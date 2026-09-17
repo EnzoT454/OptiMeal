@@ -1,8 +1,8 @@
 [project]
-site_name = "OptiBuy — Suivi du projet IFT3150"
-site_description = "Planification des repas et des achats : présentation et avancement du projet OptiBuy."
+site_name = "OptiMeal — Suivi du projet IFT3150"
+site_description = "Planification des repas et des achats : présentation et avancement du projet OptiMeal."
 site_author = "Hamza Aqel et Nouh Harfouche"
-site_url = "https://enzot454.github.io/OptiBuy/"
+site_url = "https://enzot454.github.io/OptiMeal/"
 
 copyright = """
 &copy; 2026 Hamza Aqel et Nouh Harfouche &ndash; Projet IFT3150 <br>
@@ -10,8 +10,8 @@ Département d'informatique et de recherche opérationnelle <br>
 Université de Montréal
 """
 
-repo_name = "EnzoT454/OptiBuy"
-repo_url = "https://github.com/EnzoT454/OptiBuy"
+repo_name = "EnzoT454/OptiMeal"
+repo_url = "https://github.com/EnzoT454/OptiMeal"
 
 # edit_uri = "edit/main/docs/"
 
