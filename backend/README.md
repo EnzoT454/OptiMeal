@@ -1,8 +1,8 @@
-# API OptiBuy — source optionnelle épiceries.ca
+# API OptiMeal — source optionnelle épiceries.ca
 
 Le serveur permet de rechercher des produits et de récupérer leurs prix par
 enseigne depuis [épiceries.ca](https://epiceries.ca/). Il conserve le JSON reçu
-et retourne aussi des observations dans un format commun à OptiBuy.
+et retourne aussi des observations dans un format commun à OptiMeal.
 Cette intégration fonctionne à la demande, sans clé API.
 
 ```text
@@ -69,7 +69,7 @@ de `limit`. Une recherche ne déclenche pas un appel de détail pour chaque rés
 Le consommateur choisit les produits utiles puis demande leur détail.
 
 Les routes fournisseur d’historique, de code-barres et de code marchand ne sont
-pas encore exposées par OptiBuy. La correspondance entre un ingrédient et un
+pas encore exposées par OptiMeal. La correspondance entre un ingrédient et un
 produit reste à valider : rechercher « lait » peut aussi trouver du chocolat.
 
 ## Format JSON
@@ -159,7 +159,7 @@ Noter séparément nom, format, prix, date et conditions ; compter les concordan
 
 1. Lancer le serveur avec la source activée.
 2. Dans Postman : **Import → Files**, choisir
-   [`postman/OptiBuy.postman_collection.json`](postman/OptiBuy.postman_collection.json).
+   [`postman/OptiMeal.postman_collection.json`](postman/OptiMeal.postman_collection.json).
 3. `base_url` vaut `http://127.0.0.1:8001` dans les variables de collection.
 4. Exécuter les requêtes dans l’ordre avec **Run collection**, une seule itération.
    La recherche renseigne automatiquement `product_id` pour le détail.

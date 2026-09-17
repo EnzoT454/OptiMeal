@@ -21,7 +21,7 @@ title: Vue d'ensemble du projet
 
 ## Contexte
 
-OptiBuy est un projet d’application mobile réalisé dans le cadre du cours IFT3150 à l’Université de Montréal. Il s’inscrit dans le domaine de la planification des repas et de la gestion du budget d’épicerie.
+OptiMeal est un projet d’application mobile réalisé dans le cadre du cours IFT3150 à l’Université de Montréal. Il s’inscrit dans le domaine de la planification des repas et de la gestion du budget d’épicerie.
 
 Préparer les repas de la semaine demande de choisir des recettes, de vérifier les ingrédients nécessaires et de consulter les offres des épiceries. Ces informations étant souvent dispersées, leur regroupement représente un travail répétitif pour les personnes qui souhaitent organiser leurs achats et maîtriser leurs dépenses.
 
@@ -33,7 +33,7 @@ Le produit le moins cher ne constitue pas toujours le meilleur choix s’il impo
 
 ## Proposition et objectifs
 
-Nous proposons **OptiBuy**, une application sur **iOS et Android** qui réunira recettes, calendrier de repas et liste d’épicerie modifiable par magasin. L’utilisateur pourra préciser son budget, le nombre maximal de magasins, ses préférences alimentaires et ses contraintes de déplacement. Le parcours **recettes → planification → liste d’achats** sera prioritaire.
+Nous proposons **OptiMeal**, une application sur **iOS et Android** qui réunira recettes, calendrier de repas et liste d’épicerie modifiable par magasin. L’utilisateur pourra préciser son budget, le nombre maximal de magasins, ses préférences alimentaires et ses contraintes de déplacement. Le parcours **recettes → planification → liste d’achats** sera prioritaire.
 
 Les principaux objectifs sont les suivants :
 

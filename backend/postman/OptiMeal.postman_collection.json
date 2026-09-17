@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "OptiBuy — épiceries.ca",
+    "name": "OptiMeal — épiceries.ca",
     "description": "Serveur local requis : EPICERIES_ENABLED=true. Exécuter dans l’ordre ; les appels valides contactent épiceries.ca. Pas de clé. Le filtre store de recherche désigne l’enseigne la moins chère, pas tout son catalogue. Les tests valident le contrat, pas les prix en magasin.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },

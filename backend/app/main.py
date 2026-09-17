@@ -19,11 +19,11 @@ def create_app(enabled: bool | None = None, transport: httpx.AsyncBaseTransport 
         if app.state.stale_days < 1:
             raise ValueError('EPICERIES_STALE_DAYS doit être positif')
         async with httpx.AsyncClient(timeout=10, transport=transport, follow_redirects=False,
-                                     headers={'User-Agent': 'OptiBuy/0.1', 'Accept': 'application/json'}) as http:
+                                     headers={'User-Agent': 'OptiMeal/0.1', 'Accept': 'application/json'}) as http:
             app.state.epiceries = EpiceriesClient(http, enabled if enabled is not None else configured == 'true', interval)
             yield
 
-    app = FastAPI(title='OptiBuy', version='0.1.0', lifespan=lifespan)
+    app = FastAPI(title='OptiMeal', version='0.1.0', lifespan=lifespan)
     app.include_router(router)
 
     @app.get('/health', tags=['serveur'])

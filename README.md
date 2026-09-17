@@ -1,12 +1,12 @@
-# OptiBuy — Projet IFT3150
+# OptiMeal — Projet IFT3150
 
-OptiBuy est un projet d’application mobile pour gérer des recettes, planifier les repas et préparer une liste d’épicerie par magasin selon un budget. Le dépôt contient le site de suivi et un premier serveur FastAPI avec une source de prix optionnelle épiceries.ca. L’application mobile reste à développer.
+OptiMeal est un projet d’application mobile pour gérer des recettes, planifier les repas et préparer une liste d’épicerie par magasin selon un budget. Le dépôt contient le site de suivi et un premier serveur FastAPI avec une source de prix optionnelle épiceries.ca. L’application mobile reste à développer.
 
 Projet réalisé par **Hamza Aqel et Nouh Harfouche**, à l’Université de Montréal, à l’automne 2026.
 
 ## Site de suivi
 
-**Site publié :** [enzot454.github.io/OptiBuy](https://enzot454.github.io/OptiBuy/).
+**Site publié :** [enzot454.github.io/OptiMeal](https://enzot454.github.io/OptiMeal/).
 
 C’est le lien du site publié qu’il faudra déposer sur StudiUM. Vérifier qu’il fonctionne sans connexion à GitHub avant de le remettre.
 
@@ -28,8 +28,8 @@ Le site reprend le [template IFT3150](https://github.com/udem-diro/template-proj
 Prérequis : **Python 3.11 ou plus récent** et Git. Depuis un terminal macOS ou Linux :
 
 ```bash
-git clone git@github.com:EnzoT454/OptiBuy.git
-cd OptiBuy
+git clone git@github.com:EnzoT454/OptiMeal.git
+cd OptiMeal
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
@@ -50,7 +50,7 @@ Le dossier `site/` contient le résultat généré. Il est ignoré par Git et ne
 
 Ces étapes nécessitent les droits de gestion du dépôt :
 
-1. Dans [Settings → Pages](https://github.com/EnzoT454/OptiBuy/settings/pages), sélectionner **GitHub Actions** comme source dans **Build and deployment**.
+1. Dans [Settings → Pages](https://github.com/EnzoT454/OptiMeal/settings/pages), sélectionner **GitHub Actions** comme source dans **Build and deployment**.
 2. Envoyer les changements de `partieHamza` sur GitHub, puis ouvrir une pull request vers `main`. Le workflow **Site de suivi** vérifie la construction.
 3. Fusionner la pull request dans `main`. Le workflow construit puis publie le site automatiquement.
 4. Consulter l’onglet **Actions** et attendre la réussite du travail **Publier sur GitHub Pages**. Le déploiement indique l’adresse du site.
@@ -77,7 +77,7 @@ dates et avertissements. Il complète les autres sources prévues.
 
 Consulter le [guide du backend](backend/README.md) pour le lancement, les routes,
 le format JSON et les limites, ainsi que la
-[collection Postman](backend/postman/OptiBuy.postman_collection.json) pour les essais.
+[collection Postman](backend/postman/OptiMeal.postman_collection.json) pour les essais.
 Le backend se lance séparément du site GitHub Pages.
 
 ```bash

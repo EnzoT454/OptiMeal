@@ -14,7 +14,7 @@ title: Suivi du projet
 
 ## Septembre 2026 — Préparation du projet
 
-La description d’OptiBuy a été rédigée : contexte, problématique, objectifs, méthodologie et critères d’évaluation. Le site de suivi a été adapté aux consignes du cours.
+La description d’OptiMeal a été rédigée : contexte, problématique, objectifs, méthodologie et critères d’évaluation. Le site de suivi a été adapté aux consignes du cours.
 
 Une première API FastAPI intègre épiceries.ca comme source optionnelle de prix. La recherche et la normalisation sont testées ; les prix anciens ou incohérents sont signalés. Les essais sur les circulaires PDF ont montré des difficultés de lecture des prix.
 
