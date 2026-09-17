@@ -33,16 +33,16 @@ Le produit le moins cher ne constitue pas toujours le meilleur choix s’il impo
 
 ## Proposition et objectifs
 
-Nous proposons **OptiMeal**, une application sur **iOS et Android** qui réunira recettes, calendrier de repas et liste d’épicerie modifiable par magasin. L’utilisateur pourra préciser son budget, le nombre maximal de magasins, ses préférences alimentaires et ses contraintes de déplacement. Le parcours **recettes → planification → liste d’achats** sera prioritaire.
+Nous proposons **OptiMeal**, une application sur **iOS et Android** qui réunira recettes, calendrier de repas et liste d’épicerie modifiable par magasin. L’utilisateur pourra préciser son budget, le nombre maximal de magasins, ses préférences alimentaires et ses contraintes de déplacement.
 
 Les principaux objectifs sont les suivants :
 
-- **Gérer et découvrir des recettes** : permettre la création, la modification, la recherche et les favoris, avec quatre modes d’ajout — saisie manuelle, suggestion selon une envie, suggestion à partir des ingrédients déclarés et import d’un texte. Les propositions de l’IA pourront être corrigées avant confirmation et sauvegarde.
+- **Gérer et découvrir des recettes** : permettre la création, la modification, la recherche et les favoris, avec trois modes d’ajout : ajout manuel, suggestion selon une envie et suggestion à partir des ingrédients disponibles. Pour l’ajout manuel, l’utilisateur choisira entre remplir un formulaire et saisir un texte que l’IA transformera dans le même format de recette. Les propositions de l’IA pourront être corrigées avant confirmation et sauvegarde.
 - **Planifier et conserver les repas** : enregistrer une semaine et ses portions dans un compte personnel, puis retrouver les anciennes semaines et leurs listes sans que des modifications ultérieures changent leur contenu historique.
 - **Préparer les achats** : regrouper les quantités nécessaires et produire une liste par magasin tenant compte des formats, des prix et des contraintes choisies. L’utilisateur pourra cocher, supprimer ou remplacer des articles, avec recalcul et conservation de ses choix manuels.
-- **Aider aux choix économiques** : proposer des recettes selon les promotions et un catalogue couvrant aussi les produits hors promotion. Distinguer les prix connus, déclarés après achat, estimés et inconnus ; permettre une contribution facultative du prix payé pour améliorer les estimations après validation.
+- **Aider aux choix économiques** : proposer des recettes selon les promotions et un catalogue couvrant aussi les produits hors promotion. Distinguer les prix connus, déclarés après achat, estimés et inconnus ; permettre à l’utilisateur de photographier son reçu à la fin de ses courses pour contribuer, s’il le souhaite, aux prix payés. Il pourra vérifier et corriger les informations extraites avant de les confirmer pour améliorer les estimations.
 
-L’application cherchera à réduire le coût des achats, sans garantir le meilleur panier possible parmi toutes les combinaisons. Lorsque les données sont insuffisantes, elle présentera les limites du résultat plutôt qu’un budget garanti. À ce stade, le dépôt contient la documentation et le cadrage ; l’application reste à développer.
+L’application cherchera à réduire le coût des achats, sans garantir le meilleur panier possible parmi toutes les combinaisons. Lorsque les données ne permettent pas de donner un prix précis, elle affichera une fourchette estimée min–max à partir des références disponibles. Si certains prix ne peuvent pas être estimés, ils seront signalés : la fourchette portera alors seulement sur la partie calculable de la liste. À ce stade, le répo contient la documentation et le cadrage ; l’application reste à développer.
 
 ## Méthodologie
 
@@ -50,7 +50,7 @@ Le travail sera réalisé par deux étudiants sur environ **15 semaines**, à ra
 
 La démarche sera progressive : préciser les parcours et étudier les sources de données, établir la communication entre le mobile et le serveur, puis développer les comptes, les recettes et le calendrier. Le catalogue, les circulaires et les estimations permettront ensuite de construire les listes d’achats et les recommandations économiques. Chaque étape sera intégrée et vérifiée avant de poursuivre ; la charge restante sera réévaluée régulièrement.
 
-L’interface utilisera **React Native avec TypeScript et Expo**, le serveur **Python avec FastAPI**, et le stockage **PostgreSQL**. L’IA sera évaluée pour proposer des recettes, structurer un texte de recette et extraire les informations des circulaires. Ses résultats seront validés ; les calculs de quantités et de prix seront effectués par le serveur. Les fournisseurs et les sources de données seront sélectionnés après comparaison sur des exemples représentatifs.
+L’interface utilisera **React Native avec TypeScript et Expo**, le serveur **Python avec FastAPI**, et le stockage **PostgreSQL**. L’IA sera évaluée pour proposer des recettes, structurer un texte de recette et extraire les informations des circulaires et des photos de reçus. Ses résultats seront validés ; les calculs de quantités et de prix seront effectués par le serveur. Les fournisseurs et les sources de données seront sélectionnés après comparaison sur des exemples représentatifs.
 
 Un jeu de données de démonstration clairement identifié permettra de tester le projet même si les sources externes sont indisponibles. Le travail sera versionné avec Git et documenté régulièrement sur la page de [suivi](suivi.md).
 
@@ -60,10 +60,10 @@ L’évaluation reposera sur des scénarios reproductibles et des données dont 
 
 | Aspect évalué | Stratégie et critères prévus |
 | --- | --- |
-| Fonctionnement de l’application | Exécuter sur iOS et Android les quatre modes d’ajout, la sauvegarde d’une semaine, la génération et la modification d’une liste. Relever les scénarios réussis, les échecs et les fonctions incomplètes. |
+| Fonctionnement de l’application | Exécuter sur iOS et Android les trois modes d’ajout, dont les options formulaire et texte du mode manuel, la contribution facultative par photo du reçu, la sauvegarde d’une semaine, la génération et la modification d’une liste. Relever les scénarios réussis, les échecs et les fonctions incomplètes. |
 | Exactitude des listes | Comparer les quantités, les formats à acheter et les totaux à des calculs manuels sur de petits exemples. Vérifier que chaque besoin est couvert ou explicitement signalé comme manquant ou non vérifiable. |
 | Qualité des choix économiques | Sur un même jeu de prix connus, comparer le panier proposé à un panier de référence construit manuellement pour les mêmes besoins et contraintes. Mesurer l’écart de coût et le nombre de magasins, sans supposer un gain systématique. |
-| Fiabilité des données et de l’IA | Comparer les ingrédients, quantités, prix et dates extraits à des exemples annotés manuellement. Relever les omissions, ajouts incorrects et ambiguïtés ; vérifier le signalement des prix inconnus et des offres expirées. |
+| Fiabilité des données et de l’IA | Comparer les ingrédients, quantités, prix et dates extraits à des exemples annotés manuellement. Relever les omissions, ajouts incorrects et ambiguïtés ; vérifier la lecture des reçus, les fourchettes min–max et le signalement des prix inconnus et des offres expirées. |
 | Protection et conservation des données | Vérifier avec deux comptes que les données privées restent séparées et qu’une modification de recette ou de prix ne change pas les anciennes semaines. |
 | Utilisabilité et gestion des erreurs | Réaliser le parcours complet de planification et d’achat ; relever les blocages et vérifier les états de chargement, de contenu vide et d’erreur réseau, ainsi que la clarté des avertissements. |
 

@@ -1,95 +1,103 @@
-# OptiMeal — Projet IFT3150
+<h1 align="center">OptiMeal</h1>
 
-OptiMeal est un projet d’application mobile pour gérer des recettes, planifier les repas et préparer une liste d’épicerie par magasin selon un budget. Le dépôt contient le site de suivi et un premier serveur FastAPI avec une source de prix optionnelle épiceries.ca. L’application mobile reste à développer.
+<p align="center">
+  Planifier ses repas et préparer sa liste d’épicerie selon son budget.
+</p>
 
-Projet réalisé par **Hamza Aqel et Nouh Harfouche**, à l’Université de Montréal, à l’automne 2026.
+Nous développons OptiMeal dans le cadre du cours IFT3150 à l’Université de Montréal. L’idée est de réunir les recettes, les repas de la semaine et les prix des épiceries au même endroit pour faciliter la préparation des courses.
 
-## Site de suivi
+L’application permettra de choisir ses recettes et ses portions, puis de préparer une liste d’achats par magasin en tenant compte du budget et des déplacements. Trois modes d’ajout sont prévus : ajouter une recette manuellement, trouver une idée et cuisiner avec ce qu’on a déjà. L’ajout manuel donnera le choix entre remplir un formulaire et saisir un texte que l’IA transformera dans le même format de recette, à vérifier avant de l’enregistrer.
 
-**Site publié :** [enzot454.github.io/OptiMeal](https://enzot454.github.io/OptiMeal/).
+Lorsque les prix précis manquent, nous afficherons une fourchette estimée min–max, en signalant les articles dont le prix reste impossible à estimer. À la fin des courses, l’utilisateur pourra aussi photographier son reçu et confirmer les prix extraits pour contribuer aux estimations. Cette contribution sera facultative.
 
-C’est le lien du site publié qu’il faudra déposer sur StudiUM. Vérifier qu’il fonctionne sans connexion à GitHub avant de le remettre.
+## Technologies
 
-Le site reprend le [template IFT3150](https://github.com/udem-diro/template-projet) et utilise **Zensical** pour transformer les fichiers Markdown en pages web.
+- **Mobile prévu :** React Native · TypeScript · Expo, pour iOS et Android
+- **Backend :** Python · FastAPI
+- **Base de données prévue :** PostgreSQL
+- **Documentation :** Zensical · GitHub Pages
 
-| Fichier | Contenu |
-| --- | --- |
-| `docs/index.md` | Contexte, problématique, proposition, méthodologie et évaluation |
-| `docs/suivi.md` | Avancées, difficultés, choix et prochaines étapes |
-| `docs/synthese.md` | Réalisations, résultats et bilan, à compléter progressivement |
-| `docs/references.md` | Sources utilisées et aide de l’IA |
-| `zensical.toml` | Nom du site, adresse et navigation |
-| `.github/workflows/docs.yml` | Vérification et publication automatiques |
+## Statut actuel
 
-À ce stade, la remise porte sur la vue d’ensemble. Les autres pages restent courtes et seront complétées au fil du projet.
+Nous avons mis en place le site de suivi et une première API qui utilise épiceries.ca pour rechercher des produits et récupérer leurs prix. Les données retournées conservent leur source et leur date, avec des avertissements lorsque les prix semblent anciens ou incohérents. Leur concordance avec les prix en magasin reste à vérifier.
 
-## Consulter le site en local
+L’application mobile, les comptes et la sauvegarde en base de données restent à développer. La prochaine étape est de vérifier un échantillon de prix et de relier le mobile au serveur.
 
-Prérequis : **Python 3.11 ou plus récent** et Git. Depuis un terminal macOS ou Linux :
+## Installation
+
+Pour lancer le backend et la documentation en local : **Python 3.11+** et **Git**.
 
 ```bash
-git clone git@github.com:EnzoT454/OptiMeal.git
+git clone https://github.com/EnzoT454/OptiMeal.git
 cd OptiMeal
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
-zensical serve
+python -m pip install -r requirements.txt -r backend/requirements-dev.txt
 ```
 
-Ouvrir ensuite `http://localhost:8000`. Les modifications des pages sont prises en compte automatiquement. Si le dépôt est déjà cloné, commencer à la création ou à l’activation de `.venv`.
+## Lancer le backend
 
-Pour vérifier la construction complète :
-
-```bash
-zensical build --clean
-```
-
-Le dossier `site/` contient le résultat généré. Il est ignoré par Git et ne doit pas être modifié à la main.
-
-## Activer la publication sur GitHub
-
-Ces étapes nécessitent les droits de gestion du dépôt :
-
-1. Dans [Settings → Pages](https://github.com/EnzoT454/OptiMeal/settings/pages), sélectionner **GitHub Actions** comme source dans **Build and deployment**.
-2. Envoyer les changements de `partieHamza` sur GitHub, puis ouvrir une pull request vers `main`. Le workflow **Site de suivi** vérifie la construction.
-3. Fusionner la pull request dans `main`. Le workflow construit puis publie le site automatiquement.
-4. Consulter l’onglet **Actions** et attendre la réussite du travail **Publier sur GitHub Pages**. Le déploiement indique l’adresse du site.
-
-Si les fichiers sont déjà dans `main` au moment de l’activation, lancer **Actions → Site de suivi → Run workflow**, en choisissant `main`.
-
-Le workflow vérifie les envois sur `partieHamza` et les pull requests vers `main`. **Seule la branche `main` publie le site.** Les modifications d’une branche de travail deviennent publiques après leur intégration dans `main` et la réussite du déploiement.
-
-La branche [`gh-pages` du template](https://github.com/udem-diro/template-projet/tree/gh-pages) contient ses pages déjà générées. Ici, conformément à la [méthode de publication Zensical](https://zensical.org/docs/publish-your-site/), GitHub Actions transmet directement le dossier `site/` à Pages : il n’est pas nécessaire de copier ou de créer cette branche.
-
-Si la publication échoue, vérifier la source **GitHub Actions** dans Pages, l’activation des Actions et l’autorisation de déployer depuis `main` dans l’environnement `github-pages`. La disponibilité de Pages dépend aussi de la visibilité du dépôt et du forfait GitHub : consulter la [documentation GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) si l’option est absente.
-
-## Maintenir le suivi du cours
-
-Après les rencontres de supervision, habituellement hebdomadaires, noter brièvement le travail réalisé, les difficultés, les décisions et les prochaines étapes. Le suivi doit rendre visibles la démarche, les essais et les apprentissages, en plus des résultats.
-
-Les jalons du cours sont les études préliminaires en semaines 1–2, la réalisation progressive en semaines 3–14, les mises en commun en semaines 5–6, 9–10 et 13–14, puis la présentation finale et le rapport en semaine 15. Le site sera enrichi progressivement pour accompagner ces étapes.
-
-## Backend et données
-
-Le connecteur **épiceries.ca** permet de consulter les catégories, rechercher
-des produits et obtenir des observations de prix normalisées, avec provenance,
-dates et avertissements. Il complète les autres sources prévues.
-
-Consulter le [guide du backend](backend/README.md) pour le lancement, les routes,
-le format JSON et les limites, ainsi que la
-[collection Postman](backend/postman/OptiMeal.postman_collection.json) pour les essais.
-Le backend se lance séparément du site GitHub Pages.
+Depuis la racine du projet, avec l’environnement virtuel activé :
 
 ```bash
-source .venv/bin/activate
-python -m pip install -r backend/requirements-dev.txt
 export EPICERIES_ENABLED=true
 python -m uvicorn backend.app.main:app --reload --port 8001
 ```
 
-Tests sans réseau : `python -m pytest backend/tests -q`.
-Test explicite de trois lectures réelles : `python -m backend.smoke`.
+L’API est accessible sur `http://localhost:8001`, avec sa documentation interactive sur `http://localhost:8001/docs`.
 
-## Licence
+Le [guide du backend](backend/README.md) détaille les routes disponibles et les limites des données. Une [collection Postman](backend/postman/OptiMeal.postman_collection.json) permet aussi d’essayer les requêtes.
 
-Le template annonce une licence MIT. Aucun fichier `LICENSE` n’est actuellement présent dans ce dépôt ; les informations de licence restent à compléter.
+## Tests
+
+Les tests du backend utilisent des réponses enregistrées et ne font pas d’appels réseau :
+
+```bash
+python -m pytest backend/tests -q
+```
+
+Pour essayer le connecteur avec trois lectures réelles sur épiceries.ca :
+
+```bash
+python -m backend.smoke
+```
+
+## Structure du projet
+
+```text
+OptiMeal/
+├── backend/
+│   ├── app/
+│   │   ├── main.py       # Application FastAPI
+│   │   ├── api/          # Routes HTTP
+│   │   ├── schemas/      # Validation des données
+│   │   └── services/     # Connecteur épiceries.ca et traitement des prix
+│   ├── postman/          # Collection de requêtes
+│   └── tests/            # Tests et exemples de données
+├── docs/                 # Présentation, suivi, synthèse et références
+├── .github/workflows/    # Tests du backend et publication du site
+└── zensical.toml         # Configuration du site de suivi
+```
+
+## Documentation
+
+Le [site de suivi du projet](https://enzot454.github.io/OptiMeal/) regroupe nos objectifs, notre avancement et les références utilisées. Il reprend le [template du cours IFT3150](https://github.com/udem-diro/template-projet).
+
+Pour le consulter en local, lancer cette commande dans un autre terminal avec l’environnement virtuel activé :
+
+```bash
+zensical serve
+```
+
+Le site est accessible sur `http://localhost:8000`. Pour vérifier sa construction : `zensical build --clean`. La publication sur GitHub Pages se fait automatiquement lors des mises à jour de `main`.
+
+## Équipe
+
+- Hamza Aqel
+- Nouh Harfouche
+
+**Superviseur :** Louis Edouard Lafontant<br>
+**Session :** Automne 2026<br>
+**Cours :** IFT3150 — Projet informatique, Université de Montréal
+
+*Dernière mise à jour : 17 septembre 2026*
