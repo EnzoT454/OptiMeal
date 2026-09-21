@@ -3,8 +3,8 @@ import re
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
-from backend.app.schemas.epiceries import Product
-from backend.app.services.epiceries import Snapshot
+from backend.app.price_sources.epiceries_ca import Snapshot
+from backend.app.price_sources.schemas import Product
 
 
 def parse_size(raw: str | None) -> tuple[Decimal, str] | None:

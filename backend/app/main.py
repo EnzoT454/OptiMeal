@@ -4,8 +4,8 @@ from contextlib import asynccontextmanager
 import httpx
 from fastapi import FastAPI
 
-from backend.app.api.epiceries import router
-from backend.app.services.epiceries import EpiceriesClient
+from backend.app.catalog.router import router as catalog_router
+from backend.app.price_sources.epiceries_ca import EpiceriesClient
 
 
 def create_app(enabled: bool | None = None, transport: httpx.AsyncBaseTransport | None = None,
@@ -24,7 +24,8 @@ def create_app(enabled: bool | None = None, transport: httpx.AsyncBaseTransport 
             yield
 
     app = FastAPI(title='OptiMeal', version='0.1.0', lifespan=lifespan)
-    app.include_router(router)
+    # Le catalogue expose pour le moment les routes de la source épiceries.ca.
+    app.include_router(catalog_router)
 
     @app.get('/health', tags=['serveur'])
     async def health():

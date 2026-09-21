@@ -32,7 +32,7 @@ git clone https://github.com/EnzoT454/OptiMeal.git
 cd OptiMeal
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt -r backend/requirements-dev.txt
+python -m pip install -r requirements.txt
 ```
 
 ## Lancer le backend

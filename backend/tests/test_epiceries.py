@@ -8,9 +8,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from backend.app.main import create_app
-from backend.app.schemas.epiceries import Categories
-from backend.app.services.epiceries import EpiceriesClient, Snapshot
-from backend.app.services.normalize import normalize
+from backend.app.price_sources.epiceries_ca import EpiceriesClient, Snapshot
+from backend.app.price_sources.normalize import normalize
+from backend.app.price_sources.schemas import Categories
 
 FIXTURES = Path(__file__).parent / 'fixtures'
 
@@ -54,6 +54,50 @@ def test_search_preserves_pagination_and_filters():
         response = api.get('/sources/epiceries/search?category=26&store=maxi&discounted=false')
         assert response.status_code == 200
         assert response.json()['data'] == fixture('rice-maxi')['data']
+        assert response.json()['filter']['food_only'] is False
+
+
+def test_search_excludes_non_food_categories_and_ranks_direct_names():
+    body = {
+        'ok': True,
+        'data': {
+            'count': 4, 'limit': 20, 'offset': 0, 'hasMore': False,
+            'results': [
+                {'id': 'shampoo', 'name': 'Shampooing au miel', 'price': 5, 'store': 'maxi', 'category': 70},
+                {'id': 'cereal', 'name': 'Céréales au miel', 'price': 4, 'store': 'maxi', 'category': 28},
+                {'id': 'honey', 'name': 'Miel pur', 'price': 6, 'store': 'maxi', 'category': 32},
+                {'id': 'cleaner', 'name': 'Nettoyant au miel', 'price': 3, 'store': 'maxi', 'category': 65},
+            ],
+        },
+    }
+    with client(lambda _: httpx.Response(200, json=body)) as api:
+        result = api.get('/sources/epiceries/search?q=miel').json()
+    assert [item['id'] for item in result['data']['results']] == ['honey', 'cereal']
+    assert result['data']['count'] == 2
+    assert result['filter'] == {
+        'food_only': True,
+        'excluded_category_ids': [65, 66, 67, 68, 69, 70],
+        'provider_count': 4,
+        'excluded_count': 2,
+        'ranking': 'query_name_relevance',
+    }
+
+
+def test_search_can_include_non_food_results_on_request():
+    body = {
+        'ok': True,
+        'data': {
+            'count': 2, 'limit': 20, 'offset': 0, 'hasMore': False,
+            'results': [
+                {'id': 'honey', 'name': 'Miel pur', 'price': 6, 'store': 'maxi', 'category': 32},
+                {'id': 'shampoo', 'name': 'Shampooing au miel', 'price': 5, 'store': 'maxi', 'category': 70},
+            ],
+        },
+    }
+    with client(lambda _: httpx.Response(200, json=body)) as api:
+        result = api.get('/sources/epiceries/search?q=miel&food_only=false').json()
+    assert {item['id'] for item in result['data']['results']} == {'honey', 'shampoo'}
+    assert result['filter']['excluded_count'] == 0
 
 
 def test_product_normalization_keeps_raw_and_dates():
@@ -133,7 +177,7 @@ def test_wrong_product_rejected():
 def test_cache_coalesces_concurrent_requests_and_expires(monkeypatch):
     calls = []
     clock = [1000.0]
-    monkeypatch.setattr('backend.app.services.epiceries.monotonic', lambda: clock[0])
+    monkeypatch.setattr('backend.app.price_sources.epiceries_ca.monotonic', lambda: clock[0])
     def handler(request):
         calls.append(request)
         return httpx.Response(200, json=fixture('categories'))
@@ -154,10 +198,10 @@ def test_cache_coalesces_concurrent_requests_and_expires(monkeypatch):
 def test_rate_limit_between_uncached_requests(monkeypatch):
     clock = [1000.0]
     starts = []
-    monkeypatch.setattr('backend.app.services.epiceries.monotonic', lambda: clock[0])
+    monkeypatch.setattr('backend.app.price_sources.epiceries_ca.monotonic', lambda: clock[0])
     async def sleep(delay):
         clock[0] += delay
-    monkeypatch.setattr('backend.app.services.epiceries.asyncio.sleep', sleep)
+    monkeypatch.setattr('backend.app.price_sources.epiceries_ca.asyncio.sleep', sleep)
     def handler(request):
         starts.append(clock[0])
         return httpx.Response(200, json=fixture('categories'))
