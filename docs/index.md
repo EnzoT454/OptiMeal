@@ -68,3 +68,14 @@ L’évaluation reposera sur des scénarios reproductibles et des données dont 
 | Utilisabilité et gestion des erreurs | Réaliser le parcours complet de planification et d’achat ; relever les blocages et vérifier les états de chargement, de contenu vide et d’erreur réseau, ainsi que la clarté des avertissements. |
 
 Les résultats, les limites observées et les fonctionnalités effectivement réalisées seront présentés dans la [synthèse](synthese.md). Aucune évaluation fonctionnelle n’a encore été réalisée.
+
+
+## Échéancier
+ 
+  Le suivi complet est disponible dans la page [Suivi de projet](suivi.md).
+
+| Activités | Début | Fin | Livrable | Statut |
+| --- | --- | --- | --- | --- |
+| Analyse des applications existantes, prototype et modèle C4 | 14 sept. | 20 sept. | Présentation au professeur | ✅ Terminé |
+| Évaluation des sources de données et tests d'extraction (circulaires, reçus) | 21 sept. | 27 sept. | Scripts d'extraction et choix des sources | ✅ Terminé |
+| Poursuite de l'extraction et construction de la base de données | 28 sept. | 4 oct. | Base de données avec les premières données | 🔄 En cours |
