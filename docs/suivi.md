@@ -12,15 +12,57 @@ title: Suivi du projet
 
 # Suivi de projet
 
-## Septembre 2026 — Préparation du projet
-
-La description d’OptiMeal a été rédigée : contexte, problématique, objectifs, méthodologie et critères d’évaluation. Le site de suivi a été adapté aux consignes du cours.
-
-Une première API FastAPI intègre épiceries.ca comme source optionnelle de prix. La recherche et la normalisation sont testées ; les prix anciens ou incohérents sont signalés. Les essais sur les circulaires PDF ont montré des difficultés de lecture des prix.
-
-La prochaine étape sera de vérifier un échantillon de prix et de relier l’application mobile au serveur.
-
 Cette page sera mise à jour chaque semaine avec les avancées, les difficultés, les choix effectués et les prochaines étapes, en lien avec les rencontres de supervision.
+
+## Semaine 1 (31 août – 6 septembre)
+
+### Objectifs de la période
+
+- Présenter au professeur la description du projet et son cadrage
+- Présenter les cas d’utilisation visés
+- Discuter des technologies à utiliser pour développer l’application
+
+### Travail réalisé
+
+- Rédaction de la description du projet et identification des utilisateurs cibles
+- Présentation des cas d’utilisation visés : sauvegarde de recettes, intégration de l’IA pour générer des recettes et aider à la planification, ainsi que planification des repas dans un calendrier
+- Définition initiale de l’intégration des promotions hebdomadaires afin de recommander des recettes en fonction des rabais
+
+### Décisions et ajustements
+
+- Technologies retenues et confirmées avec le professeur : React Native avec TypeScript et Expo pour le mobile, Python avec FastAPI pour le backend et PostgreSQL pour la persistance
+- Comparer différents modèles LLM afin de choisir la solution la plus adaptée aux besoins du projet
+- Considérer un aspect communautaire, par exemple des profils utilisateurs et le partage de recettes
+- Déterminer avec le coéquipier la priorité entre l’aspect recettes et l’aspect budget, promotions et liste d’épicerie
+
+### Difficultés rencontrées
+
+- Identifier des sources de données fiables pour les produits, les prix et les promotions
+- Déterminer quel aspect de l’application doit être priorisé
+
+---
+
+## Semaine 2 (7–13 septembre)
+
+### Objectifs de la période
+
+- Rechercher des applications semblables
+- Commencer le prototype de l’application
+
+### Travail réalisé
+
+- Analyse de deux applications similaires : AnyList et Flipp
+- Création d’une première version de la maquette dans Figma
+- Découverte de l’API epiceries.ca comme source potentielle de produits et de prix, qui reste à évaluer
+
+### Décisions et ajustements
+
+- Confirmer les technologies retenues pour le projet
+- Tester l’API epiceries.ca et évaluer la qualité de ses résultats
+- Tester l’extraction des données à partir des circulaires et l’extraction web à partir des sites des magasins
+- Limiter les premiers essais aux magasins Metro, Maxi et Super C afin de simplifier le démarrage
+
+---
 
 ## Semaine 3 (14–20 septembre)
 
