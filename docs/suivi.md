@@ -8,6 +8,11 @@ title: Suivi du projet
             display: none !important;
         }
     }
+
+    /* Afficher seulement les semaines dans la table des matières. */
+    .md-nav--secondary > .md-nav__list > .md-nav__item > .md-nav {
+        display: none;
+    }
 </style>
 
 # Suivi de projet
