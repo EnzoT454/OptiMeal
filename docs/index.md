@@ -33,7 +33,7 @@ Le produit le moins cher ne constitue pas toujours le meilleur choix s’il impo
 
 ## Proposition et objectifs
 
-Nous proposons **OptiMeal**, une application sur **iOS et Android** qui réunira recettes, calendrier de repas et liste d’épicerie modifiable par magasin. L’utilisateur pourra préciser son budget, le nombre maximal de magasins, ses préférences alimentaires et ses contraintes de déplacement.
+Nous proposons **OptiMeal**, une application sur iOS et Android qui réunira recettes, calendrier de repas et liste d’épicerie modifiable par magasin. L’utilisateur pourra préciser son budget, le nombre maximal de magasins, ses préférences alimentaires et ses contraintes de déplacement.
 
 Les principaux objectifs sont les suivants :
 
@@ -46,7 +46,7 @@ L’application cherchera à réduire le coût des achats, sans garantir le meil
 
 ## Méthodologie
 
-Le travail sera réalisé par deux étudiants sur environ **15 semaines**, à raison de **20 heures par semaine chacun** incluant développement, tests, réunions et documentation. Une marge pour les imprévus et du temps pour le rapport et la démonstration seront réservés.
+Le travail sera réalisé par 2 étudiants sur environ 15 semaines, à raison de 20 heures par semaine chacun incluant développement, tests, réunions et documentation. Une marge pour les imprévus et du temps pour le rapport et la démonstration seront réservés.
 
 La démarche sera progressive : préciser les parcours et étudier les sources de données, établir la communication entre le mobile et le serveur, puis développer les comptes, les recettes et le calendrier. Le catalogue, les circulaires et les estimations permettront ensuite de construire les listes d’achats et les recommandations économiques. Chaque étape sera intégrée et vérifiée avant de poursuivre ; la charge restante sera réévaluée régulièrement.
 
@@ -76,6 +76,8 @@ Les résultats, les limites observées et les fonctionnalités effectivement ré
 
 | Activités | Début | Fin | Livrable | Statut |
 | --- | --- | --- | --- | --- |
+| Description du projet et cas d’utilisation | 31 août | 6 sept. | Description du projet et cas d’utilisation | ✅ Terminé |
+| Recherche d’applications similaires et début du prototype sur Figma | 7 sept. | 13 sept. | Recherche comparative et prototype initial sur Figma | ✅ Terminé |
 | Analyse des applications existantes, prototype et modèle C4 | 14 sept. | 20 sept. | Présentation au professeur | ✅ Terminé |
 | Évaluation des sources de données et tests d'extraction (circulaires, reçus) | 21 sept. | 27 sept. | Scripts d'extraction et choix des sources | ✅ Terminé |
 | Poursuite de l'extraction et construction de la base de données | 28 sept. | 4 oct. | Base de données avec les premières données | 🔄 En cours |
