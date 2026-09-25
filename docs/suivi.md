@@ -62,7 +62,6 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 ### Décisions et ajustements
 
-- Confirmer les technologies retenues pour le projet
 - Tester l’API epiceries.ca et évaluer la qualité de ses résultats
 - Tester l’extraction des données à partir des circulaires et l’extraction web à partir des sites des magasins
 - Limiter les premiers essais aux magasins Metro, Maxi et Super C afin de simplifier le démarrage
@@ -95,7 +94,7 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 - **Prix et données** : contribution des utilisateurs par photo de reçu ;
       script qui récupère automatiquement les circulaires ; couche d'IA pour
       filtrer les résultats d'epiceries.ca ; plan de secours pour les données
-- **Magasins** : carte avec géolocalisation, incluant les petits magasins
+- **Magasins** : lancement limité à Metro, Maxi et Super C ; les petits magasins pourront être ajoutés progressivement à la carte avec géolocalisation. Lorsque les données de prix ne sont pas accessibles, les reçus confirmés par les utilisateurs constitueront une source importante pour compléter les données
 - **Utilisateurs** : profils types (étudiants, familles, passionnés de
       cuisine) ; aspect communautaire avec profils à côté des recettes ;
       historique des listes d'achats
@@ -136,11 +135,11 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 ### Décisions et ajustements
 
-- Limitation à trois magasins (Maxi, Metro, Super C) pour faciliter
-    le travail ; d'autres pourront être ajoutés plus tard
+- Pour le lancement, limitation à trois magasins (Maxi, Metro, Super C) afin de faciliter le travail ; d’autres magasins pourront être ajoutés progressivement. Les reçus confirmés par les utilisateurs aideront à compléter les données de prix lorsque l’accès aux données des petits magasins est limité
 - Les circulaires PDF ne seront pas la source principale, à cause des
     problèmes d'exactitude et de disponibilité
-- Poursuite des essais d'extraction avec ChatGPT
+- Méthode retenue pour récupérer les données : extraction web avec ChatGPT ; les reçus confirmés par les utilisateurs compléteront les données manquantes
+- Les promotions récupérées et stockées dans la base de données devront être exactes à au moins 99 %
 - Plan B : OpenCV et pytesseract pour extraire le texte des photos
     au lieu de Gemini
 

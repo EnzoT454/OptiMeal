@@ -79,5 +79,5 @@ Les résultats, les limites observées et les fonctionnalités effectivement ré
 | Description du projet et cas d’utilisation | 31 août | 6 sept. | Description du projet et cas d’utilisation | ✅ Terminé |
 | Recherche d’applications similaires et début du prototype sur Figma | 7 sept. | 13 sept. | Recherche comparative et prototype initial sur Figma | ✅ Terminé |
 | Analyse des applications existantes, prototype et modèle C4 | 14 sept. | 20 sept. | Présentation au professeur | ✅ Terminé |
-| Évaluation des sources de données et tests d'extraction (circulaires, reçus) | 21 sept. | 27 sept. | Scripts d'extraction et choix des sources | ✅ Terminé |
+| Évaluation initiale des sources de données et tests d'extraction (circulaires, reçus) | 21 sept. | 27 sept. | Résultats des tests initiaux et choix d’une méthode | ✅ Terminé |
 | Poursuite de l'extraction et construction de la base de données | 28 sept. | 4 oct. | Base de données avec les premières données | 🔄 En cours |
