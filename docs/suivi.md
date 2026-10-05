@@ -160,6 +160,41 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 ### Objectifs de la période
 
-- Continuer les essais d'extraction avec ChatGPT sur d'autres produits
-- Tester OpenCV et pytesseract comme plan B pour l'extraction des photos
-- Construire notre base de données à partir des données obtenues
+- Poursuivre les essais de collecte de prix
+- Tester OpenCV et Tesseract pour les photos de reçus
+- Préparer la structure de la base de données
+
+### Travail réalisé
+
+- Mise en place d’un connecteur Apify pour récupérer les produits et les prix de Maxi Côte-des-Neiges
+    - Recherches réparties en trois lots couvrant 31 ingrédients
+    - Ajout de la collecte des promotions alimentaires
+    - Conservation des réponses pour pouvoir les vérifier et les retraiter sans nouvelle collecte
+    - Vérification par Hamza des données Maxi récupérées : les produits, les prix et la succursale sont corrects
+    - Les fichiers finaux des 31 produits et des 196 promotions indiquent maintenant que les données ont été revues et vérifiées
+- Ajout de routes FastAPI pour consulter le catalogue collecté
+- Préparation d’un modèle de données pour les ingrédients, les produits, les prix et les reçus ; la base PostgreSQL n’est pas encore créée
+- Mise en place de l’extraction locale des reçus avec Apple Vision sur Mac et Tesseract + OpenCV pour Windows
+    - Amélioration de la lecture des articles, des quantités et des rabais
+    - Vérification des montants sur quatre reçus Maxi et Metro avec Tesseract + OpenCV
+    - Le 4 octobre, Hamza a vérifié et confirmé les prix extraits de cet échantillon
+
+### Décisions et ajustements
+
+- Utiliser Apify pour les données Maxi
+- Utiliser l’extraction web avec un modèle IA pour Metro et Super C ; cette partie reste à développer
+- Ne plus utiliser épiceries.ca ni poursuivre l’extraction des circulaires PDF comme source de données
+- Conserver les deux méthodes de lecture des reçus : Apple Vision pour Mac et Tesseract + OpenCV pour Windows
+
+### Difficultés rencontrées
+
+- Les recherches Apify ont parfois retourné des produits proches de l’ingrédient demandé. Une sélection a été nécessaire avant de vérifier les produits retenus
+- La lecture du rabais Metro a demandé un modèle Tesseract complémentaire. Apple Vision lit encore ce rabais incorrectement
+- Les essais Tesseract ont été réalisés sur Mac ; le fonctionnement sur un PC Windows et la lecture des reçus Super C restent à vérifier
+- Les reçus restent locaux : leur correction et leur confirmation ne sont pas encore intégrées à l’application ou à la base de données
+
+### Prochaines étapes
+
+- Développer et évaluer la collecte web pour Metro et Super C
+- Reproduire les essais de reçus sur Windows et ajouter un reçu Super C
+- Mettre en place PostgreSQL et commencer la connexion entre le mobile et le serveur
