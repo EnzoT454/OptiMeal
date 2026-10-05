@@ -1,0 +1,943 @@
+{
+  "schema_version": "catalog-review-1.0",
+  "status": "pending_human_review",
+  "note": "Suggestions uniquement. Modifier ce fichier n’approuve pas un prix ni une succursale.",
+  "matches": [
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_32913a634f1325ea1737",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_6c49ab02697d013a7ac0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_396f1b5c9000ba7d7ea5",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8db8d5f2d9863bdacd7e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f9517243479819e29547",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_0dcb02d1cafa70dd0574",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_e5808beae809d0706981",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_0d809759995b7116db4b",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f9d959e122d6c5fcdc6f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_1020b7f13828d89e117a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_1249d1e7dc65080e9e58",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8fc11585f37e9f4b6c36",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_b1785c40dc7ddb22e21b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_6454edc48621e1f23ef3",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8996fe90ac641e60ec7e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_4c17c70a9f96a92580d0",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_ad8cf134109318d64f80",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f6f041f31ec728224dd9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_75193368bfd9ad5f84a1",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_e6e3628670edcd653dde",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_2fb3bc27c80bc5c86e27",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8d002b9e32ac95cf649d",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_27273ad700d7fe0f2de5",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_e03f8486dd8ac461ee67",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_559c3e3b86bd83ac6c50",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_e54dafba2ff400b1ce9e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_1fc36268f64129dc2f37",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_43ad6194882ecb918fd5",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_ffa8fb91c10a407600b3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_aec8dc58174fe0a8143d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_00d165b9b62fe62161b8",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:pickled"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_847b2f8b5e1f75bfe89b",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:butter"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_7be472dd4796744cf003",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a5372802d90340cfc1e5",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_b1310e7f9ff6ee5563e3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c1fb5505bea93120bc9b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f088755f7ccffd4bf3af",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a73f36de68f956a7223e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a84741de418e009aa99c",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_3141f686cdca6490a017",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_cd94ae07c4300e7a2b41",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_16b824ec90073debc23d",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a002eab15cd859b6d9b0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_4e182fcc809671438b74",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c078d0561ca9793ba6b6",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salt"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_36aaa3740e9b8051309f",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_94fc7f3fe230a35c1b89",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_295abd25615f5d0f255b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_7759ad2927d969f1a049",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:butter",
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_4605b6786c121c2da0b4",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_aee0f05fa05ff16d1bbf",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:butter"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_08a8f094caa0638ce83e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a88a303013daca172893",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salt"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_9b0c7f22a3571b48fcf1",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salt"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8f9f942a3a3dffad8681",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_02179436ff8559fe46cb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_43e39bb00ff261aa3f98",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_7505b2c2760219608008",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_dcc0687f7192ca42f2c7",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_fa97b86d7980c8a9fa75",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_46eff8a5fe954c9bd536",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_bdb18056513fd51bfa3b",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_ddd68d2e72648a2ab50a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_849ca95bcd8dfdd4e6f2",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c873850832dddcfe58cb",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_fb39ee42a7ea91a863ab",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_6b0272ff4292cfa2da78",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_ad8cb28462ef0911167f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8d56bc3802a786180437",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f6cc902197cfebdd948e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_bc4ab2fe8ce88a15a70d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_d44744ea58a5e533ea7f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_437e0f094d737996fd55",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_10cda9b66a48a3ac648f",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salt",
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_6f1b455c42fd80033434",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:pickled"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a1ef37788e567246c70f",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_aed0961495e8b380c206",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_2f360b25a80a0e3f43e6",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_b08ea7e89c2379a86442",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_10a911f0f04233c28d98",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_06bfa5e33e622b828bfe",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_989566d573ef9d53f598",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_dccfbfdd8fa957b7b456",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_33453ab5c453100b7c91",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c3e14960d5c45a10d3ab",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_2319753a660ee1e80216",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a812264ffce5cc8790f9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_a812264ffce5cc8790f9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_441cb8e1eaa5b7bfb19a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_5a924574245a982bfb82",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_5a924574245a982bfb82",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_7156a5d65984ccc59eb8",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_53d51f2e92e73982d6d7",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_682940efc44abe11c12d",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c43a483f59ed66efa712",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_955709353fbd315a4392",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_53850ecbc718986f6459",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    }
+  ],
+  "search_rejections": []
+}

@@ -1,0 +1,251 @@
+{
+  "calls_saved": 21,
+  "http_successes": 19,
+  "expected_http_400": 2,
+  "scope": "Small convenience sample; no claim of population accuracy or verified retailer prices.",
+  "findings": [
+    {
+      "file": "butter-category.json",
+      "id": "BZIYUTdLnxtJ",
+      "name": "Lactantia Beurre salé 125 g",
+      "issues": [
+        "unit_price_arithmetic_mismatch",
+        "unit_price_raw_value_conflict"
+      ]
+    },
+    {
+      "file": "carrots-superc.json",
+      "id": "yOeGqbs4BAc2",
+      "name": "Carottes",
+      "issues": [
+        "unit_price_arithmetic_mismatch"
+      ]
+    },
+    {
+      "file": "carrots-superc.json",
+      "id": "J06VTNKhi9te",
+      "name": "Carottes",
+      "issues": [
+        "unit_price_arithmetic_mismatch"
+      ]
+    },
+    {
+      "file": "carrots-superc.json",
+      "id": "f7hIzGsBA6nq",
+      "name": "Carottes miniatures biologiques",
+      "issues": [
+        "unit_price_arithmetic_mismatch",
+        "unit_price_raw_value_conflict"
+      ]
+    },
+    {
+      "file": "detail-butter-category.json",
+      "id": "u067bNgt3njr",
+      "store": "iga",
+      "issues": [
+        "older_than_7_days_proposed_threshold"
+      ],
+      "age_days": 16.9
+    },
+    {
+      "file": "detail-carrots-superc.json",
+      "id": "yOeGqbs4BAc2",
+      "name": "Carottes",
+      "issues": [
+        "unit_price_arithmetic_mismatch"
+      ]
+    },
+    {
+      "file": "detail-carrots-superc.json",
+      "id": "yOeGqbs4BAc2",
+      "store": "superc",
+      "issues": [
+        "older_than_7_days_proposed_threshold"
+      ],
+      "age_days": 37.2
+    },
+    {
+      "file": "detail-carrots-superc.json",
+      "id": "yOeGqbs4BAc2",
+      "issues": [
+        "summary_vs_store_price_conflict"
+      ],
+      "summary_price": 1.98,
+      "store_price": 3.99,
+      "summary_updated": "2026-08-29T13:20:45+00:00",
+      "store_date": "2026-08-08T19:20:44+00:00"
+    },
+    {
+      "file": "detail-milk-metro.json",
+      "id": "50ZHXt26RPS3",
+      "name": "Lait au chocolat avec cajou",
+      "issues": [
+        "unit_price_arithmetic_mismatch",
+        "unit_price_raw_value_conflict",
+        "milk_category_with_mass_needs_review"
+      ]
+    },
+    {
+      "file": "detail-milk-metro.json",
+      "id": "50ZHXt26RPS3",
+      "store": "iga",
+      "issues": [
+        "older_than_7_days_proposed_threshold"
+      ],
+      "age_days": 221.6
+    },
+    {
+      "file": "detail-milk-metro.json",
+      "id": "50ZHXt26RPS3",
+      "store": "metro",
+      "issues": [
+        "older_than_7_days_proposed_threshold"
+      ],
+      "age_days": 37.2
+    },
+    {
+      "file": "detail-rice-maxi.json",
+      "id": "VBE1xju4zXrm",
+      "store": "maxi",
+      "issues": [
+        "older_than_7_days_proposed_threshold"
+      ],
+      "age_days": 16.9
+    },
+    {
+      "file": "history-targeted.json",
+      "issues": [
+        "duplicate_history_rows"
+      ],
+      "duplicates": 2
+    },
+    {
+      "file": "milk-metro.json",
+      "id": "50ZHXt26RPS3",
+      "name": "Lait au chocolat avec cajou",
+      "issues": [
+        "unit_price_arithmetic_mismatch",
+        "unit_price_raw_value_conflict",
+        "milk_category_with_mass_needs_review"
+      ]
+    },
+    {
+      "file": "product-carrots.json",
+      "id": "QemR5BjM1OWD",
+      "name": "Great value pois & carottes",
+      "issues": [
+        "format_unparsed_or_missing"
+      ]
+    },
+    {
+      "file": "product-carrots.json",
+      "id": "QemR5BjM1OWD",
+      "store": "walmart",
+      "issues": [
+        "older_than_7_days_proposed_threshold"
+      ],
+      "age_days": 16.9
+    },
+    {
+      "file": "product-milk.json",
+      "id": "KLT6H8ZfyNP0",
+      "name": "Dove sans aluminium désodorisant pour tout le corps pour femmes avec 14 d'hydratants parfum lait d'avoine et vanille pour une peau douce et confortable",
+      "issues": [
+        "format_unparsed_or_missing"
+      ]
+    },
+    {
+      "file": "product-milk.json",
+      "id": "KLT6H8ZfyNP0",
+      "store": "walmart",
+      "issues": [
+        "older_than_7_days_proposed_threshold"
+      ],
+      "age_days": 16.9
+    },
+    {
+      "file": "search-carrots.json",
+      "id": "QemR5BjM1OWD",
+      "name": "Great value pois & carottes",
+      "issues": [
+        "format_unparsed_or_missing"
+      ]
+    },
+    {
+      "file": "search-carrots.json",
+      "id": "KWBn31xkft9D",
+      "name": "Carottes anciennes à lérable",
+      "issues": [
+        "format_unparsed_or_missing"
+      ]
+    },
+    {
+      "file": "search-milk.json",
+      "id": "KLT6H8ZfyNP0",
+      "name": "Dove sans aluminium désodorisant pour tout le corps pour femmes avec 14 d'hydratants parfum lait d'avoine et vanille pour une peau douce et confortable",
+      "issues": [
+        "format_unparsed_or_missing"
+      ]
+    },
+    {
+      "file": "search-milk.json",
+      "id": "zILrWlJmA6cs",
+      "name": "Pacifica - lingettes déodorantes pour les aisselles au lait de coco et aux huiles essentielles - unisexe - 30 pièces",
+      "issues": [
+        "format_unparsed_or_missing",
+        "unit_price_missing"
+      ]
+    },
+    {
+      "file": "search-page2.json",
+      "id": "527xYkZP0zyi",
+      "name": "Nanak milk cake dessert classique indien au lait riche en saveurs",
+      "issues": [
+        "format_unparsed_or_missing",
+        "unit_price_missing"
+      ]
+    },
+    {
+      "file": "search-page2.json",
+      "id": "ZYUiakPf9m6e",
+      "name": "Boisson de protéine du lait au chocolat lait's go sport",
+      "issues": [
+        "format_unparsed_or_missing",
+        "unit_price_missing"
+      ]
+    },
+    {
+      "file": "search-page2.json",
+      "id": "y1It9piScr3A",
+      "name": "Hashachar produits laitiers à tartiner au chocolat py",
+      "issues": [
+        "mass_volume_mismatch"
+      ]
+    },
+    {
+      "file": "storeproduct-example.json",
+      "id": "KmGS0CjUfXoy",
+      "store": "maxi",
+      "issues": [
+        "older_than_7_days_proposed_threshold"
+      ],
+      "age_days": 16.9
+    },
+    {
+      "file": "storeproduct-example.json",
+      "id": "KmGS0CjUfXoy",
+      "store": "provigo",
+      "issues": [
+        "older_than_7_days_proposed_threshold"
+      ],
+      "age_days": 16.9
+    },
+    {
+      "file": "storeproduct-example.json",
+      "issues": [
+        "duplicate_history_rows"
+      ],
+      "duplicates": 1
+    }
+  ]
+}

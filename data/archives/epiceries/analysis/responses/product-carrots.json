@@ -1,0 +1,61 @@
+{
+  "requested_at": "2026-09-14T23:51:44.225044+00:00",
+  "url": "https://epiceries.ca/api?endpoint=product&id=QemR5BjM1OWD",
+  "status": 200,
+  "elapsed_seconds": 0.119,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:51:44 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=iwyEPdDrrmClEvgiyPlvVkPVWAV1I8X%2FDkPsqJHnhLgaiWev2WXyeiEb6aQXjNTyeDB6VcUbs%2BI296vKgWwDM%2BYdAgytTTzF53tjorYDE6Xf67%2FSBpv%2BkVdgnaVyyp8%3D\"}]}",
+    "CF-RAY": "a3b34d272b25ab28-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "id": "QemR5BjM1OWD",
+      "name": "Great value pois & carottes",
+      "brand": null,
+      "size": null,
+      "price": 1.37,
+      "unitPrice": {
+        "value": 0.34,
+        "unit": "100 ml",
+        "raw": "0.34/100ml"
+      },
+      "store": "walmart",
+      "discounted": false,
+      "category": 29,
+      "image": "https://cdn.epiceries.ca/110712ea-8c0d-42f3-af95-aa201ca7288a.1faf4375d08d093a82a15529248a3c61.jpeg",
+      "link": "https://www.walmart.ca/fr/ip/Great-Value-Pois-Carottes/10275334",
+      "url": "https://epiceries.ca/view?i=QemR5BjM1OWD",
+      "updated": "2026-08-29T13:21:30+00:00",
+      "prices": [
+        {
+          "store": "walmart",
+          "price": 1.37,
+          "discounted": false,
+          "size": null,
+          "unitPrice": {
+            "value": 0.34,
+            "unit": "100 ml",
+            "raw": "0.34/100ml"
+          },
+          "link": "https://www.walmart.ca/fr/ip/Great-Value-Pois-Carottes/10275334",
+          "timestamp": 1787972720,
+          "date": "2026-08-29T03:05:20+00:00"
+        }
+      ]
+    }
+  }
+}

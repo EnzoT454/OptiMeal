@@ -1,0 +1,795 @@
+{
+  "schema_version": "catalog-pilot-1.0",
+  "status": "review_required",
+  "dataset_kind": "real",
+  "evaluated_at": "2026-09-28T21:32:26.618001Z",
+  "target_store": {
+    "id": "maxi_cote_des_neiges",
+    "retailer_id": "maxi",
+    "name": "Maxi Côte-des-Neiges",
+    "address": "6825, chemin de la Côte-des-Neiges, Montréal",
+    "timezone": "America/Toronto",
+    "receipt_store_code": "8661",
+    "retailer_api_store_id": null,
+    "identity_source": "En-tête du reçu fourni data/recu_maxi.jpg ; choix utilisateur",
+    "price_scope_status": "not_verified"
+  },
+  "ingredients": [
+    {
+      "id": "ing_ail_frais",
+      "name": "Ail frais",
+      "category": "vegetables",
+      "aliases": [
+        "ail",
+        "garlic"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sel",
+        "sauce",
+        "beurre",
+        "hache",
+        "haché",
+        "mariné",
+        "marines",
+        "assaisonnement"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_oignon_jaune",
+      "name": "Oignon jaune",
+      "category": "vegetables",
+      "aliases": [
+        "oignon jaune",
+        "oignons jaunes",
+        "yellow onion",
+        "yellow onions"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sauce",
+        "soupe",
+        "frits"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_carotte_fraiche",
+      "name": "Carotte fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "carotte",
+        "carottes",
+        "carrot",
+        "carrots"
+      ],
+      "excluded_terms": [
+        "jus",
+        "soupe",
+        "gateau",
+        "gâteau",
+        "surgelé",
+        "surgelees",
+        "conserve"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_banane_fraiche",
+      "name": "Banane fraîche",
+      "category": "fruits",
+      "aliases": [
+        "banane",
+        "bananes",
+        "banana",
+        "bananas"
+      ],
+      "excluded_terms": [
+        "pain",
+        "yogourt",
+        "smoothie",
+        "chips",
+        "séchées",
+        "sechees",
+        "surgelées",
+        "surgelees"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_poitrine_poulet",
+      "name": "Poitrine de poulet fraîche",
+      "category": "meat",
+      "aliases": [
+        "poitrine",
+        "poitrines",
+        "chicken breast"
+      ],
+      "excluded_terms": [
+        "panée",
+        "panees",
+        "nuggets",
+        "cuit",
+        "cuite",
+        "surgelé",
+        "surgelees"
+      ],
+      "required_any": [
+        "poulet",
+        "chicken"
+      ]
+    },
+    {
+      "id": "ing_lait_2",
+      "name": "Lait de vache 2 %",
+      "category": "dairy",
+      "aliases": [
+        "lait",
+        "milk"
+      ],
+      "excluded_terms": [
+        "chocolat",
+        "amande",
+        "soya",
+        "avoine",
+        "sans lactose",
+        "lactose free"
+      ],
+      "required_any": [
+        "2 %"
+      ]
+    },
+    {
+      "id": "ing_oeuf_gros",
+      "name": "Œufs gros",
+      "category": "eggs",
+      "aliases": [
+        "oeufs",
+        "œufs",
+        "eggs"
+      ],
+      "excluded_terms": [
+        "liquide",
+        "blancs",
+        "chocolat",
+        "cuit",
+        "cuits"
+      ],
+      "required_any": [
+        "gros",
+        "large"
+      ]
+    },
+    {
+      "id": "ing_riz_basmati_blanc",
+      "name": "Riz basmati blanc sec",
+      "category": "pantry",
+      "aliases": [
+        "basmati"
+      ],
+      "excluded_terms": [
+        "brun",
+        "brown",
+        "cuit",
+        "express",
+        "pret",
+        "prêt",
+        "micro",
+        "assaisonné"
+      ],
+      "required_any": [
+        "riz",
+        "rice"
+      ]
+    },
+    {
+      "id": "ing_pois_chiche_conserve",
+      "name": "Pois chiches en conserve",
+      "category": "pantry",
+      "aliases": [
+        "pois chiches",
+        "chickpeas"
+      ],
+      "excluded_terms": [
+        "secs",
+        "sec",
+        "farine",
+        "houmous",
+        "hummus",
+        "rôtis",
+        "rotis"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_huile_olive",
+      "name": "Huile d’olive",
+      "category": "pantry",
+      "aliases": [
+        "huile olive",
+        "huile d olive",
+        "olive oil"
+      ],
+      "excluded_terms": [
+        "melange",
+        "mélange",
+        "aromatisée",
+        "aromatisee",
+        "vaporisateur",
+        "spray"
+      ],
+      "required_any": []
+    }
+  ],
+  "products": [
+    {
+      "id": "candidate_8443690151395b57beef",
+      "external_product_id": "eWPnNYyhjZsf",
+      "identity_status": "source_candidate",
+      "name": "Bulbe d'ail paquet de 3",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1un",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "candidate_3ce0eece9736b1252548",
+      "external_product_id": "OgCpoE1Hayql",
+      "identity_status": "source_candidate",
+      "name": "Lactantia UltraPur Lait 2 % ultrafiltré 1.5 L",
+      "brand": "Lactantia UltraPur",
+      "barcode": null,
+      "format": {
+        "raw": "1.5l",
+        "kind": "fixed",
+        "quantity": "1500.0",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "candidate_5f1e4f72801c545ac58c",
+      "external_product_id": "s1Ci59ruJho8",
+      "identity_status": "source_candidate",
+      "name": "Carottes, sac de 10 lb",
+      "brand": "Délices du Marché",
+      "barcode": null,
+      "format": {
+        "raw": "4.54kg",
+        "kind": "fixed",
+        "quantity": "4540.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    }
+  ],
+  "offers": [
+    {
+      "id": "offer_063e85b729f4461d0bba",
+      "product_id": "candidate_8443690151395b57beef",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "unknown",
+      "amount": "4.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-23T19:41:49Z",
+      "retrieved_at": "2026-09-28T21:32:28.005976Z",
+      "source_url": "https://epiceries.ca/api?endpoint=product&id=eWPnNYyhjZsf",
+      "retailer_url": "https://www.maxi.ca/fr/bulbe-d-ail-paquet-de-3/p/21626133001_EA",
+      "capture_id": "db3cffe8030297f5873e",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "validity_unknown",
+        "branch_unknown",
+        "not_verified",
+        "format_unparsed",
+        "sale_basis_unknown",
+        "target_branch_not_verified"
+      ]
+    },
+    {
+      "id": "offer_69071fde33341820e44e",
+      "product_id": "candidate_3ce0eece9736b1252548",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "unknown",
+      "amount": "6.05",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2025-08-17T04:35:11Z",
+      "retrieved_at": "2026-09-28T21:32:32.026975Z",
+      "source_url": "https://epiceries.ca/api?endpoint=product&id=OgCpoE1Hayql",
+      "retailer_url": "https://www.maxi.ca/fr/ultrap-r-2/p/21239137_EA",
+      "capture_id": "137fbeabc117be1658ec",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "validity_unknown",
+        "branch_unknown",
+        "not_verified",
+        "stale_observation",
+        "sale_basis_unknown",
+        "target_branch_not_verified"
+      ]
+    },
+    {
+      "id": "offer_fb23d7c0e7f5a3b342d9",
+      "product_id": "candidate_5f1e4f72801c545ac58c",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "unknown",
+      "amount": "5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-23T19:41:49Z",
+      "retrieved_at": "2026-09-28T21:33:06.054235Z",
+      "source_url": "https://epiceries.ca/api?endpoint=product&id=s1Ci59ruJho8",
+      "retailer_url": "https://www.maxi.ca/fr/carottes-sac-de-10-lb/p/20600930001_EA",
+      "capture_id": "ddc20af48625d7ee6e8b",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "validity_unknown",
+        "branch_unknown",
+        "not_verified",
+        "sale_basis_unknown",
+        "target_branch_not_verified"
+      ]
+    }
+  ],
+  "matches": [
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "candidate_8443690151395b57beef",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ail",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "candidate_3ce0eece9736b1252548",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lait",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "product_id": "candidate_5f1e4f72801c545ac58c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:carottes",
+        "manual_approval_required"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "ingredient_id": "ing_ail_frais",
+      "candidate_count": 1,
+      "offer_count": 1,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_oignon_jaune",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "candidate_count": 1,
+      "offer_count": 1,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "candidate_count": 1,
+      "offer_count": 1,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_pois_chiche_conserve",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    }
+  ],
+  "collection": {
+    "strategy": "hybrid",
+    "capture_count": 46,
+    "details_attempted": 30,
+    "errors": [
+      {
+        "stage": "product",
+        "id": "P0B5bIKmugZS",
+        "error": "{'status': 502, 'message': 'Réponse fournisseur invalide.'}"
+      }
+    ],
+    "truncations": [
+      "detail_budget_reached",
+      "search_truncated:[('category', 1), ('q', 'carottes')]",
+      "search_truncated:[('category', 1), ('q', 'oignons')]",
+      "search_truncated:[('category', 1)]",
+      "search_truncated:[('category', 16)]",
+      "search_truncated:[('category', 2)]",
+      "search_truncated:[('category', 26), ('q', 'riz basmati')]",
+      "search_truncated:[('category', 26)]",
+      "search_truncated:[('category', 29)]",
+      "search_truncated:[('category', 33)]",
+      "search_truncated:[('category', 7)]",
+      "search_truncated:[('category', 9), ('q', 'oeufs')]",
+      "search_truncated:[('category', 9)]"
+    ],
+    "rejected_search_rows": [
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "Ik3JAa0CSgoO",
+        "name": "Delicious kitchen boisson au lait de coco originale",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "rZUceon1tGiq",
+        "name": "Lactantia PurFiltre Lait 0 % écrémé 1.5 L",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "CenoX3cNgH7M",
+        "name": "Nido lait entier en poudre",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "pXnG81fOtrJ7",
+        "name": "Lait de poule riche et crémeux original",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "QtJBKMezO42R",
+        "name": "Lait de poule",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "OaF6bjq4T3zs",
+        "name": "Lactantia Lait frappé à la vanille 460 ml (bouteille)",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "6q4NHjxwTU7s",
+        "name": "Lactantia Lait frappé au chocolat 460 ml (bouteille)",
+        "reasons": [
+          "excluded_term:chocolat"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "tXWo8Iu2G3PS",
+        "name": "Lactantia PurFiltre Lait 325 % homogénéisé 1.5 L",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "VUbXFHA837ia",
+        "name": "Chagnon Lait de Poule 3.8% entier lait 1 L",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "ZYUiakPf9m6e",
+        "name": "Boisson de protéine du lait au chocolat lait's go sport",
+        "reasons": [
+          "excluded_term:chocolat"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "epUIGz0fNMyZ",
+        "name": "Lait 2% uht m.g. partiellement écrémé au chocolat",
+        "reasons": [
+          "excluded_term:chocolat"
+        ]
+      },
+      {
+        "ingredient_id": "ing_lait_2",
+        "external_product_id": "LJNjhdKuIFWC",
+        "name": "Partiellement écrémé biologique lait au chocolat 2% m.g.",
+        "reasons": [
+          "excluded_term:chocolat"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "tT9GyHCgE5ar",
+        "name": "Lovo Œufs bruns moyen biologiques 12 un",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "DgYG2AE4rWxM",
+        "name": "Gray ridge oeufs blancs moyens",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "9ThENcYK1nk4",
+        "name": "Goldegg gros oeufs blancs de poules en liberte",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "8AXsOKHLVwne",
+        "name": "Great value 12 ufs blancs calibre extra gros",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "H4h1EDACxbuO",
+        "name": "Compliments Balance Liquide Blancs d'oeufs 100% purs 1 kg",
+        "reasons": [
+          "excluded_term:liquide",
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "xD6WJb5tX3uO",
+        "name": "Great value oeufs blancs moyens 30",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "IKXLD3VaSWqx",
+        "name": "Oeufs de Pâques à la crème",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "qiM5ISVwp94t",
+        "name": "Burnbrae Fermes Naturoeuf Blancs d'oeufs liquides 100% purs 500 g",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "SVakNUx08fAL",
+        "name": "C'est Prêt! 2 oeufs bacon Combo déjeuner 1 un",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "tXNyD1iejcFu",
+        "name": "Compliments Équilibre Blancs d'oeufs liquides 500 g",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "OMi87StfgT2b",
+        "name": "Oeufs mimosa Buffet 1 un",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_poitrine_poulet",
+        "external_product_id": "aBD2UrF1xkdE",
+        "name": "Poitrine de dinde style cajun",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_poitrine_poulet",
+        "external_product_id": "2IKkNteSAmDB",
+        "name": "Poitrine de dinde cuite",
+        "reasons": [
+          "excluded_term:cuite"
+        ]
+      },
+      {
+        "ingredient_id": "ing_poitrine_poulet",
+        "external_product_id": "Q5pMbla9fREd",
+        "name": "Poitrine de dinde rôtie au four Menu Bleu, tomate et basilic",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_riz_basmati_blanc",
+        "external_product_id": "S2H0OY4urKzD",
+        "name": "Pti basmati mamra",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "DgYG2AE4rWxM",
+        "name": "Gray ridge oeufs blancs moyens",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "9ThENcYK1nk4",
+        "name": "Goldegg gros oeufs blancs de poules en liberte",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "H4h1EDACxbuO",
+        "name": "Compliments Balance Liquide Blancs d'oeufs 100% purs 1 kg",
+        "reasons": [
+          "excluded_term:liquide",
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "xD6WJb5tX3uO",
+        "name": "Great value oeufs blancs moyens 30",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "IKXLD3VaSWqx",
+        "name": "Oeufs de Pâques à la crème",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "qiM5ISVwp94t",
+        "name": "Burnbrae Fermes Naturoeuf Blancs d'oeufs liquides 100% purs 500 g",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "SVakNUx08fAL",
+        "name": "C'est Prêt! 2 oeufs bacon Combo déjeuner 1 un",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "tXNyD1iejcFu",
+        "name": "Compliments Équilibre Blancs d'oeufs liquides 500 g",
+        "reasons": [
+          "excluded_term:blancs"
+        ]
+      },
+      {
+        "ingredient_id": "ing_oeuf_gros",
+        "external_product_id": "OMi87StfgT2b",
+        "name": "Oeufs mimosa Buffet 1 un",
+        "reasons": [
+          "required_attribute_missing"
+        ]
+      }
+    ],
+    "complete_catalog": false
+  },
+  "warnings": [
+    "source_prices_not_verified_at_target_store",
+    "no_automatic_ingredient_approval",
+    "bounded_sample_not_store_inventory"
+  ]
+}

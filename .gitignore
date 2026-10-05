@@ -178,6 +178,5 @@ cython_debug/
 
 .DS_Store
 
-# Data items et prix
-/data/
-
+# Supports de présentation locaux
+/presentations/

@@ -9,8 +9,7 @@ class Settings:
 
     database_url: str | None = os.getenv('DATABASE_URL')
     jwt_secret: str | None = os.getenv('JWT_SECRET')
-    epiceries_enabled: bool = os.getenv('EPICERIES_ENABLED', 'false').lower() == 'true'
-    epiceries_stale_days: int = int(os.getenv('EPICERIES_STALE_DAYS', '7'))
+    catalog_import_path: str | None = os.getenv('CATALOG_IMPORT_PATH') or None
 
 
 settings = Settings()

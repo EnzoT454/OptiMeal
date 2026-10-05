@@ -1,0 +1,264 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "maxi",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "maxi",
+  "store_id": "8661",
+  "purchase_date": "2026-10-03",
+  "date_order": "ymd",
+  "source": {
+    "filename": "recu-h1.jpg",
+    "sha256": "e436d217c4b717acbfd40c30467773ef32f0b9a5db0dfbdda2b2a13147e087e0",
+    "engine": "tesseract",
+    "elapsed_seconds": 2.586
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": "05700003460",
+      "name": "CLASS SCE ROSEE",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.97",
+      "source_lines": [
+        "/ 05700003460 CLASS SCE ROSEE MRJ 2.97"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": "06038318557",
+      "name": "PC PAPRIKA",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "6.00",
+      "source_lines": [
+        "; 06038318557 PC PAPRIKA MRJ 6.00"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": "06620001994",
+      "name": "CLBH CRCMA MOULU",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "6.49",
+      "source_lines": [
+        "À 06620001994 CLBH CRCMA MOULU MRJ 6.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": "06780000049",
+      "name": "UNICO THON DOLIV",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "5.99",
+      "source_lines": [
+        "06780000049 UNICO THON DOLIV MRJ 5,99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 5,
+      "product_code": "08870201640",
+      "name": "BM CONFITURE",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "6.29",
+      "source_lines": [
+        "08870201640 BM CONFITURE  MRJ 6.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 6,
+      "product_code": "66151100250",
+      "name": "TISSA SARD HUILE",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": "4",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "1.89",
+      "line_total": "7.56",
+      "source_lines": [
+        "3 (4)66151100250 TISSA SARD HUILE MRJ",
+        "À 4 @ $1,89 7,56"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 7,
+      "product_code": "62902541000",
+      "name": "10G0 YOGOURT  MRU",
+      "category_raw": "22-PRODUITS LAITIERS",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "7.29",
+      "source_lines": [
+        "62902541000 10G0 YOGOURT  MRU 7,29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 8,
+      "product_code": "62798733146",
+      "name": "FRAISES 1 L",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.99",
+      "source_lines": [
+        ": 62798733146 FRAISES 1 L MRJ 2,99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 9,
+      "product_code": "94011",
+      "name": "BANANES BIO",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": "1.065",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "2.40",
+      "line_total": "2.56",
+      "source_lines": [
+        "94011 BANANES BIO MRJ",
+        "À 1.065 kg @ $2,40/kg 2.56"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 10,
+      "product_code": "05657351503",
+      "name": "GADOUA PAIN DUO",
+      "category_raw": "34-BOULANGERIE COMMERCIALE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "6.00",
+      "source_lines": [
+        "; 05657351503 GADOUA PAIN DUO MRJ 6,00"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 11,
+      "product_code": "62623327240",
+      "name": "AUTH GALETTE MOR",
+      "category_raw": "34-BOULANGERIE COMMERCIALE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.00",
+      "source_lines": [
+        "oy 62623327240 AUTH GALETTE MOR MRJ 4,00"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 12,
+      "product_code": "87668101932",
+      "name": "SANTOSH NAAN AIL",
+      "category_raw": "34-BOULANGERIE COMMERCIALE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.29",
+      "source_lines": [
+        "ral 87668101932 SANTOSH NAAN AIL MRJ 2,29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [],
+  "totals": {
+    "subtotal": "60.43",
+    "total": "60.43",
+    "taxes": null,
+    "items_sum": "60.43",
+    "calculated_subtotal": "60.43",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "tesseract_ocr_prefix_removed_requires_review",
+    "tesseract_noise_lines_ignored_requires_review",
+    "purchase_date_order_requires_review"
+  ]
+}

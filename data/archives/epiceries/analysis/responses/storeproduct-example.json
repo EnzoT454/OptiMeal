@@ -1,0 +1,1064 @@
+{
+  "requested_at": "2026-09-14T23:52:59.443325+00:00",
+  "url": "https://epiceries.ca/api?endpoint=storeproduct&store=maxi&code=20021564_EA",
+  "status": 200,
+  "elapsed_seconds": 0.338,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:52:59 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=6HXtIhbCkDULpiLamSaqp4nqZn%2FIDsuFLiOtxn5EwJSxkjROJkLMvB0w%2F7uvHIh2Dxco0GPr8rUurslrJMccj3PSlmXi0BTH8ZZ%2FvjZIlU5wdQ3pcMQ9dHPjvZOgK1E%3D\"}]}",
+    "CF-RAY": "a3b34efc3f57f4cc-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "store": "maxi",
+      "code": "20021564_EA",
+      "id": "KmGS0CjUfXoy",
+      "url": "https://epiceries.ca/view?i=KmGS0CjUfXoy",
+      "product": {
+        "id": "KmGS0CjUfXoy",
+        "name": "Lait 2 %",
+        "brand": "QUÉBON",
+        "size": "4l",
+        "price": 8.16,
+        "unitPrice": {
+          "value": 0.2,
+          "unit": "100 ml",
+          "raw": "0.20/100ml"
+        },
+        "store": "maxi",
+        "discounted": false,
+        "category": 7,
+        "image": "https://cdn.epiceries.ca/20021564_fr_front_1200.png",
+        "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+        "url": "https://epiceries.ca/view?i=KmGS0CjUfXoy",
+        "updated": "2026-08-29T13:11:08+00:00",
+        "prices": [
+          {
+            "store": "maxi",
+            "price": 8.16,
+            "discounted": false,
+            "size": "4l",
+            "unitPrice": {
+              "value": 0.2,
+              "unit": "100 ml",
+              "raw": "0.20/100ml"
+            },
+            "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+            "timestamp": 1787972720,
+            "date": "2026-08-29T03:05:20+00:00"
+          },
+          {
+            "store": "provigo",
+            "price": 8.16,
+            "discounted": false,
+            "size": "4l",
+            "unitPrice": {
+              "value": 0.2,
+              "unit": "100 ml",
+              "raw": "0.20/100ml"
+            },
+            "link": "https://www.provigo.ca/fr/lait-2/p/20021564_EA",
+            "timestamp": 1787972720,
+            "date": "2026-08-29T03:05:20+00:00"
+          }
+        ]
+      },
+      "deal": null,
+      "history": [
+        {
+          "store": "maxi",
+          "price": 7.87,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/lait-2/p/20021564_EA",
+          "timestamp": 1729601136,
+          "date": "2024-10-22T12:45:36+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.87,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/lait-2/p/20021564_EA",
+          "timestamp": 1730418521,
+          "date": "2024-10-31T23:48:41+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.87,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/lait-2/p/20021564_EA",
+          "timestamp": 1731524195,
+          "date": "2024-11-13T18:56:35+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.87,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1732484840,
+          "date": "2024-11-24T21:47:20+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.87,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1732813200,
+          "date": "2024-11-28T17:00:00+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.87,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1733717749,
+          "date": "2024-12-09T04:15:49+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.87,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1735352249,
+          "date": "2024-12-28T02:17:29+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.87,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1735797623,
+          "date": "2025-01-02T06:00:23+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1739389119,
+          "date": "2025-02-12T19:38:39+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1740852454,
+          "date": "2025-03-01T18:07:34+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1741490083,
+          "date": "2025-03-09T03:14:43+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1741842031,
+          "date": "2025-03-13T05:00:31+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1742446839,
+          "date": "2025-03-20T05:00:39+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1743051635,
+          "date": "2025-03-27T05:00:35+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1743656702,
+          "date": "2025-04-03T05:05:02+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1744275593,
+          "date": "2025-04-10T08:59:53+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1744866040,
+          "date": "2025-04-17T05:00:40+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1745470836,
+          "date": "2025-04-24T05:00:36+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1746075636,
+          "date": "2025-05-01T05:00:36+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1748459231,
+          "date": "2025-05-28T19:07:11+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1750236430,
+          "date": "2025-06-18T08:47:10+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1750914040,
+          "date": "2025-06-26T05:00:40+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1751742256,
+          "date": "2025-07-05T19:04:16+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1752123628,
+          "date": "2025-07-10T05:00:28+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1752850440,
+          "date": "2025-07-18T14:54:00+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1753333235,
+          "date": "2025-07-24T05:00:35+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1753941262,
+          "date": "2025-07-31T05:54:22+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1755405276,
+          "date": "2025-08-17T04:34:36+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1757525661,
+          "date": "2025-09-10T17:34:21+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1758628408,
+          "date": "2025-09-23T11:53:28+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1759303212,
+          "date": "2025-10-01T07:20:12+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1759441357,
+          "date": "2025-10-02T21:42:37+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1760118391,
+          "date": "2025-10-10T17:46:31+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1760598031,
+          "date": "2025-10-16T07:00:31+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1761772123,
+          "date": "2025-10-29T21:08:43+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1762367896,
+          "date": "2025-11-05T18:38:16+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1763022436,
+          "date": "2025-11-13T08:27:16+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1763683443,
+          "date": "2025-11-21T00:04:03+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1764230426,
+          "date": "2025-11-27T08:00:26+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1765915784,
+          "date": "2025-12-16T20:09:44+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1766649633,
+          "date": "2025-12-25T08:00:33+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1767485644,
+          "date": "2026-01-04T00:14:04+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1768116147,
+          "date": "2026-01-11T07:22:27+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1768464020,
+          "date": "2026-01-15T08:00:20+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1769075930,
+          "date": "2026-01-22T09:58:50+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 7.97,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1769487068,
+          "date": "2026-01-27T04:11:08+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1770279079,
+          "date": "2026-02-05T08:11:19+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1770887840,
+          "date": "2026-02-12T09:17:20+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1771488026,
+          "date": "2026-02-19T08:00:26+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1772099686,
+          "date": "2026-02-26T09:54:46+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1773307120,
+          "date": "2026-03-12T09:18:40+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1774251469,
+          "date": "2026-03-23T07:37:49+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1774508437,
+          "date": "2026-03-26T07:00:37+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1775113230,
+          "date": "2026-04-02T07:00:30+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1775718034,
+          "date": "2026-04-09T07:00:34+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1776322813,
+          "date": "2026-04-16T07:00:13+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1776927614,
+          "date": "2026-04-23T07:00:14+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1777533608,
+          "date": "2026-04-30T07:20:08+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1778561042,
+          "date": "2026-05-12T04:44:02+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1778561042,
+          "date": "2026-05-12T04:44:02+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1779347084,
+          "date": "2026-05-21T07:04:44+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1780490241,
+          "date": "2026-06-03T12:37:21+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1780704164,
+          "date": "2026-06-06T00:02:44+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1783222142,
+          "date": "2026-07-05T03:29:02+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1783707071,
+          "date": "2026-07-10T18:11:11+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1784185239,
+          "date": "2026-07-16T07:00:39+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1784790045,
+          "date": "2026-07-23T07:00:45+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1785395237,
+          "date": "2026-07-30T07:07:17+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1786219047,
+          "date": "2026-08-08T19:57:27+00:00"
+        },
+        {
+          "store": "maxi",
+          "price": 8.16,
+          "discounted": false,
+          "size": "4l",
+          "unitPrice": {
+            "value": 0.2,
+            "unit": "100 ml",
+            "raw": "0.20/100ml"
+          },
+          "link": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+          "timestamp": 1787972720,
+          "date": "2026-08-29T03:05:20+00:00"
+        }
+      ]
+    }
+  }
+}

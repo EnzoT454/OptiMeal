@@ -1,0 +1,6237 @@
+{
+  "schema_version": "catalog-pilot-1.0",
+  "status": "review_required",
+  "dataset_kind": "real",
+  "evaluated_at": "2026-09-29T14:38:37.486158Z",
+  "target_store": {
+    "id": "maxi_cote_des_neiges",
+    "retailer_id": "maxi",
+    "name": "Maxi Côte-des-Neiges",
+    "address": "6825, chemin de la Côte-des-Neiges, Montréal",
+    "timezone": "America/Toronto",
+    "receipt_store_code": "8661",
+    "retailer_api_store_id": null,
+    "identity_source": "En-tête du reçu fourni data/recu_maxi.jpg ; choix utilisateur",
+    "price_scope_status": "not_verified"
+  },
+  "ingredients": [
+    {
+      "id": "ing_ail_frais",
+      "name": "Ail frais",
+      "category": "vegetables",
+      "aliases": [
+        "ail",
+        "garlic"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sel",
+        "sauce",
+        "beurre",
+        "hache",
+        "haché",
+        "mariné",
+        "marines",
+        "assaisonnement",
+        "powder",
+        "salt",
+        "butter",
+        "minced",
+        "pickled",
+        "seasoning"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_oignon_jaune",
+      "name": "Oignon jaune",
+      "category": "vegetables",
+      "aliases": [
+        "oignon jaune",
+        "oignons jaunes",
+        "yellow onion",
+        "yellow onions"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sauce",
+        "soupe",
+        "frits",
+        "powder",
+        "soup",
+        "fried"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_carotte_fraiche",
+      "name": "Carotte fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "carotte",
+        "carottes",
+        "carrot",
+        "carrots"
+      ],
+      "excluded_terms": [
+        "jus",
+        "soupe",
+        "gateau",
+        "gâteau",
+        "surgelé",
+        "surgelees",
+        "conserve",
+        "mélange",
+        "melange",
+        "érable",
+        "erable",
+        "juice",
+        "soup",
+        "cake",
+        "frozen",
+        "canned",
+        "mix",
+        "maple"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_banane_fraiche",
+      "name": "Banane fraîche",
+      "category": "fruits",
+      "aliases": [
+        "banane",
+        "bananes",
+        "banana",
+        "bananas"
+      ],
+      "excluded_terms": [
+        "pain",
+        "yogourt",
+        "smoothie",
+        "chips",
+        "séchées",
+        "sechees",
+        "surgelées",
+        "surgelees",
+        "collations",
+        "mélange",
+        "melange",
+        "plantain",
+        "plantin",
+        "compote",
+        "bread",
+        "yogurt",
+        "dried",
+        "frozen",
+        "snack",
+        "mix",
+        "puree"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_poitrine_poulet",
+      "name": "Poitrine de poulet fraîche",
+      "category": "meat",
+      "aliases": [
+        "poitrine",
+        "poitrines",
+        "chicken breast"
+      ],
+      "excluded_terms": [
+        "panée",
+        "panees",
+        "nuggets",
+        "cuit",
+        "cuite",
+        "surgelé",
+        "surgelees",
+        "assaisonné",
+        "assaisonne",
+        "farcie",
+        "miel",
+        "al pastor",
+        "breaded",
+        "cooked",
+        "frozen",
+        "seasoned",
+        "stuffed",
+        "honey"
+      ],
+      "required_any": [
+        "poulet",
+        "chicken"
+      ]
+    },
+    {
+      "id": "ing_lait_2",
+      "name": "Lait de vache 2 %",
+      "category": "dairy",
+      "aliases": [
+        "lait",
+        "milk"
+      ],
+      "excluded_terms": [
+        "chocolat",
+        "amande",
+        "soya",
+        "avoine",
+        "sans lactose",
+        "lactose free",
+        "chèvre",
+        "chevre",
+        "poule",
+        "coco",
+        "chocolate",
+        "almond",
+        "soy",
+        "oat",
+        "goat",
+        "eggnog",
+        "coconut"
+      ],
+      "required_any": [
+        "2 %"
+      ]
+    },
+    {
+      "id": "ing_oeuf_gros",
+      "name": "Œufs gros",
+      "category": "eggs",
+      "aliases": [
+        "oeufs",
+        "œufs",
+        "eggs"
+      ],
+      "excluded_terms": [
+        "liquide",
+        "chocolat",
+        "cuit",
+        "cuits",
+        "blancs d oeufs",
+        "extra gros",
+        "liquid",
+        "chocolate",
+        "cooked",
+        "egg whites",
+        "extra large"
+      ],
+      "required_any": [
+        "gros",
+        "large"
+      ]
+    },
+    {
+      "id": "ing_riz_basmati_blanc",
+      "name": "Riz basmati blanc sec",
+      "category": "pantry",
+      "aliases": [
+        "basmati"
+      ],
+      "excluded_terms": [
+        "brun",
+        "brown",
+        "cuit",
+        "express",
+        "pret",
+        "prêt",
+        "micro",
+        "assaisonné",
+        "champignons",
+        "citron",
+        "piment",
+        "grains entiers",
+        "cooked",
+        "ready",
+        "seasoned",
+        "mushroom",
+        "lemon",
+        "whole grain"
+      ],
+      "required_any": [
+        "riz",
+        "rice"
+      ]
+    },
+    {
+      "id": "ing_pois_chiche_conserve",
+      "name": "Pois chiches en conserve",
+      "category": "pantry",
+      "aliases": [
+        "pois chiches",
+        "chickpeas"
+      ],
+      "excluded_terms": [
+        "secs",
+        "sec",
+        "farine",
+        "houmous",
+        "hummus",
+        "rôtis",
+        "rotis",
+        "dry",
+        "dried",
+        "flour",
+        "roasted"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_huile_olive",
+      "name": "Huile d’olive",
+      "category": "pantry",
+      "aliases": [
+        "huile olive",
+        "huile d olive",
+        "olive oil"
+      ],
+      "excluded_terms": [
+        "melange",
+        "mélange",
+        "aromatisée",
+        "aromatisee",
+        "vaporisateur",
+        "spray",
+        "blend",
+        "flavoured",
+        "flavored"
+      ],
+      "required_any": []
+    }
+  ],
+  "products": [
+    {
+      "id": "apify_product_32913a634f1325ea1737",
+      "external_product_id": "20180764_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Powder",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "165g",
+        "kind": "fixed",
+        "quantity": "165",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_6c49ab02697d013a7ac0",
+      "external_product_id": "20135581001_KG",
+      "identity_status": "source_candidate",
+      "name": "Colossal Fresh Garlic",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "0.1kg",
+        "kind": "variable_weight",
+        "quantity": null,
+        "unit": null,
+        "package_count": null,
+        "warnings": [
+          "provider_weight_may_be_estimated"
+        ]
+      }
+    },
+    {
+      "id": "apify_product_396f1b5c9000ba7d7ea5",
+      "external_product_id": "20309777002_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Plus, Gluten-Free One Step Seasoning Signature Blends",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "141g",
+        "kind": "fixed",
+        "quantity": "141",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_8db8d5f2d9863bdacd7e",
+      "external_product_id": "20866924007_EA",
+      "identity_status": "source_candidate",
+      "name": "Herb & Garlic Cream Cheese Product",
+      "brand": "Philadelphia",
+      "barcode": null,
+      "format": {
+        "raw": "227g",
+        "kind": "fixed",
+        "quantity": "227",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_f9517243479819e29547",
+      "external_product_id": "21004355001_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Bulbs, 3-count",
+      "brand": "Rooster",
+      "barcode": null,
+      "format": {
+        "raw": "90g",
+        "kind": "fixed",
+        "quantity": "90",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_0dcb02d1cafa70dd0574",
+      "external_product_id": "21518017_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Aioli, Mayonnaise Type Dressing Garlic Aioli",
+      "brand": "Hellmann's",
+      "barcode": null,
+      "format": {
+        "raw": "340ml",
+        "kind": "fixed",
+        "quantity": "340",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_e5808beae809d0706981",
+      "external_product_id": "20123251_EA",
+      "identity_status": "source_candidate",
+      "name": "Chopped Garlic",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "250g",
+        "kind": "fixed",
+        "quantity": "250",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_0d809759995b7116db4b",
+      "external_product_id": "20309777001_EA",
+      "identity_status": "source_candidate",
+      "name": "Roasted Garlic & Peppers, Gluten-Free One Step Seasoning Signature Blends",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "144g",
+        "kind": "fixed",
+        "quantity": "144",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_f9d959e122d6c5fcdc6f",
+      "external_product_id": "20717130001_EA",
+      "identity_status": "source_candidate",
+      "name": "Organic Garlic",
+      "brand": "PC Organics",
+      "barcode": null,
+      "format": {
+        "raw": "115g",
+        "kind": "fixed",
+        "quantity": "115",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_1020b7f13828d89e117a",
+      "external_product_id": "21686231_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Mayonnaise Style Sauce",
+      "brand": "Heinz",
+      "barcode": null,
+      "format": {
+        "raw": "340ml",
+        "kind": "fixed",
+        "quantity": "340",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_1249d1e7dc65080e9e58",
+      "external_product_id": "21238843001_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Bulbs",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1kg",
+        "kind": "fixed",
+        "quantity": "1000",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a5973aa339009e8f420b",
+      "external_product_id": "20177555_EA",
+      "identity_status": "source_candidate",
+      "name": "Celery Salt",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "190g",
+        "kind": "fixed",
+        "quantity": "190",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_8fc11585f37e9f4b6c36",
+      "external_product_id": "21013899_EA",
+      "identity_status": "source_candidate",
+      "name": "Chopped Garlic",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "1kg",
+        "kind": "fixed",
+        "quantity": "1000",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_de44545c4ce659027e2a",
+      "external_product_id": "20003932_EA",
+      "identity_status": "source_candidate",
+      "name": "Bay Leaves",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "13g",
+        "kind": "fixed",
+        "quantity": "13",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_b1785c40dc7ddb22e21b",
+      "external_product_id": "20636099_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic, Peeled",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "250g",
+        "kind": "fixed",
+        "quantity": "250",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_6454edc48621e1f23ef3",
+      "external_product_id": "20142463_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic, Minced",
+      "brand": "Derlea",
+      "barcode": null,
+      "format": {
+        "raw": "250g",
+        "kind": "fixed",
+        "quantity": "250",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_8996fe90ac641e60ec7e",
+      "external_product_id": "20617758_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Powder",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "150g",
+        "kind": "fixed",
+        "quantity": "150",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_4c17c70a9f96a92580d0",
+      "external_product_id": "20004861_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic, Minced",
+      "brand": "Derlea",
+      "barcode": null,
+      "format": {
+        "raw": "1kg",
+        "kind": "fixed",
+        "quantity": "1000",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_ad8cf134109318d64f80",
+      "external_product_id": "20041579_EA",
+      "identity_status": "source_candidate",
+      "name": "Ready Bake Garlic Toast Texas-Style Bread",
+      "brand": "Furlani",
+      "barcode": null,
+      "format": {
+        "raw": "40g",
+        "kind": "fixed",
+        "quantity": "40",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_f6f041f31ec728224dd9",
+      "external_product_id": "20180051_EA",
+      "identity_status": "source_candidate",
+      "name": "Heirloom Ontario Garlic",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "115g",
+        "kind": "fixed",
+        "quantity": "115",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_75193368bfd9ad5f84a1",
+      "external_product_id": "20074770_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic, Minced",
+      "brand": "Derlea",
+      "barcode": null,
+      "format": {
+        "raw": "125g",
+        "kind": "fixed",
+        "quantity": "125",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_e6e3628670edcd653dde",
+      "external_product_id": "20110312_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic, Puree",
+      "brand": "Derlea",
+      "barcode": null,
+      "format": {
+        "raw": "125g",
+        "kind": "fixed",
+        "quantity": "125",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_2fb3bc27c80bc5c86e27",
+      "external_product_id": "21361140_EA",
+      "identity_status": "source_candidate",
+      "name": "Ready to Bake Garlic Toast",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "638g",
+        "kind": "fixed",
+        "quantity": "638",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_8d002b9e32ac95cf649d",
+      "external_product_id": "20955533_EA",
+      "identity_status": "source_candidate",
+      "name": "Organic Garlic Powder",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "57g",
+        "kind": "fixed",
+        "quantity": "57",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_27273ad700d7fe0f2de5",
+      "external_product_id": "20097765_EA",
+      "identity_status": "source_candidate",
+      "name": "Roasted Garlic Puree",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "125g",
+        "kind": "fixed",
+        "quantity": "125",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_e03f8486dd8ac461ee67",
+      "external_product_id": "21552151_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Bread",
+      "brand": "D'Italiano",
+      "barcode": null,
+      "format": {
+        "raw": "325g",
+        "kind": "fixed",
+        "quantity": "325",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_559c3e3b86bd83ac6c50",
+      "external_product_id": "21088388_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Paste",
+      "brand": "Suraj",
+      "barcode": null,
+      "format": {
+        "raw": "750g",
+        "kind": "fixed",
+        "quantity": "750",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_e54dafba2ff400b1ce9e",
+      "external_product_id": "21299517001_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic & Herbs",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_1fc36268f64129dc2f37",
+      "external_product_id": "21020061_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Bread",
+      "brand": "Ready Bake",
+      "barcode": null,
+      "format": {
+        "raw": "330g",
+        "kind": "fixed",
+        "quantity": "330",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_43ad6194882ecb918fd5",
+      "external_product_id": "20291572_EA",
+      "identity_status": "source_candidate",
+      "name": "Ready Bake Garlic Parmesan Toast Texas-Style Bread",
+      "brand": "Furlani",
+      "barcode": null,
+      "format": {
+        "raw": "40g",
+        "kind": "fixed",
+        "quantity": "40",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_ffa8fb91c10a407600b3",
+      "external_product_id": "21594272_EA",
+      "identity_status": "source_candidate",
+      "name": "Ready to Bake Garlic Bread",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "325g",
+        "kind": "fixed",
+        "quantity": "325",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_aec8dc58174fe0a8143d",
+      "external_product_id": "21626133001_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Bulb, 3-Pack",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_00d165b9b62fe62161b8",
+      "external_product_id": "20863268_EA",
+      "identity_status": "source_candidate",
+      "name": "Hot Pickled Garlic",
+      "brand": "Sardo",
+      "barcode": null,
+      "format": {
+        "raw": "375ml",
+        "kind": "fixed",
+        "quantity": "375",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_847b2f8b5e1f75bfe89b",
+      "external_product_id": "20106744_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic & Provencal Herb Butter",
+      "brand": "Lactantia",
+      "barcode": null,
+      "format": {
+        "raw": "125g",
+        "kind": "fixed",
+        "quantity": "125",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_7be472dd4796744cf003",
+      "external_product_id": "20618365_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Flakes",
+      "brand": "Suraj",
+      "barcode": null,
+      "format": {
+        "raw": "200g",
+        "kind": "fixed",
+        "quantity": "200",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a5372802d90340cfc1e5",
+      "external_product_id": "21732733_EA",
+      "identity_status": "source_candidate",
+      "name": "Toum Squeeze and Drizzle Garlic Spread",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "255ml",
+        "kind": "fixed",
+        "quantity": "255",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_b1310e7f9ff6ee5563e3",
+      "external_product_id": "21552105_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Toast, Bake At Home, 8 Slices",
+      "brand": "D'Italiano",
+      "barcode": null,
+      "format": {
+        "raw": "325g",
+        "kind": "fixed",
+        "quantity": "325",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c1fb5505bea93120bc9b",
+      "external_product_id": "21088480_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic & Ginger Paste",
+      "brand": "Suraj",
+      "barcode": null,
+      "format": {
+        "raw": "750g",
+        "kind": "fixed",
+        "quantity": "750",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_f088755f7ccffd4bf3af",
+      "external_product_id": "20611516_EA",
+      "identity_status": "source_candidate",
+      "name": "Pearl Solo Garlic",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "250g",
+        "kind": "fixed",
+        "quantity": "250",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a73f36de68f956a7223e",
+      "external_product_id": "21209151_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Powder",
+      "brand": "PC Organics",
+      "barcode": null,
+      "format": {
+        "raw": "64g",
+        "kind": "fixed",
+        "quantity": "64",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a84741de418e009aa99c",
+      "external_product_id": "21416946_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Powder Jar",
+      "brand": "Quality",
+      "barcode": null,
+      "format": {
+        "raw": "400g",
+        "kind": "fixed",
+        "quantity": "400",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_3141f686cdca6490a017",
+      "external_product_id": "20320456001_EA",
+      "identity_status": "source_candidate",
+      "name": "Roasted Garlic Mayo Sandwich Spread",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "300ml",
+        "kind": "fixed",
+        "quantity": "300",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_cd94ae07c4300e7a2b41",
+      "external_product_id": "21164021_EA",
+      "identity_status": "source_candidate",
+      "name": "Giuseppe Garlic Fingers",
+      "brand": "Dr Oetker",
+      "barcode": null,
+      "format": {
+        "raw": "317g",
+        "kind": "fixed",
+        "quantity": "317",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_16b824ec90073debc23d",
+      "external_product_id": "21116905_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Powder",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "67g",
+        "kind": "fixed",
+        "quantity": "67",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a002eab15cd859b6d9b0",
+      "external_product_id": "21669502_EA",
+      "identity_status": "source_candidate",
+      "name": "Cheesy Garlic Fingers",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "295g",
+        "kind": "fixed",
+        "quantity": "295",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_4e182fcc809671438b74",
+      "external_product_id": "21691814_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic in Oil",
+      "brand": "National",
+      "barcode": null,
+      "format": {
+        "raw": "370g",
+        "kind": "fixed",
+        "quantity": "370",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c078d0561ca9793ba6b6",
+      "external_product_id": "20618040_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Salt",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "250g",
+        "kind": "fixed",
+        "quantity": "250",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_36aaa3740e9b8051309f",
+      "external_product_id": "21379256_EA",
+      "identity_status": "source_candidate",
+      "name": "Black Garlic Seasoning Blend",
+      "brand": "McCormicks",
+      "barcode": null,
+      "format": {
+        "raw": "62g",
+        "kind": "fixed",
+        "quantity": "62",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_94fc7f3fe230a35c1b89",
+      "external_product_id": "21362401_EA",
+      "identity_status": "source_candidate",
+      "name": "Roasted Garlic Seasoning Tube ",
+      "brand": "Trudeau",
+      "barcode": null,
+      "format": {
+        "raw": "115g",
+        "kind": "fixed",
+        "quantity": "115",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_295abd25615f5d0f255b",
+      "external_product_id": "20343319_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Naan Flatbreads",
+      "brand": "Suraj",
+      "barcode": null,
+      "format": {
+        "raw": "10ea",
+        "kind": "fixed",
+        "quantity": "10",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_7759ad2927d969f1a049",
+      "external_product_id": "21717457_EA",
+      "identity_status": "source_candidate",
+      "name": "La Grille Garlic Butter Flavoured Seasoning",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "190g",
+        "kind": "fixed",
+        "quantity": "190",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_4605b6786c121c2da0b4",
+      "external_product_id": "20325609001_EA",
+      "identity_status": "source_candidate",
+      "name": "Alfredo & Roasted Garlic Pasta Sauce",
+      "brand": "Classico",
+      "barcode": null,
+      "format": {
+        "raw": "410ml",
+        "kind": "fixed",
+        "quantity": "410",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_aee0f05fa05ff16d1bbf",
+      "external_product_id": "20796248001_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic and Butter Flavour Sourdough Style Croutons",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "140g",
+        "kind": "fixed",
+        "quantity": "140",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_08a8f094caa0638ce83e",
+      "external_product_id": "21669349_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic and Cheese Trio Focaccia",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "456g",
+        "kind": "fixed",
+        "quantity": "456",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a88a303013daca172893",
+      "external_product_id": "20181401_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Salt Club Size",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "1.05kg",
+        "kind": "fixed",
+        "quantity": "1050.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_9b0c7f22a3571b48fcf1",
+      "external_product_id": "20183341001_EA",
+      "identity_status": "source_candidate",
+      "name": "Salt Garlic",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "220g",
+        "kind": "fixed",
+        "quantity": "220",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_8f9f942a3a3dffad8681",
+      "external_product_id": "21529839_EA",
+      "identity_status": "source_candidate",
+      "name": "Gourmet Garlic Press",
+      "brand": "Kitchen Aid",
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_02179436ff8559fe46cb",
+      "external_product_id": "21594313_EA",
+      "identity_status": "source_candidate",
+      "name": "Ready to Bake Sliced Garlic Toast",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "325g",
+        "kind": "fixed",
+        "quantity": "325",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_43e39bb00ff261aa3f98",
+      "external_product_id": "20321787004_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Paste",
+      "brand": "AKIS",
+      "barcode": null,
+      "format": {
+        "raw": "250ml",
+        "kind": "fixed",
+        "quantity": "250",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_7505b2c2760219608008",
+      "external_product_id": "20116794_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic & Fine Herbs Spreadable Cheese",
+      "brand": "Boursin",
+      "barcode": null,
+      "format": {
+        "raw": "150g",
+        "kind": "fixed",
+        "quantity": "150",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_dcc0687f7192ca42f2c7",
+      "external_product_id": "21379274_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Powder",
+      "brand": "McCormicks",
+      "barcode": null,
+      "format": {
+        "raw": "54g",
+        "kind": "fixed",
+        "quantity": "54",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_fa97b86d7980c8a9fa75",
+      "external_product_id": "21734387_EA",
+      "identity_status": "source_candidate",
+      "name": "Roasted Garlic Pasta Sauce",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "600ml",
+        "kind": "fixed",
+        "quantity": "600",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_46eff8a5fe954c9bd536",
+      "external_product_id": "21345420_EA",
+      "identity_status": "source_candidate",
+      "name": "Zinc Alloy/Ss Garlic Press",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_bdb18056513fd51bfa3b",
+      "external_product_id": "20627619003_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic BBQ Sauce",
+      "brand": "Kraft",
+      "barcode": null,
+      "format": {
+        "raw": "455ml",
+        "kind": "fixed",
+        "quantity": "455",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_ddd68d2e72648a2ab50a",
+      "external_product_id": "21510642_EA",
+      "identity_status": "source_candidate",
+      "name": "Cuisine Garlic & Fine Herbs Cream Sauce",
+      "brand": "Boursin",
+      "barcode": null,
+      "format": {
+        "raw": "220g",
+        "kind": "fixed",
+        "quantity": "220",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_849ca95bcd8dfdd4e6f2",
+      "external_product_id": "21756063_EA",
+      "identity_status": "source_candidate",
+      "name": "Condensed Soup Garlic Parmesan With Herbs",
+      "brand": "Campbell's",
+      "barcode": null,
+      "format": {
+        "raw": "284ml",
+        "kind": "fixed",
+        "quantity": "284",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c873850832dddcfe58cb",
+      "external_product_id": "21686274_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Parmesan Mayonnaise Style Sauce",
+      "brand": "Heinz",
+      "barcode": null,
+      "format": {
+        "raw": "340ml",
+        "kind": "fixed",
+        "quantity": "340",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_fb39ee42a7ea91a863ab",
+      "external_product_id": "21056545_EA",
+      "identity_status": "source_candidate",
+      "name": "Kosher Crushed Garlic Cubes",
+      "brand": "Gefen",
+      "barcode": null,
+      "format": {
+        "raw": "71g",
+        "kind": "fixed",
+        "quantity": "71",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_6b0272ff4292cfa2da78",
+      "external_product_id": "21716516_EA",
+      "identity_status": "source_candidate",
+      "name": "Umami Topping Crunchy Garlic With Chili Oil Mild",
+      "brand": "S&B",
+      "barcode": null,
+      "format": {
+        "raw": "110g",
+        "kind": "fixed",
+        "quantity": "110",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_ad8cb28462ef0911167f",
+      "external_product_id": "21447372_EA",
+      "identity_status": "source_candidate",
+      "name": "Ginger Garlic Paste Ground Ginger & Garlic",
+      "brand": "Shan",
+      "barcode": null,
+      "format": {
+        "raw": "310g",
+        "kind": "fixed",
+        "quantity": "310",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_8d56bc3802a786180437",
+      "external_product_id": "20417211_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic, Pepper & Herbs",
+      "brand": "Cool Runnings",
+      "barcode": null,
+      "format": {
+        "raw": "250g",
+        "kind": "fixed",
+        "quantity": "250",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_f6cc902197cfebdd948e",
+      "external_product_id": "20323473001_EA",
+      "identity_status": "source_candidate",
+      "name": "Honey Garlic Sauce",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "350ml",
+        "kind": "fixed",
+        "quantity": "350",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_bc4ab2fe8ce88a15a70d",
+      "external_product_id": "21029472_EA",
+      "identity_status": "source_candidate",
+      "name": "Granulated Garlic",
+      "brand": "Ta'am Vareach",
+      "barcode": null,
+      "format": {
+        "raw": "120g",
+        "kind": "fixed",
+        "quantity": "120",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_d44744ea58a5e533ea7f",
+      "external_product_id": "21688923_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Press, Almond Cream",
+      "brand": "Kitchen Aid",
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_437e0f094d737996fd55",
+      "external_product_id": "20866929001_EA",
+      "identity_status": "source_candidate",
+      "name": "Herb & Garlic Cream Cheese Product",
+      "brand": "Philadelphia",
+      "barcode": null,
+      "format": {
+        "raw": "340g",
+        "kind": "fixed",
+        "quantity": "340",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_10cda9b66a48a3ac648f",
+      "external_product_id": "20765285_EA",
+      "identity_status": "source_candidate",
+      "name": "One Step Seasoning, Garlic And Herb, Gluten-Free, Salt-Free",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "142g",
+        "kind": "fixed",
+        "quantity": "142",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_6f1b455c42fd80033434",
+      "external_product_id": "20127705_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic, Pickled",
+      "brand": "Clic",
+      "barcode": null,
+      "format": {
+        "raw": "600ml",
+        "kind": "fixed",
+        "quantity": "600",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_4c24207aa8f8104ae251",
+      "external_product_id": "20307509001_EA",
+      "identity_status": "source_candidate",
+      "name": "Basil Pesto",
+      "brand": "Classico",
+      "barcode": null,
+      "format": {
+        "raw": "218ml",
+        "kind": "fixed",
+        "quantity": "218",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a1ef37788e567246c70f",
+      "external_product_id": "20021457_EA",
+      "identity_status": "source_candidate",
+      "name": "Minced Garlic     ",
+      "brand": "Dion",
+      "barcode": null,
+      "format": {
+        "raw": "55g",
+        "kind": "fixed",
+        "quantity": "55",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_aed0961495e8b380c206",
+      "external_product_id": "21213660_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Press",
+      "brand": "Everyday Essentials",
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_2f360b25a80a0e3f43e6",
+      "external_product_id": "21190093_EA",
+      "identity_status": "source_candidate",
+      "name": "Soft Grip Garlic Press",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_b08ea7e89c2379a86442",
+      "external_product_id": "21179916_EA",
+      "identity_status": "source_candidate",
+      "name": "Sw Garlic Press    ",
+      "brand": "Oxo",
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_10a911f0f04233c28d98",
+      "external_product_id": "21050380_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Naan Flatbreads",
+      "brand": "Suraj",
+      "barcode": null,
+      "format": {
+        "raw": "500g",
+        "kind": "fixed",
+        "quantity": "500",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_344ee648255a98fa63d7",
+      "external_product_id": "20139141001_EA",
+      "identity_status": "source_candidate",
+      "name": "Italian Parsley",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_06bfa5e33e622b828bfe",
+      "external_product_id": "20772229_EA",
+      "identity_status": "source_candidate",
+      "name": "Minced Garlic",
+      "brand": "Prima",
+      "barcode": null,
+      "format": {
+        "raw": "85g",
+        "kind": "fixed",
+        "quantity": "85",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_989566d573ef9d53f598",
+      "external_product_id": "20318301002_EA",
+      "identity_status": "source_candidate",
+      "name": "Pasta Seasoning Roasted Garlic & Herbs no artificial flavours ",
+      "brand": "Knorr",
+      "barcode": null,
+      "format": {
+        "raw": "22g",
+        "kind": "fixed",
+        "quantity": "22",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_dccfbfdd8fa957b7b456",
+      "external_product_id": "20309693001_EA",
+      "identity_status": "source_candidate",
+      "name": "Medium Garlic Marinade",
+      "brand": "VH",
+      "barcode": null,
+      "format": {
+        "raw": "341ml",
+        "kind": "fixed",
+        "quantity": "341",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_33453ab5c453100b7c91",
+      "external_product_id": "21447373_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Paste Ground Garlic",
+      "brand": "Shan",
+      "barcode": null,
+      "format": {
+        "raw": "310g",
+        "kind": "fixed",
+        "quantity": "310",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c3e14960d5c45a10d3ab",
+      "external_product_id": "20297368_EA",
+      "identity_status": "source_candidate",
+      "name": "Honey Garlic Marinade",
+      "brand": "VH",
+      "barcode": null,
+      "format": {
+        "raw": "341ml",
+        "kind": "fixed",
+        "quantity": "341",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_2319753a660ee1e80216",
+      "external_product_id": "21671463_EA",
+      "identity_status": "source_candidate",
+      "name": "Naan Garlic",
+      "brand": "Santosh",
+      "barcode": null,
+      "format": {
+        "raw": "500g",
+        "kind": "fixed",
+        "quantity": "500",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a812264ffce5cc8790f9",
+      "external_product_id": "20326517004_EA",
+      "identity_status": "source_candidate",
+      "name": "Organic Couscous, Roasted Garlic & Olive Oil",
+      "brand": "Casbah",
+      "barcode": null,
+      "format": {
+        "raw": "198g",
+        "kind": "fixed",
+        "quantity": "198",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_441cb8e1eaa5b7bfb19a",
+      "external_product_id": "21447370_EA",
+      "identity_status": "source_candidate",
+      "name": "Ginger Garlic Paste Ground Ginger & Garlic",
+      "brand": "Shan",
+      "barcode": null,
+      "format": {
+        "raw": "700g",
+        "kind": "fixed",
+        "quantity": "700",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_5a924574245a982bfb82",
+      "external_product_id": "20326618_EA",
+      "identity_status": "source_candidate",
+      "name": "Roasted Garlic Olive Oil",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "250ml",
+        "kind": "fixed",
+        "quantity": "250",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_7156a5d65984ccc59eb8",
+      "external_product_id": "21062267_EA",
+      "identity_status": "source_candidate",
+      "name": "Creamy Garlic Wing Sauce",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "350ml",
+        "kind": "fixed",
+        "quantity": "350",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_53d51f2e92e73982d6d7",
+      "external_product_id": "21649862_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Parmesan Chicken Wing Mayo Style Dip",
+      "brand": "Hellmann's",
+      "barcode": null,
+      "format": {
+        "raw": "340ml",
+        "kind": "fixed",
+        "quantity": "340",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_682940efc44abe11c12d",
+      "external_product_id": "21619179_EA",
+      "identity_status": "source_candidate",
+      "name": "Fire-Roasted Tomato & Garlic Pasta Sauce",
+      "brand": "Classico",
+      "barcode": null,
+      "format": {
+        "raw": "600ml",
+        "kind": "fixed",
+        "quantity": "600",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c43a483f59ed66efa712",
+      "external_product_id": "21596373_EA",
+      "identity_status": "source_candidate",
+      "name": "All-In-One Garlic Multitool",
+      "brand": "Starfrit",
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_955709353fbd315a4392",
+      "external_product_id": "21422054_EA",
+      "identity_status": "source_candidate",
+      "name": "Seasoning Blend Garlic & Herb",
+      "brand": "Mrs Dash",
+      "barcode": null,
+      "format": {
+        "raw": "70g",
+        "kind": "fixed",
+        "quantity": "70",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_53850ecbc718986f6459",
+      "external_product_id": "21531259_EA",
+      "identity_status": "source_candidate",
+      "name": "Sauce & Spread, Garlic Flavoured",
+      "brand": "Tamam",
+      "barcode": null,
+      "format": {
+        "raw": "290ml",
+        "kind": "fixed",
+        "quantity": "290",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_6bc6d68330ba3acc01a3",
+      "external_product_id": "21659870_EA",
+      "identity_status": "source_candidate",
+      "name": "Flavour Maker Pizza Topping Seasoning",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "93g",
+        "kind": "fixed",
+        "quantity": "93",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    }
+  ],
+  "offers": [
+    {
+      "id": "apify_offer_e4c4173488c6b6da9eb0",
+      "product_id": "apify_product_32913a634f1325ea1737",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "165 g, $3.93/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-powder/p/20180764_EA",
+      "capture_id": "row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_7dfb9d99cbba3522828e",
+      "product_id": "apify_product_6c49ab02697d013a7ac0",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "$13.21/1kg $5.99/1lb",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.32",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/colossal-fresh-garlic/p/20135581001_KG",
+      "capture_id": "row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "provider_weight_may_be_estimated",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_aabd95a21dc069d01dfe",
+      "product_id": "apify_product_396f1b5c9000ba7d7ea5",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "141 g, $4.46/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-plus-gluten-free-one-step-seasoning-signatu/p/20309777002_EA",
+      "capture_id": "row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_8764758a13c5a575c39f",
+      "product_id": "apify_product_8db8d5f2d9863bdacd7e",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "227 g, $1.76/100g",
+      "multi_buy_deal": "SAVE $0.79",
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/herb-garlic-cream-cheese-product/p/20866924007_EA",
+      "capture_id": "row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ea655b30fd58e4578eb6",
+      "product_id": "apify_product_f9517243479819e29547",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "90 g, $0.33/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-bulbs-3-count/p/21004355001_EA",
+      "capture_id": "row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_bd4565653350bdc40d3f",
+      "product_id": "apify_product_0dcb02d1cafa70dd0574",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "340 ml, $1.11/100ml",
+      "multi_buy_deal": "SAVE $1.21",
+      "loyalty_offer": null,
+      "amount": "3.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-aioli-mayonnaise-type-dressing-garlic-aioli/p/21518017_EA",
+      "capture_id": "row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_d55bf85c08429913db1e",
+      "product_id": "apify_product_e5808beae809d0706981",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "250 g, $1.60/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/chopped-garlic/p/20123251_EA",
+      "capture_id": "row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_8c07476142af32ccdd3d",
+      "product_id": "apify_product_0d809759995b7116db4b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "144 g, $4.37/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/roasted-garlic-peppers-gluten-free-one-step-season/p/20309777001_EA",
+      "capture_id": "row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ad359e031603a2d09c7e",
+      "product_id": "apify_product_f9d959e122d6c5fcdc6f",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "115 g, $3.48/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/organic-garlic/p/20717130001_EA",
+      "capture_id": "row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_6ba9acc1a0f2926d473f",
+      "product_id": "apify_product_1020b7f13828d89e117a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "340 ml, $1.26/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-mayonnaise-style-sauce/p/21686231_EA",
+      "capture_id": "row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_069ff475e24467eac752",
+      "product_id": "apify_product_1249d1e7dc65080e9e58",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 kg, $0.70/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-bulbs/p/21238843001_EA",
+      "capture_id": "row_10",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_8d756d57152a21f36258",
+      "product_id": "apify_product_a5973aa339009e8f420b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "190 g, $3.42/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/celery-salt/p/20177555_EA",
+      "capture_id": "row_11",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_0a4d05664349d5e926db",
+      "product_id": "apify_product_8fc11585f37e9f4b6c36",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 kg, $0.75/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/chopped-garlic/p/21013899_EA",
+      "capture_id": "row_12",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_73b1569d05a7a67791a7",
+      "product_id": "apify_product_de44545c4ce659027e2a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "13 g, $49.92/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/bay-leaves/p/20003932_EA",
+      "capture_id": "row_13",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_9082af7db74b6bcae81e",
+      "product_id": "apify_product_b1785c40dc7ddb22e21b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "250 g, $1.40/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-peeled/p/20636099_EA",
+      "capture_id": "row_14",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_5b6d5b67c4e00ee4e614",
+      "product_id": "apify_product_6454edc48621e1f23ef3",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "250 g, $2.00/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-minced/p/20142463_EA",
+      "capture_id": "row_15",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_4cbf84a54dc99735e94b",
+      "product_id": "apify_product_8996fe90ac641e60ec7e",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "150 g, $1.67/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-powder/p/20617758_EA",
+      "capture_id": "row_16",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_b3b5b84b2117fc0fd0d1",
+      "product_id": "apify_product_4c17c70a9f96a92580d0",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 kg, $0.85/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "8.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-minced/p/20004861_EA",
+      "capture_id": "row_17",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_c7a0f5eec2fa979eb5bf",
+      "product_id": "apify_product_ad8cf134109318d64f80",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "16x40.0 g, $0.83/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/ready-bake-garlic-toast-texas-style-bread/p/20041579_EA",
+      "capture_id": "row_18",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_6e7e40e0c1f320398890",
+      "product_id": "apify_product_f6f041f31ec728224dd9",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "115 g, $3.48/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/heirloom-ontario-garlic/p/20180051_EA",
+      "capture_id": "row_19",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_9795b5ebdc93395833b5",
+      "product_id": "apify_product_75193368bfd9ad5f84a1",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "125 g, $2.40/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-minced/p/20074770_EA",
+      "capture_id": "row_20",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_fe260fe3c3600a7371de",
+      "product_id": "apify_product_e6e3628670edcd653dde",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "125 g, $2.40/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-puree/p/20110312_EA",
+      "capture_id": "row_21",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_101090134329074d9f77",
+      "product_id": "apify_product_2fb3bc27c80bc5c86e27",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "638 g, $0.63/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/ready-to-bake-garlic-toast/p/21361140_EA",
+      "capture_id": "row_22",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_8cf041313af4be3e02bd",
+      "product_id": "apify_product_8d002b9e32ac95cf649d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "57 g, $5.26/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/organic-garlic-powder/p/20955533_EA",
+      "capture_id": "row_23",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_493b57e78664f43631c6",
+      "product_id": "apify_product_27273ad700d7fe0f2de5",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "125 g, $2.63/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/roasted-garlic-puree/p/20097765_EA",
+      "capture_id": "row_24",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_c56df2267563f2c11f35",
+      "product_id": "apify_product_e03f8486dd8ac461ee67",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "325 g, $0.92/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-bread/p/21552151_EA",
+      "capture_id": "row_25",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_6599ad71082681e67222",
+      "product_id": "apify_product_559c3e3b86bd83ac6c50",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "750 g, $0.64/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-paste/p/21088388_EA",
+      "capture_id": "row_26",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_b08ce606594ccb2ea071",
+      "product_id": "apify_product_e54dafba2ff400b1ce9e",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $2.50/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-herbs/p/21299517001_EA",
+      "capture_id": "row_27",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ae4b56995ec49978eb96",
+      "product_id": "apify_product_1fc36268f64129dc2f37",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "330 g, $1.06/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-bread/p/21020061_EA",
+      "capture_id": "row_28",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_e103036b2197233173c9",
+      "product_id": "apify_product_43ad6194882ecb918fd5",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "16x40.0 g, $0.83/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/ready-bake-garlic-parmesan-toast-texas-style-bread/p/20291572_EA",
+      "capture_id": "row_29",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ff8e453cf5af5c587b18",
+      "product_id": "apify_product_ffa8fb91c10a407600b3",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "325 g, $0.86/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/ready-to-bake-garlic-bread/p/21594272_EA",
+      "capture_id": "row_30",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ff00fe208ca53508539d",
+      "product_id": "apify_product_aec8dc58174fe0a8143d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $4.49/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-bulb-3-pack/p/21626133001_EA",
+      "capture_id": "row_31",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_fc09067ee63cc98165af",
+      "product_id": "apify_product_00d165b9b62fe62161b8",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "375 ml, $2.13/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/hot-pickled-garlic/p/20863268_EA",
+      "capture_id": "row_32",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_bd12bbe708fcc89455e9",
+      "product_id": "apify_product_847b2f8b5e1f75bfe89b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "125 g, $3.20/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-provencal-herb-butter/p/20106744_EA",
+      "capture_id": "row_33",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_1a5388a8fef312013200",
+      "product_id": "apify_product_7be472dd4796744cf003",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "200 g, $1.75/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-flakes/p/20618365_EA",
+      "capture_id": "row_34",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_bfec937496e95749b8b8",
+      "product_id": "apify_product_a5372802d90340cfc1e5",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "255 ml, $1.96/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/toum-squeeze-and-drizzle-garlic-spread/p/21732733_EA",
+      "capture_id": "row_35",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_bafb375b888a45779bcc",
+      "product_id": "apify_product_b1310e7f9ff6ee5563e3",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "325 g, $1.17/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-toast-bake-at-home-8-slices/p/21552105_EA",
+      "capture_id": "row_36",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_99b5fb5e5b71c61926a9",
+      "product_id": "apify_product_c1fb5505bea93120bc9b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "750 g, $0.64/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-ginger-paste/p/21088480_EA",
+      "capture_id": "row_37",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_7144c4770621176d784d",
+      "product_id": "apify_product_f088755f7ccffd4bf3af",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "250 g, $2.48/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2.48",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/pearl-solo-garlic/p/20611516_EA",
+      "capture_id": "row_38",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_d2d59427cee45a9a5d30",
+      "product_id": "apify_product_a73f36de68f956a7223e",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "64 g, $6.25/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-powder/p/21209151_EA",
+      "capture_id": "row_39",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_7121a48aa41795e65f12",
+      "product_id": "apify_product_a84741de418e009aa99c",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "400 g, $1.07/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-powder-jar/p/21416946_EA",
+      "capture_id": "row_40",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_38430b473ec02117ea55",
+      "product_id": "apify_product_3141f686cdca6490a017",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "300 ml, $1.17/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/roasted-garlic-mayo-sandwich-spread/p/20320456001_EA",
+      "capture_id": "row_41",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_e6f2d055ed44e003518a",
+      "product_id": "apify_product_cd94ae07c4300e7a2b41",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "317 g, $1.26/100g",
+      "multi_buy_deal": "SAVE $0.50",
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/giuseppe-garlic-fingers/p/21164021_EA",
+      "capture_id": "row_42",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_1fda72212e5b71bdae69",
+      "product_id": "apify_product_16b824ec90073debc23d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "67 g, $8.96/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-powder/p/21116905_EA",
+      "capture_id": "row_43",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ca94dc80c3a9f1ad5373",
+      "product_id": "apify_product_a002eab15cd859b6d9b0",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "295 g, $1.19/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/cheesy-garlic-fingers/p/21669502_EA",
+      "capture_id": "row_44",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_43fe56fb7f5fbcc8e7a0",
+      "product_id": "apify_product_4e182fcc809671438b74",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "370 g, $1.08/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-in-oil/p/21691814_EA",
+      "capture_id": "row_45",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_15838eebd127eaf254f9",
+      "product_id": "apify_product_c078d0561ca9793ba6b6",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "250 g, $1.00/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-salt/p/20618040_EA",
+      "capture_id": "row_46",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_e30e7dad4509e9d2a03a",
+      "product_id": "apify_product_36aaa3740e9b8051309f",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "62 g, $9.68/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/black-garlic-seasoning-blend/p/21379256_EA",
+      "capture_id": "row_47",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_f6ea4b8cf48fc72848e6",
+      "product_id": "apify_product_94fc7f3fe230a35c1b89",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "115 g, $5.21/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/roasted-garlic-seasoning-tube/p/21362401_EA",
+      "capture_id": "row_48",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_d0a3a0af1d7e367a585d",
+      "product_id": "apify_product_295abd25615f5d0f255b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "10 ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-naan-flatbreads/p/20343319_EA",
+      "capture_id": "row_49",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_5bfb40ec9c025a0401f5",
+      "product_id": "apify_product_7759ad2927d969f1a049",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "190 g, $3.42/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/la-grille-garlic-butter-flavoured-seasoning/p/21717457_EA",
+      "capture_id": "row_50",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_f6e1775c1fa0ef53b719",
+      "product_id": "apify_product_4605b6786c121c2da0b4",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "410 ml, $0.85/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/alfredo-roasted-garlic-pasta-sauce/p/20325609001_EA",
+      "capture_id": "row_51",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_05589ed83480d4ea6090",
+      "product_id": "apify_product_aee0f05fa05ff16d1bbf",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "140 g, $3.06/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-and-butter-flavour-sourdough-style-croutons/p/20796248001_EA",
+      "capture_id": "row_52",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_22b07b13cfc5520c80c8",
+      "product_id": "apify_product_08a8f094caa0638ce83e",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "456 g, $1.10/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-and-cheese-trio-focaccia/p/21669349_EA",
+      "capture_id": "row_53",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_1f7208f6cf0719573e4a",
+      "product_id": "apify_product_a88a303013daca172893",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.05 kg, $1.00/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "10.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-salt-club-size/p/20181401_EA",
+      "capture_id": "row_54",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_3b2b388b1301d6cf3980",
+      "product_id": "apify_product_9b0c7f22a3571b48fcf1",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "220 g, $2.95/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/salt-garlic/p/20183341001_EA",
+      "capture_id": "row_55",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_e4517a565aa8357b546e",
+      "product_id": "apify_product_8f9f942a3a3dffad8681",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $15.00/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "15",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/gourmet-garlic-press/p/21529839_EA",
+      "capture_id": "row_56",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ff699978d5a2cd570e1a",
+      "product_id": "apify_product_02179436ff8559fe46cb",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "325 g, $1.08/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/ready-to-bake-sliced-garlic-toast/p/21594313_EA",
+      "capture_id": "row_57",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_90f90fc1a0a4b9098df5",
+      "product_id": "apify_product_43e39bb00ff261aa3f98",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "250 ml, $2.00/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-paste/p/20321787004_EA",
+      "capture_id": "row_58",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_9553f2daecc83dd922d4",
+      "product_id": "apify_product_7505b2c2760219608008",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "150 g, $4.99/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-fine-herbs-spreadable-cheese/p/20116794_EA",
+      "capture_id": "row_59",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_3e6dd828ee64e5fdf489",
+      "product_id": "apify_product_dcc0687f7192ca42f2c7",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "54 g, $11.11/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-powder/p/21379274_EA",
+      "capture_id": "row_60",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_fece7bb9a163d64a1044",
+      "product_id": "apify_product_fa97b86d7980c8a9fa75",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "600 ml, $0.78/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.69",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/roasted-garlic-pasta-sauce/p/21734387_EA",
+      "capture_id": "row_61",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_f7e73a0d484fc7680089",
+      "product_id": "apify_product_46eff8a5fe954c9bd536",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $14.00/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "14",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/zinc-alloy-ss-garlic-press/p/21345420_EA",
+      "capture_id": "row_62",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_c79cc9b6a854a071d653",
+      "product_id": "apify_product_bdb18056513fd51bfa3b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "455 ml, $0.55/100ml",
+      "multi_buy_deal": "SAVE $0.29",
+      "loyalty_offer": null,
+      "amount": "2.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-bbq-sauce/p/20627619003_EA",
+      "capture_id": "row_63",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_5e026910f605400ffca7",
+      "product_id": "apify_product_ddd68d2e72648a2ab50a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "220 g, $3.40/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/cuisine-garlic-fine-herbs-cream-sauce/p/21510642_EA",
+      "capture_id": "row_64",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_906f0992fac93d98faa5",
+      "product_id": "apify_product_849ca95bcd8dfdd4e6f2",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "284 ml, $0.53/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/condensed-soup-garlic-parmesan-with-herbs/p/21756063_EA",
+      "capture_id": "row_65",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_d60789e474d4077c32f9",
+      "product_id": "apify_product_c873850832dddcfe58cb",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "340 ml, $1.26/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-parmesan-mayonnaise-style-sauce/p/21686274_EA",
+      "capture_id": "row_66",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_7f64ea4b49ff7b60f154",
+      "product_id": "apify_product_fb39ee42a7ea91a863ab",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "71 g, $6.34/100g",
+      "multi_buy_deal": "SAVE $0.50",
+      "loyalty_offer": null,
+      "amount": "4.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/kosher-crushed-garlic-cubes/p/21056545_EA",
+      "capture_id": "row_67",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_e9bdeb2d577faef57d33",
+      "product_id": "apify_product_6b0272ff4292cfa2da78",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "110 g, $7.99/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "8.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/umami-topping-crunchy-garlic-with-chili-oil-mild/p/21716516_EA",
+      "capture_id": "row_68",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_836b768aac0495ecefbf",
+      "product_id": "apify_product_ad8cb28462ef0911167f",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "310 g, $1.29/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/ginger-garlic-paste-ground-ginger-garlic/p/21447372_EA",
+      "capture_id": "row_69",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_57f8764bbe99004e0c84",
+      "product_id": "apify_product_8d56bc3802a786180437",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "250 g, $1.80/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-pepper-herbs/p/20417211_EA",
+      "capture_id": "row_70",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_47df0fae4e3521d94f0b",
+      "product_id": "apify_product_f6cc902197cfebdd948e",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "350 ml, $0.85/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/honey-garlic-sauce/p/20323473001_EA",
+      "capture_id": "row_71",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_074d87b79e635d1376e5",
+      "product_id": "apify_product_bc4ab2fe8ce88a15a70d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "120 g, $7.49/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "8.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/granulated-garlic/p/21029472_EA",
+      "capture_id": "row_72",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ccc48d6056b235b8de23",
+      "product_id": "apify_product_d44744ea58a5e533ea7f",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $17.00/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "17",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-press-almond-cream/p/21688923_EA",
+      "capture_id": "row_73",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_3b35dab8a85e8271ff87",
+      "product_id": "apify_product_437e0f094d737996fd55",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "340 g, $2.29/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/herb-garlic-cream-cheese-product/p/20866929001_EA",
+      "capture_id": "row_74",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_88c06cff998b15ce0e58",
+      "product_id": "apify_product_10cda9b66a48a3ac648f",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "142 g, $4.43/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/one-step-seasoning-garlic-and-herb-gluten-free-sal/p/20765285_EA",
+      "capture_id": "row_75",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_2c280c1d8526da25ac80",
+      "product_id": "apify_product_6f1b455c42fd80033434",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "600 ml, $0.86/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-pickled/p/20127705_EA",
+      "capture_id": "row_76",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_5b6b809d83d416ad123d",
+      "product_id": "apify_product_4c24207aa8f8104ae251",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "218 ml, $1.60/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/basil-pesto/p/20307509001_EA",
+      "capture_id": "row_77",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_50d468959a2bfafec250",
+      "product_id": "apify_product_a1ef37788e567246c70f",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "55 g, $5.98/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/minced-garlic/p/20021457_EA",
+      "capture_id": "row_78",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_4d3e623943b3cba5c013",
+      "product_id": "apify_product_aed0961495e8b380c206",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $4.00/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-press/p/21213660_EA",
+      "capture_id": "row_79",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ebb9f671bbd43592a720",
+      "product_id": "apify_product_2f360b25a80a0e3f43e6",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $10.00/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "10",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/soft-grip-garlic-press/p/21190093_EA",
+      "capture_id": "row_80",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_6cc5eeb2e9468cd53f93",
+      "product_id": "apify_product_b08ea7e89c2379a86442",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $20.00/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "20",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/sw-garlic-press/p/21179916_EA",
+      "capture_id": "row_81",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_ead7536a8d7b71bc7d39",
+      "product_id": "apify_product_10a911f0f04233c28d98",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "500 g, $0.80/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-naan-flatbreads/p/21050380_EA",
+      "capture_id": "row_82",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_26123cee0dcf5134ae44",
+      "product_id": "apify_product_344ee648255a98fa63d7",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $1.99/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/italian-parsley/p/20139141001_EA",
+      "capture_id": "row_83",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_179de4c3e464f7ad20ae",
+      "product_id": "apify_product_06bfa5e33e622b828bfe",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "85 g, $8.82/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/minced-garlic/p/20772229_EA",
+      "capture_id": "row_84",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_4beec3f0efabb9e6586e",
+      "product_id": "apify_product_989566d573ef9d53f598",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "22 g, $9.05/100g",
+      "multi_buy_deal": "SAVE $0.51",
+      "loyalty_offer": null,
+      "amount": "1.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/pasta-seasoning-roasted-garlic-herbs-no-artificial/p/20318301002_EA",
+      "capture_id": "row_85",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_b08d9bef1bda44c4fb66",
+      "product_id": "apify_product_dccfbfdd8fa957b7b456",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "341 ml, $0.88/100ml",
+      "multi_buy_deal": "SAVE $0.99",
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/medium-garlic-marinade/p/20309693001_EA",
+      "capture_id": "row_86",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_1d0a8a5bbf05de09af16",
+      "product_id": "apify_product_33453ab5c453100b7c91",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "310 g, $1.29/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-paste-ground-garlic/p/21447373_EA",
+      "capture_id": "row_87",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_22d66a9f6a62dd884ede",
+      "product_id": "apify_product_c3e14960d5c45a10d3ab",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "341 ml, $0.88/100ml",
+      "multi_buy_deal": "SAVE $0.99",
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/honey-garlic-marinade/p/20297368_EA",
+      "capture_id": "row_88",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_09b4724b177f81555c38",
+      "product_id": "apify_product_2319753a660ee1e80216",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "500 g, $0.46/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/naan-garlic/p/21671463_EA",
+      "capture_id": "row_89",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_23fa6b656497511352b5",
+      "product_id": "apify_product_a812264ffce5cc8790f9",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "198 g, $2.17/100g",
+      "multi_buy_deal": "SAVE $0.21",
+      "loyalty_offer": null,
+      "amount": "4.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/organic-couscous-roasted-garlic-olive-oil/p/20326517004_EA",
+      "capture_id": "row_90",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_d402175bb118e9384ceb",
+      "product_id": "apify_product_441cb8e1eaa5b7bfb19a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "700 g, $1.00/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/ginger-garlic-paste-ground-ginger-garlic/p/21447370_EA",
+      "capture_id": "row_91",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_0814d7e858b95bce7d54",
+      "product_id": "apify_product_5a924574245a982bfb82",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "250 ml, $3.60/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "9",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/roasted-garlic-olive-oil/p/20326618_EA",
+      "capture_id": "row_92",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_adc7900e2d5c851ec472",
+      "product_id": "apify_product_7156a5d65984ccc59eb8",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "350 ml, $1.29/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/creamy-garlic-wing-sauce/p/21062267_EA",
+      "capture_id": "row_93",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_058f98e0fd8cac7c2dee",
+      "product_id": "apify_product_53d51f2e92e73982d6d7",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "340 ml, $1.26/100ml",
+      "multi_buy_deal": "SAVE $1.21",
+      "loyalty_offer": null,
+      "amount": "4.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-parmesan-chicken-wing-mayo-style-dip/p/21649862_EA",
+      "capture_id": "row_94",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_440fe156aa1693bf1e60",
+      "product_id": "apify_product_682940efc44abe11c12d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "600 ml, $0.58/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/fire-roasted-tomato-garlic-pasta-sauce/p/21619179_EA",
+      "capture_id": "row_95",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_53068c29fb6742112196",
+      "product_id": "apify_product_c43a483f59ed66efa712",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $13.00/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "13",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/all-in-one-garlic-multitool/p/21596373_EA",
+      "capture_id": "row_96",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_bc9624e7084cb59d6e03",
+      "product_id": "apify_product_955709353fbd315a4392",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "70 g, $6.41/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/seasoning-blend-garlic-herb/p/21422054_EA",
+      "capture_id": "row_97",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_6fba288b0c4d343096b7",
+      "product_id": "apify_product_53850ecbc718986f6459",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "290 ml, $2.00/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/sauce-spread-garlic-flavoured/p/21531259_EA",
+      "capture_id": "row_98",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_c4104c6ef516d118db23",
+      "product_id": "apify_product_6bc6d68330ba3acc01a3",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "93 g, $6.99/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-29T14:38:37.486158Z",
+      "retrieved_at": "2026-09-29T14:38:37.486158Z",
+      "source_url": "https://api.apify.com/v2/datasets/Mduw4ecHdCHaV4NAW/items",
+      "retailer_url": "https://www.maxi.ca/en/flavour-maker-pizza-topping-seasoning/p/21659870_EA",
+      "capture_id": "row_99",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    }
+  ],
+  "matches": [
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_32913a634f1325ea1737",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_6c49ab02697d013a7ac0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_396f1b5c9000ba7d7ea5",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8db8d5f2d9863bdacd7e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f9517243479819e29547",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_0dcb02d1cafa70dd0574",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_e5808beae809d0706981",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_0d809759995b7116db4b",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f9d959e122d6c5fcdc6f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_1020b7f13828d89e117a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_1249d1e7dc65080e9e58",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8fc11585f37e9f4b6c36",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_b1785c40dc7ddb22e21b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_6454edc48621e1f23ef3",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8996fe90ac641e60ec7e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_4c17c70a9f96a92580d0",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_ad8cf134109318d64f80",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f6f041f31ec728224dd9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_75193368bfd9ad5f84a1",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_e6e3628670edcd653dde",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_2fb3bc27c80bc5c86e27",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8d002b9e32ac95cf649d",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_27273ad700d7fe0f2de5",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_e03f8486dd8ac461ee67",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_559c3e3b86bd83ac6c50",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_e54dafba2ff400b1ce9e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_1fc36268f64129dc2f37",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_43ad6194882ecb918fd5",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_ffa8fb91c10a407600b3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_aec8dc58174fe0a8143d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_00d165b9b62fe62161b8",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:pickled"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_847b2f8b5e1f75bfe89b",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:butter"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_7be472dd4796744cf003",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a5372802d90340cfc1e5",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_b1310e7f9ff6ee5563e3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c1fb5505bea93120bc9b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f088755f7ccffd4bf3af",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a73f36de68f956a7223e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a84741de418e009aa99c",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_3141f686cdca6490a017",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_cd94ae07c4300e7a2b41",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_16b824ec90073debc23d",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a002eab15cd859b6d9b0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_4e182fcc809671438b74",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c078d0561ca9793ba6b6",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salt"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_36aaa3740e9b8051309f",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_94fc7f3fe230a35c1b89",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_295abd25615f5d0f255b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_7759ad2927d969f1a049",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:butter",
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_4605b6786c121c2da0b4",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_aee0f05fa05ff16d1bbf",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:butter"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_08a8f094caa0638ce83e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a88a303013daca172893",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salt"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_9b0c7f22a3571b48fcf1",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salt"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8f9f942a3a3dffad8681",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_02179436ff8559fe46cb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_43e39bb00ff261aa3f98",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_7505b2c2760219608008",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_dcc0687f7192ca42f2c7",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_fa97b86d7980c8a9fa75",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_46eff8a5fe954c9bd536",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_bdb18056513fd51bfa3b",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_ddd68d2e72648a2ab50a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_849ca95bcd8dfdd4e6f2",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c873850832dddcfe58cb",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_fb39ee42a7ea91a863ab",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_6b0272ff4292cfa2da78",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_ad8cb28462ef0911167f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8d56bc3802a786180437",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f6cc902197cfebdd948e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_bc4ab2fe8ce88a15a70d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_d44744ea58a5e533ea7f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_437e0f094d737996fd55",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_10cda9b66a48a3ac648f",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salt",
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_6f1b455c42fd80033434",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:pickled"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a1ef37788e567246c70f",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_aed0961495e8b380c206",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_2f360b25a80a0e3f43e6",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_b08ea7e89c2379a86442",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_10a911f0f04233c28d98",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_06bfa5e33e622b828bfe",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:minced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_989566d573ef9d53f598",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_dccfbfdd8fa957b7b456",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_33453ab5c453100b7c91",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c3e14960d5c45a10d3ab",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_2319753a660ee1e80216",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_a812264ffce5cc8790f9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_a812264ffce5cc8790f9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_441cb8e1eaa5b7bfb19a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_5a924574245a982bfb82",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_5a924574245a982bfb82",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_7156a5d65984ccc59eb8",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_53d51f2e92e73982d6d7",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_682940efc44abe11c12d",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_c43a483f59ed66efa712",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_955709353fbd315a4392",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_53850ecbc718986f6459",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "ingredient_id": "ing_ail_frais",
+      "candidate_count": 58,
+      "offer_count": 58,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_oignon_jaune",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_pois_chiche_conserve",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "candidate_count": 2,
+      "offer_count": 2,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    }
+  ],
+  "collection": {
+    "source": "apify_loblaws",
+    "strategy": "targeted",
+    "capture_count": 100,
+    "errors": [],
+    "truncations": [
+      "result_limit_reached"
+    ],
+    "rejected_search_rows": [],
+    "complete_catalog": false,
+    "run_id": "jzaxfJbHTFEVYQeu5",
+    "dataset_id": "Mduw4ecHdCHaV4NAW"
+  },
+  "warnings": [
+    "source_reported_location_requires_identity_check",
+    "bounded_sample_not_store_inventory",
+    "no_automatic_ingredient_approval"
+  ]
+}

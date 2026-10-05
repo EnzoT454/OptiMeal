@@ -1,0 +1,87 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "generic",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": null,
+  "store_id": null,
+  "purchase_date": null,
+  "date_order": "ymd",
+  "source": {
+    "filename": "recu-nouh2.png",
+    "sha256": "60e3139acc19bf3d9b84368808bb07db9fde98059bc796c8c25c73ef67561468",
+    "engine": "vision",
+    "elapsed_seconds": 0.702
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "PATATE JAUNI: NI1 1OLb $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.99",
+      "source_lines": [
+        "PATATE JAUNI: NI1 1OLb $3.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "Oignon Jaune 2Lb $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "0.99",
+      "source_lines": [
+        "Oignon Jaune 2Lb $0.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [],
+  "totals": {
+    "subtotal": "51.97",
+    "total": "51.97",
+    "taxes": null,
+    "items_sum": "4.98",
+    "calculated_subtotal": "4.98",
+    "difference_from_subtotal": "-46.99",
+    "arithmetic_status": "mismatch",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [
+    "PAIN SOUS-MIRINS",
+    "12 e $0.-19 $5.88",
+    "6 pour 2 49$ -$0.90RT",
+    "TOMATE DE SIRRE",
+    "1.530 kg @ $1.30 / kg $1.99",
+    "BANANE",
+    "1.190 kg @ $1.74 / kg $2.07"
+  ],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "generic_profile_requires_review",
+    "purchase_date_missing",
+    "items_subtotal_mismatch",
+    "unparsed_lines_require_review"
+  ]
+}

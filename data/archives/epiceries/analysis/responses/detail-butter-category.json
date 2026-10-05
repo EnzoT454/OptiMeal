@@ -1,0 +1,61 @@
+{
+  "requested_at": "2026-09-14T23:52:53.640864+00:00",
+  "url": "https://epiceries.ca/api?endpoint=product&id=u067bNgt3njr",
+  "status": 200,
+  "elapsed_seconds": 0.096,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:52:53 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=6mm2LJfsW9yT%2FJl9S3PTGFV%2FYJxPxvtd1LxmRozk8hzQWph2%2BgYOMn%2F4XsoOJINfZWBXPJeY17ofCRmAmKQemQLQ5b%2BnYE7N5txf%2FvFbisBFtXveHFiFFn79j5TTtPw%3D\"}]}",
+    "CF-RAY": "a3b34ed91c22a392-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "id": "u067bNgt3njr",
+      "name": "Lactantia Beurre salé 250 g",
+      "brand": "Lactantia",
+      "size": "250g",
+      "price": 6.79,
+      "unitPrice": {
+        "value": 2.72,
+        "unit": "100 g",
+        "raw": "2.72/100g"
+      },
+      "store": "iga",
+      "discounted": false,
+      "category": 10,
+      "image": "https://cdn.epiceries.ca/183466_EA_ml_primary_front_na_022125_VOILA_564e0d42c6cd65a966936cc98a537f194c3ed3e8.JPG",
+      "link": "https://www.iga.ca/fr/produits/lactantia-beurre-salé-250-g",
+      "url": "https://epiceries.ca/view?i=u067bNgt3njr",
+      "updated": "2026-08-29T13:18:02+00:00",
+      "prices": [
+        {
+          "store": "iga",
+          "price": 6.79,
+          "discounted": false,
+          "size": "250g",
+          "unitPrice": {
+            "value": 2.72,
+            "unit": "100 g",
+            "raw": "2.72/100g"
+          },
+          "link": "https://www.iga.ca/fr/produits/lactantia-beurre-salé-250-g",
+          "timestamp": 1787972720,
+          "date": "2026-08-29T03:05:20+00:00"
+        }
+      ]
+    }
+  }
+}

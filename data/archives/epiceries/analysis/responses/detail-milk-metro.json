@@ -1,0 +1,75 @@
+{
+  "requested_at": "2026-09-14T23:52:54.766000+00:00",
+  "url": "https://epiceries.ca/api?endpoint=product&id=50ZHXt26RPS3",
+  "status": 200,
+  "elapsed_seconds": 0.119,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:52:55 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=zuZPuYMT0N%2BVmBIKe%2FAyStSaUaX9kv0GGm8NWgMcZo9z8IdJwgGMa90wRQgG%2BahAMFmtnTGmOFEzDHo3zsC1p2CctL%2FpFMCbclKcQtX%2Bb6VaDgnTBAKT6qpBFvaBu28%3D\"}]}",
+    "CF-RAY": "a3b34ee00c83ac46-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "id": "50ZHXt26RPS3",
+      "name": "Lait au chocolat avec cajou",
+      "brand": "RITTER SPORT",
+      "size": "100g",
+      "price": 5.99,
+      "unitPrice": {
+        "value": 4.99,
+        "unit": "100 g",
+        "raw": "5.99/100g"
+      },
+      "store": "metro",
+      "discounted": false,
+      "category": 7,
+      "image": "https://cdn.epiceries.ca/15187662798878.jpg",
+      "link": "https://www.metro.ca/epicerie-en-ligne/allees/collations/collations-sucrees-et-bonbons/chocolat/chocolat-au-lait-avec-noix-de-cajou/p/050255707001",
+      "url": "https://epiceries.ca/view?i=50ZHXt26RPS3",
+      "updated": "2026-08-29T13:16:19+00:00",
+      "prices": [
+        {
+          "store": "iga",
+          "price": 3.99,
+          "discounted": true,
+          "size": "100g",
+          "unitPrice": {
+            "value": 3.99,
+            "unit": "100 g",
+            "raw": "3.99/100g"
+          },
+          "link": "https://www.iga.net/fr/produit/lait-au-chocolatavec-cajou/00000_000000005025570700",
+          "timestamp": 1770283839,
+          "date": "2026-02-05T09:30:39+00:00"
+        },
+        {
+          "store": "metro",
+          "price": 5.99,
+          "discounted": false,
+          "size": "100g",
+          "unitPrice": {
+            "value": 5.99,
+            "unit": "100 g",
+            "raw": "5.99/100g"
+          },
+          "link": "https://www.metro.ca/epicerie-en-ligne/allees/collations/collations-sucrees-et-bonbons/chocolat/chocolat-au-lait-avec-noix-de-cajou/p/050255707001",
+          "timestamp": 1786216949,
+          "date": "2026-08-08T19:22:29+00:00"
+        }
+      ]
+    }
+  }
+}

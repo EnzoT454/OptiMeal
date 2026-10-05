@@ -1,0 +1,280 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "maxi",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "maxi",
+  "store_id": "8661",
+  "purchase_date": "2026-09-27",
+  "date_order": "ymd",
+  "source": {
+    "filename": "recu_maxi.jpg",
+    "sha256": "e788f653b26c4c3786be0a4b443b039f44d5aa65fbe01d30e604bb55093fcdff",
+    "engine": "vision",
+    "elapsed_seconds": 2.247
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": "05700003460",
+      "name": "CLASS SCE ROSEE",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.49",
+      "source_lines": [
+        "05700003460 CLASS SCE ROSEE MRJ 3.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": "05719711852",
+      "name": "ROO VERMICELLE",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.98",
+      "source_lines": [
+        "05719711852 ROO VERMICELLE MRJ 1.98"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": "06038309830",
+      "name": "SN COQUILLES",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.00",
+      "source_lines": [
+        "06038309830 SN COQUILLES MRJ 2.00"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": "06780000049",
+      "name": "UNICO THON DOLIV",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "5.99",
+      "source_lines": [
+        "06780000049 UNICO THON DOLIV MRJ 5.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 5,
+      "product_code": "628107321018",
+      "name": "AL SHIFA MIEL",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "9.49",
+      "source_lines": [
+        "628107321018 AL SHIFA MIEL MRJ 9.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 6,
+      "product_code": "66151100250",
+      "name": "TISSA SARD HUILE",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": "3",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "1.89",
+      "line_total": "5.67",
+      "source_lines": [
+        "(3)66151100250 TISSA SARD HUILE MRJ",
+        "3 @ $1.89 5.67"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 7,
+      "product_code": "06038366414",
+      "name": "OEUFS GROS",
+      "category_raw": "22-PRODUITS LAITIERS",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.88",
+      "source_lines": [
+        "06038366414 OEUFS GROS MRJ 3.88"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 8,
+      "product_code": "03338370278",
+      "name": "COURONNE BROCOLI",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "0.95",
+      "source_lines": [
+        "03338370278 COURONNE BROCOLI MRJ 0.95"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 9,
+      "product_code": "06038305932",
+      "name": "CHAMPIGNONS PC",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "0.68",
+      "source_lines": [
+        "06038305932 CHAMPIGNONS PC MRJ 0.68"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 10,
+      "product_code": "06148303301",
+      "name": "OIGNONS DM",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.29",
+      "source_lines": [
+        "06148303301 OIGNONS DM MRJ 3.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 11,
+      "product_code": "4131",
+      "name": "POMMES FUJI",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": "0.785",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "6.35",
+      "line_total": "4.98",
+      "source_lines": [
+        "4131 POMMES FUJI MRJ",
+        "0.785 kg @ $6.35/kg 4.98"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 12,
+      "product_code": "94011",
+      "name": "BANANES BIO",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": "0.820",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "2.40",
+      "line_total": "1.97",
+      "source_lines": [
+        "94011 BANANES BIO MRJ",
+        "0.820 kg @ $2. 40/kg 1.97"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 13,
+      "product_code": "87668101932",
+      "name": "SANTOSH NAAN AIL",
+      "category_raw": "34-BOULANGERIE COMMERCIALE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.29",
+      "source_lines": [
+        "87668101932 SANTOSH NAAN AIL MRJ 2.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [],
+  "totals": {
+    "subtotal": "46.66",
+    "total": "46.66",
+    "taxes": null,
+    "items_sum": "46.66",
+    "calculated_subtotal": "46.66",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "purchase_date_order_requires_review"
+  ]
+}

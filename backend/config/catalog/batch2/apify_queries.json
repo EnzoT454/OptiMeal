@@ -1,0 +1,14 @@
+{
+  "queries": {
+    "ing_tomate_fraiche": "tomatoes",
+    "ing_pomme_de_terre": "potatoes",
+    "ing_poivron_frais": "bell peppers",
+    "ing_brocoli_frais": "broccoli",
+    "ing_courgette_fraiche": "zucchini",
+    "ing_pomme_fraiche": "apples",
+    "ing_citron_frais": "lemons",
+    "ing_boeuf_hache": "ground beef",
+    "ing_saumon": "salmon",
+    "ing_thon_conserve": "canned tuna"
+  }
+}

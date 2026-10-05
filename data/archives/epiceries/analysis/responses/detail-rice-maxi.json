@@ -1,0 +1,61 @@
+{
+  "requested_at": "2026-09-14T23:52:56.995764+00:00",
+  "url": "https://epiceries.ca/api?endpoint=product&id=VBE1xju4zXrm",
+  "status": 200,
+  "elapsed_seconds": 0.11,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:52:57 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=POXONoOUxU18yMEpXrxs1iUfqveOlJIUGtlP9%2FrnyEF7lkKVK4pHDCmMgRxrEs%2B%2BPSi9%2Fa0WL0L%2BCetbazapemY4vRboUsdL31hdX9lHd5A3lla%2FsCwUtL91PbVeMhY%3D\"}]}",
+    "CF-RAY": "a3b34eedffb6aaaa-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "id": "VBE1xju4zXrm",
+      "name": "Riz basmati brun",
+      "brand": "Suraj",
+      "size": "1.81kg",
+      "price": 5.49,
+      "unitPrice": {
+        "value": 0.3,
+        "unit": "100 g",
+        "raw": "0.30/100g"
+      },
+      "store": "maxi",
+      "discounted": false,
+      "category": 26,
+      "image": "https://cdn.epiceries.ca/20839413_fr_front_1200.png",
+      "link": "https://www.maxi.ca/fr/riz-basmati-brun/p/20839413_EA",
+      "url": "https://epiceries.ca/view?i=VBE1xju4zXrm",
+      "updated": "2026-08-29T13:21:15+00:00",
+      "prices": [
+        {
+          "store": "maxi",
+          "price": 5.49,
+          "discounted": false,
+          "size": "1.81kg",
+          "unitPrice": {
+            "value": 0.3,
+            "unit": "100 g",
+            "raw": "0.30/100g"
+          },
+          "link": "https://www.maxi.ca/fr/riz-basmati-brun/p/20839413_EA",
+          "timestamp": 1787972720,
+          "date": "2026-08-29T03:05:20+00:00"
+        }
+      ]
+    }
+  }
+}

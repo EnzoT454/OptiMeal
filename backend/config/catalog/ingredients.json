@@ -1,0 +1,368 @@
+{
+  "schema_version": "ingredients-1.0",
+  "ingredients": [
+    {
+      "id": "ing_ail_frais",
+      "name": "Ail frais",
+      "category": "vegetables",
+      "aliases": [
+        "ail",
+        "garlic"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sel",
+        "sauce",
+        "beurre",
+        "hache",
+        "haché",
+        "mariné",
+        "marines",
+        "assaisonnement",
+        "powder",
+        "salt",
+        "butter",
+        "minced",
+        "pickled",
+        "seasoning",
+        "chopped",
+        "peeled",
+        "puree",
+        "purée",
+        "paste",
+        "pâte",
+        "pate",
+        "roasted",
+        "rôti",
+        "rotis",
+        "bread",
+        "pain",
+        "toast",
+        "naan",
+        "flatbreads",
+        "focaccia",
+        "fingers",
+        "croutons",
+        "cheese",
+        "fromage",
+        "aioli",
+        "mayonnaise",
+        "mayo",
+        "dressing",
+        "spread",
+        "tartinade",
+        "flakes",
+        "flocons",
+        "granulated",
+        "granulé",
+        "oil",
+        "huile",
+        "press",
+        "presse",
+        "multitool",
+        "outil",
+        "ginger",
+        "gingembre",
+        "pepper",
+        "poivre",
+        "herbs",
+        "herbes",
+        "herb",
+        "soup",
+        "soupe",
+        "marinade",
+        "dip",
+        "trempette",
+        "couscous",
+        "pasta",
+        "pâtes",
+        "topping",
+        "garniture",
+        "crushed",
+        "écrasé"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_oignon_jaune",
+      "name": "Oignon jaune",
+      "category": "vegetables",
+      "aliases": [
+        "oignon jaune",
+        "oignons jaunes",
+        "yellow onion",
+        "yellow onions"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sauce",
+        "soupe",
+        "frits",
+        "powder",
+        "soup",
+        "fried"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_carotte_fraiche",
+      "name": "Carotte fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "carotte",
+        "carottes",
+        "carrot",
+        "carrots"
+      ],
+      "excluded_terms": [
+        "jus",
+        "soupe",
+        "gateau",
+        "gâteau",
+        "surgelé",
+        "surgelees",
+        "conserve",
+        "mélange",
+        "melange",
+        "érable",
+        "erable",
+        "juice",
+        "soup",
+        "cake",
+        "frozen",
+        "canned",
+        "mix",
+        "maple"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_banane_fraiche",
+      "name": "Banane fraîche",
+      "category": "fruits",
+      "aliases": [
+        "banane",
+        "bananes",
+        "banana",
+        "bananas"
+      ],
+      "excluded_terms": [
+        "pain",
+        "yogourt",
+        "smoothie",
+        "chips",
+        "séchées",
+        "sechees",
+        "surgelées",
+        "surgelees",
+        "collations",
+        "mélange",
+        "melange",
+        "plantain",
+        "plantin",
+        "compote",
+        "bread",
+        "yogurt",
+        "dried",
+        "frozen",
+        "snack",
+        "mix",
+        "puree"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_poitrine_poulet",
+      "name": "Poitrine de poulet fraîche",
+      "category": "meat",
+      "aliases": [
+        "poitrine",
+        "poitrines",
+        "chicken breast"
+      ],
+      "excluded_terms": [
+        "panée",
+        "panees",
+        "nuggets",
+        "cuit",
+        "cuite",
+        "surgelé",
+        "surgelees",
+        "assaisonné",
+        "assaisonne",
+        "farcie",
+        "miel",
+        "al pastor",
+        "breaded",
+        "cooked",
+        "frozen",
+        "seasoned",
+        "stuffed",
+        "honey"
+      ],
+      "required_any": [
+        "poulet",
+        "chicken"
+      ]
+    },
+    {
+      "id": "ing_lait_2",
+      "name": "Lait de vache 2 %",
+      "category": "dairy",
+      "aliases": [
+        "lait",
+        "milk"
+      ],
+      "excluded_terms": [
+        "chocolat",
+        "amande",
+        "soya",
+        "avoine",
+        "sans lactose",
+        "lactose free",
+        "chèvre",
+        "chevre",
+        "poule",
+        "coco",
+        "chocolate",
+        "almond",
+        "soy",
+        "oat",
+        "goat",
+        "eggnog",
+        "coconut"
+      ],
+      "required_any": [
+        "2 %"
+      ]
+    },
+    {
+      "id": "ing_oeuf_gros",
+      "name": "Œufs gros",
+      "category": "eggs",
+      "aliases": [
+        "oeufs",
+        "œufs",
+        "eggs"
+      ],
+      "excluded_terms": [
+        "liquide",
+        "chocolat",
+        "cuit",
+        "cuits",
+        "blancs d oeufs",
+        "extra gros",
+        "liquid",
+        "chocolate",
+        "cooked",
+        "egg whites",
+        "extra large"
+      ],
+      "required_any": [
+        "gros",
+        "large"
+      ]
+    },
+    {
+      "id": "ing_riz_basmati_blanc",
+      "name": "Riz basmati blanc sec",
+      "category": "pantry",
+      "aliases": [
+        "basmati"
+      ],
+      "excluded_terms": [
+        "brun",
+        "brown",
+        "cuit",
+        "express",
+        "pret",
+        "prêt",
+        "micro",
+        "assaisonné",
+        "champignons",
+        "citron",
+        "piment",
+        "grains entiers",
+        "cooked",
+        "ready",
+        "seasoned",
+        "mushroom",
+        "lemon",
+        "whole grain"
+      ],
+      "required_any": [
+        "riz",
+        "rice"
+      ]
+    },
+    {
+      "id": "ing_pois_chiche_conserve",
+      "name": "Pois chiches en conserve",
+      "category": "pantry",
+      "aliases": [
+        "pois chiches",
+        "chickpeas"
+      ],
+      "excluded_terms": [
+        "secs",
+        "sec",
+        "farine",
+        "houmous",
+        "hummus",
+        "rôtis",
+        "rotis",
+        "dry",
+        "dried",
+        "flour",
+        "roasted"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_huile_olive",
+      "name": "Huile d’olive",
+      "category": "pantry",
+      "aliases": [
+        "huile olive",
+        "huile d olive",
+        "olive oil"
+      ],
+      "excluded_terms": [
+        "melange",
+        "mélange",
+        "aromatisée",
+        "aromatisee",
+        "vaporisateur",
+        "spray",
+        "blend",
+        "flavoured",
+        "flavored",
+        "couscous",
+        "garlic",
+        "ail",
+        "roasted",
+        "rôti",
+        "lemon",
+        "citron",
+        "basil",
+        "basilic",
+        "truffle",
+        "truffe",
+        "bread",
+        "pain",
+        "pasta",
+        "pâtes",
+        "crackers",
+        "biscuit",
+        "tuna",
+        "thon",
+        "sardines",
+        "soap",
+        "savon",
+        "shampoo",
+        "shampoing"
+      ],
+      "required_any": []
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "requested_at": "2026-09-14T23:51:38.998179+00:00",
+  "url": "https://epiceries.ca/api?endpoint=search&q=lait&limit=3",
+  "status": 200,
+  "elapsed_seconds": 1.228,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:51:39 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=kxMQK%2F6YboQ21BCAJZVz%2FZZIXq9IQKwa334V1CDBlfTGNZ1LNQevAaxVpMto4k4KyghfI6Th5gWiRQz%2FLVlsq3DNatYvHqgIKVEk7b2JijaCSUX76itBC0jMnsSoCxE%3D\"}]}",
+    "CF-RAY": "a3b34d05bcd93739-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "count": 3,
+      "limit": 3,
+      "offset": 0,
+      "hasMore": true,
+      "results": [
+        {
+          "id": "KLT6H8ZfyNP0",
+          "name": "Dove sans aluminium désodorisant pour tout le corps pour femmes avec 14 d'hydratants parfum lait d'avoine et vanille pour une peau douce et confortable",
+          "brand": null,
+          "size": null,
+          "price": 7.97,
+          "unitPrice": {
+            "value": 7.97,
+            "unit": "100 g",
+            "raw": "7.97/100g"
+          },
+          "store": "walmart",
+          "discounted": true,
+          "category": 70,
+          "image": "https://cdn.epiceries.ca/f983b0a3-bb4c-492b-ac73-c88ab2b8d77c.b448ccea86903fa0ffde4b8734a71a26.jpeg",
+          "link": "https://www.walmart.ca/fr/ip/Dove-sans-aluminium-D-sodorisant-pour-Tout-le-Corps-femmes-avec-1-4-d-hydratants-parfum-lait-d-avoine-et-vanille-une-peau-douce-confortable/6000208162073",
+          "url": "https://epiceries.ca/view?i=KLT6H8ZfyNP0",
+          "updated": "2026-08-29T13:21:39+00:00"
+        },
+        {
+          "id": "zILrWlJmA6cs",
+          "name": "Pacifica - lingettes déodorantes pour les aisselles au lait de coco et aux huiles essentielles - unisexe - 30 pièces",
+          "brand": null,
+          "size": null,
+          "price": 11.96,
+          "unitPrice": null,
+          "store": "walmart",
+          "discounted": false,
+          "category": 70,
+          "image": "https://cdn.epiceries.ca/c2d3c211-8ca8-498e-abab-86c7a91c7b00.8bd192eb8e1563508d6c803ea46aaa3b.png",
+          "link": "https://www.walmart.ca/fr/ip/Pacifica-Lingettes-d-odorantes-pour-les-aisselles-au-lait-de-coco-et-aux-huiles-essentielles-Unisexe-30-pi-ces/265IYIVEYCHQ",
+          "url": "https://epiceries.ca/view?i=zILrWlJmA6cs",
+          "updated": "2026-08-29T13:21:38+00:00"
+        },
+        {
+          "id": "LMA7EbiJlGZ9",
+          "name": "Collation de chocolat au lait hershey's harry potter.",
+          "brand": null,
+          "size": "267g",
+          "price": 6.97,
+          "unitPrice": {
+            "value": 2.61,
+            "unit": "100 g",
+            "raw": "2.61/100g"
+          },
+          "store": "walmart",
+          "discounted": false,
+          "category": 64,
+          "image": "https://cdn.epiceries.ca/be42d459-f48b-4cb7-91ac-f798a2e836e6.c7807efac287d0dc2ecfe1b442dc711d.jpeg",
+          "link": "https://www.walmart.ca/fr/ip/Collation-de-chocolat-au-lait-HERSHEY-S-HARRY-POTTER-267g/5YWN06OJH0QX",
+          "url": "https://epiceries.ca/view?i=LMA7EbiJlGZ9",
+          "updated": "2026-08-29T13:21:34+00:00"
+        }
+      ]
+    }
+  }
+}

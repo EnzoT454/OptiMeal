@@ -1,0 +1,319 @@
+{
+  "schema_version": "ingredients-1.0",
+  "ingredients": [
+    {
+      "id": "ing_crevettes",
+      "name": "Crevettes nature",
+      "category": "fish",
+      "aliases": [
+        "shrimp",
+        "shrimps",
+        "prawn",
+        "prawns",
+        "crevette",
+        "crevettes"
+      ],
+      "excluded_terms": [
+        "breaded",
+        "pane",
+        "tempura",
+        "sauce",
+        "seasoned",
+        "assaisonne",
+        "marinated",
+        "marine",
+        "dumpling",
+        "ravioli",
+        "noodle",
+        "nouille",
+        "salad",
+        "salade"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_fromage_cheddar",
+      "name": "Fromage cheddar",
+      "category": "dairy",
+      "aliases": [
+        "cheddar"
+      ],
+      "excluded_terms": [
+        "flavoured",
+        "flavored",
+        "saveur",
+        "cracker",
+        "crackers",
+        "biscuit",
+        "popcorn",
+        "soup",
+        "soupe",
+        "sauce",
+        "dip",
+        "trempette",
+        "macaroni",
+        "pasta",
+        "chips",
+        "snack"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_yogourt_nature",
+      "name": "Yogourt nature",
+      "category": "dairy",
+      "aliases": [
+        "yogurt",
+        "yoghurt",
+        "yogourt",
+        "yogourts"
+      ],
+      "excluded_terms": [
+        "vanilla",
+        "vanille",
+        "strawberry",
+        "fraise",
+        "blueberry",
+        "bleuet",
+        "peach",
+        "peche",
+        "coconut",
+        "coco",
+        "almond",
+        "amande",
+        "drink",
+        "boisson",
+        "frozen",
+        "glace"
+      ],
+      "required_any": [
+        "plain",
+        "nature",
+        "natural"
+      ]
+    },
+    {
+      "id": "ing_beurre",
+      "name": "Beurre",
+      "category": "dairy",
+      "aliases": [
+        "butter",
+        "beurre"
+      ],
+      "excluded_terms": [
+        "peanut",
+        "arachide",
+        "almond",
+        "amande",
+        "apple",
+        "pomme",
+        "cocoa",
+        "cacao",
+        "coconut",
+        "coco",
+        "garlic",
+        "ail",
+        "cookie",
+        "cookies",
+        "biscuit",
+        "chicken",
+        "poulet",
+        "sauce",
+        "margarine",
+        "plant based",
+        "vegetal"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_pates_seches",
+      "name": "Pâtes alimentaires sèches",
+      "category": "pantry",
+      "aliases": [
+        "pasta",
+        "spaghetti",
+        "penne",
+        "fusilli",
+        "macaroni",
+        "rotini",
+        "linguine",
+        "fettuccine",
+        "pates"
+      ],
+      "excluded_terms": [
+        "sauce",
+        "ready",
+        "pret",
+        "fresh",
+        "fraiche",
+        "frozen",
+        "surgele",
+        "stuffed",
+        "farci",
+        "ravioli",
+        "tortellini",
+        "meal",
+        "repas",
+        "salad",
+        "salade"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_haricots_rouges_conserve",
+      "name": "Haricots rouges en conserve",
+      "category": "pantry",
+      "aliases": [
+        "kidney beans",
+        "haricots rouges"
+      ],
+      "excluded_terms": [
+        "dry",
+        "dried",
+        "sec",
+        "secs",
+        "salad",
+        "salade",
+        "soup",
+        "soupe",
+        "chili",
+        "mix",
+        "melange"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_tomates_conserve",
+      "name": "Tomates en conserve",
+      "category": "pantry",
+      "aliases": [
+        "tomato",
+        "tomatoes",
+        "tomate",
+        "tomates"
+      ],
+      "excluded_terms": [
+        "soup",
+        "soupe",
+        "juice",
+        "jus",
+        "ketchup",
+        "paste",
+        "pate",
+        "sauce",
+        "dried",
+        "seche",
+        "fresh",
+        "frais"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_farine",
+      "name": "Farine de blé tout usage",
+      "category": "pantry",
+      "aliases": [
+        "flour",
+        "farine"
+      ],
+      "excluded_terms": [
+        "almond",
+        "amande",
+        "coconut",
+        "coco",
+        "chickpea",
+        "pois chiche",
+        "rice",
+        "riz",
+        "corn",
+        "mais",
+        "gluten free",
+        "sans gluten",
+        "pancake",
+        "crepe",
+        "mix",
+        "melange"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_sucre",
+      "name": "Sucre blanc granulé",
+      "category": "pantry",
+      "aliases": [
+        "sugar",
+        "sucre"
+      ],
+      "excluded_terms": [
+        "brown",
+        "brun",
+        "cassonade",
+        "icing",
+        "glace",
+        "powdered",
+        "coconut",
+        "coco",
+        "substitute",
+        "substitut",
+        "stevia",
+        "candy",
+        "bonbon",
+        "cookie",
+        "biscuit"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_sel",
+      "name": "Sel de table",
+      "category": "pantry",
+      "aliases": [
+        "salt",
+        "sel"
+      ],
+      "excluded_terms": [
+        "garlic",
+        "ail",
+        "celery",
+        "celeri",
+        "seasoning",
+        "assaisonnement",
+        "pepper",
+        "poivre",
+        "bath",
+        "bain",
+        "epsom",
+        "cracker",
+        "chips",
+        "butter",
+        "beurre"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_pain_tranche",
+      "name": "Pain tranché",
+      "category": "bakery",
+      "aliases": [
+        "bread",
+        "pain"
+      ],
+      "excluded_terms": [
+        "garlic",
+        "ail",
+        "banana",
+        "banane",
+        "crumbs",
+        "chapelure",
+        "naan",
+        "pita",
+        "bagel",
+        "buns",
+        "rolls",
+        "mix",
+        "melange"
+      ],
+      "required_any": []
+    }
+  ]
+}

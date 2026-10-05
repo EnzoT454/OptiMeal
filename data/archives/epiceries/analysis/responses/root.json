@@ -1,0 +1,48 @@
+{
+  "requested_at": "2026-09-14T23:51:35.669609+00:00",
+  "url": "https://epiceries.ca/api",
+  "status": 200,
+  "elapsed_seconds": 0.098,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:51:35 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=z08bR%2BODY%2FDj2HyikyBUwiRO5lDyRc8%2BNKnEpFHaGO82oJuSNwqR1O7Ick%2F%2FWeiQJox8uNT6DoeQXSuMUhSqrJGOeoJubepEv5RL0Kh3matU9IhaaOrbSTQCmaUXEbo%3D\"}]}",
+    "CF-RAY": "a3b34cf1becf90a8-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "name": "épiceries.ca API",
+      "version": "1",
+      "description": "Public, read-only access to grocery item values and price history across six Québec grocery chains.",
+      "documentation": "https://epiceries.ca/developers",
+      "stores": [
+        "maxi",
+        "iga",
+        "superc",
+        "metro",
+        "provigo",
+        "walmart"
+      ],
+      "endpoints": {
+        "search": "https://epiceries.ca/api?endpoint=search&q=lait",
+        "product": "https://epiceries.ca/api?endpoint=product&id=PRODUCT_ID",
+        "history": "https://epiceries.ca/api?endpoint=history&id=PRODUCT_ID",
+        "barcode": "https://epiceries.ca/api?endpoint=barcode&code=BARCODE",
+        "storeproduct": "https://epiceries.ca/api?endpoint=storeproduct&store=maxi&code=STORE_CODE",
+        "categories": "https://epiceries.ca/api?endpoint=categories"
+      }
+    }
+  }
+}

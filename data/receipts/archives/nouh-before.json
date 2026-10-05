@@ -1,0 +1,374 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "generic",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": null,
+  "store_id": null,
+  "purchase_date": null,
+  "date_order": "ymd",
+  "source": {
+    "filename": "recu-nouh.png",
+    "sha256": "13a7d364a0df52f9dcd72d61422e85c417a22289982f4979c812bd335ef282dd",
+    "engine": "vision",
+    "elapsed_seconds": 2.284
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "M HALAL pitfites de $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.99",
+      "source_lines": [
+        "M HALAL pitfites de $4.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "CEDAR pois chiche 907 gr $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.99",
+      "source_lines": [
+        "CEDAR pois chiche 907 gr $1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": null,
+      "name": "FADY semoule 3kg $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.99",
+      "source_lines": [
+        "FADY semoule 3kg $4,99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": null,
+      "name": "MASOUD riz basmati sella $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.29",
+      "source_lines": [
+        "MASOUD riz basmati sella $4.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 5,
+      "product_code": null,
+      "name": "DALIA torsade 500gr $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.29",
+      "source_lines": [
+        "DALIA torsade 500gr $2.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 6,
+      "product_code": null,
+      "name": "b e $0.49 $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.94",
+      "source_lines": [
+        "b e $0.49 $2.94"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 7,
+      "product_code": null,
+      "name": "MELON D'EAU PETIT $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.99",
+      "source_lines": [
+        "MELON D'EAU PETIT $2.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 8,
+      "product_code": null,
+      "name": "U1gnon Jaune 5/0 $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.99",
+      "source_lines": [
+        "U1gnon Jaune 5/0 $1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 9,
+      "product_code": null,
+      "name": "El Mordjene Graisse $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.49",
+      "source_lines": [
+        "El Mordjene Graisse $3.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 10,
+      "product_code": null,
+      "name": "AMOR BENAMOR vermicelles $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.79",
+      "source_lines": [
+        "AMOR BENAMOR vermicelles $2.79"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 11,
+      "product_code": null,
+      "name": "FRANCISCO thon a l'huile $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.99",
+      "source_lines": [
+        "FRANCISCO thon a l'huile $2.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 12,
+      "product_code": null,
+      "name": "CEDAR hutle de tournesol $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "8.49",
+      "source_lines": [
+        "CEDAR hutle de tournesol $8.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 13,
+      "product_code": null,
+      "name": "HEINZ moutarde 375ml $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.99",
+      "source_lines": [
+        "HEINZ moutarde 375ml $1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 14,
+      "product_code": null,
+      "name": "AVOCAT SAC $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.99",
+      "source_lines": [
+        "AVOCAT SAC $2.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 15,
+      "product_code": null,
+      "name": "carrotes 5lb $",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.99",
+      "source_lines": [
+        "carrotes 5lb $1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [],
+  "totals": {
+    "subtotal": "101.65",
+    "total": "101.65",
+    "taxes": null,
+    "items_sum": "51.20",
+    "calculated_subtotal": "51.20",
+    "difference_from_subtotal": "-50.45",
+    "arithmetic_status": "mismatch",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [
+    "pudlet 800g",
+    "boeuf hache mi-maigre",
+    "0.732 kg 0 $14.99 / kg $10.97",
+    "MERGUEZ BOEUF DOUX",
+    "0.424 kg @ $14.99 / kg $6.36",
+    "GESIER DE POULET",
+    "0.421 kg @ $6.99 / kg $2.94",
+    "908gr",
+    "RAISIN ROUGE",
+    "1.440 kg @ $3.94 / kg $5.67",
+    "BANANE",
+    "1.075 kg G $1.74 / kg $1.87",
+    "PAIN SOUS-MARINS",
+    "6 pour 2.49$ -$O.45RT",
+    "POIVRON VERT",
+    "0.435 kg @ $2.18 / kg $0.95",
+    "Vegetale 500gг",
+    "JARRET DE BOEUF S/0",
+    "0.810 kg & $17.99 / kg $14.57",
+    "TOMATE ROMA",
+    "1.945 kg @ $2.18 1kg $4.24",
+    "500gr",
+    "Viale 3*65gr",
+    "POIVRON ROUGE",
+    "0.635 kg ( $1.08 / kg $0.69",
+    "31t",
+    "MOULIN D'OR biscuits",
+    "vanille noisette 120gr",
+    "3 E $0.79 $2.37",
+    "3 pour 0,99$ -$1.38RT",
+    "TOMATE DE SERRE",
+    "0.390 kg 0 $1.74 / kg $0.68",
+    "POMME LOBO",
+    "0.895 kg @ $1.08 / kg $0.97"
+  ],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "generic_profile_requires_review",
+    "purchase_date_missing",
+    "items_subtotal_mismatch",
+    "unparsed_lines_require_review"
+  ]
+}

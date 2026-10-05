@@ -1,0 +1,611 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "generic",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": null,
+  "store_id": null,
+  "purchase_date": null,
+  "date_order": "ymd",
+  "source": {
+    "filename": "recu-nouh.png",
+    "sha256": "13a7d364a0df52f9dcd72d61422e85c417a22289982f4979c812bd335ef282dd",
+    "engine": "vision",
+    "elapsed_seconds": 2.065
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "M HALAL pitfites de pudlet 800g",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.99",
+      "source_lines": [
+        "M HALAL pitfites de $4.99",
+        "pudlet 800g"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "boeuf hache mi-maigre",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.732",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "14.99",
+      "line_total": "10.97",
+      "source_lines": [
+        "boeuf hache mi-maigre",
+        "0.732 kg 0 $14.99 / kg $10.97"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": null,
+      "name": "MERGUEZ BOEUF DOUX",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.424",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "14.99",
+      "line_total": "6.36",
+      "source_lines": [
+        "MERGUEZ BOEUF DOUX",
+        "0.424 kg @ $14.99 / kg $6.36"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": null,
+      "name": "GESIER DE POULET",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.421",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "6.99",
+      "line_total": "2.94",
+      "source_lines": [
+        "GESIER DE POULET",
+        "0.421 kg @ $6.99 / kg $2.94"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 5,
+      "product_code": null,
+      "name": "CEDAR pois chiche 907 gr",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.99",
+      "source_lines": [
+        "CEDAR pois chiche 907 gr $1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 6,
+      "product_code": null,
+      "name": "FADY semoule 3kg",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.99",
+      "source_lines": [
+        "FADY semoule 3kg $4,99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 7,
+      "product_code": null,
+      "name": "MASOUD riz basmati sella 908gr",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.29",
+      "source_lines": [
+        "MASOUD riz basmati sella $4.29",
+        "908gr"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 8,
+      "product_code": null,
+      "name": "DALIA torsade 500gr",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.29",
+      "source_lines": [
+        "DALIA torsade 500gr $2.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 9,
+      "product_code": null,
+      "name": "RAISIN ROUGE",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "1.440",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "3.94",
+      "line_total": "5.67",
+      "source_lines": [
+        "RAISIN ROUGE",
+        "1.440 kg @ $3.94 / kg $5.67"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 10,
+      "product_code": null,
+      "name": "BANANE",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "1.075",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "1.74",
+      "line_total": "1.87",
+      "source_lines": [
+        "BANANE",
+        "1.075 kg G $1.74 / kg $1.87"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 11,
+      "product_code": null,
+      "name": "PAIN SOUS-MARINS",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.94",
+      "source_lines": [
+        "PAIN SOUS-MARINS",
+        "b e $0.49 $2.94"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_detail_unreadable",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 12,
+      "product_code": null,
+      "name": "MELON D'EAU PETIT",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.99",
+      "source_lines": [
+        "MELON D'EAU PETIT $2.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 13,
+      "product_code": null,
+      "name": "U1gnon Jaune 5/0",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.99",
+      "source_lines": [
+        "U1gnon Jaune 5/0 $1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 14,
+      "product_code": null,
+      "name": "POIVRON VERT",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.435",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "2.18",
+      "line_total": "0.95",
+      "source_lines": [
+        "POIVRON VERT",
+        "0.435 kg @ $2.18 / kg $0.95"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 15,
+      "product_code": null,
+      "name": "El Mordjene Graisse Vegetale 500gг",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.49",
+      "source_lines": [
+        "El Mordjene Graisse $3.49",
+        "Vegetale 500gг"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 16,
+      "product_code": null,
+      "name": "JARRET DE BOEUF S/0",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.810",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "17.99",
+      "line_total": "14.57",
+      "source_lines": [
+        "JARRET DE BOEUF S/0",
+        "0.810 kg & $17.99 / kg $14.57"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 17,
+      "product_code": null,
+      "name": "TOMATE ROMA",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.24",
+      "source_lines": [
+        "TOMATE ROMA",
+        "1.945 kg @ $2.18 1kg $4.24"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_detail_unreadable",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 18,
+      "product_code": null,
+      "name": "AMOR BENAMOR vermicelles 500gr",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.79",
+      "source_lines": [
+        "AMOR BENAMOR vermicelles $2.79",
+        "500gr"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 19,
+      "product_code": null,
+      "name": "FRANCISCO thon a l'huile Viale 3*65gr",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.99",
+      "source_lines": [
+        "FRANCISCO thon a l'huile $2.99",
+        "Viale 3*65gr"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 20,
+      "product_code": null,
+      "name": "POIVRON ROUGE",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.635",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "1.08",
+      "line_total": "0.69",
+      "source_lines": [
+        "POIVRON ROUGE",
+        "0.635 kg ( $1.08 / kg $0.69"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 21,
+      "product_code": null,
+      "name": "CEDAR hutle de tournesol",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "8.49",
+      "source_lines": [
+        "CEDAR hutle de tournesol $8.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 22,
+      "product_code": null,
+      "name": "HEINZ moutarde 375ml",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.99",
+      "source_lines": [
+        "HEINZ moutarde 375ml $1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 23,
+      "product_code": null,
+      "name": "MOULIN D'OR biscuits vanille noisette 120gr",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "3",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "0.79",
+      "line_total": "2.37",
+      "source_lines": [
+        "MOULIN D'OR biscuits",
+        "vanille noisette 120gr",
+        "3 E $0.79 $2.37"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 24,
+      "product_code": null,
+      "name": "AVOCAT SAC",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.99",
+      "source_lines": [
+        "AVOCAT SAC $2.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 25,
+      "product_code": null,
+      "name": "TOMATE DE SERRE",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.390",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "1.74",
+      "line_total": "0.68",
+      "source_lines": [
+        "TOMATE DE SERRE",
+        "0.390 kg 0 $1.74 / kg $0.68"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 26,
+      "product_code": null,
+      "name": "POMME LOBO",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.895",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "1.08",
+      "line_total": "0.97",
+      "source_lines": [
+        "POMME LOBO",
+        "0.895 kg @ $1.08 / kg $0.97"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 27,
+      "product_code": null,
+      "name": "carrotes 5lb",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.99",
+      "source_lines": [
+        "carrotes 5lb $1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": null,
+      "effect": "unknown",
+      "source_line": "6 pour 2.49$ -$O.45RT",
+      "review_required": true
+    },
+    {
+      "amount": "-1.38",
+      "effect": "applied",
+      "source_line": "3 pour 0,99$ -$1.38RT",
+      "review_required": true
+    }
+  ],
+  "totals": {
+    "subtotal": "101.65",
+    "total": "101.65",
+    "taxes": null,
+    "items_sum": "103.48",
+    "calculated_subtotal": null,
+    "difference_from_subtotal": null,
+    "arithmetic_status": "unverifiable",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [
+    "31t"
+  ],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "generic_profile_requires_review",
+    "purchase_date_missing",
+    "items_subtotal_unverifiable",
+    "receipt_adjustments_require_review",
+    "unparsed_lines_require_review"
+  ]
+}

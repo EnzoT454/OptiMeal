@@ -1,163 +1,124 @@
 # Backend OptiMeal
 
-Ce dossier contient l'API du projet OptiMeal. Le backend reçoit les demandes de l'application mobile, applique les règles métier, lit ou écrit les données dans PostgreSQL et communique avec les sources externes de prix.
+Le backend contient l’API FastAPI, la collecte Apify pour Maxi et l’extraction locale des reçus. Le code est organisé par fonction, avec des commandes et des guides séparés.
 
-L'architecture est un **monolithe modulaire FastAPI** : une seule application à déployer, divisée par domaines métier. Ce choix est adapté au projet : les fonctions recettes, planification, liste d'achats et prix sont étroitement liées, et l'équipe peut les développer et les tester sans la complexité de microservices.
-
-## État actuel
-
-Le connecteur **épiceries.ca** est fonctionnel et couvert par des tests sans réseau. Il fournit les routes suivantes :
-
-- `GET /health`
-- `GET /sources/epiceries/categories`
-- `GET /sources/epiceries/search?q=riz&limit=3`
-- `GET /sources/epiceries/products/{id}`
-
-Les modules `accounts`, `recipes`, `planning`, `shopping_lists` et le stockage PostgreSQL sont des squelettes intentionnels : leur structure est prête, mais leurs routes et modèles ne sont pas encore implémentés.
-
-### Recherche de produits
-
-`GET /sources/epiceries/search` transmet la requête au fournisseur, puis améliore localement la pertinence pour un usage d'épicerie. Par défaut, `food_only=true` retire les catégories explicitement non alimentaires du fournisseur (ménage, hygiène/beauté, animaux et bébé) et, avec le tri fournisseur par défaut (`updated_desc`), classe les noms commençant par la requête avant les correspondances où elle apparaît plus loin. Les tris de prix restent ceux du fournisseur. Ainsi, une recherche `q=miel` ne propose pas un shampoing au miel avant un aliment.
-
-Le champ `filter` de la réponse expose les catégories retirées, le nombre de résultats fournisseur et le mode de classement. `data.count` est le nombre réellement renvoyé après filtrage ; `hasMore` demeure l'indication du fournisseur. Utiliser `food_only=false` pour obtenir aussi les catégories non alimentaires. Un paramètre `category` explicite est toujours respecté et désactive ce filtre local.
-
-## Flux d'une requête
-
-```text
-Application mobile / Postman
-            |
-            v
-        router.py              Route HTTP : paramètres, réponse et statut HTTP
-            |
-            v
-        service.py             Règles métier et autorisations
-            |
-      +-----+------+------------------+
-      |            |                  |
-      v            v                  v
- models.py    price_sources/      common/
- PostgreSQL   API externe          unités et prix partagés
-      |
-      v
- schemas.py -> JSON validé renvoyé au client
-```
-
-Pour le connecteur disponible aujourd'hui :
-
-```text
-Route catalogue -> epiceries_ca.py -> cache + limite de débit -> épiceries.ca
-       |                                                               |
-       +-------- normalize.py <- données fournisseur validées --------+
-```
-
-Le backend conserve les données brutes et renvoie des avertissements de qualité (prix ancien, format non interprétable, prix détaillé incohérent, etc.). Un résultat HTTP `200` ne garantit pas qu'un prix soit valide dans une succursale.
-
-## Arborescence et rôle des fichiers
+## Structure
 
 ```text
 backend/
-├── app/
-│   ├── __init__.py             # Marque app comme package Python
-│   ├── main.py                 # Crée FastAPI, ajoute les routes et /health
-│   ├── config.py               # Lit DATABASE_URL, JWT_SECRET et options externes
-│   ├── database.py             # Futur point unique SQLAlchemy/PostgreSQL
-│   ├── security.py             # Futur hashage des mots de passe et JWT
-│   │
-│   ├── accounts/               # Domaine comptes utilisateurs
-│   │   ├── router.py           # Futures routes /auth et /users
-│   │   ├── schemas.py          # JSON inscription, connexion et profil
-│   │   ├── models.py           # Futures tables User et préférences
-│   │   └── service.py          # Inscription, connexion et règles d'accès
-│   │
-│   ├── recipes/                # Domaine recettes et ingrédients
-│   │   ├── router.py           # Futures routes /recipes
-│   │   ├── schemas.py          # Formats JSON des recettes
-│   │   ├── models.py           # Futures tables Recipe et Ingredient
-│   │   └── service.py          # CRUD, favoris et ajustement des portions
-│   │
-│   ├── planning/               # Domaine planification hebdomadaire
-│   │   ├── router.py           # Futures routes /plans ou /weeks
-│   │   ├── schemas.py          # Jours, repas et portions
-│   │   ├── models.py           # Semaines et repas planifiés
-│   │   └── service.py          # Validation et historique des semaines
-│   │
-│   ├── shopping_lists/         # Domaine listes d'achats
-│   │   ├── router.py           # Futures routes /shopping-lists
-│   │   ├── schemas.py          # Articles et totaux de liste
-│   │   ├── models.py           # Listes et articles persistés
-│   │   └── service.py          # Agrégation, remplacement et recalcul
-│   │
-│   ├── catalog/                # Domaine catalogue, magasins et prix internes
-│   │   ├── router.py           # Routes épiceries.ca actuellement disponibles
-│   │   ├── schemas.py          # Futurs schémas catalogue OptiMeal
-│   │   ├── models.py           # Futures tables Product, Store, PriceObservation
-│   │   └── service.py          # Futures recherches et règles de prix internes
-│   │
-│   ├── price_sources/          # Connecteurs de données de prix externes
-│   │   ├── epiceries_ca.py     # HTTP, cache, débit limité et erreurs fournisseur
-│   │   ├── schemas.py          # Contrat Pydantic spécifique à épiceries.ca
-│   │   └── normalize.py        # Conversion vers le format d'offre OptiMeal
-│   │
-│   └── common/                 # Fonctions réutilisables, sans domaine métier
-│       ├── units.py            # Futures conversions g/kg/ml/L
-│       └── prices.py           # Futurs types prix, fourchettes et avertissements
-│
+├── README.md
+├── .env.example                 # Variables actuelles et emplacements des futurs secrets
+├── app/                         # Code de l’API et traitements réutilisables
+│   ├── main.py                  # FastAPI, chargement du catalogue et /health
+│   ├── config.py                # Configuration et futurs paramètres PostgreSQL/auth
+│   ├── database.py              # Squelette du point d’accès PostgreSQL
+│   ├── security.py              # Squelette de l’authentification
+│   ├── accounts/                # Base des comptes : router, schemas, models, service
+│   ├── recipes/                 # Base des recettes, ingrédients et favoris
+│   ├── planning/                # Base des plans hebdomadaires et de leur historique
+│   ├── shopping_lists/          # Base des listes, modifications et recalcul
+│   ├── common/                  # Base des utilitaires partagés : prix et unités
+│   ├── catalog/
+│   │   ├── router.py            # GET /catalog et /catalog/offers
+│   │   ├── schemas.py           # Contrat Pydantic du catalogue
+│   │   ├── models.py            # Futurs modèles produits, magasins et prix
+│   │   ├── service.py           # Futures règles du catalogue persisté
+│   │   ├── formats.py           # Formats, unités et codes-barres
+│   │   ├── matching.py          # Correspondances ingrédient-produit
+│   │   ├── export.py            # Identifiants stables et rapport de collecte
+│   │   ├── apify_command.py     # Préparation des collectes, reprises et rejeux
+│   │   ├── apify_batch.py       # Répartition des recherches, quotas et budgets
+│   │   └── apify_ingestion.py   # Capture et normalisation des réponses
+│   ├── price_sources/
+│   │   └── apify_loblaws.py     # Client HTTP Apify
+│   └── receipts/
+│       ├── ocr.py               # Apple Vision et Tesseract + OpenCV
+│       ├── vision_ocr.swift     # Reconnaissance de texte sur Mac
+│       ├── parser.py            # Reconstruction des articles et montants
+│       ├── schemas.py           # Contrat JSON des reçus
+│       ├── validation.py        # Contrôles des montants
+│       └── rules/               # Règles communes, Maxi, Metro et génériques
+├── cli/                         # Commandes exécutées avec python -m
+│   ├── ingest_catalog.py        # Collecte, reprise et rejeu Apify
+│   └── extract_receipt.py       # Extraction OCR et export du schéma JSON
+├── config/catalog/              # 31 ingrédients, requêtes, rayons et succursale
+├── docs/
+│   ├── APIFY.md                 # Installation et utilisation d’Apify
+│   ├── CATALOG.md               # Contrat et limites du catalogue
+│   ├── RECEIPTS.md              # Installation OCR, essais et limites
+│   ├── DATA.md                  # Organisation des données locales
+│   ├── DATABASE.md              # Proposition PostgreSQL pour la suite
+│   └── examples/                # Exemple de catalogue fictif
+├── alembic/                     # Base des futures migrations PostgreSQL
+│   ├── env.py                   # Configuration à compléter
+│   └── versions/               # Emplacement des migrations
 ├── tests/
-│   ├── conftest.py             # Futures fixtures partagées (client, base test)
-│   ├── fixtures/               # Réponses fournisseur enregistrées, sans réseau
-│   ├── test_epiceries.py       # Tests actuels du connecteur épiceries.ca
-│   ├── test_accounts.py        # Emplacement des futurs tests comptes
-│   ├── test_recipes.py         # Emplacement des futurs tests recettes
-│   ├── test_planning.py        # Emplacement des futurs tests planification
-│   └── test_shopping_lists.py  # Emplacement des futurs tests listes
-│
-├── alembic/
-│   ├── env.py                  # Configuration de migration à compléter avec SQLAlchemy
-│   │                            # et Alembic
-│   └── versions/               # Une migration PostgreSQL par changement de schéma
-│
-├── postman/                    # Collection pour essayer l'API manuellement
-├── smoke.py                    # Parcours réel catégories -> recherche -> détail
-└── .env.example                # Variables à copier dans un environnement local
+│   ├── conftest.py              # Base des futures fixtures partagées
+│   ├── test_accounts.py         # Emplacement des tests comptes
+│   ├── test_recipes.py          # Emplacement des tests recettes
+│   ├── test_planning.py         # Emplacement des tests plans
+│   ├── test_shopping_lists.py   # Emplacement des tests listes
+│   ├── test_catalog.py          # Formats, codes-barres et correspondances
+│   ├── test_apify_catalog.py    # Collecte, erreurs, reprise, rejeu et API
+│   └── test_receipts.py         # OCR, parsing et contrôles des montants
+└── postman/                     # Requêtes pour essayer l’API
 ```
 
-## Convention pour un nouveau domaine
+Les fichiers `__init__.py` identifient les packages Python. Les squelettes des composantes retenues sont conservés comme base du développement à venir. Ils précisent les responsabilités sans prétendre que les fonctionnalités sont déjà réalisées. Dans chaque domaine, `router.py` recevra les requêtes HTTP, `schemas.py` définira les contrats, `models.py` les modèles persistants et `service.py` les règles métier.
 
-- `router.py` : couche HTTP uniquement. Elle valide les paramètres, appelle le service et renvoie le bon code HTTP. Ne pas y placer de calcul métier.
-- `schemas.py` : contrats d'entrée et de sortie avec Pydantic. Ils empêchent notamment de renvoyer des champs internes ou sensibles.
-- `models.py` : modèles SQLAlchemy représentant les tables PostgreSQL.
-- `service.py` : règles métier. Au début, il peut contenir les requêtes SQLAlchemy simples ; un `repository.py` ne sera créé que si ces requêtes deviennent réutilisées ou complexes.
+## Lancer l’API
 
-## Lancer le backend
-
-Depuis la racine du dépôt :
+Depuis la racine du projet, avec l’environnement Python activé :
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
 python -m pip install -r requirements.txt
-export EPICERIES_ENABLED=true
+export CATALOG_IMPORT_PATH=data/catalog/maxi/maxi-apify-batch2-01/catalog.json
 python -m uvicorn backend.app.main:app --reload --port 8001
 ```
 
-Documentation interactive : <http://127.0.0.1:8001/docs>.
+Choisir une collecte existante. Sans catalogue configuré, `GET /health` fonctionne et les routes `/catalog` et `/catalog/offers` renvoient 503. La documentation interactive est à `http://localhost:8001/docs`. Un fichier invalide empêche le démarrage.
 
-Exécuter les tests sans réseau :
+Les fichiers `data_final/produits.json` et `promos.json` servent à consulter les données regroupées ; l’API charge actuellement un export `catalog-pilot-1.0`, comme ceux des collectes. Les lectures HTTP ne lancent aucun appel Apify.
+
+## Collecter les données Maxi
+
+Exporter `APIFY_TOKEN` dans le terminal avant une collecte réelle. Les commandes ne chargent pas automatiquement `.env`.
+
+```bash
+python -m backend.cli.ingest_catalog --live --location-id 8661 \
+  --max-items 100 --max-charge-usd 1 \
+  --output-dir data/catalog/maxi/nouvelle-collecte
+```
+
+Le rejeu fonctionne sans token ni réseau :
+
+```bash
+python -m backend.cli.ingest_catalog \
+  --replay data/catalog/maxi/maxi-apify-02/raw.json \
+  --output-dir data/catalog/maxi/nouveau-rejeu
+```
+
+Consulter [Apify](docs/APIFY.md) pour les lots, promotions, budgets et reprises, et le [guide catalogue](docs/CATALOG.md) pour le contrat. Hamza a vérifié les données Maxi récupérées : les produits, les prix et la succursale sont corrects. Cette validation humaine est consignée dans le [guide Apify](docs/APIFY.md#validation-humaine-des-données-maxi--4-octobre-2026).
+
+## Extraire un reçu
+
+```bash
+python -m backend.cli.extract_receipt data/receipts/images/recu_maxi.jpg \
+  --engine tesseract --output data/receipts/extractions/nouveau-recu.json
+```
+
+Sur Mac, `--engine vision` utilise Apple Vision. Pour Windows, utiliser Tesseract + OpenCV. Le [guide OCR](docs/RECEIPTS.md) explique l’installation, le modèle complémentaire Metro et les résultats. Le chemin Windows reste à tester sur PC.
+
+Les reçus restent locaux et privés. La confirmation humaine du 4 octobre porte sur les prix de l’échantillon Maxi/Metro ; les anciennes sorties peuvent conserver des erreurs. Le parcours de correction et confirmation en base reste à développer.
+
+## Tests et développement
 
 ```bash
 python -m pytest backend/tests -q
 ```
 
-Le test réel est volontairement séparé, car il dépend du fournisseur :
+Les tests couvrent les modules existants sans collecte externe ni appel payant. Ils ne prouvent pas l’exactitude des prix en magasin.
 
-```bash
-python -m backend.smoke
-```
+Pour la suite, ajouter les connecteurs web IA Metro/Super C dans `app/price_sources/`, puis construire PostgreSQL, comptes, recettes, planning et listes progressivement. Compléter les fichiers déjà préparés dans les domaines concernés et leurs tests. Garder les routes HTTP courtes et les traitements réutilisables hors des commandes.
 
-## Étapes suivantes
-
-1. Ajouter SQLAlchemy, Alembic et PostgreSQL dans `database.py`.
-2. Implémenter `accounts` et ses tests avant de protéger les routes privées.
-3. Implémenter `recipes`, puis `planning`.
-4. Construire `shopping_lists` à partir des recettes, plans et prix.
-5. Ajouter progressivement les autres sources de prix dans `price_sources/`.
+Le [guide des données](docs/DATA.md) décrit les fichiers locaux. Le [modèle de base](docs/DATABASE.md) reste une proposition à concrétiser lors de l’intégration PostgreSQL.

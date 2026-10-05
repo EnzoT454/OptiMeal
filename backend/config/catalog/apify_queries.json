@@ -1,0 +1,14 @@
+{
+  "queries": {
+    "ing_ail_frais": "garlic",
+    "ing_oignon_jaune": "yellow onions",
+    "ing_carotte_fraiche": "carrots",
+    "ing_banane_fraiche": "bananas",
+    "ing_poitrine_poulet": "chicken breast",
+    "ing_lait_2": "2% milk",
+    "ing_oeuf_gros": "large eggs",
+    "ing_riz_basmati_blanc": "basmati rice",
+    "ing_pois_chiche_conserve": "chickpeas",
+    "ing_huile_olive": "olive oil"
+  }
+}

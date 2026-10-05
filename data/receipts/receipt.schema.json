@@ -1,0 +1,447 @@
+{
+  "$defs": {
+    "ReceiptAdjustment": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Amount"
+        },
+        "effect": {
+          "enum": [
+            "applied",
+            "informational",
+            "unknown"
+          ],
+          "title": "Effect",
+          "type": "string"
+        },
+        "source_line": {
+          "title": "Source Line",
+          "type": "string"
+        },
+        "review_required": {
+          "const": true,
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "amount",
+        "effect",
+        "source_line"
+      ],
+      "title": "ReceiptAdjustment",
+      "type": "object"
+    },
+    "ReceiptItem": {
+      "additionalProperties": false,
+      "properties": {
+        "line_id": {
+          "exclusiveMinimum": 0,
+          "title": "Line Id",
+          "type": "integer"
+        },
+        "product_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Code"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "category_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category Raw"
+        },
+        "format_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Format Raw"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quantity"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "enum": [
+                "unit",
+                "kg",
+                "lb"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "quantity_source": {
+          "default": "unknown",
+          "enum": [
+            "explicit",
+            "unknown"
+          ],
+          "title": "Quantity Source",
+          "type": "string"
+        },
+        "unit_price": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit Price"
+        },
+        "line_total": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line Total"
+        },
+        "source_lines": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Lines",
+          "type": "array"
+        },
+        "review_required": {
+          "const": true,
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "line_id",
+        "name",
+        "source_lines"
+      ],
+      "title": "ReceiptItem",
+      "type": "object"
+    },
+    "ReceiptSource": {
+      "additionalProperties": false,
+      "properties": {
+        "filename": {
+          "title": "Filename",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "engine": {
+          "title": "Engine",
+          "type": "string"
+        },
+        "elapsed_seconds": {
+          "minimum": 0,
+          "title": "Elapsed Seconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "filename",
+        "sha256",
+        "engine",
+        "elapsed_seconds"
+      ],
+      "title": "ReceiptSource",
+      "type": "object"
+    },
+    "ReceiptTotals": {
+      "additionalProperties": false,
+      "properties": {
+        "subtotal": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Subtotal"
+        },
+        "total": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Total"
+        },
+        "taxes": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Taxes"
+        },
+        "items_sum": {
+          "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d{0,2}0*$",
+          "title": "Items Sum",
+          "type": "string"
+        },
+        "calculated_subtotal": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Calculated Subtotal"
+        },
+        "difference_from_subtotal": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Difference From Subtotal"
+        },
+        "arithmetic_status": {
+          "enum": [
+            "matches",
+            "mismatch",
+            "unverifiable"
+          ],
+          "title": "Arithmetic Status",
+          "type": "string"
+        },
+        "tax_check_status": {
+          "default": "unverifiable",
+          "enum": [
+            "matches",
+            "mismatch",
+            "unverifiable"
+          ],
+          "title": "Tax Check Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "items_sum",
+        "arithmetic_status"
+      ],
+      "title": "ReceiptTotals",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "receipt-1.1",
+      "default": "receipt-1.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "parsing_profile": {
+      "default": "generic",
+      "enum": [
+        "maxi",
+        "metro",
+        "generic"
+      ],
+      "title": "Parsing Profile",
+      "type": "string"
+    },
+    "status": {
+      "const": "review_required",
+      "default": "review_required",
+      "title": "Status",
+      "type": "string"
+    },
+    "source_kind": {
+      "const": "receipt",
+      "default": "receipt",
+      "title": "Source Kind",
+      "type": "string"
+    },
+    "currency": {
+      "const": "CAD",
+      "default": "CAD",
+      "title": "Currency",
+      "type": "string"
+    },
+    "retailer": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Retailer"
+    },
+    "store_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Store Id"
+    },
+    "purchase_date": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Purchase Date"
+    },
+    "date_order": {
+      "enum": [
+        "ymd",
+        "dmy"
+      ],
+      "title": "Date Order",
+      "type": "string"
+    },
+    "source": {
+      "$ref": "#/$defs/ReceiptSource"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ReceiptItem"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "adjustments": {
+      "items": {
+        "$ref": "#/$defs/ReceiptAdjustment"
+      },
+      "title": "Adjustments",
+      "type": "array"
+    },
+    "totals": {
+      "$ref": "#/$defs/ReceiptTotals"
+    },
+    "unparsed_lines": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unparsed Lines",
+      "type": "array"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "date_order",
+    "source",
+    "items",
+    "totals",
+    "unparsed_lines",
+    "warnings"
+  ],
+  "title": "ReceiptExtraction",
+  "type": "object"
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": "catalog-proposal-0.1",
+  "dataset_kind": "demo",
+  "status": "illustrative_not_an_implemented_api",
+  "ingredient": {
+    "id": "ing_oignon_jaune",
+    "name": "Oignon jaune",
+    "category_code": "produce",
+    "aliases": [
+      {"label": "Oignons jaunes", "locale": "fr-CA", "status": "validated"}
+    ],
+    "products": [
+      {
+        "id": "prod_oignon_jaune_sac_3lb",
+        "name": "Oignons jaunes, sac de 3 lb",
+        "brand": null,
+        "identifiers": [],
+        "match": {"kind": "direct", "status": "validated"},
+        "format": {"kind": "fixed", "raw": "Sac de 3 lb", "quantity": "3", "unit": "lb"},
+        "offers": [
+          {
+            "id": "price_demo_001",
+            "listing_id": "listing_demo_maxi_oignons",
+            "retailer_id": "maxi",
+            "store_id": "store_demo_001",
+            "scope": {"kind": "store", "region_code": null},
+            "external_product_id": null,
+            "price_type": "fixed",
+            "amount": "2.99",
+            "regular_amount": null,
+            "currency": "CAD",
+            "basis_quantity": "1",
+            "basis_unit": "package",
+            "minimum_purchase_quantity": null,
+            "is_promotion": true,
+            "loyalty_required": false,
+            "conditions_raw": "Offre fictive sans condition de fidélité.",
+            "conditions_status": "supported",
+            "taxes_included": null,
+            "deposit_amount": null,
+            "valid_from": "2026-09-24",
+            "valid_to": "2026-09-30",
+            "observed_at": "2026-09-28T14:30:00-04:00",
+            "source": {
+              "capture_id": "capture_demo_001",
+              "type": "manual",
+              "namespace": "optimeal_demo",
+              "url": null,
+              "retrieved_at": "2026-09-28T14:30:00-04:00",
+              "published_at": null
+            },
+            "quality": {"status": "review_required", "warnings": ["demo_data_not_a_real_price"]}
+          }
+        ]
+      }
+    ]
+  },
+  "stores": [
+    {
+      "id": "store_demo_001",
+      "retailer_id": "maxi",
+      "name": "Succursale fictive pour démonstration",
+      "external_store_id": null,
+      "timezone": "America/Toronto"
+    }
+  ]
+}

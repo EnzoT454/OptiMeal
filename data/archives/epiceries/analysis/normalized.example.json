@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1-proposal",
+  "status": "example_from_saved_api_response_not_verified_in_store",
+  "retailer": "maxi",
+  "store_id": null,
+  "name": "Lait 2 %",
+  "brand": "QUÉBON",
+  "category": "dairy",
+  "category_mapping_status": "proposed",
+  "format": {
+    "raw": "4l",
+    "quantity": "4",
+    "unit": "L"
+  },
+  "price": {
+    "amount": "8.16",
+    "currency": "CAD",
+    "basis": "package",
+    "kind": "commercial",
+    "discounted": false,
+    "loyalty_required": null,
+    "taxes_included": null,
+    "deposit_amount": null
+  },
+  "observed_at": "2026-08-29T03:05:20+00:00",
+  "retrieved_at": "2026-09-14T23:52:59.443325+00:00",
+  "valid_from": null,
+  "valid_to": null,
+  "source": {
+    "type": "epiceries_api",
+    "product_id": "KmGS0CjUfXoy",
+    "category_id": 7,
+    "url": "https://epiceries.ca/api?endpoint=storeproduct&store=maxi&code=20021564_EA",
+    "retailer_url": "https://www.maxi.ca/fr/lait-2/p/20021564_EA",
+    "product_updated_at": "2026-08-29T13:11:08+00:00"
+  },
+  "quality": {
+    "status": "review_required",
+    "warnings": [
+      "Observed price older than proposed 7-day freshness threshold.",
+      "No store branch or promotion validity interval supplied.",
+      "Not verified against a current retailer price."
+    ]
+  }
+}
