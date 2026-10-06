@@ -1,0 +1,12 @@
+{
+  "id": "maxi_cote_des_neiges",
+  "retailer_id": "maxi",
+  "name": "Maxi Côte-des-Neiges",
+  "address": "6825, chemin de la Côte-des-Neiges, Montréal",
+  "timezone": "America/Toronto",
+  "receipt_store_code": "8661",
+  "retailer_api_store_id": "8661",
+  "identity_source": "En-tête du reçu fourni data/recu_maxi.jpg ; choix utilisateur",
+  "price_scope_status": "not_verified",
+  "api_identity_source": "Apify raw.json de maxi-apify-01 : 100 lignes location=8661, Maxi Montréal Côte-des-Neiges, H3S 2B6 ; identité déclarée par la source, prix non vérifiés"
+}

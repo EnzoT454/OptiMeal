@@ -1,0 +1,713 @@
+{
+  "schema_version": "catalog-review-1.0",
+  "status": "pending_human_review",
+  "note": "Suggestions uniquement. Modifier ce fichier n’approuve pas un prix ni une succursale.",
+  "matches": [
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_32913a634f1325ea1737",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:powder"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_6c49ab02697d013a7ac0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_396f1b5c9000ba7d7ea5",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_8db8d5f2d9863bdacd7e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:cheese",
+        "excluded_term:herb"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_f9517243479819e29547",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_0dcb02d1cafa70dd0574",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:aioli",
+        "excluded_term:mayonnaise",
+        "excluded_term:dressing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_e5808beae809d0706981",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:chopped"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_0d809759995b7116db4b",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:seasoning",
+        "excluded_term:roasted"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_1249d1e7dc65080e9e58",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:garlic",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "apify_product_1020b7f13828d89e117a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce",
+        "excluded_term:mayonnaise"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oignon_jaune",
+      "product_id": "apify_product_1759e66dc34c2ee766fb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:yellow onions",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oignon_jaune",
+      "product_id": "apify_product_95f6f1f1aad307b90769",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:yellow onions",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oignon_jaune",
+      "product_id": "apify_product_bdad4336b9880f8d2837",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:yellow onion",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "product_id": "apify_product_28a6c7bc0204df5f30ce",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:carrots",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "product_id": "apify_product_e39c4092c0c66a6b26c2",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:carrots",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "product_id": "apify_product_33228589f82b04c16171",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:carrots",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "product_id": "apify_product_65392ba227f76a8041d5",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:carrots",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "product_id": "apify_product_f7689a986441652ce700",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:carrots",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "product_id": "apify_product_5477ad5b04841b8816ea",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:carrots",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "product_id": "apify_product_5186dbec8120a80307da",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:carrots",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "product_id": "apify_product_ddb69cdb5b3f3bad518f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:bananas",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "product_id": "apify_product_eee2f0363c4de7399f52",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:smoothie"
+      ]
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "product_id": "apify_product_c9d53cb1080a7efcb75a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:smoothie"
+      ]
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "product_id": "apify_product_8584d2d82986780de3c9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:bananas",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "product_id": "apify_product_e5c5ad9cbf3406c8bfe3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:banana",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "product_id": "apify_product_b10343fcd586ba19f008",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:yogurt"
+      ]
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "product_id": "apify_product_4c879774c853488670f4",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:chicken breast",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "product_id": "apify_product_b17253735d76a9454f5c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:chicken breast",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "product_id": "apify_product_0546586bf85b654838fe",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:chicken breast",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "product_id": "apify_product_35f2355725752aff2db6",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:chicken breast",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_9a4161aa6407d26337dd",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:milk",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_bdea959b25ac53844ea9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:milk",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_3068b56576986b4cda14",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:milk",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_0083495fe58fd7f49c80",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:milk",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_3dd63857513859ef466c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:milk",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_7c7e8295b1103313c860",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:milk",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_bfeb0dfa3cedf116cd1e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:lactose free"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_772e9307883c0f77943f",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_8a001e450cc5b2f9a994",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:lactose free"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "product_id": "apify_product_9199351a3c90fcc01c34",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:eggs",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_7203e66059c1a358c5d2",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:chocolate"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "product_id": "apify_product_7203e66059c1a358c5d2",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:chocolate"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "apify_product_3b1a1ad65a4207bf6682",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:chocolate"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "product_id": "apify_product_3b1a1ad65a4207bf6682",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:chocolate"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "product_id": "apify_product_d8b9a8195725325962de",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:extra large"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "product_id": "apify_product_49b005c956dc22eb14ac",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:eggs",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "product_id": "apify_product_51016918c92d74b279d3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:eggs",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "product_id": "apify_product_d638ab6a01a46aadc53d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:eggs",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "product_id": "apify_product_a9dd03e8f95b3f69399b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:eggs",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "product_id": "apify_product_8b2a90bf39ebbd0799a0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:eggs",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_1ac66c1f66a10fd3634a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:basmati",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_24931dd8cef5d41b6917",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:basmati",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_a82341b215ce69a2e575",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:basmati",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_9608922a4cfc6bb89297",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:basmati",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_00f02229a3729797a860",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:basmati",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_4bff8ccb02a7343a0972",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:express"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_b6966a3120148d34f54c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:basmati",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_06bc371e99ecfbf8bfdf",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:basmati",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_342150206cee74b886af",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:basmati",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "product_id": "apify_product_8aade5eedd0bacd56489",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:express"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pois_chiche_conserve",
+      "product_id": "apify_product_c439cc62377752b792a3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:chickpeas",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pois_chiche_conserve",
+      "product_id": "apify_product_8c54c5b99f609037f829",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:chickpeas",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pois_chiche_conserve",
+      "product_id": "apify_product_bf5c6143c27038899df8",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:chickpeas",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_74bec09ead81756ee3fc",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_60ec6ea8d1b3aa4daf09",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_151de3605d6ca9bb8cfe",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_ee63f82c2b861327df65",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_6b394312b1c0c7739356",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_30385347ce476c1a6026",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_5657726fe9b2ffc42647",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_54f6916bbc1a51062a8a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "product_id": "apify_product_4568c9298e453fc54da0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:olive oil",
+        "manual_approval_required"
+      ]
+    }
+  ],
+  "search_rejections": []
+}

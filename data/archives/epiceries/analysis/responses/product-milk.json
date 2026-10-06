@@ -1,0 +1,61 @@
+{
+  "requested_at": "2026-09-14T23:51:43.099625+00:00",
+  "url": "https://epiceries.ca/api?endpoint=product&id=KLT6H8ZfyNP0",
+  "status": 200,
+  "elapsed_seconds": 0.521,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:51:43 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=K9s4uriKypO3ANfMpoFGUYOj37Q%2Ba6hh48ni5uIzDE%2FobbCj2hRmIFI%2FgRedUIcb88DtdJ0nbjwreh1INmQaKv8kAhJkm66lzElvmv0tjR5AHADC1S%2FOe8SM46qQUUU%3D\"}]}",
+    "CF-RAY": "a3b34d202c6eb1a2-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "id": "KLT6H8ZfyNP0",
+      "name": "Dove sans aluminium désodorisant pour tout le corps pour femmes avec 14 d'hydratants parfum lait d'avoine et vanille pour une peau douce et confortable",
+      "brand": null,
+      "size": null,
+      "price": 7.97,
+      "unitPrice": {
+        "value": 7.97,
+        "unit": "100 g",
+        "raw": "7.97/100g"
+      },
+      "store": "walmart",
+      "discounted": true,
+      "category": 70,
+      "image": "https://cdn.epiceries.ca/f983b0a3-bb4c-492b-ac73-c88ab2b8d77c.b448ccea86903fa0ffde4b8734a71a26.jpeg",
+      "link": "https://www.walmart.ca/fr/ip/Dove-sans-aluminium-D-sodorisant-pour-Tout-le-Corps-femmes-avec-1-4-d-hydratants-parfum-lait-d-avoine-et-vanille-une-peau-douce-confortable/6000208162073",
+      "url": "https://epiceries.ca/view?i=KLT6H8ZfyNP0",
+      "updated": "2026-08-29T13:21:39+00:00",
+      "prices": [
+        {
+          "store": "walmart",
+          "price": 7.97,
+          "discounted": true,
+          "size": null,
+          "unitPrice": {
+            "value": 7.97,
+            "unit": "100 g",
+            "raw": "7.97/100g"
+          },
+          "link": "https://www.walmart.ca/fr/ip/Dove-sans-aluminium-D-sodorisant-pour-Tout-le-Corps-femmes-avec-1-4-d-hydratants-parfum-lait-d-avoine-et-vanille-une-peau-douce-confortable/6000208162073",
+          "timestamp": 1787972720,
+          "date": "2026-08-29T03:05:20+00:00"
+        }
+      ]
+    }
+  }
+}

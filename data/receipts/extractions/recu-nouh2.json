@@ -1,0 +1,317 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "generic",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": null,
+  "store_id": null,
+  "purchase_date": null,
+  "date_order": "ymd",
+  "source": {
+    "filename": "recu-nouh2.png",
+    "sha256": "60e3139acc19bf3d9b84368808bb07db9fde98059bc796c8c25c73ef67561468",
+    "engine": "vision",
+    "elapsed_seconds": 1.6
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "MOULIN D'OR biscuits 120gr",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "3",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "0.79",
+      "line_total": "2.37",
+      "source_lines": [
+        "MOULIN D'OR biscuits 120gr",
+        "3 e $0.79 $2.37"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "TETE D'AGNENU",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.583",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "11.99",
+      "line_total": "6.99",
+      "source_lines": [
+        "TETE D'AGNENU",
+        "0.583 kg @ $11.99 / kg $6.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": null,
+      "name": "EPAULE D'ATNEAU",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "1.051",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "15.99",
+      "line_total": "16.80",
+      "source_lines": [
+        "EPAULE D'ATNEAU",
+        "1.051 kg @ $15.99 / kg $16.80"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_times_price_mismatch"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": null,
+      "name": "FRANCISCO thon a l'huile vúgütale",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "2",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "2.99",
+      "line_total": "5.98",
+      "source_lines": [
+        "FRANCISCO thon a l'huile",
+        "vúgütale",
+        "2 @ $2.99 $5.98"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 5,
+      "product_code": null,
+      "name": "POMME JAUNE QC",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "1.280",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "2.84",
+      "line_total": "3.64",
+      "source_lines": [
+        "POMME JAUNE QC",
+        "1.280 kg @ $2.84 / kg $3.64"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 6,
+      "product_code": null,
+      "name": "POIRE CACTUS ROUGE",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.680",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "2.18",
+      "line_total": "1.48",
+      "source_lines": [
+        "POIRE CACTUS ROUGE",
+        "0.680 kg @ $2.18 / kg $1.48"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 7,
+      "product_code": null,
+      "name": "ZUCCHINI VEIT",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.390",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "3.28",
+      "line_total": "1.28",
+      "source_lines": [
+        "ZUCCHINI VEIT",
+        "0.390 kg & $3.28 / kg $1.28"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 8,
+      "product_code": null,
+      "name": "POIVRON JAUIIE",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "0.930",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "0.85",
+      "line_total": "0.79",
+      "source_lines": [
+        "POIVRON JAUIIE",
+        "0.930 kg @ $0.85 / kg $0.79"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 9,
+      "product_code": null,
+      "name": "PATATE JAUNI: NI1 1OLb",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.99",
+      "source_lines": [
+        "PATATE JAUNI: NI1 1OLb $3.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 10,
+      "product_code": null,
+      "name": "PAIN SOUS-MIRINS",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "5.88",
+      "source_lines": [
+        "PAIN SOUS-MIRINS",
+        "12 e $0.-19 $5.88"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_detail_unreadable",
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 11,
+      "product_code": null,
+      "name": "TOMATE DE SIRRE",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "1.530",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "1.30",
+      "line_total": "1.99",
+      "source_lines": [
+        "TOMATE DE SIRRE",
+        "1.530 kg @ $1.30 / kg $1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 12,
+      "product_code": null,
+      "name": "BANANE",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": "1.190",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "1.74",
+      "line_total": "2.07",
+      "source_lines": [
+        "BANANE",
+        "1.190 kg @ $1.74 / kg $2.07"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review"
+      ]
+    },
+    {
+      "line_id": 13,
+      "product_code": null,
+      "name": "Oignon Jaune 2Lb",
+      "category_raw": null,
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "0.99",
+      "source_lines": [
+        "Oignon Jaune 2Lb $0.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "generic_candidate_requires_review",
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": "-1.38",
+      "effect": "applied",
+      "source_line": "3 pour 0 99$ -$1.38RT",
+      "review_required": true
+    },
+    {
+      "amount": "-0.90",
+      "effect": "applied",
+      "source_line": "6 pour 2 49$ -$0.90RT",
+      "review_required": true
+    }
+  ],
+  "totals": {
+    "subtotal": "51.97",
+    "total": "51.97",
+    "taxes": null,
+    "items_sum": "54.25",
+    "calculated_subtotal": "51.97",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "generic_profile_requires_review",
+    "purchase_date_missing",
+    "receipt_adjustments_require_review"
+  ]
+}

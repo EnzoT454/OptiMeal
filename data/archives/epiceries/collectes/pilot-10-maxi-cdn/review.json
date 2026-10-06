@@ -1,0 +1,329 @@
+{
+  "schema_version": "catalog-review-1.0",
+  "status": "pending_human_review",
+  "note": "Suggestions uniquement. Modifier ce fichier n’approuve pas un prix ni une succursale.",
+  "matches": [
+    {
+      "ingredient_id": "ing_ail_frais",
+      "product_id": "candidate_8443690151395b57beef",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ail",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "product_id": "candidate_3ce0eece9736b1252548",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lait",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "product_id": "candidate_5f1e4f72801c545ac58c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:carottes",
+        "manual_approval_required"
+      ]
+    }
+  ],
+  "search_rejections": [
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "Ik3JAa0CSgoO",
+      "name": "Delicious kitchen boisson au lait de coco originale",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "rZUceon1tGiq",
+      "name": "Lactantia PurFiltre Lait 0 % écrémé 1.5 L",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "CenoX3cNgH7M",
+      "name": "Nido lait entier en poudre",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "pXnG81fOtrJ7",
+      "name": "Lait de poule riche et crémeux original",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "QtJBKMezO42R",
+      "name": "Lait de poule",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "OaF6bjq4T3zs",
+      "name": "Lactantia Lait frappé à la vanille 460 ml (bouteille)",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "6q4NHjxwTU7s",
+      "name": "Lactantia Lait frappé au chocolat 460 ml (bouteille)",
+      "reasons": [
+        "excluded_term:chocolat"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "tXWo8Iu2G3PS",
+      "name": "Lactantia PurFiltre Lait 325 % homogénéisé 1.5 L",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "VUbXFHA837ia",
+      "name": "Chagnon Lait de Poule 3.8% entier lait 1 L",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "ZYUiakPf9m6e",
+      "name": "Boisson de protéine du lait au chocolat lait's go sport",
+      "reasons": [
+        "excluded_term:chocolat"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "epUIGz0fNMyZ",
+      "name": "Lait 2% uht m.g. partiellement écrémé au chocolat",
+      "reasons": [
+        "excluded_term:chocolat"
+      ]
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "external_product_id": "LJNjhdKuIFWC",
+      "name": "Partiellement écrémé biologique lait au chocolat 2% m.g.",
+      "reasons": [
+        "excluded_term:chocolat"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "tT9GyHCgE5ar",
+      "name": "Lovo Œufs bruns moyen biologiques 12 un",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "DgYG2AE4rWxM",
+      "name": "Gray ridge oeufs blancs moyens",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "9ThENcYK1nk4",
+      "name": "Goldegg gros oeufs blancs de poules en liberte",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "8AXsOKHLVwne",
+      "name": "Great value 12 ufs blancs calibre extra gros",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "H4h1EDACxbuO",
+      "name": "Compliments Balance Liquide Blancs d'oeufs 100% purs 1 kg",
+      "reasons": [
+        "excluded_term:liquide",
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "xD6WJb5tX3uO",
+      "name": "Great value oeufs blancs moyens 30",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "IKXLD3VaSWqx",
+      "name": "Oeufs de Pâques à la crème",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "qiM5ISVwp94t",
+      "name": "Burnbrae Fermes Naturoeuf Blancs d'oeufs liquides 100% purs 500 g",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "SVakNUx08fAL",
+      "name": "C'est Prêt! 2 oeufs bacon Combo déjeuner 1 un",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "tXNyD1iejcFu",
+      "name": "Compliments Équilibre Blancs d'oeufs liquides 500 g",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "OMi87StfgT2b",
+      "name": "Oeufs mimosa Buffet 1 un",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "external_product_id": "aBD2UrF1xkdE",
+      "name": "Poitrine de dinde style cajun",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "external_product_id": "2IKkNteSAmDB",
+      "name": "Poitrine de dinde cuite",
+      "reasons": [
+        "excluded_term:cuite"
+      ]
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "external_product_id": "Q5pMbla9fREd",
+      "name": "Poitrine de dinde rôtie au four Menu Bleu, tomate et basilic",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "external_product_id": "S2H0OY4urKzD",
+      "name": "Pti basmati mamra",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "DgYG2AE4rWxM",
+      "name": "Gray ridge oeufs blancs moyens",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "9ThENcYK1nk4",
+      "name": "Goldegg gros oeufs blancs de poules en liberte",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "H4h1EDACxbuO",
+      "name": "Compliments Balance Liquide Blancs d'oeufs 100% purs 1 kg",
+      "reasons": [
+        "excluded_term:liquide",
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "xD6WJb5tX3uO",
+      "name": "Great value oeufs blancs moyens 30",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "IKXLD3VaSWqx",
+      "name": "Oeufs de Pâques à la crème",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "qiM5ISVwp94t",
+      "name": "Burnbrae Fermes Naturoeuf Blancs d'oeufs liquides 100% purs 500 g",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "SVakNUx08fAL",
+      "name": "C'est Prêt! 2 oeufs bacon Combo déjeuner 1 un",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "tXNyD1iejcFu",
+      "name": "Compliments Équilibre Blancs d'oeufs liquides 500 g",
+      "reasons": [
+        "excluded_term:blancs"
+      ]
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "external_product_id": "OMi87StfgT2b",
+      "name": "Oeufs mimosa Buffet 1 un",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    }
+  ]
+}

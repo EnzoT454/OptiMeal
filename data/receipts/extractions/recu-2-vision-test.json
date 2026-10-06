@@ -1,0 +1,126 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "metro",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "metro",
+  "store_id": null,
+  "purchase_date": "2026-08-11",
+  "date_order": "ymd",
+  "source": {
+    "filename": "recu_2.png",
+    "sha256": "598c530555cdcc3f39457661883997369b5aaccb9013697b0da5a404ccd1a808",
+    "engine": "vision",
+    "elapsed_seconds": 1.589
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "NAAN AIL",
+      "category_raw": "MICHE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.99",
+      "source_lines": [
+        "NAAN AIL 4.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "FILET SAUMON COH",
+      "category_raw": "POISS. FRAIS",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "13.87",
+      "source_lines": [
+        "FILET SAUMON COH 13.87"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": null,
+      "name": "SELECT.OEUF",
+      "category_raw": "PRODUIT LAIT",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "6.29",
+      "source_lines": [
+        "SELECT.OEUF 6.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": null,
+      "name": "SIGGIS SKYR BAN.",
+      "category_raw": "PRODUIT LAIT",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.99",
+      "source_lines": [
+        "SIGGIS SKYR BAN. 3.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": "11.12",
+      "effect": "informational",
+      "source_line": "Rabais 11.12",
+      "review_required": true
+    },
+    {
+      "amount": "0.90",
+      "effect": "informational",
+      "source_line": "Rabais 0.90",
+      "review_required": true
+    }
+  ],
+  "totals": {
+    "subtotal": "29.14",
+    "total": "29.14",
+    "taxes": null,
+    "items_sum": "29.14",
+    "calculated_subtotal": "29.14",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "purchase_date_order_requires_review",
+    "receipt_adjustments_require_review"
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "requested_at": "2026-09-14T23:51:41.573030+00:00",
+  "url": "https://epiceries.ca/api?endpoint=search&q=carottes&limit=3",
+  "status": 200,
+  "elapsed_seconds": 0.228,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:51:41 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=7v4j6bR1I%2BgJyLwv1vK9gS%2FDQM2M8EUOmleBDgbv3QnnnBpNl3mkkEhrNxlRFIbFzNH4317%2F0mtIyVKEGtXwBrniG%2Bj9KmKGGC3iB6fcYnPquKXMo8yLBxP2mP1jfUw%3D\"}]}",
+    "CF-RAY": "a3b34d15db7aaaec-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "count": 3,
+      "limit": 3,
+      "offset": 0,
+      "hasMore": true,
+      "results": [
+        {
+          "id": "QemR5BjM1OWD",
+          "name": "Great value pois & carottes",
+          "brand": null,
+          "size": null,
+          "price": 1.37,
+          "unitPrice": {
+            "value": 0.34,
+            "unit": "100 ml",
+            "raw": "0.34/100ml"
+          },
+          "store": "walmart",
+          "discounted": false,
+          "category": 29,
+          "image": "https://cdn.epiceries.ca/110712ea-8c0d-42f3-af95-aa201ca7288a.1faf4375d08d093a82a15529248a3c61.jpeg",
+          "link": "https://www.walmart.ca/fr/ip/Great-Value-Pois-Carottes/10275334",
+          "url": "https://epiceries.ca/view?i=QemR5BjM1OWD",
+          "updated": "2026-08-29T13:21:30+00:00"
+        },
+        {
+          "id": "KWBn31xkft9D",
+          "name": "Carottes anciennes à lérable",
+          "brand": null,
+          "size": null,
+          "price": 2.49,
+          "unitPrice": {
+            "value": 2.49,
+            "unit": "100 g",
+            "raw": "2.49/100g"
+          },
+          "store": "provigo",
+          "discounted": false,
+          "category": 1,
+          "image": "https://cdn.epiceries.ca/21481039_fr_front_1200.png",
+          "link": "https://www.provigo.ca/fr/carottes-anciennes-l-rable/p/21481039_KG",
+          "url": "https://epiceries.ca/view?i=KWBn31xkft9D",
+          "updated": "2026-08-29T13:21:27+00:00"
+        },
+        {
+          "id": "z9Rw3dqc6k2p",
+          "name": "Nourriture sèche pour chiens au boeuf, carottes et pois verts",
+          "brand": "Selection",
+          "size": "6.8kg",
+          "price": 16.49,
+          "unitPrice": {
+            "value": 0.24,
+            "unit": "100 g",
+            "raw": "0.24/100g"
+          },
+          "store": "superc",
+          "discounted": false,
+          "category": 69,
+          "image": "https://cdn.epiceries.ca/14056527790110.jpg",
+          "link": "https://www.superc.ca/allees/essentiels-pour-animaux/chiens/nourriture-seche-pour-chiens/nourriture-seche-pour-chiens-au-boeuf-carottes-et-pois-verts/p/059749993241",
+          "url": "https://epiceries.ca/view?i=z9Rw3dqc6k2p",
+          "updated": "2026-08-29T13:21:12+00:00"
+        }
+      ]
+    }
+  }
+}

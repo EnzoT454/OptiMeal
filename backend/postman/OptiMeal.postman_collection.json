@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "OptiMeal — épiceries.ca",
-    "description": "Serveur local requis : EPICERIES_ENABLED=true. Exécuter dans l’ordre ; les appels valides contactent épiceries.ca. Pas de clé. Le filtre store de recherche désigne l’enseigne la moins chère, pas tout son catalogue. Les tests valident le contrat, pas les prix en magasin.",
+    "name": "OptiMeal — catalogue Maxi",
+    "description": "Lectures locales FastAPI, sans collecte Apify. Définir CATALOG_IMPORT_PATH avant le démarrage pour les routes catalogue. Sans fichier, elles retournent 503 ; /health reste disponible.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -10,8 +10,8 @@
       "value": "http://127.0.0.1:8001"
     },
     {
-      "key": "product_id",
-      "value": "KmGS0CjUfXoy"
+      "key": "ingredient_id",
+      "value": "ing_ail_frais"
     }
   ],
   "item": [
@@ -36,11 +36,11 @@
       ]
     },
     {
-      "name": "2 — Catégories",
+      "name": "2 — Catalogue configuré",
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{base_url}}/sources/epiceries/categories"
+        "url": "{{base_url}}/catalog"
       },
       "event": [
         {
@@ -49,18 +49,18 @@
             "type": "text/javascript",
             "exec": [
               "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
-              "pm.test(\"Liste de catégories\", () => pm.expect(pm.response.json().data.categories).to.be.an(\"array\"));"
+              "pm.test(\"Contrat catalogue\", () => pm.expect(pm.response.json().schema_version).to.eql(\"catalog-pilot-1.0\"));"
             ]
           }
         }
       ]
     },
     {
-      "name": "3 — Recherche et sélection du produit",
+      "name": "3 — Offres paginées",
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{base_url}}/sources/epiceries/search?q=riz&limit=3"
+        "url": "{{base_url}}/catalog/offers?limit=20&offset=0"
       },
       "event": [
         {
@@ -69,21 +69,18 @@
             "type": "text/javascript",
             "exec": [
               "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
-              "const body = pm.response.json();",
-              "pm.test(\"Résultats disponibles\", () => pm.expect(body.data.results.length).to.be.above(0));",
-              "if (body.data.results.length) pm.collectionVariables.set(\"product_id\", body.data.results[0].id);",
-              "pm.test(\"Pagination\", () => pm.expect(body.data.hasMore).to.be.a(\"boolean\"));"
+              "pm.test(\"Offres et total\", () => { const body = pm.response.json(); pm.expect(body.offers).to.be.an(\"array\"); pm.expect(body.total).to.be.a(\"number\"); });"
             ]
           }
         }
       ]
     },
     {
-      "name": "4 — Détail normalisé",
+      "name": "4 — Offres par ingrédient",
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{base_url}}/sources/epiceries/products/{{product_id}}"
+        "url": "{{base_url}}/catalog/offers?ingredient_id={{ingredient_id}}&limit=20"
       },
       "event": [
         {
@@ -91,80 +88,18 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
-              "const body = pm.response.json();",
-              "pm.test(\"Contrat v1\", () => pm.expect(body.schema_version).to.eql(\"1.0\"));",
-              "pm.test(\"Prix par enseigne\", () => { pm.expect(body.offers).to.be.an(\"array\").that.is.not.empty; body.offers.forEach(o => { pm.expect(o.price.amount).to.be.a(\"string\"); pm.expect(o.price.currency).to.eql(\"CAD\"); pm.expect(o.valid_to).to.eql(null); pm.expect(o.store_id).to.eql(null); pm.expect(o.quality.status).to.eql(\"review_required\"); }); });",
-              "pm.collectionVariables.set(\"previous_retrieved_at\", body.source.retrieved_at);"
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));"
             ]
           }
         }
       ]
     },
     {
-      "name": "5 — Même détail depuis le cache",
+      "name": "5 — Pagination invalide",
       "request": {
         "method": "GET",
         "header": [],
-        "url": "{{base_url}}/sources/epiceries/products/{{product_id}}"
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
-              "pm.test(\"Cache sans changer la date de récupération\", () => { const s = pm.response.json().source; pm.expect(s.cached).to.eql(true); pm.expect(s.retrieved_at).to.eql(pm.collectionVariables.get(\"previous_retrieved_at\")); });"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "6 — Filtre manquant",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": "{{base_url}}/sources/epiceries/search"
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "7 — Enseigne invalide",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": "{{base_url}}/sources/epiceries/search?q=lait&store=inconnu"
-      },
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"HTTP 422\", () => pm.response.to.have.status(422));"
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "name": "8 — Limite excessive",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": "{{base_url}}/sources/epiceries/search?q=lait&limit=101"
+        "url": "{{base_url}}/catalog/offers?limit=0"
       },
       "event": [
         {

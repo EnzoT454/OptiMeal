@@ -1,0 +1,91 @@
+{
+  "requested_at": "2026-09-14T23:52:52.540629+00:00",
+  "url": "https://epiceries.ca/api?endpoint=search&category=26&store=maxi&limit=3",
+  "status": 200,
+  "elapsed_seconds": 0.099,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:52:52 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=6OETcJPGtxMQnwNSi1kOkLJjJ0XgVoPQ7IazU9kh9n4SwzmUgrILEORb4q0wkKJIMDapDv8l0WRYr7AIaRKeFpc6vpiw8jUZxNingDMCjnR1PL3aDtI5XcuvOhcA%2FgY%3D\"}]}",
+    "CF-RAY": "a3b34ed22a23f41f-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "count": 3,
+      "limit": 3,
+      "offset": 0,
+      "hasMore": true,
+      "results": [
+        {
+          "id": "VBE1xju4zXrm",
+          "name": "Riz basmati brun",
+          "brand": "Suraj",
+          "size": "1.81kg",
+          "price": 5.49,
+          "unitPrice": {
+            "value": 0.3,
+            "unit": "100 g",
+            "raw": "0.30/100g"
+          },
+          "store": "maxi",
+          "discounted": false,
+          "category": 26,
+          "image": "https://cdn.epiceries.ca/20839413_fr_front_1200.png",
+          "link": "https://www.maxi.ca/fr/riz-basmati-brun/p/20839413_EA",
+          "url": "https://epiceries.ca/view?i=VBE1xju4zXrm",
+          "updated": "2026-08-29T13:21:15+00:00"
+        },
+        {
+          "id": "wF82AcN6XVhs",
+          "name": "Riz collant à la noix de coco",
+          "brand": "Bens Original",
+          "size": "240g",
+          "price": 2.79,
+          "unitPrice": {
+            "value": 1.16,
+            "unit": "100 g",
+            "raw": "1.16/100g"
+          },
+          "store": "maxi",
+          "discounted": true,
+          "category": 26,
+          "image": "https://cdn.epiceries.ca/5849650173_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+          "link": "https://www.maxi.ca/fr/riz-collant-la-noix-de-coco/p/21736337_EA",
+          "url": "https://epiceries.ca/view?i=wF82AcN6XVhs",
+          "updated": "2026-08-29T13:20:55+00:00"
+        },
+        {
+          "id": "GseNVlhupKiB",
+          "name": "Riz collant",
+          "brand": "Bens Original",
+          "size": "240g",
+          "price": 2.79,
+          "unitPrice": {
+            "value": 1.16,
+            "unit": "100 g",
+            "raw": "1.16/100g"
+          },
+          "store": "maxi",
+          "discounted": true,
+          "category": 26,
+          "image": "https://cdn.epiceries.ca/5849650172_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+          "link": "https://www.maxi.ca/fr/riz-collant/p/21736491_EA",
+          "url": "https://epiceries.ca/view?i=GseNVlhupKiB",
+          "updated": "2026-08-29T13:20:55+00:00"
+        }
+      ]
+    }
+  }
+}

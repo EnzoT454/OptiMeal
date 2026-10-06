@@ -1,0 +1,91 @@
+{
+  "requested_at": "2026-09-14T23:52:51.435556+00:00",
+  "url": "https://epiceries.ca/api?endpoint=search&category=1&q=carottes&store=superc&limit=3",
+  "status": 200,
+  "elapsed_seconds": 0.118,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:52:51 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=8seh7uyvvayzSXFsLJiPXEpoRCp%2FSq0wu3PeVtYWcmqjy0kJocN%2F73Y8nRKOT8HKb88%2FJYTEPhrJ6vsIaSEepR3HFi9GtJX1V1QJLkNpWmxyPrT9qDHNykGv3usy3X4%3D\"}]}",
+    "CF-RAY": "a3b34ecb38b5aab4-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "count": 3,
+      "limit": 3,
+      "offset": 0,
+      "hasMore": true,
+      "results": [
+        {
+          "id": "yOeGqbs4BAc2",
+          "name": "Carottes",
+          "brand": "Marque maison",
+          "size": "3lb",
+          "price": 1.98,
+          "unitPrice": {
+            "value": 0.13,
+            "unit": "100 g",
+            "raw": "0.13/100g"
+          },
+          "store": "superc",
+          "discounted": true,
+          "category": 1,
+          "image": "https://cdn.epiceries.ca/11453519298590.jpg",
+          "link": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/carottes/p/059749860383",
+          "url": "https://epiceries.ca/view?i=yOeGqbs4BAc2",
+          "updated": "2026-08-29T13:20:45+00:00"
+        },
+        {
+          "id": "J06VTNKhi9te",
+          "name": "Carottes",
+          "brand": "Marque maison",
+          "size": "3lb",
+          "price": 1.98,
+          "unitPrice": {
+            "value": 0.13,
+            "unit": "100 g",
+            "raw": "0.13/100g"
+          },
+          "store": "superc",
+          "discounted": true,
+          "category": 1,
+          "image": "https://cdn.epiceries.ca/10824538521630.jpg",
+          "link": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/carottes/p/059749864282",
+          "url": "https://epiceries.ca/view?i=J06VTNKhi9te",
+          "updated": "2026-08-29T13:20:45+00:00"
+        },
+        {
+          "id": "f7hIzGsBA6nq",
+          "name": "Carottes miniatures biologiques",
+          "brand": "Marque maison",
+          "size": "454g",
+          "price": 2.49,
+          "unitPrice": {
+            "value": 0.88,
+            "unit": "100 g",
+            "raw": "0.55/100g"
+          },
+          "store": "superc",
+          "discounted": true,
+          "category": 1,
+          "image": "https://cdn.epiceries.ca/12934194659358.jpg",
+          "link": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/carottes-miniatures-biologiques/p/033383902050",
+          "url": "https://epiceries.ca/view?i=f7hIzGsBA6nq",
+          "updated": "2026-08-29T13:19:24+00:00"
+        }
+      ]
+    }
+  }
+}

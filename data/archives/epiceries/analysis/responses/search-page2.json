@@ -1,0 +1,83 @@
+{
+  "requested_at": "2026-09-14T23:51:46.831217+00:00",
+  "url": "https://epiceries.ca/api?endpoint=search&q=lait&limit=3&offset=3",
+  "status": 200,
+  "elapsed_seconds": 0.488,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:51:46 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=rpYo7fLmYxn6XFeVrjZxKOy5420PbbxS8S7U4DU4C%2BwR%2BOVvzYhK5CAd01RO6FtMB3rd7n8vCeiV1INJECKMV2sz9so7fvHTaHf%2FPTXeZsVIULZrL7J31fPzI5EADpo%3D\"}]}",
+    "CF-RAY": "a3b34d3559b7aaf4-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "count": 3,
+      "limit": 3,
+      "offset": 3,
+      "hasMore": true,
+      "results": [
+        {
+          "id": "527xYkZP0zyi",
+          "name": "Nanak milk cake dessert classique indien au lait riche en saveurs",
+          "brand": null,
+          "size": null,
+          "price": 7.97,
+          "unitPrice": null,
+          "store": "walmart",
+          "discounted": false,
+          "category": 13,
+          "image": "https://cdn.epiceries.ca/6cc16fc2-2d9d-4242-a111-904227df9c43.9277a80fb37183524bf7e9428f25784a.jpeg",
+          "link": "https://www.walmart.ca/fr/ip/NANAK-MILK-CAKE/6000197473119",
+          "url": "https://epiceries.ca/view?i=527xYkZP0zyi",
+          "updated": "2026-08-29T13:21:33+00:00"
+        },
+        {
+          "id": "ZYUiakPf9m6e",
+          "name": "Boisson de protéine du lait au chocolat lait's go sport",
+          "brand": null,
+          "size": null,
+          "price": 13.97,
+          "unitPrice": null,
+          "store": "walmart",
+          "discounted": false,
+          "category": 7,
+          "image": "https://cdn.epiceries.ca/a3057d0f-1898-4e25-b18e-eefdbe58a264.772b8f304171ab935dc0991df716b5a2.png",
+          "link": "https://www.walmart.ca/fr/ip/Boisson-de-prot-ine-du-lait-au-chocolat-Lait-s-Go-Sport/6000197203694",
+          "url": "https://epiceries.ca/view?i=ZYUiakPf9m6e",
+          "updated": "2026-08-29T13:21:32+00:00"
+        },
+        {
+          "id": "y1It9piScr3A",
+          "name": "Hashachar produits laitiers à tartiner au chocolat py",
+          "brand": null,
+          "size": "453g",
+          "price": 7.97,
+          "unitPrice": {
+            "value": 0.02,
+            "unit": "100 ml",
+            "raw": "0.02/100ml"
+          },
+          "store": "walmart",
+          "discounted": false,
+          "category": 11,
+          "image": "https://cdn.epiceries.ca/c52637f8-6629-4079-954c-34dc3df26412.9f967cd45106f10a3933a8fb5c3504be.jpeg",
+          "link": "https://www.walmart.ca/fr/ip/Hashachar-Produits-laitiers-tartiner-au-chocolat-PY-453g/6000197096728",
+          "url": "https://epiceries.ca/view?i=y1It9piScr3A",
+          "updated": "2026-08-29T13:21:29+00:00"
+        }
+      ]
+    }
+  }
+}

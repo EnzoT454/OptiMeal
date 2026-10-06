@@ -1,0 +1,15 @@
+{
+  "queries": {
+    "ing_crevettes": "shrimp",
+    "ing_fromage_cheddar": "cheddar cheese",
+    "ing_yogourt_nature": "plain yogurt",
+    "ing_beurre": "butter",
+    "ing_pates_seches": "dry pasta",
+    "ing_haricots_rouges_conserve": "canned kidney beans",
+    "ing_tomates_conserve": "canned tomatoes",
+    "ing_farine": "all purpose flour",
+    "ing_sucre": "granulated sugar",
+    "ing_sel": "table salt",
+    "ing_pain_tranche": "sliced bread"
+  }
+}

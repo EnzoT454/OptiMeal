@@ -1,0 +1,505 @@
+{
+  "schema_version": "catalog-pilot-1.0",
+  "status": "review_required",
+  "dataset_kind": "real",
+  "evaluated_at": "2026-09-28T21:32:01.529030Z",
+  "target_store": {
+    "id": "maxi_cote_des_neiges",
+    "retailer_id": "maxi",
+    "name": "Maxi Côte-des-Neiges",
+    "address": "6825, chemin de la Côte-des-Neiges, Montréal",
+    "timezone": "America/Toronto",
+    "receipt_store_code": "8661",
+    "retailer_api_store_id": null,
+    "identity_source": "En-tête du reçu fourni data/recu_maxi.jpg ; choix utilisateur",
+    "price_scope_status": "not_verified"
+  },
+  "ingredients": [
+    {
+      "id": "ing_ail_frais",
+      "name": "Ail frais",
+      "category": "vegetables",
+      "aliases": [
+        "ail",
+        "garlic"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sel",
+        "sauce",
+        "beurre",
+        "hache",
+        "haché",
+        "mariné",
+        "marines",
+        "assaisonnement"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_oignon_jaune",
+      "name": "Oignon jaune",
+      "category": "vegetables",
+      "aliases": [
+        "oignon jaune",
+        "oignons jaunes",
+        "yellow onion",
+        "yellow onions"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sauce",
+        "soupe",
+        "frits"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_carotte_fraiche",
+      "name": "Carotte fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "carotte",
+        "carottes",
+        "carrot",
+        "carrots"
+      ],
+      "excluded_terms": [
+        "jus",
+        "soupe",
+        "gateau",
+        "gâteau",
+        "surgelé",
+        "surgelees",
+        "conserve"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_banane_fraiche",
+      "name": "Banane fraîche",
+      "category": "fruits",
+      "aliases": [
+        "banane",
+        "bananes",
+        "banana",
+        "bananas"
+      ],
+      "excluded_terms": [
+        "pain",
+        "yogourt",
+        "smoothie",
+        "chips",
+        "séchées",
+        "sechees",
+        "surgelées",
+        "surgelees"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_poitrine_poulet",
+      "name": "Poitrine de poulet fraîche",
+      "category": "meat",
+      "aliases": [
+        "poitrine",
+        "poitrines",
+        "chicken breast"
+      ],
+      "excluded_terms": [
+        "panée",
+        "panees",
+        "nuggets",
+        "cuit",
+        "cuite",
+        "surgelé",
+        "surgelees"
+      ],
+      "required_any": [
+        "poulet",
+        "chicken"
+      ]
+    },
+    {
+      "id": "ing_lait_2",
+      "name": "Lait de vache 2 %",
+      "category": "dairy",
+      "aliases": [
+        "lait",
+        "milk"
+      ],
+      "excluded_terms": [
+        "chocolat",
+        "amande",
+        "soya",
+        "avoine",
+        "sans lactose",
+        "lactose free"
+      ],
+      "required_any": [
+        "2 %"
+      ]
+    },
+    {
+      "id": "ing_oeuf_gros",
+      "name": "Œufs gros",
+      "category": "eggs",
+      "aliases": [
+        "oeufs",
+        "œufs",
+        "eggs"
+      ],
+      "excluded_terms": [
+        "liquide",
+        "blancs",
+        "chocolat",
+        "cuit",
+        "cuits"
+      ],
+      "required_any": [
+        "gros",
+        "large"
+      ]
+    },
+    {
+      "id": "ing_riz_basmati_blanc",
+      "name": "Riz basmati blanc sec",
+      "category": "pantry",
+      "aliases": [
+        "basmati"
+      ],
+      "excluded_terms": [
+        "brun",
+        "brown",
+        "cuit",
+        "express",
+        "pret",
+        "prêt",
+        "micro",
+        "assaisonné"
+      ],
+      "required_any": [
+        "riz",
+        "rice"
+      ]
+    },
+    {
+      "id": "ing_pois_chiche_conserve",
+      "name": "Pois chiches en conserve",
+      "category": "pantry",
+      "aliases": [
+        "pois chiches",
+        "chickpeas"
+      ],
+      "excluded_terms": [
+        "secs",
+        "sec",
+        "farine",
+        "houmous",
+        "hummus",
+        "rôtis",
+        "rotis"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_huile_olive",
+      "name": "Huile d’olive",
+      "category": "pantry",
+      "aliases": [
+        "huile olive",
+        "huile d olive",
+        "olive oil"
+      ],
+      "excluded_terms": [
+        "melange",
+        "mélange",
+        "aromatisée",
+        "aromatisee",
+        "vaporisateur",
+        "spray"
+      ],
+      "required_any": []
+    }
+  ],
+  "products": [],
+  "offers": [],
+  "matches": [],
+  "coverage": [
+    {
+      "ingredient_id": "ing_ail_frais",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_oignon_jaune",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_pois_chiche_conserve",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "candidate_count": 0,
+      "offer_count": 0,
+      "verified_store_offer_count": 0,
+      "status": "no_reference_found"
+    }
+  ],
+  "collection": {
+    "strategy": "hybrid",
+    "capture_count": 18,
+    "details_attempted": 0,
+    "errors": [
+      {
+        "stage": "search",
+        "params": {
+          "category": 1,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "category": 2,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "category": 7,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "category": 9,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "category": 16,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "category": 26,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "category": 29,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "category": 33,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "ail",
+          "category": 1,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "oignons",
+          "category": 1,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "carottes",
+          "category": 1,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "bananes",
+          "category": 2,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "poitrine poulet",
+          "category": 16,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "lait",
+          "category": 7,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "oeufs",
+          "category": 9,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "riz basmati",
+          "category": 26,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "pois chiches",
+          "category": 29,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      },
+      {
+        "stage": "search",
+        "params": {
+          "q": "huile olive",
+          "category": 33,
+          "limit": 20,
+          "offset": 0,
+          "sort": "updated_desc"
+        },
+        "error": "{'status': 502, 'message': 'Fournisseur indisponible.'}"
+      }
+    ],
+    "truncations": [],
+    "rejected_search_rows": [],
+    "complete_catalog": false
+  },
+  "warnings": [
+    "source_prices_not_verified_at_target_store",
+    "no_automatic_ingredient_approval",
+    "bounded_sample_not_store_inventory"
+  ]
+}

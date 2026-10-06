@@ -17,6 +17,9 @@ title: Références
 - **[Documentation Zensical](https://zensical.org/docs/publish-your-site/)** : construction et publication du site sur GitHub Pages.
 - **[Maquette OptiMeal sur Figma](https://www.figma.com/design/GZnafkmCJzWu1gyl6ZamgP)** : référence prévue pour l’interface mobile.
 
-- **[API épiceries.ca](https://epiceries.ca/developers)** : source optionnelle de produits et prix, avec dates et provenance à vérifier.
+- **[Connecteur Maxi sur Apify](https://apify.com/sunny_eternity/loblaws-grocery-scraper)** : source retenue pour les produits et prix Maxi.
+- **[Apple Vision](https://developer.apple.com/documentation/vision)** et **[Tesseract](https://github.com/tesseract-ocr/tesseract)** : moteurs utilisés pour la lecture locale des reçus.
+
+Pour Metro et Super C, nous retenons l’extraction des pages web avec un modèle IA ; le modèle et le traitement restent à développer et à évaluer.
 
 **Utilisation de l’IA :** Codex (OpenAI) a aidé à rédiger la documentation, analyser les données et développer le connecteur et ses tests.

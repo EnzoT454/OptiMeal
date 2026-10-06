@@ -1,0 +1,555 @@
+{
+  "schema_version": "catalog-capture-1.0",
+  "dataset_kind": "real",
+  "evaluated_at": "2026-09-28T21:32:01.529030+00:00",
+  "ingredients": [
+    {
+      "id": "ing_ail_frais",
+      "name": "Ail frais",
+      "category": "vegetables",
+      "aliases": [
+        "ail",
+        "garlic"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sel",
+        "sauce",
+        "beurre",
+        "hache",
+        "haché",
+        "mariné",
+        "marines",
+        "assaisonnement"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_oignon_jaune",
+      "name": "Oignon jaune",
+      "category": "vegetables",
+      "aliases": [
+        "oignon jaune",
+        "oignons jaunes",
+        "yellow onion",
+        "yellow onions"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sauce",
+        "soupe",
+        "frits"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_carotte_fraiche",
+      "name": "Carotte fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "carotte",
+        "carottes",
+        "carrot",
+        "carrots"
+      ],
+      "excluded_terms": [
+        "jus",
+        "soupe",
+        "gateau",
+        "gâteau",
+        "surgelé",
+        "surgelees",
+        "conserve"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_banane_fraiche",
+      "name": "Banane fraîche",
+      "category": "fruits",
+      "aliases": [
+        "banane",
+        "bananes",
+        "banana",
+        "bananas"
+      ],
+      "excluded_terms": [
+        "pain",
+        "yogourt",
+        "smoothie",
+        "chips",
+        "séchées",
+        "sechees",
+        "surgelées",
+        "surgelees"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_poitrine_poulet",
+      "name": "Poitrine de poulet fraîche",
+      "category": "meat",
+      "aliases": [
+        "poitrine",
+        "poitrines",
+        "chicken breast"
+      ],
+      "excluded_terms": [
+        "panée",
+        "panees",
+        "nuggets",
+        "cuit",
+        "cuite",
+        "surgelé",
+        "surgelees"
+      ],
+      "required_any": [
+        "poulet",
+        "chicken"
+      ]
+    },
+    {
+      "id": "ing_lait_2",
+      "name": "Lait de vache 2 %",
+      "category": "dairy",
+      "aliases": [
+        "lait",
+        "milk"
+      ],
+      "excluded_terms": [
+        "chocolat",
+        "amande",
+        "soya",
+        "avoine",
+        "sans lactose",
+        "lactose free"
+      ],
+      "required_any": [
+        "2 %"
+      ]
+    },
+    {
+      "id": "ing_oeuf_gros",
+      "name": "Œufs gros",
+      "category": "eggs",
+      "aliases": [
+        "oeufs",
+        "œufs",
+        "eggs"
+      ],
+      "excluded_terms": [
+        "liquide",
+        "blancs",
+        "chocolat",
+        "cuit",
+        "cuits"
+      ],
+      "required_any": [
+        "gros",
+        "large"
+      ]
+    },
+    {
+      "id": "ing_riz_basmati_blanc",
+      "name": "Riz basmati blanc sec",
+      "category": "pantry",
+      "aliases": [
+        "basmati"
+      ],
+      "excluded_terms": [
+        "brun",
+        "brown",
+        "cuit",
+        "express",
+        "pret",
+        "prêt",
+        "micro",
+        "assaisonné"
+      ],
+      "required_any": [
+        "riz",
+        "rice"
+      ]
+    },
+    {
+      "id": "ing_pois_chiche_conserve",
+      "name": "Pois chiches en conserve",
+      "category": "pantry",
+      "aliases": [
+        "pois chiches",
+        "chickpeas"
+      ],
+      "excluded_terms": [
+        "secs",
+        "sec",
+        "farine",
+        "houmous",
+        "hummus",
+        "rôtis",
+        "rotis"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_huile_olive",
+      "name": "Huile d’olive",
+      "category": "pantry",
+      "aliases": [
+        "huile olive",
+        "huile d olive",
+        "olive oil"
+      ],
+      "excluded_terms": [
+        "melange",
+        "mélange",
+        "aromatisée",
+        "aromatisee",
+        "vaporisateur",
+        "spray"
+      ],
+      "required_any": []
+    }
+  ],
+  "queries": {
+    "ing_ail_frais": {
+      "q": "ail",
+      "category": 1
+    },
+    "ing_oignon_jaune": {
+      "q": "oignons",
+      "category": 1
+    },
+    "ing_carotte_fraiche": {
+      "q": "carottes",
+      "category": 1
+    },
+    "ing_banane_fraiche": {
+      "q": "bananes",
+      "category": 2
+    },
+    "ing_poitrine_poulet": {
+      "q": "poitrine poulet",
+      "category": 16
+    },
+    "ing_lait_2": {
+      "q": "lait",
+      "category": 7
+    },
+    "ing_oeuf_gros": {
+      "q": "oeufs",
+      "category": 9
+    },
+    "ing_riz_basmati_blanc": {
+      "q": "riz basmati",
+      "category": 26
+    },
+    "ing_pois_chiche_conserve": {
+      "q": "pois chiches",
+      "category": 29
+    },
+    "ing_huile_olive": {
+      "q": "huile olive",
+      "category": 33
+    }
+  },
+  "target_store": {
+    "id": "maxi_cote_des_neiges",
+    "retailer_id": "maxi",
+    "name": "Maxi Côte-des-Neiges",
+    "address": "6825, chemin de la Côte-des-Neiges, Montréal",
+    "timezone": "America/Toronto",
+    "receipt_store_code": "8661",
+    "retailer_api_store_id": null,
+    "identity_source": "En-tête du reçu fourni data/recu_maxi.jpg ; choix utilisateur",
+    "price_scope_status": "not_verified"
+  },
+  "settings": {
+    "strategy": "hybrid",
+    "max_pages": 1,
+    "page_size": 20,
+    "max_details": 30,
+    "max_requests": 50
+  },
+  "captures": [
+    {
+      "id": "3002ba75fc9a86054b26",
+      "endpoint": "search",
+      "params": {
+        "category": 1,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:01.736457+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "b48882a018207d39307c",
+      "endpoint": "search",
+      "params": {
+        "category": 2,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:02.688251+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "da4b9855e0f235372327",
+      "endpoint": "search",
+      "params": {
+        "category": 7,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:03.689386+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "50f6e64e4461e2db68a6",
+      "endpoint": "search",
+      "params": {
+        "category": 9,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:04.690577+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "add8f190aea8343e4eb0",
+      "endpoint": "search",
+      "params": {
+        "category": 16,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:05.690856+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "8110a74b23e4a6e61bc6",
+      "endpoint": "search",
+      "params": {
+        "category": 26,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:06.691865+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "9a08b27b4a3c82d4e57c",
+      "endpoint": "search",
+      "params": {
+        "category": 29,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:07.692890+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "43def72174f5d64abb59",
+      "endpoint": "search",
+      "params": {
+        "category": 33,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:08.693547+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "b6e4332f3296cbd48456",
+      "endpoint": "search",
+      "params": {
+        "q": "ail",
+        "category": 1,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:09.714028+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "7dc0652528d3f0b81aaf",
+      "endpoint": "search",
+      "params": {
+        "q": "oignons",
+        "category": 1,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:10.695493+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "a4c677e19af223edc1e7",
+      "endpoint": "search",
+      "params": {
+        "q": "carottes",
+        "category": 1,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:11.696350+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "5df79318101c8a0b4b12",
+      "endpoint": "search",
+      "params": {
+        "q": "bananes",
+        "category": 2,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:12.697603+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "01148379e798536142c2",
+      "endpoint": "search",
+      "params": {
+        "q": "poitrine poulet",
+        "category": 16,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:13.698453+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "52f80ce9673a11cad0ec",
+      "endpoint": "search",
+      "params": {
+        "q": "lait",
+        "category": 7,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:14.700414+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "e7d9eec512f84f26e90e",
+      "endpoint": "search",
+      "params": {
+        "q": "oeufs",
+        "category": 9,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:15.702463+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "40a8693f0444df59619d",
+      "endpoint": "search",
+      "params": {
+        "q": "riz basmati",
+        "category": 26,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:16.703706+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "a4270098bd47878a0481",
+      "endpoint": "search",
+      "params": {
+        "q": "pois chiches",
+        "category": 29,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:17.703471+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    },
+    {
+      "id": "7efcc28d35f67048ac21",
+      "endpoint": "search",
+      "params": {
+        "q": "huile olive",
+        "category": 33,
+        "limit": 20,
+        "offset": 0,
+        "sort": "updated_desc"
+      },
+      "retrieved_at": "2026-09-28T21:32:18.704525+00:00",
+      "error": {
+        "status": 502,
+        "message": "Fournisseur indisponible."
+      }
+    }
+  ]
+}

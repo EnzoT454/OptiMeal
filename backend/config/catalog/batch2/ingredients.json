@@ -1,0 +1,256 @@
+{
+  "schema_version": "ingredients-1.0",
+  "ingredients": [
+    {
+      "id": "ing_tomate_fraiche",
+      "name": "Tomate fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "tomato",
+        "tomatoes",
+        "tomate",
+        "tomates"
+      ],
+      "excluded_terms": [
+        "sauce",
+        "paste",
+        "pate",
+        "conserve",
+        "canned",
+        "diced",
+        "crushed",
+        "soup",
+        "soupe",
+        "juice",
+        "jus",
+        "dried",
+        "seche",
+        "ketchup"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_pomme_de_terre",
+      "name": "Pomme de terre fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "potato",
+        "potatoes",
+        "pomme de terre",
+        "pommes de terre"
+      ],
+      "excluded_terms": [
+        "sweet",
+        "douce",
+        "douces",
+        "chips",
+        "frites",
+        "fries",
+        "mashed",
+        "puree",
+        "frozen",
+        "surgele",
+        "salad",
+        "salade"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_poivron_frais",
+      "name": "Poivron frais",
+      "category": "vegetables",
+      "aliases": [
+        "bell pepper",
+        "bell peppers",
+        "sweet pepper",
+        "sweet peppers",
+        "poivron",
+        "poivrons"
+      ],
+      "excluded_terms": [
+        "pickled",
+        "marine",
+        "roasted",
+        "roti",
+        "frozen",
+        "surgele",
+        "sauce",
+        "seasoning"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_brocoli_frais",
+      "name": "Brocoli frais",
+      "category": "vegetables",
+      "aliases": [
+        "broccoli",
+        "brocoli",
+        "brocolis"
+      ],
+      "excluded_terms": [
+        "frozen",
+        "surgele",
+        "soup",
+        "soupe",
+        "sauce",
+        "cheese",
+        "fromage",
+        "mix",
+        "melange"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_courgette_fraiche",
+      "name": "Courgette fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "zucchini",
+        "zucchinis",
+        "courgette",
+        "courgettes"
+      ],
+      "excluded_terms": [
+        "frozen",
+        "surgele",
+        "bread",
+        "pain",
+        "muffin",
+        "pickled",
+        "marine"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_pomme_fraiche",
+      "name": "Pomme fraîche",
+      "category": "fruits",
+      "aliases": [
+        "apple",
+        "apples",
+        "pomme",
+        "pommes"
+      ],
+      "excluded_terms": [
+        "juice",
+        "jus",
+        "sauce",
+        "compote",
+        "pie",
+        "tarte",
+        "cider",
+        "cidre",
+        "dried",
+        "seche",
+        "chips",
+        "potato",
+        "terre"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_citron_frais",
+      "name": "Citron frais",
+      "category": "fruits",
+      "aliases": [
+        "lemon",
+        "lemons",
+        "citron",
+        "citrons"
+      ],
+      "excluded_terms": [
+        "juice",
+        "jus",
+        "lemonade",
+        "limonade",
+        "cake",
+        "gateau",
+        "pie",
+        "tarte",
+        "extract",
+        "extrait",
+        "soap",
+        "savon",
+        "cleaner",
+        "nettoyant",
+        "pepper",
+        "poivre",
+        "tea",
+        "the"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_boeuf_hache",
+      "name": "Bœuf haché cru",
+      "category": "meat",
+      "aliases": [
+        "ground beef",
+        "minced beef",
+        "boeuf hache"
+      ],
+      "excluded_terms": [
+        "cooked",
+        "cuit",
+        "seasoned",
+        "assaisonne",
+        "burger",
+        "patty",
+        "patties",
+        "meatballs",
+        "boulettes",
+        "plant based",
+        "vegetal"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_saumon",
+      "name": "Saumon nature",
+      "category": "fish",
+      "aliases": [
+        "salmon",
+        "saumon"
+      ],
+      "excluded_terms": [
+        "smoked",
+        "fume",
+        "canned",
+        "conserve",
+        "seasoned",
+        "assaisonne",
+        "marinated",
+        "marine",
+        "sushi",
+        "spread",
+        "tartinade",
+        "pet",
+        "cat",
+        "dog"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_thon_conserve",
+      "name": "Thon en conserve",
+      "category": "fish",
+      "aliases": [
+        "tuna",
+        "thon"
+      ],
+      "excluded_terms": [
+        "salad",
+        "salade",
+        "fresh",
+        "frais",
+        "steak",
+        "sushi",
+        "spread",
+        "tartinade",
+        "kit"
+      ],
+      "required_any": []
+    }
+  ]
+}

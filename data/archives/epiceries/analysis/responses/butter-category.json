@@ -1,0 +1,91 @@
+{
+  "requested_at": "2026-09-14T23:52:49.066213+00:00",
+  "url": "https://epiceries.ca/api?endpoint=search&category=10&q=Lactantia&limit=3",
+  "status": 200,
+  "elapsed_seconds": 0.117,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:52:49 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=wvO5Xy0StfaSq22SLivLy9HGGkrQ9PFxIVSfVJixks9etMFA0uK%2Bp0Bb3gWk3yqFr%2FkStCTzC5FFxSd%2Fha2%2BExnrpk7t0UYwJfwrMiAAN0Xh1EdBl7FFypRQ3rflcj4%3D\"}]}",
+    "CF-RAY": "a3b34ebc6aaa61e8-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "count": 3,
+      "limit": 3,
+      "offset": 0,
+      "hasMore": true,
+      "results": [
+        {
+          "id": "u067bNgt3njr",
+          "name": "Lactantia Beurre salé 250 g",
+          "brand": "Lactantia",
+          "size": "250g",
+          "price": 6.79,
+          "unitPrice": {
+            "value": 2.72,
+            "unit": "100 g",
+            "raw": "2.72/100g"
+          },
+          "store": "iga",
+          "discounted": false,
+          "category": 10,
+          "image": "https://cdn.epiceries.ca/183466_EA_ml_primary_front_na_022125_VOILA_564e0d42c6cd65a966936cc98a537f194c3ed3e8.JPG",
+          "link": "https://www.iga.ca/fr/produits/lactantia-beurre-salé-250-g",
+          "url": "https://epiceries.ca/view?i=u067bNgt3njr",
+          "updated": "2026-08-29T13:18:02+00:00"
+        },
+        {
+          "id": "BZIYUTdLnxtJ",
+          "name": "Lactantia Beurre salé 125 g",
+          "brand": "Lactantia",
+          "size": "125g",
+          "price": 4.49,
+          "unitPrice": {
+            "value": 2.39,
+            "unit": "100 g",
+            "raw": "3.59/100g"
+          },
+          "store": "iga",
+          "discounted": false,
+          "category": 10,
+          "image": "https://cdn.epiceries.ca/573805_EA_fr_na_front_na_061925_VOILA_f6a76c078381c0403edd13e1c779882c804af6aa.JPG",
+          "link": "https://www.iga.ca/fr/produits/lactantia-beurre-salé-125-g",
+          "url": "https://epiceries.ca/view?i=BZIYUTdLnxtJ",
+          "updated": "2026-08-29T13:17:29+00:00"
+        },
+        {
+          "id": "O8m3Ln7RVl42",
+          "name": "Beurre Non Salé",
+          "brand": "Lactantia",
+          "size": "250g",
+          "price": 6.49,
+          "unitPrice": {
+            "value": 2.6,
+            "unit": "100 g",
+            "raw": "2.60/100g"
+          },
+          "store": "provigo",
+          "discounted": false,
+          "category": 10,
+          "image": "https://cdn.epiceries.ca/21020349_fr_1_1200.png",
+          "link": "https://www.provigo.ca/fr/beurre-de-culture-non-sal/p/21020349_EA",
+          "url": "https://epiceries.ca/view?i=O8m3Ln7RVl42",
+          "updated": "2026-08-29T13:15:13+00:00"
+        }
+      ]
+    }
+  }
+}

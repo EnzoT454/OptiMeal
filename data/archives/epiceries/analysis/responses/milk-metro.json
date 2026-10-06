@@ -1,0 +1,91 @@
+{
+  "requested_at": "2026-09-14T23:52:50.311889+00:00",
+  "url": "https://epiceries.ca/api?endpoint=search&category=7&store=metro&limit=3",
+  "status": 200,
+  "elapsed_seconds": 0.243,
+  "headers": {
+    "Date": "Mon, 14 Sep 2026 23:52:50 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "close",
+    "Server": "cloudflare",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, max-age=300",
+    "cf-cache-status": "DYNAMIC",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=iwCj7ri7AL%2BqkmX%2BvWw2sS6ZoV%2BYaW5wJKytWW8tj6dr%2FLE%2BERfoZNNKF8UD6jIPdSEGJvHpjF4Kc8T%2FLI96RcEuqnWIevwDAQ586ML%2F3S%2FD5ji%2Fa3EdG0B5dSvRI7s%3D\"}]}",
+    "CF-RAY": "a3b34ec42895f54f-YYZ",
+    "alt-svc": "h3=\":443\"; ma=86400"
+  },
+  "body": {
+    "ok": true,
+    "data": {
+      "count": 3,
+      "limit": 3,
+      "offset": 0,
+      "hasMore": true,
+      "results": [
+        {
+          "id": "50ZHXt26RPS3",
+          "name": "Lait au chocolat avec cajou",
+          "brand": "RITTER SPORT",
+          "size": "100g",
+          "price": 5.99,
+          "unitPrice": {
+            "value": 4.99,
+            "unit": "100 g",
+            "raw": "5.99/100g"
+          },
+          "store": "metro",
+          "discounted": false,
+          "category": 7,
+          "image": "https://cdn.epiceries.ca/15187662798878.jpg",
+          "link": "https://www.metro.ca/epicerie-en-ligne/allees/collations/collations-sucrees-et-bonbons/chocolat/chocolat-au-lait-avec-noix-de-cajou/p/050255707001",
+          "url": "https://epiceries.ca/view?i=50ZHXt26RPS3",
+          "updated": "2026-08-29T13:16:19+00:00"
+        },
+        {
+          "id": "EykSLeVroBtW",
+          "name": "Lait nordique 1% m.g. biologique",
+          "brand": "Nutrinor",
+          "size": "2l",
+          "price": 6.99,
+          "unitPrice": {
+            "value": 0.35,
+            "unit": "100 ml",
+            "raw": "0.35/100ml"
+          },
+          "store": "metro",
+          "discounted": true,
+          "category": 7,
+          "image": "https://cdn.epiceries.ca/11292680618014.jpg",
+          "link": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-ecremes-et-1/lait-biologique-1/p/065244133211",
+          "url": "https://epiceries.ca/view?i=EykSLeVroBtW",
+          "updated": "2026-08-29T13:13:35+00:00"
+        },
+        {
+          "id": "t30wIk1TYQMj",
+          "name": "Lait biologique 2% (1L)",
+          "brand": "Natrel",
+          "size": "1l",
+          "price": 3.99,
+          "unitPrice": {
+            "value": 0.4,
+            "unit": "100 ml",
+            "raw": "0.00/ml"
+          },
+          "store": "metro",
+          "discounted": true,
+          "category": 7,
+          "image": "https://cdn.epiceries.ca/15139389603870.jpg",
+          "link": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-biologique-2/p/055872500202",
+          "url": "https://epiceries.ca/view?i=t30wIk1TYQMj",
+          "updated": "2026-08-29T13:13:02+00:00"
+        }
+      ]
+    }
+  }
+}

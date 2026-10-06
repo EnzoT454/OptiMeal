@@ -1,0 +1,4892 @@
+{
+  "schema_version": "apify-capture-1.0",
+  "actor": "sunny_eternity~loblaws-grocery-scraper",
+  "dataset_kind": "real",
+  "evaluated_at": "2026-09-29T14:38:37.486158+00:00",
+  "ingredients": [
+    {
+      "id": "ing_ail_frais",
+      "name": "Ail frais",
+      "category": "vegetables",
+      "aliases": [
+        "ail",
+        "garlic"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sel",
+        "sauce",
+        "beurre",
+        "hache",
+        "haché",
+        "mariné",
+        "marines",
+        "assaisonnement",
+        "powder",
+        "salt",
+        "butter",
+        "minced",
+        "pickled",
+        "seasoning",
+        "chopped",
+        "peeled",
+        "puree",
+        "purée",
+        "paste",
+        "pâte",
+        "pate",
+        "roasted",
+        "rôti",
+        "rotis",
+        "bread",
+        "pain",
+        "toast",
+        "naan",
+        "flatbreads",
+        "focaccia",
+        "fingers",
+        "croutons",
+        "cheese",
+        "fromage",
+        "aioli",
+        "mayonnaise",
+        "mayo",
+        "dressing",
+        "spread",
+        "tartinade",
+        "flakes",
+        "flocons",
+        "granulated",
+        "granulé",
+        "oil",
+        "huile",
+        "press",
+        "presse",
+        "multitool",
+        "outil",
+        "ginger",
+        "gingembre",
+        "pepper",
+        "poivre",
+        "herbs",
+        "herbes",
+        "herb",
+        "soup",
+        "soupe",
+        "marinade",
+        "dip",
+        "trempette",
+        "couscous",
+        "pasta",
+        "pâtes",
+        "topping",
+        "garniture",
+        "crushed",
+        "écrasé"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_oignon_jaune",
+      "name": "Oignon jaune",
+      "category": "vegetables",
+      "aliases": [
+        "oignon jaune",
+        "oignons jaunes",
+        "yellow onion",
+        "yellow onions"
+      ],
+      "excluded_terms": [
+        "poudre",
+        "sauce",
+        "soupe",
+        "frits",
+        "powder",
+        "soup",
+        "fried"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_carotte_fraiche",
+      "name": "Carotte fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "carotte",
+        "carottes",
+        "carrot",
+        "carrots"
+      ],
+      "excluded_terms": [
+        "jus",
+        "soupe",
+        "gateau",
+        "gâteau",
+        "surgelé",
+        "surgelees",
+        "conserve",
+        "mélange",
+        "melange",
+        "érable",
+        "erable",
+        "juice",
+        "soup",
+        "cake",
+        "frozen",
+        "canned",
+        "mix",
+        "maple"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_banane_fraiche",
+      "name": "Banane fraîche",
+      "category": "fruits",
+      "aliases": [
+        "banane",
+        "bananes",
+        "banana",
+        "bananas"
+      ],
+      "excluded_terms": [
+        "pain",
+        "yogourt",
+        "smoothie",
+        "chips",
+        "séchées",
+        "sechees",
+        "surgelées",
+        "surgelees",
+        "collations",
+        "mélange",
+        "melange",
+        "plantain",
+        "plantin",
+        "compote",
+        "bread",
+        "yogurt",
+        "dried",
+        "frozen",
+        "snack",
+        "mix",
+        "puree"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_poitrine_poulet",
+      "name": "Poitrine de poulet fraîche",
+      "category": "meat",
+      "aliases": [
+        "poitrine",
+        "poitrines",
+        "chicken breast"
+      ],
+      "excluded_terms": [
+        "panée",
+        "panees",
+        "nuggets",
+        "cuit",
+        "cuite",
+        "surgelé",
+        "surgelees",
+        "assaisonné",
+        "assaisonne",
+        "farcie",
+        "miel",
+        "al pastor",
+        "breaded",
+        "cooked",
+        "frozen",
+        "seasoned",
+        "stuffed",
+        "honey"
+      ],
+      "required_any": [
+        "poulet",
+        "chicken"
+      ]
+    },
+    {
+      "id": "ing_lait_2",
+      "name": "Lait de vache 2 %",
+      "category": "dairy",
+      "aliases": [
+        "lait",
+        "milk"
+      ],
+      "excluded_terms": [
+        "chocolat",
+        "amande",
+        "soya",
+        "avoine",
+        "sans lactose",
+        "lactose free",
+        "chèvre",
+        "chevre",
+        "poule",
+        "coco",
+        "chocolate",
+        "almond",
+        "soy",
+        "oat",
+        "goat",
+        "eggnog",
+        "coconut"
+      ],
+      "required_any": [
+        "2 %"
+      ]
+    },
+    {
+      "id": "ing_oeuf_gros",
+      "name": "Œufs gros",
+      "category": "eggs",
+      "aliases": [
+        "oeufs",
+        "œufs",
+        "eggs"
+      ],
+      "excluded_terms": [
+        "liquide",
+        "chocolat",
+        "cuit",
+        "cuits",
+        "blancs d oeufs",
+        "extra gros",
+        "liquid",
+        "chocolate",
+        "cooked",
+        "egg whites",
+        "extra large"
+      ],
+      "required_any": [
+        "gros",
+        "large"
+      ]
+    },
+    {
+      "id": "ing_riz_basmati_blanc",
+      "name": "Riz basmati blanc sec",
+      "category": "pantry",
+      "aliases": [
+        "basmati"
+      ],
+      "excluded_terms": [
+        "brun",
+        "brown",
+        "cuit",
+        "express",
+        "pret",
+        "prêt",
+        "micro",
+        "assaisonné",
+        "champignons",
+        "citron",
+        "piment",
+        "grains entiers",
+        "cooked",
+        "ready",
+        "seasoned",
+        "mushroom",
+        "lemon",
+        "whole grain"
+      ],
+      "required_any": [
+        "riz",
+        "rice"
+      ]
+    },
+    {
+      "id": "ing_pois_chiche_conserve",
+      "name": "Pois chiches en conserve",
+      "category": "pantry",
+      "aliases": [
+        "pois chiches",
+        "chickpeas"
+      ],
+      "excluded_terms": [
+        "secs",
+        "sec",
+        "farine",
+        "houmous",
+        "hummus",
+        "rôtis",
+        "rotis",
+        "dry",
+        "dried",
+        "flour",
+        "roasted"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_huile_olive",
+      "name": "Huile d’olive",
+      "category": "pantry",
+      "aliases": [
+        "huile olive",
+        "huile d olive",
+        "olive oil"
+      ],
+      "excluded_terms": [
+        "melange",
+        "mélange",
+        "aromatisée",
+        "aromatisee",
+        "vaporisateur",
+        "spray",
+        "blend",
+        "flavoured",
+        "flavored",
+        "couscous",
+        "garlic",
+        "ail",
+        "roasted",
+        "rôti",
+        "lemon",
+        "citron",
+        "basil",
+        "basilic",
+        "truffle",
+        "truffe",
+        "bread",
+        "pain",
+        "pasta",
+        "pâtes",
+        "crackers",
+        "biscuit",
+        "tuna",
+        "thon",
+        "sardines",
+        "soap",
+        "savon",
+        "shampoo",
+        "shampoing"
+      ],
+      "required_any": []
+    }
+  ],
+  "target_store": {
+    "id": "maxi_cote_des_neiges",
+    "retailer_id": "maxi",
+    "name": "Maxi Côte-des-Neiges",
+    "address": "6825, chemin de la Côte-des-Neiges, Montréal",
+    "timezone": "America/Toronto",
+    "receipt_store_code": "8661",
+    "retailer_api_store_id": null,
+    "identity_source": "En-tête du reçu fourni data/recu_maxi.jpg ; choix utilisateur",
+    "price_scope_status": "not_verified"
+  },
+  "input": {
+    "banner": "maxi",
+    "search_terms": [
+      "garlic",
+      "yellow onions",
+      "carrots",
+      "bananas",
+      "chicken breast",
+      "2% milk",
+      "large eggs",
+      "basmati rice",
+      "chickpeas",
+      "olive oil"
+    ],
+    "group_variants": false,
+    "on_sale_only": false,
+    "postal_code": "H3S1H5"
+  },
+  "max_items": 100,
+  "max_charge_usd": 1.0,
+  "rows": [
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Powder",
+      "brand": "Club House",
+      "article_number": "20180764",
+      "price": "6.49",
+      "unit_price": "165 g, $3.93/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20180764_EA/en/1/20180764_en_1_1200.png",
+      "product_id": "20180764_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-powder/p/20180764_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "165g",
+      "parsed_package_size": {
+        "size": 165,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 165,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 3.93,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 3.93,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Colossal Fresh Garlic",
+      "brand": null,
+      "article_number": "20135581001",
+      "price": "1.32",
+      "unit_price": "$13.21/1kg $5.99/1lb",
+      "image_url": "https://digital.loblaws.ca/PCX/20135581001_KG/en/1/20135581001_en_front_1200.png",
+      "product_id": "20135581001_KG",
+      "product_url": "https://www.maxi.ca/en/colossal-fresh-garlic/p/20135581001_KG",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_weight",
+      "package_size": "0.1kg",
+      "parsed_package_size": {
+        "size": 0.1,
+        "unit": "kg"
+      },
+      "normalized_package_size": {
+        "size": 100,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 13.21,
+        "quantity": 1,
+        "unit": "kg",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.321,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Plus, Gluten-Free One Step Seasoning Signature Blends",
+      "brand": "Club House",
+      "article_number": "20309777002",
+      "price": "6.29",
+      "unit_price": "141 g, $4.46/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20309777002_EA/en/1/20309777002_en_front_1200.png",
+      "product_id": "20309777002_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-plus-gluten-free-one-step-seasoning-signatu/p/20309777002_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "141g",
+      "parsed_package_size": {
+        "size": 141,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 141,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 4.46,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 4.46,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Herb & Garlic Cream Cheese Product",
+      "brand": "Philadelphia",
+      "article_number": "20866924007",
+      "price": "4",
+      "unit_price": "227 g, $1.76/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20866924007_EA/en/1/20866924007_en_1_v1_1200.png",
+      "product_id": "20866924007_EA",
+      "product_url": "https://www.maxi.ca/en/herb-garlic-cream-cheese-product/p/20866924007_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "227g",
+      "parsed_package_size": {
+        "size": 227,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 227,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.76,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.76,
+      "was_price": 4.79,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $0.79",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Bulbs, 3-count",
+      "brand": "Rooster",
+      "article_number": "21004355001",
+      "price": "1",
+      "unit_price": "90 g, $0.33/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21004355001_EA/en/1/21004355001_en_front_1200.png",
+      "product_id": "21004355001_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-bulbs-3-count/p/21004355001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "90g",
+      "parsed_package_size": {
+        "size": 90,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 90,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.33,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 0.33,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Aioli, Mayonnaise Type Dressing Garlic Aioli",
+      "brand": "Hellmann's",
+      "article_number": "21518017",
+      "price": "3.79",
+      "unit_price": "340 ml, $1.11/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21518017_EA/en/1/21518017_en_1_v1_1200.png",
+      "product_id": "21518017_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-aioli-mayonnaise-type-dressing-garlic-aioli/p/21518017_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "340ml",
+      "parsed_package_size": {
+        "size": 340,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 340,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 1.11,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 1.11,
+      "was_price": 5,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $1.21",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Chopped Garlic",
+      "brand": "No Name",
+      "article_number": "20123251",
+      "price": "4",
+      "unit_price": "250 g, $1.60/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20123251_EA/en/1/20123251_enfr_front_1200.png",
+      "product_id": "20123251_EA",
+      "product_url": "https://www.maxi.ca/en/chopped-garlic/p/20123251_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "250g",
+      "parsed_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.6,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.6,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Roasted Garlic & Peppers, Gluten-Free One Step Seasoning Signature Blends",
+      "brand": "Club House",
+      "article_number": "20309777001",
+      "price": "6.29",
+      "unit_price": "144 g, $4.37/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20309777001_EA/en/1/20309777001_enfr_front_1200.png",
+      "product_id": "20309777001_EA",
+      "product_url": "https://www.maxi.ca/en/roasted-garlic-peppers-gluten-free-one-step-season/p/20309777001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "144g",
+      "parsed_package_size": {
+        "size": 144,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 144,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 4.37,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 4.37,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Organic Garlic",
+      "brand": "PC Organics",
+      "article_number": "20717130001",
+      "price": "4",
+      "unit_price": "115 g, $3.48/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20717130001_EA/en/1/20717130001_en_front_1200.png",
+      "product_id": "20717130001_EA",
+      "product_url": "https://www.maxi.ca/en/organic-garlic/p/20717130001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "115g",
+      "parsed_package_size": {
+        "size": 115,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 115,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 3.48,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 3.48,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Mayonnaise Style Sauce",
+      "brand": "Heinz",
+      "article_number": "21686231",
+      "price": "4.29",
+      "unit_price": "340 ml, $1.26/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21686231_EA/en/1/21686231_en_front_v2_1200.png",
+      "product_id": "21686231_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-mayonnaise-style-sauce/p/21686231_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "340ml",
+      "parsed_package_size": {
+        "size": 340,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 340,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 1.26,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 1.26,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Bulbs",
+      "brand": null,
+      "article_number": "21238843001",
+      "price": "7",
+      "unit_price": "1 kg, $0.70/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21238843001_EA/en/1/21238843001_en_front_1200.png",
+      "product_id": "21238843001_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-bulbs/p/21238843001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1kg",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "kg"
+      },
+      "normalized_package_size": {
+        "size": 1000,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.7,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.7,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Celery Salt",
+      "brand": "Club House",
+      "article_number": "20177555",
+      "price": "6.49",
+      "unit_price": "190 g, $3.42/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20177555_EA/en/1/20177555_en_1_1200.png",
+      "product_id": "20177555_EA",
+      "product_url": "https://www.maxi.ca/en/celery-salt/p/20177555_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "190g",
+      "parsed_package_size": {
+        "size": 190,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 190,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 3.42,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 3.42,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Chopped Garlic",
+      "brand": "No Name",
+      "article_number": "21013899",
+      "price": "7.49",
+      "unit_price": "1 kg, $0.75/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21013899_EA/en/1/21013899_en_front_1200.png",
+      "product_id": "21013899_EA",
+      "product_url": "https://www.maxi.ca/en/chopped-garlic/p/21013899_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1kg",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "kg"
+      },
+      "normalized_package_size": {
+        "size": 1000,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.75,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.75,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Bay Leaves",
+      "brand": "Club House",
+      "article_number": "20003932",
+      "price": "6.49",
+      "unit_price": "13 g, $49.92/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20003932_EA/en/1/6620000161_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+      "product_id": "20003932_EA",
+      "product_url": "https://www.maxi.ca/en/bay-leaves/p/20003932_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "13g",
+      "parsed_package_size": {
+        "size": 13,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 13,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 49.92,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 49.92,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic, Peeled",
+      "brand": null,
+      "article_number": "20636099",
+      "price": "3.5",
+      "unit_price": "250 g, $1.40/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20636099_EA/en/1/20636099_en_front_1200.png",
+      "product_id": "20636099_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-peeled/p/20636099_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "250g",
+      "parsed_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.4,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.4,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic, Minced",
+      "brand": "Derlea",
+      "article_number": "20142463",
+      "price": "5",
+      "unit_price": "250 g, $2.00/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20142463_EA/en/1/6939100028_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "20142463_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-minced/p/20142463_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "250g",
+      "parsed_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 2,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 2,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Powder",
+      "brand": "No Name",
+      "article_number": "20617758",
+      "price": "2.5",
+      "unit_price": "150 g, $1.67/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20617758_EA/en/1/20617758_enfr_front_1200.png",
+      "product_id": "20617758_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-powder/p/20617758_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "150g",
+      "parsed_package_size": {
+        "size": 150,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 150,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.67,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.67,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic, Minced",
+      "brand": "Derlea",
+      "article_number": "20004861",
+      "price": "8.5",
+      "unit_price": "1 kg, $0.85/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20004861_EA/en/1/20004861_en_front_1200.png",
+      "product_id": "20004861_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-minced/p/20004861_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1kg",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "kg"
+      },
+      "normalized_package_size": {
+        "size": 1000,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.85,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.85,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Ready Bake Garlic Toast Texas-Style Bread",
+      "brand": "Furlani",
+      "article_number": "20041579",
+      "price": "5.29",
+      "unit_price": "16x40.0 g, $0.83/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20041579_EA/en/1/20041579_en_front_v1_1200.png",
+      "product_id": "20041579_EA",
+      "product_url": "https://www.maxi.ca/en/ready-bake-garlic-toast-texas-style-bread/p/20041579_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "40g",
+      "parsed_package_size": {
+        "size": 40,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 40,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.83,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.83,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Heirloom Ontario Garlic",
+      "brand": null,
+      "article_number": "20180051",
+      "price": "4",
+      "unit_price": "115 g, $3.48/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20180051_EA/en/1/20180051_en_front_1200.png",
+      "product_id": "20180051_EA",
+      "product_url": "https://www.maxi.ca/en/heirloom-ontario-garlic/p/20180051_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "115g",
+      "parsed_package_size": {
+        "size": 115,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 115,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 3.48,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 3.48,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic, Minced",
+      "brand": "Derlea",
+      "article_number": "20074770",
+      "price": "3",
+      "unit_price": "125 g, $2.40/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20074770_EA/en/1/20074770_en_front_1200.png",
+      "product_id": "20074770_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-minced/p/20074770_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "125g",
+      "parsed_package_size": {
+        "size": 125,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 125,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 2.4,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 2.4,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic, Puree",
+      "brand": "Derlea",
+      "article_number": "20110312",
+      "price": "3",
+      "unit_price": "125 g, $2.40/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20110312_EA/en/1/20110312_en_front_1200.png",
+      "product_id": "20110312_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-puree/p/20110312_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "125g",
+      "parsed_package_size": {
+        "size": 125,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 125,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 2.4,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 2.4,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Ready to Bake Garlic Toast",
+      "brand": "No Name",
+      "article_number": "21361140",
+      "price": "4",
+      "unit_price": "638 g, $0.63/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21361140_EA/en/1/21361140_enfr_front_v1_1200.png",
+      "product_id": "21361140_EA",
+      "product_url": "https://www.maxi.ca/en/ready-to-bake-garlic-toast/p/21361140_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "638g",
+      "parsed_package_size": {
+        "size": 638,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 638,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.63,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.63,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Organic Garlic Powder",
+      "brand": "Club House",
+      "article_number": "20955533",
+      "price": "3",
+      "unit_price": "57 g, $5.26/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20955533_EA/en/1/20955533_en_1_1200.png",
+      "product_id": "20955533_EA",
+      "product_url": "https://www.maxi.ca/en/organic-garlic-powder/p/20955533_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "57g",
+      "parsed_package_size": {
+        "size": 57,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 57,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 5.26,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 5.26,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Roasted Garlic Puree",
+      "brand": "No Name",
+      "article_number": "20097765",
+      "price": "3.29",
+      "unit_price": "125 g, $2.63/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20097765_EA/en/1/20097765_en_front_1200.png",
+      "product_id": "20097765_EA",
+      "product_url": "https://www.maxi.ca/en/roasted-garlic-puree/p/20097765_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "125g",
+      "parsed_package_size": {
+        "size": 125,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 125,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 2.63,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 2.63,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Bread",
+      "brand": "D'Italiano",
+      "article_number": "21552151",
+      "price": "3",
+      "unit_price": "325 g, $0.92/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21552151_EA/en/1/84701800474_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "21552151_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-bread/p/21552151_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "325g",
+      "parsed_package_size": {
+        "size": 325,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 325,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.92,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.92,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Paste",
+      "brand": "Suraj",
+      "article_number": "21088388",
+      "price": "4.79",
+      "unit_price": "750 g, $0.64/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21088388_EA/en/1/21088388_en_front_1200.png",
+      "product_id": "21088388_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-paste/p/21088388_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "750g",
+      "parsed_package_size": {
+        "size": 750,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 750,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.64,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.64,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic & Herbs",
+      "brand": null,
+      "article_number": "21299517001",
+      "price": "2.5",
+      "unit_price": "1 ea, $2.50/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21299517001_EA/en/1/87177700006_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+      "product_id": "21299517001_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-herbs/p/21299517001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 2.5,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 2.5,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Bread",
+      "brand": "Ready Bake",
+      "article_number": "21020061",
+      "price": "3.49",
+      "unit_price": "330 g, $1.06/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21020061_EA/en/1/21020061_en_front_1200.png",
+      "product_id": "21020061_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-bread/p/21020061_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "330g",
+      "parsed_package_size": {
+        "size": 330,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 330,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.06,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.06,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Ready Bake Garlic Parmesan Toast Texas-Style Bread",
+      "brand": "Furlani",
+      "article_number": "20291572",
+      "price": "5.29",
+      "unit_price": "16x40.0 g, $0.83/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20291572_EA/en/1/20291572_en_front_1200.png",
+      "product_id": "20291572_EA",
+      "product_url": "https://www.maxi.ca/en/ready-bake-garlic-parmesan-toast-texas-style-bread/p/20291572_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "40g",
+      "parsed_package_size": {
+        "size": 40,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 40,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.83,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.83,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Ready to Bake Garlic Bread",
+      "brand": "No Name",
+      "article_number": "21594272",
+      "price": "2.79",
+      "unit_price": "325 g, $0.86/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21594272_EA/en/1/21594272_en_front_v2_1200.png",
+      "product_id": "21594272_EA",
+      "product_url": "https://www.maxi.ca/en/ready-to-bake-garlic-bread/p/21594272_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "325g",
+      "parsed_package_size": {
+        "size": 325,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 325,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.86,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.86,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Bulb, 3-Pack",
+      "brand": null,
+      "article_number": "21626133001",
+      "price": "4.49",
+      "unit_price": "1 ea, $4.49/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21626133001_EA/en/1/83586200500_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "21626133001_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-bulb-3-pack/p/21626133001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 4.49,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 4.49,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Hot Pickled Garlic",
+      "brand": "Sardo",
+      "article_number": "20863268",
+      "price": "7.99",
+      "unit_price": "375 ml, $2.13/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20863268_EA/en/1/20863268_en_front_1200.png",
+      "product_id": "20863268_EA",
+      "product_url": "https://www.maxi.ca/en/hot-pickled-garlic/p/20863268_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "375ml",
+      "parsed_package_size": {
+        "size": 375,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 375,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 2.13,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 2.13,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic & Provencal Herb Butter",
+      "brand": "Lactantia",
+      "article_number": "20106744",
+      "price": "4",
+      "unit_price": "125 g, $3.20/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20106744_EA/en/1/20106744_en_front_1200.png",
+      "product_id": "20106744_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-provencal-herb-butter/p/20106744_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "125g",
+      "parsed_package_size": {
+        "size": 125,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 125,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 3.2,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 3.2,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Flakes",
+      "brand": "Suraj",
+      "article_number": "20618365",
+      "price": "3.5",
+      "unit_price": "200 g, $1.75/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20618365_EA/en/1/20618365_en_front_1200.png",
+      "product_id": "20618365_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-flakes/p/20618365_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "200g",
+      "parsed_package_size": {
+        "size": 200,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 200,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.75,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.75,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Toum Squeeze and Drizzle Garlic Spread",
+      "brand": "President's Choice",
+      "article_number": "21732733",
+      "price": "5",
+      "unit_price": "255 ml, $1.96/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21732733_EA/en/1/21732733_en_front_v1_1200.png",
+      "product_id": "21732733_EA",
+      "product_url": "https://www.maxi.ca/en/toum-squeeze-and-drizzle-garlic-spread/p/21732733_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "255ml",
+      "parsed_package_size": {
+        "size": 255,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 255,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 1.96,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 1.96,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Toast, Bake At Home, 8 Slices",
+      "brand": "D'Italiano",
+      "article_number": "21552105",
+      "price": "3.79",
+      "unit_price": "325 g, $1.17/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21552105_EA/en/1/84701800476_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+      "product_id": "21552105_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-toast-bake-at-home-8-slices/p/21552105_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "325g",
+      "parsed_package_size": {
+        "size": 325,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 325,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.17,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.17,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic & Ginger Paste",
+      "brand": "Suraj",
+      "article_number": "21088480",
+      "price": "4.79",
+      "unit_price": "750 g, $0.64/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21088480_EA/en/1/6148305425_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "21088480_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-ginger-paste/p/21088480_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "750g",
+      "parsed_package_size": {
+        "size": 750,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 750,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.64,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.64,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Pearl Solo Garlic",
+      "brand": null,
+      "article_number": "20611516",
+      "price": "2.48",
+      "unit_price": "250 g, $2.48/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/20611516_EA/en/1/20611516_en_front_1200.png",
+      "product_id": "20611516_EA",
+      "product_url": "https://www.maxi.ca/en/pearl-solo-garlic/p/20611516_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "250g",
+      "parsed_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 2.48,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 2.48,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Powder",
+      "brand": "PC Organics",
+      "article_number": "21209151",
+      "price": "4",
+      "unit_price": "64 g, $6.25/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21209151_EA/en/1/6038322188_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "21209151_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-powder/p/21209151_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "64g",
+      "parsed_package_size": {
+        "size": 64,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 64,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 6.25,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 6.25,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Powder Jar",
+      "brand": "Quality",
+      "article_number": "21416946",
+      "price": "4.29",
+      "unit_price": "400 g, $1.07/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21416946_EA/en/1/21416946_en_front_1200.png",
+      "product_id": "21416946_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-powder-jar/p/21416946_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "400g",
+      "parsed_package_size": {
+        "size": 400,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 400,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.07,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.07,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Roasted Garlic Mayo Sandwich Spread",
+      "brand": "President's Choice",
+      "article_number": "20320456001",
+      "price": "3.5",
+      "unit_price": "300 ml, $1.17/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20320456001_EA/en/1/20320456001_enfr_front_1200.png",
+      "product_id": "20320456001_EA",
+      "product_url": "https://www.maxi.ca/en/roasted-garlic-mayo-sandwich-spread/p/20320456001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "300ml",
+      "parsed_package_size": {
+        "size": 300,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 300,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 1.17,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 1.17,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Giuseppe Garlic Fingers",
+      "brand": "Dr Oetker",
+      "article_number": "21164021",
+      "price": "4",
+      "unit_price": "317 g, $1.26/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21164021_EA/en/1/21164021_en_1_1200.png",
+      "product_id": "21164021_EA",
+      "product_url": "https://www.maxi.ca/en/giuseppe-garlic-fingers/p/21164021_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "317g",
+      "parsed_package_size": {
+        "size": 317,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 317,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.26,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.26,
+      "was_price": 4.5,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $0.50",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Powder",
+      "brand": "President's Choice",
+      "article_number": "21116905",
+      "price": "6",
+      "unit_price": "67 g, $8.96/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21116905_EA/en/1/21116905_enfr_front_v1_1200.png",
+      "product_id": "21116905_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-powder/p/21116905_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "67g",
+      "parsed_package_size": {
+        "size": 67,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 67,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 8.96,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 8.96,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Cheesy Garlic Fingers",
+      "brand": "No Name",
+      "article_number": "21669502",
+      "price": "3.5",
+      "unit_price": "295 g, $1.19/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21669502_EA/en/1/21669502_en_front_1200.png",
+      "product_id": "21669502_EA",
+      "product_url": "https://www.maxi.ca/en/cheesy-garlic-fingers/p/21669502_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "295g",
+      "parsed_package_size": {
+        "size": 295,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 295,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.19,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.19,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic in Oil",
+      "brand": "National",
+      "article_number": "21691814",
+      "price": "3.99",
+      "unit_price": "370 g, $1.08/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21691814_EA/en/1/62051402065_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+      "product_id": "21691814_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-in-oil/p/21691814_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "370g",
+      "parsed_package_size": {
+        "size": 370,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 370,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.08,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.08,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Salt",
+      "brand": "No Name",
+      "article_number": "20618040",
+      "price": "2.5",
+      "unit_price": "250 g, $1.00/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20618040_EA/en/1/20618040_en_front_v2_1200.png",
+      "product_id": "20618040_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-salt/p/20618040_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "250g",
+      "parsed_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Black Garlic Seasoning Blend",
+      "brand": "McCormicks",
+      "article_number": "21379256",
+      "price": "6",
+      "unit_price": "62 g, $9.68/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21379256_EA/en/1/21379256_enfr_front_1200.png",
+      "product_id": "21379256_EA",
+      "product_url": "https://www.maxi.ca/en/black-garlic-seasoning-blend/p/21379256_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "62g",
+      "parsed_package_size": {
+        "size": 62,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 62,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 9.68,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 9.68,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Roasted Garlic Seasoning Tube ",
+      "brand": "Trudeau",
+      "article_number": "21362401",
+      "price": "5.99",
+      "unit_price": "115 g, $5.21/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21362401_EA/en/1/21362401_en_front_1200.png",
+      "product_id": "21362401_EA",
+      "product_url": "https://www.maxi.ca/en/roasted-garlic-seasoning-tube/p/21362401_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "115g",
+      "parsed_package_size": {
+        "size": 115,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 115,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 5.21,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 5.21,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Naan Flatbreads",
+      "brand": "Suraj",
+      "article_number": "20343319",
+      "price": "6",
+      "unit_price": "10 ea",
+      "image_url": "https://digital.loblaws.ca/PCX/20343319_EA/en/1/20343319_en_front_v1_1200.png",
+      "product_id": "20343319_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-naan-flatbreads/p/20343319_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "10ea",
+      "parsed_package_size": {
+        "size": 10,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 10,
+        "unit": "ea"
+      },
+      "parsed_unit_price": null,
+      "comparable_unit_price": null,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "La Grille Garlic Butter Flavoured Seasoning",
+      "brand": "Club House",
+      "article_number": "21717457",
+      "price": "6.5",
+      "unit_price": "190 g, $3.42/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21717457_EA/en/1/21717457_en_1_1200.png",
+      "product_id": "21717457_EA",
+      "product_url": "https://www.maxi.ca/en/la-grille-garlic-butter-flavoured-seasoning/p/21717457_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "190g",
+      "parsed_package_size": {
+        "size": 190,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 190,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 3.42,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 3.42,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Alfredo & Roasted Garlic Pasta Sauce",
+      "brand": "Classico",
+      "article_number": "20325609001",
+      "price": "3.49",
+      "unit_price": "410 ml, $0.85/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20325609001_EA/en/1/20325609001_en_front_1200.png",
+      "product_id": "20325609001_EA",
+      "product_url": "https://www.maxi.ca/en/alfredo-roasted-garlic-pasta-sauce/p/20325609001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "410ml",
+      "parsed_package_size": {
+        "size": 410,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 410,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 0.85,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 0.85,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic and Butter Flavour Sourdough Style Croutons",
+      "brand": "President's Choice",
+      "article_number": "20796248001",
+      "price": "4.29",
+      "unit_price": "140 g, $3.06/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20796248001_EA/en/1/20796248001_en_front_1200.png",
+      "product_id": "20796248001_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-and-butter-flavour-sourdough-style-croutons/p/20796248001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "140g",
+      "parsed_package_size": {
+        "size": 140,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 140,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 3.06,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 3.06,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic and Cheese Trio Focaccia",
+      "brand": "President's Choice",
+      "article_number": "21669349",
+      "price": "5",
+      "unit_price": "456 g, $1.10/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21669349_EA/en/1/21669349_en_front_1200.png",
+      "product_id": "21669349_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-and-cheese-trio-focaccia/p/21669349_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "456g",
+      "parsed_package_size": {
+        "size": 456,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 456,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.1,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.1,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Salt Club Size",
+      "brand": "No Name",
+      "article_number": "20181401",
+      "price": "10.49",
+      "unit_price": "1.05 kg, $1.00/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20181401_EA/en/1/20181401_en_front_1200.png",
+      "product_id": "20181401_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-salt-club-size/p/20181401_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1.05kg",
+      "parsed_package_size": {
+        "size": 1.05,
+        "unit": "kg"
+      },
+      "normalized_package_size": {
+        "size": 1050,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Salt Garlic",
+      "brand": "Club House",
+      "article_number": "20183341001",
+      "price": "6.49",
+      "unit_price": "220 g, $2.95/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20183341001_EA/en/1/20183341001_en_1_1200.png",
+      "product_id": "20183341001_EA",
+      "product_url": "https://www.maxi.ca/en/salt-garlic/p/20183341001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "220g",
+      "parsed_package_size": {
+        "size": 220,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 220,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 2.95,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 2.95,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Gourmet Garlic Press",
+      "brand": "Kitchen Aid",
+      "article_number": "21529839",
+      "price": "15",
+      "unit_price": "1 ea, $15.00/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21529839_EA/en/1/21529839_en_1_1200.png",
+      "product_id": "21529839_EA",
+      "product_url": "https://www.maxi.ca/en/gourmet-garlic-press/p/21529839_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 15,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 15,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Ready to Bake Sliced Garlic Toast",
+      "brand": "No Name",
+      "article_number": "21594313",
+      "price": "3.5",
+      "unit_price": "325 g, $1.08/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21594313_EA/en/1/21594313_en_front_v2_1200.png",
+      "product_id": "21594313_EA",
+      "product_url": "https://www.maxi.ca/en/ready-to-bake-sliced-garlic-toast/p/21594313_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "325g",
+      "parsed_package_size": {
+        "size": 325,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 325,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.08,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.08,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Paste",
+      "brand": "AKIS",
+      "article_number": "20321787004",
+      "price": "4.99",
+      "unit_price": "250 ml, $2.00/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20321787004_EA/en/1/62231300004_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "20321787004_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-paste/p/20321787004_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "250ml",
+      "parsed_package_size": {
+        "size": 250,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 250,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 2,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 2,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic & Fine Herbs Spreadable Cheese",
+      "brand": "Boursin",
+      "article_number": "20116794",
+      "price": "7.49",
+      "unit_price": "150 g, $4.99/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20116794_EA/en/1/20116794_en_1_1200.png",
+      "product_id": "20116794_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-fine-herbs-spreadable-cheese/p/20116794_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "150g",
+      "parsed_package_size": {
+        "size": 150,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 150,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 4.99,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 4.99,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Powder",
+      "brand": "McCormicks",
+      "article_number": "21379274",
+      "price": "6",
+      "unit_price": "54 g, $11.11/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21379274_EA/en/1/21379274_en_front_1200.png",
+      "product_id": "21379274_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-powder/p/21379274_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "54g",
+      "parsed_package_size": {
+        "size": 54,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 54,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 11.11,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 11.11,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Roasted Garlic Pasta Sauce",
+      "brand": "President's Choice",
+      "article_number": "21734387",
+      "price": "4.69",
+      "unit_price": "600 ml, $0.78/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21734387_EA/en/1/21734387_en_front_v1_1200.png",
+      "product_id": "21734387_EA",
+      "product_url": "https://www.maxi.ca/en/roasted-garlic-pasta-sauce/p/21734387_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "600ml",
+      "parsed_package_size": {
+        "size": 600,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 600,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 0.78,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 0.78,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Zinc Alloy/Ss Garlic Press",
+      "brand": "President's Choice",
+      "article_number": "21345420",
+      "price": "14",
+      "unit_price": "1 ea, $14.00/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21345420_EA/en/1/21345420_en_front_1200.png",
+      "product_id": "21345420_EA",
+      "product_url": "https://www.maxi.ca/en/zinc-alloy-ss-garlic-press/p/21345420_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 14,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 14,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic BBQ Sauce",
+      "brand": "Kraft",
+      "article_number": "20627619003",
+      "price": "2.5",
+      "unit_price": "455 ml, $0.55/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20627619003_EA/en/1/20627619003_en_front_v2_1200.png",
+      "product_id": "20627619003_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-bbq-sauce/p/20627619003_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "455ml",
+      "parsed_package_size": {
+        "size": 455,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 455,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 0.55,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 0.55,
+      "was_price": 2.79,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $0.29",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Cuisine Garlic & Fine Herbs Cream Sauce",
+      "brand": "Boursin",
+      "article_number": "21510642",
+      "price": "7.49",
+      "unit_price": "220 g, $3.40/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21510642_EA/en/1/21510642_en_1_v1_1200.png",
+      "product_id": "21510642_EA",
+      "product_url": "https://www.maxi.ca/en/cuisine-garlic-fine-herbs-cream-sauce/p/21510642_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "220g",
+      "parsed_package_size": {
+        "size": 220,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 220,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 3.4,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 3.4,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Condensed Soup Garlic Parmesan With Herbs",
+      "brand": "Campbell's",
+      "article_number": "21756063",
+      "price": "1.5",
+      "unit_price": "284 ml, $0.53/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21756063_EA/en/1/6321129609_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+      "product_id": "21756063_EA",
+      "product_url": "https://www.maxi.ca/en/condensed-soup-garlic-parmesan-with-herbs/p/21756063_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "284ml",
+      "parsed_package_size": {
+        "size": 284,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 284,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 0.53,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 0.53,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Parmesan Mayonnaise Style Sauce",
+      "brand": "Heinz",
+      "article_number": "21686274",
+      "price": "4.29",
+      "unit_price": "340 ml, $1.26/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21686274_EA/en/1/21686274_en_1_1200.png",
+      "product_id": "21686274_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-parmesan-mayonnaise-style-sauce/p/21686274_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "340ml",
+      "parsed_package_size": {
+        "size": 340,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 340,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 1.26,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 1.26,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Kosher Crushed Garlic Cubes",
+      "brand": "Gefen",
+      "article_number": "21056545",
+      "price": "4.5",
+      "unit_price": "71 g, $6.34/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21056545_EA/en/1/71006956400_enfr_front_centre_marketing_A_1_GS1_Ecommerce_v1_1200.png",
+      "product_id": "21056545_EA",
+      "product_url": "https://www.maxi.ca/en/kosher-crushed-garlic-cubes/p/21056545_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "71g",
+      "parsed_package_size": {
+        "size": 71,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 71,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 6.34,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 6.34,
+      "was_price": 5,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $0.50",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Umami Topping Crunchy Garlic With Chili Oil Mild",
+      "brand": "S&B",
+      "article_number": "21716516",
+      "price": "8.79",
+      "unit_price": "110 g, $7.99/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21716516_EA/en/1/7488000401_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+      "product_id": "21716516_EA",
+      "product_url": "https://www.maxi.ca/en/umami-topping-crunchy-garlic-with-chili-oil-mild/p/21716516_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "110g",
+      "parsed_package_size": {
+        "size": 110,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 110,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 7.99,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 7.99,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Ginger Garlic Paste Ground Ginger & Garlic",
+      "brand": "Shan",
+      "article_number": "21447372",
+      "price": "3.99",
+      "unit_price": "310 g, $1.29/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21447372_EA/en/1/78882100118_enfr_front_centre_marketing_1_GS1_Ecommerce_1200.png",
+      "product_id": "21447372_EA",
+      "product_url": "https://www.maxi.ca/en/ginger-garlic-paste-ground-ginger-garlic/p/21447372_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "310g",
+      "parsed_package_size": {
+        "size": 310,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 310,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.29,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.29,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic, Pepper & Herbs",
+      "brand": "Cool Runnings",
+      "article_number": "20417211",
+      "price": "4.49",
+      "unit_price": "250 g, $1.80/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20417211_EA/en/1/62491300132_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "20417211_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-pepper-herbs/p/20417211_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "250g",
+      "parsed_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 250,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.8,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.8,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Honey Garlic Sauce",
+      "brand": "No Name",
+      "article_number": "20323473001",
+      "price": "2.99",
+      "unit_price": "350 ml, $0.85/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20323473001_EA/en/1/20323473001_en_front_v1_1200.png",
+      "product_id": "20323473001_EA",
+      "product_url": "https://www.maxi.ca/en/honey-garlic-sauce/p/20323473001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "350ml",
+      "parsed_package_size": {
+        "size": 350,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 350,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 0.85,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 0.85,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Granulated Garlic",
+      "brand": "Ta'am Vareach",
+      "article_number": "21029472",
+      "price": "8.99",
+      "unit_price": "120 g, $7.49/100g",
+      "image_url": "https://assets.loblaws.ca/pcx_bronx_fe_assets/images/common/coming-soon-en-web.png",
+      "product_id": "21029472_EA",
+      "product_url": "https://www.maxi.ca/en/granulated-garlic/p/21029472_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "120g",
+      "parsed_package_size": {
+        "size": 120,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 120,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 7.49,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 7.49,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Press, Almond Cream",
+      "brand": "Kitchen Aid",
+      "article_number": "21688923",
+      "price": "17",
+      "unit_price": "1 ea, $17.00/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21688923_EA/en/1/21688923_en_front_1200.png",
+      "product_id": "21688923_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-press-almond-cream/p/21688923_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 17,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 17,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Herb & Garlic Cream Cheese Product",
+      "brand": "Philadelphia",
+      "article_number": "20866929001",
+      "price": "7.79",
+      "unit_price": "340 g, $2.29/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20866929001_EA/en/1/20866929001_en_1_v1_1200.png",
+      "product_id": "20866929001_EA",
+      "product_url": "https://www.maxi.ca/en/herb-garlic-cream-cheese-product/p/20866929001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "340g",
+      "parsed_package_size": {
+        "size": 340,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 340,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 2.29,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 2.29,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "One Step Seasoning, Garlic And Herb, Gluten-Free, Salt-Free",
+      "brand": "Club House",
+      "article_number": "20765285",
+      "price": "6.29",
+      "unit_price": "142 g, $4.43/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20765285_EA/en/1/20765285_enfr_front_1200.png",
+      "product_id": "20765285_EA",
+      "product_url": "https://www.maxi.ca/en/one-step-seasoning-garlic-and-herb-gluten-free-sal/p/20765285_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "142g",
+      "parsed_package_size": {
+        "size": 142,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 142,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 4.43,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 4.43,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic, Pickled",
+      "brand": "Clic",
+      "article_number": "20127705",
+      "price": "7.29",
+      "unit_price": "600 ml, $0.86/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20127705_EA/en/1/20127705_en_front_1200.png",
+      "product_id": "20127705_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-pickled/p/20127705_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "600ml",
+      "parsed_package_size": {
+        "size": 600,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 600,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 0.86,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 0.86,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Basil Pesto",
+      "brand": "Classico",
+      "article_number": "20307509001",
+      "price": "3.49",
+      "unit_price": "218 ml, $1.60/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20307509001_EA/en/1/20307509001_en_front_1200.png",
+      "product_id": "20307509001_EA",
+      "product_url": "https://www.maxi.ca/en/basil-pesto/p/20307509001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "218ml",
+      "parsed_package_size": {
+        "size": 218,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 218,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 1.6,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 1.6,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Minced Garlic     ",
+      "brand": "Dion",
+      "article_number": "20021457",
+      "price": "3.29",
+      "unit_price": "55 g, $5.98/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20021457_EA/en/1/20021457_en_front_1200.png",
+      "product_id": "20021457_EA",
+      "product_url": "https://www.maxi.ca/en/minced-garlic/p/20021457_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "55g",
+      "parsed_package_size": {
+        "size": 55,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 55,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 5.98,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 5.98,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Press",
+      "brand": "Everyday Essentials",
+      "article_number": "21213660",
+      "price": "4",
+      "unit_price": "1 ea, $4.00/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21213660_EA/en/1/21213660_en_front_1200.png",
+      "product_id": "21213660_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-press/p/21213660_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 4,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 4,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Soft Grip Garlic Press",
+      "brand": "President's Choice",
+      "article_number": "21190093",
+      "price": "10",
+      "unit_price": "1 ea, $10.00/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21190093_EA/en/1/21190093_en_front_1200.png",
+      "product_id": "21190093_EA",
+      "product_url": "https://www.maxi.ca/en/soft-grip-garlic-press/p/21190093_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 10,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 10,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Sw Garlic Press    ",
+      "brand": "Oxo",
+      "article_number": "21179916",
+      "price": "20",
+      "unit_price": "1 ea, $20.00/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21179916_EA/en/1/21179916_en_front_1200.png",
+      "product_id": "21179916_EA",
+      "product_url": "https://www.maxi.ca/en/sw-garlic-press/p/21179916_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 20,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 20,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Naan Flatbreads",
+      "brand": "Suraj",
+      "article_number": "21050380",
+      "price": "4",
+      "unit_price": "500 g, $0.80/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21050380_EA/en/1/21050380_en_front_v1_1200.png",
+      "product_id": "21050380_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-naan-flatbreads/p/21050380_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "500g",
+      "parsed_package_size": {
+        "size": 500,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 500,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.8,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.8,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Italian Parsley",
+      "brand": null,
+      "article_number": "20139141001",
+      "price": "1.99",
+      "unit_price": "1 ea, $1.99/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/20139141001_EA/en/1/20139141001_en_front_1200.png",
+      "product_id": "20139141001_EA",
+      "product_url": "https://www.maxi.ca/en/italian-parsley/p/20139141001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 1.99,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 1.99,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Minced Garlic",
+      "brand": "Prima",
+      "article_number": "20772229",
+      "price": "7.5",
+      "unit_price": "85 g, $8.82/100g",
+      "image_url": "https://assets.loblaws.ca/pcx_bronx_fe_assets/images/common/coming-soon-en-web.png",
+      "product_id": "20772229_EA",
+      "product_url": "https://www.maxi.ca/en/minced-garlic/p/20772229_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "85g",
+      "parsed_package_size": {
+        "size": 85,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 85,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 8.82,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 8.82,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Pasta Seasoning Roasted Garlic & Herbs no artificial flavours ",
+      "brand": "Knorr",
+      "article_number": "20318301002",
+      "price": "1.99",
+      "unit_price": "22 g, $9.05/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20318301002_EA/en/1/20318301002_enfr_front_v1_1200.png",
+      "product_id": "20318301002_EA",
+      "product_url": "https://www.maxi.ca/en/pasta-seasoning-roasted-garlic-herbs-no-artificial/p/20318301002_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "22g",
+      "parsed_package_size": {
+        "size": 22,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 22,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 9.05,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 9.05,
+      "was_price": 2.5,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $0.51",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Medium Garlic Marinade",
+      "brand": "VH",
+      "article_number": "20309693001",
+      "price": "3",
+      "unit_price": "341 ml, $0.88/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20309693001_EA/en/1/20309693001_en_1_v1_1200.png",
+      "product_id": "20309693001_EA",
+      "product_url": "https://www.maxi.ca/en/medium-garlic-marinade/p/20309693001_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "341ml",
+      "parsed_package_size": {
+        "size": 341,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 341,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 0.88,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 0.88,
+      "was_price": 3.99,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $0.99",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Paste Ground Garlic",
+      "brand": "Shan",
+      "article_number": "21447373",
+      "price": "3.99",
+      "unit_price": "310 g, $1.29/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21447373_EA/en/1/78882100117_enfr_front_centre_marketing_1_GS1_Ecommerce_1200.png",
+      "product_id": "21447373_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-paste-ground-garlic/p/21447373_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "310g",
+      "parsed_package_size": {
+        "size": 310,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 310,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1.29,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1.29,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Honey Garlic Marinade",
+      "brand": "VH",
+      "article_number": "20297368",
+      "price": "3",
+      "unit_price": "341 ml, $0.88/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20297368_EA/en/1/20297368_en_1_v1_1200.png",
+      "product_id": "20297368_EA",
+      "product_url": "https://www.maxi.ca/en/honey-garlic-marinade/p/20297368_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "341ml",
+      "parsed_package_size": {
+        "size": 341,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 341,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 0.88,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 0.88,
+      "was_price": 3.99,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $0.99",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Naan Garlic",
+      "brand": "Santosh",
+      "article_number": "21671463",
+      "price": "2.29",
+      "unit_price": "500 g, $0.46/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21671463_EA/en/1/87668101932_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+      "product_id": "21671463_EA",
+      "product_url": "https://www.maxi.ca/en/naan-garlic/p/21671463_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "500g",
+      "parsed_package_size": {
+        "size": 500,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 500,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 0.46,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 0.46,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Organic Couscous, Roasted Garlic & Olive Oil",
+      "brand": "Casbah",
+      "article_number": "20326517004",
+      "price": "4.29",
+      "unit_price": "198 g, $2.17/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/20326517004_EA/en/1/7293497112_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "20326517004_EA",
+      "product_url": "https://www.maxi.ca/en/organic-couscous-roasted-garlic-olive-oil/p/20326517004_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "198g",
+      "parsed_package_size": {
+        "size": 198,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 198,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 2.17,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 2.17,
+      "was_price": 4.5,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $0.21",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Ginger Garlic Paste Ground Ginger & Garlic",
+      "brand": "Shan",
+      "article_number": "21447370",
+      "price": "6.99",
+      "unit_price": "700 g, $1.00/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21447370_EA/en/1/78882100121_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "21447370_EA",
+      "product_url": "https://www.maxi.ca/en/ginger-garlic-paste-ground-ginger-garlic/p/21447370_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "700g",
+      "parsed_package_size": {
+        "size": 700,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 700,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 1,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 1,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Roasted Garlic Olive Oil",
+      "brand": "President's Choice",
+      "article_number": "20326618",
+      "price": "9",
+      "unit_price": "250 ml, $3.60/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/20326618_EA/en/1/20326618_en_front_1200.png",
+      "product_id": "20326618_EA",
+      "product_url": "https://www.maxi.ca/en/roasted-garlic-olive-oil/p/20326618_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "250ml",
+      "parsed_package_size": {
+        "size": 250,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 250,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 3.6,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 3.6,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Creamy Garlic Wing Sauce",
+      "brand": "President's Choice",
+      "article_number": "21062267",
+      "price": "4.5",
+      "unit_price": "350 ml, $1.29/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21062267_EA/en/1/21062267_en_front_1200.png",
+      "product_id": "21062267_EA",
+      "product_url": "https://www.maxi.ca/en/creamy-garlic-wing-sauce/p/21062267_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "350ml",
+      "parsed_package_size": {
+        "size": 350,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 350,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 1.29,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 1.29,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Garlic Parmesan Chicken Wing Mayo Style Dip",
+      "brand": "Hellmann's",
+      "article_number": "21649862",
+      "price": "4.29",
+      "unit_price": "340 ml, $1.26/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21649862_EA/en/1/6840000431_enfr_front_centre_marketing_A_1_GS1_Ecommerce_1200.png",
+      "product_id": "21649862_EA",
+      "product_url": "https://www.maxi.ca/en/garlic-parmesan-chicken-wing-mayo-style-dip/p/21649862_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "340ml",
+      "parsed_package_size": {
+        "size": 340,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 340,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 1.26,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 1.26,
+      "was_price": 5.5,
+      "is_on_sale": true,
+      "multi_buy_deal": "SAVE $1.21",
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Fire-Roasted Tomato & Garlic Pasta Sauce",
+      "brand": "Classico",
+      "article_number": "21619179",
+      "price": "3.49",
+      "unit_price": "600 ml, $0.58/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21619179_EA/en/1/21619179_en_front_v2_1200.png",
+      "product_id": "21619179_EA",
+      "product_url": "https://www.maxi.ca/en/fire-roasted-tomato-garlic-pasta-sauce/p/21619179_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "600ml",
+      "parsed_package_size": {
+        "size": 600,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 600,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 0.58,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 0.58,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "All-In-One Garlic Multitool",
+      "brand": "Starfrit",
+      "article_number": "21596373",
+      "price": "13",
+      "unit_price": "1 ea, $13.00/1ea",
+      "image_url": "https://digital.loblaws.ca/PCX/21596373_EA/en/1/6985892106_enfr_front_centre_marketing_1_GS1_Ecommerce_1200.png",
+      "product_id": "21596373_EA",
+      "product_url": "https://www.maxi.ca/en/all-in-one-garlic-multitool/p/21596373_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "1ea",
+      "parsed_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "normalized_package_size": {
+        "size": 1,
+        "unit": "ea"
+      },
+      "parsed_unit_price": {
+        "value": 13,
+        "quantity": 1,
+        "unit": "ea",
+        "unit_type": "count"
+      },
+      "comparable_unit_price": 13,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Seasoning Blend Garlic & Herb",
+      "brand": "Mrs Dash",
+      "article_number": "21422054",
+      "price": "4.49",
+      "unit_price": "70 g, $6.41/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21422054_EA/en/1/21422054_en_front_1200.png",
+      "product_id": "21422054_EA",
+      "product_url": "https://www.maxi.ca/en/seasoning-blend-garlic-herb/p/21422054_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "70g",
+      "parsed_package_size": {
+        "size": 70,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 70,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 6.41,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 6.41,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Sauce & Spread, Garlic Flavoured",
+      "brand": "Tamam",
+      "article_number": "21531259",
+      "price": "5.79",
+      "unit_price": "290 ml, $2.00/100ml",
+      "image_url": "https://digital.loblaws.ca/PCX/21531259_EA/en/1/5850490128_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "product_id": "21531259_EA",
+      "product_url": "https://www.maxi.ca/en/sauce-spread-garlic-flavoured/p/21531259_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "290ml",
+      "parsed_package_size": {
+        "size": 290,
+        "unit": "ml"
+      },
+      "normalized_package_size": {
+        "size": 290,
+        "unit": "ml"
+      },
+      "parsed_unit_price": {
+        "value": 2,
+        "quantity": 100,
+        "unit": "ml",
+        "unit_type": "volume"
+      },
+      "comparable_unit_price": 2,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    },
+    {
+      "store": "Maxi",
+      "category": "search:garlic",
+      "name": "Flavour Maker Pizza Topping Seasoning",
+      "brand": "Club House",
+      "article_number": "21659870",
+      "price": "6.5",
+      "unit_price": "93 g, $6.99/100g",
+      "image_url": "https://digital.loblaws.ca/PCX/21659870_EA/en/1/21659870_en_front_1200.png",
+      "product_id": "21659870_EA",
+      "product_url": "https://www.maxi.ca/en/flavour-maker-pizza-topping-seasoning/p/21659870_EA",
+      "location": "8661",
+      "location_name": "Maxi Montréal Côte-des-Neiges",
+      "location_postal_code": "H3S 2B6",
+      "location_coordinates": {
+        "lat": 45.50533,
+        "lng": -73.637574
+      },
+      "is_variant": false,
+      "variant_theme": null,
+      "selling_type": "by_unit",
+      "package_size": "93g",
+      "parsed_package_size": {
+        "size": 93,
+        "unit": "g"
+      },
+      "normalized_package_size": {
+        "size": 93,
+        "unit": "g"
+      },
+      "parsed_unit_price": {
+        "value": 6.99,
+        "quantity": 100,
+        "unit": "g",
+        "unit_type": "weight"
+      },
+      "comparable_unit_price": 6.99,
+      "was_price": null,
+      "is_on_sale": false,
+      "multi_buy_deal": null,
+      "pc_optimum_offer": null
+    }
+  ],
+  "capture_complete": true,
+  "run_id": "jzaxfJbHTFEVYQeu5",
+  "run_status": "SUCCEEDED",
+  "dataset_id": "Mduw4ecHdCHaV4NAW",
+  "capture_error": null,
+  "previous_ingredient_rules": [
+    [
+      {
+        "id": "ing_ail_frais",
+        "name": "Ail frais",
+        "category": "vegetables",
+        "aliases": [
+          "ail",
+          "garlic"
+        ],
+        "excluded_terms": [
+          "poudre",
+          "sel",
+          "sauce",
+          "beurre",
+          "hache",
+          "haché",
+          "mariné",
+          "marines",
+          "assaisonnement",
+          "powder",
+          "salt",
+          "butter",
+          "minced",
+          "pickled",
+          "seasoning"
+        ],
+        "required_any": []
+      },
+      {
+        "id": "ing_oignon_jaune",
+        "name": "Oignon jaune",
+        "category": "vegetables",
+        "aliases": [
+          "oignon jaune",
+          "oignons jaunes",
+          "yellow onion",
+          "yellow onions"
+        ],
+        "excluded_terms": [
+          "poudre",
+          "sauce",
+          "soupe",
+          "frits",
+          "powder",
+          "soup",
+          "fried"
+        ],
+        "required_any": []
+      },
+      {
+        "id": "ing_carotte_fraiche",
+        "name": "Carotte fraîche",
+        "category": "vegetables",
+        "aliases": [
+          "carotte",
+          "carottes",
+          "carrot",
+          "carrots"
+        ],
+        "excluded_terms": [
+          "jus",
+          "soupe",
+          "gateau",
+          "gâteau",
+          "surgelé",
+          "surgelees",
+          "conserve",
+          "mélange",
+          "melange",
+          "érable",
+          "erable",
+          "juice",
+          "soup",
+          "cake",
+          "frozen",
+          "canned",
+          "mix",
+          "maple"
+        ],
+        "required_any": []
+      },
+      {
+        "id": "ing_banane_fraiche",
+        "name": "Banane fraîche",
+        "category": "fruits",
+        "aliases": [
+          "banane",
+          "bananes",
+          "banana",
+          "bananas"
+        ],
+        "excluded_terms": [
+          "pain",
+          "yogourt",
+          "smoothie",
+          "chips",
+          "séchées",
+          "sechees",
+          "surgelées",
+          "surgelees",
+          "collations",
+          "mélange",
+          "melange",
+          "plantain",
+          "plantin",
+          "compote",
+          "bread",
+          "yogurt",
+          "dried",
+          "frozen",
+          "snack",
+          "mix",
+          "puree"
+        ],
+        "required_any": []
+      },
+      {
+        "id": "ing_poitrine_poulet",
+        "name": "Poitrine de poulet fraîche",
+        "category": "meat",
+        "aliases": [
+          "poitrine",
+          "poitrines",
+          "chicken breast"
+        ],
+        "excluded_terms": [
+          "panée",
+          "panees",
+          "nuggets",
+          "cuit",
+          "cuite",
+          "surgelé",
+          "surgelees",
+          "assaisonné",
+          "assaisonne",
+          "farcie",
+          "miel",
+          "al pastor",
+          "breaded",
+          "cooked",
+          "frozen",
+          "seasoned",
+          "stuffed",
+          "honey"
+        ],
+        "required_any": [
+          "poulet",
+          "chicken"
+        ]
+      },
+      {
+        "id": "ing_lait_2",
+        "name": "Lait de vache 2 %",
+        "category": "dairy",
+        "aliases": [
+          "lait",
+          "milk"
+        ],
+        "excluded_terms": [
+          "chocolat",
+          "amande",
+          "soya",
+          "avoine",
+          "sans lactose",
+          "lactose free",
+          "chèvre",
+          "chevre",
+          "poule",
+          "coco",
+          "chocolate",
+          "almond",
+          "soy",
+          "oat",
+          "goat",
+          "eggnog",
+          "coconut"
+        ],
+        "required_any": [
+          "2 %"
+        ]
+      },
+      {
+        "id": "ing_oeuf_gros",
+        "name": "Œufs gros",
+        "category": "eggs",
+        "aliases": [
+          "oeufs",
+          "œufs",
+          "eggs"
+        ],
+        "excluded_terms": [
+          "liquide",
+          "chocolat",
+          "cuit",
+          "cuits",
+          "blancs d oeufs",
+          "extra gros",
+          "liquid",
+          "chocolate",
+          "cooked",
+          "egg whites",
+          "extra large"
+        ],
+        "required_any": [
+          "gros",
+          "large"
+        ]
+      },
+      {
+        "id": "ing_riz_basmati_blanc",
+        "name": "Riz basmati blanc sec",
+        "category": "pantry",
+        "aliases": [
+          "basmati"
+        ],
+        "excluded_terms": [
+          "brun",
+          "brown",
+          "cuit",
+          "express",
+          "pret",
+          "prêt",
+          "micro",
+          "assaisonné",
+          "champignons",
+          "citron",
+          "piment",
+          "grains entiers",
+          "cooked",
+          "ready",
+          "seasoned",
+          "mushroom",
+          "lemon",
+          "whole grain"
+        ],
+        "required_any": [
+          "riz",
+          "rice"
+        ]
+      },
+      {
+        "id": "ing_pois_chiche_conserve",
+        "name": "Pois chiches en conserve",
+        "category": "pantry",
+        "aliases": [
+          "pois chiches",
+          "chickpeas"
+        ],
+        "excluded_terms": [
+          "secs",
+          "sec",
+          "farine",
+          "houmous",
+          "hummus",
+          "rôtis",
+          "rotis",
+          "dry",
+          "dried",
+          "flour",
+          "roasted"
+        ],
+        "required_any": []
+      },
+      {
+        "id": "ing_huile_olive",
+        "name": "Huile d’olive",
+        "category": "pantry",
+        "aliases": [
+          "huile olive",
+          "huile d olive",
+          "olive oil"
+        ],
+        "excluded_terms": [
+          "melange",
+          "mélange",
+          "aromatisée",
+          "aromatisee",
+          "vaporisateur",
+          "spray",
+          "blend",
+          "flavoured",
+          "flavored"
+        ],
+        "required_any": []
+      }
+    ]
+  ]
+}

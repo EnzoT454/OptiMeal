@@ -1,0 +1,18 @@
+{
+  "source": "Schéma public actorDefinition.input du build default, consulté le 30 septembre 2026",
+  "note": "Rayons alimentaires. Exclusion du rayon natural-and-organic global car il inclut santé/beauté et entretien.",
+  "categories": [
+    "fruits-vegetables",
+    "dairy-eggs",
+    "meat",
+    "fish-seafood",
+    "pantry",
+    "international-foods",
+    "snacks-chips-candy",
+    "frozen-food",
+    "bakery",
+    "prepared-meals",
+    "drinks",
+    "deli"
+  ]
+}

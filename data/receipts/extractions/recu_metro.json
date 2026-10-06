@@ -1,0 +1,170 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "metro",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "metro",
+  "store_id": null,
+  "purchase_date": "2026-08-22",
+  "date_order": "ymd",
+  "source": {
+    "filename": "recu_metro.png",
+    "sha256": "b1845e42bee9b0f2cbab9f2be84df468a8f7df2e04d704169a24b482f77d5136",
+    "engine": "saved_ocr_replay",
+    "elapsed_seconds": 0.001
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "CLASSICO SCE PAT",
+      "category_raw": "EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.97",
+      "source_lines": [
+        "CLASSICO SCE PAT 2.97"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "FRAMBOISE 170G",
+      "category_raw": "FRUITS LEGUM",
+      "format_raw": null,
+      "quantity": "3",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "1.77",
+      "line_total": "5.31",
+      "source_lines": [
+        "(3) FRAMBOISE 170G",
+        "3 @ $1.77 5.31"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 3,
+      "product_code": null,
+      "name": "NAAN AIL",
+      "category_raw": "MICHE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.99",
+      "source_lines": [
+        "NAAN AIL 4.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": null,
+      "name": "SELECT.OEUF",
+      "category_raw": "PRODUIT LAIT",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "6.29",
+      "source_lines": [
+        "SELECT.OEUF 6.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 5,
+      "product_code": null,
+      "name": "SIGGIS SKYR BAN.",
+      "category_raw": "PRODUIT LAIT",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.89",
+      "source_lines": [
+        "SIGGIS SKYR BAN. 4.89"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 6,
+      "product_code": null,
+      "name": "DOVE MENC.ANTIS.",
+      "category_raw": "SANTE BEAUT",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "9.99",
+      "source_lines": [
+        "DOVE MENC.ANTIS. FP 9.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": "3.32",
+      "effect": "informational",
+      "source_line": "Rabais 3.32",
+      "review_required": true
+    },
+    {
+      "amount": "9.66",
+      "effect": "informational",
+      "source_line": "Rabais 9.66",
+      "review_required": true
+    },
+    {
+      "amount": "-8.99",
+      "effect": "applied",
+      "source_line": "RABAIS MEMBRE -8.99",
+      "review_required": true
+    }
+  ],
+  "totals": {
+    "subtotal": "33.45",
+    "total": "34.95",
+    "taxes": "1.50",
+    "items_sum": "34.44",
+    "calculated_subtotal": "25.45",
+    "difference_from_subtotal": "-8.00",
+    "arithmetic_status": "mismatch",
+    "tax_check_status": "matches"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "purchase_date_order_requires_review",
+    "items_subtotal_mismatch",
+    "receipt_adjustments_require_review"
+  ]
+}

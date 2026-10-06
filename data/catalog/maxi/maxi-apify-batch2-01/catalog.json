@@ -1,0 +1,6056 @@
+{
+  "schema_version": "catalog-pilot-1.0",
+  "status": "review_required",
+  "dataset_kind": "real",
+  "evaluated_at": "2026-09-30T14:09:45.965144Z",
+  "target_store": {
+    "id": "maxi_cote_des_neiges",
+    "retailer_id": "maxi",
+    "name": "Maxi Côte-des-Neiges",
+    "address": "6825, chemin de la Côte-des-Neiges, Montréal",
+    "timezone": "America/Toronto",
+    "receipt_store_code": "8661",
+    "retailer_api_store_id": "8661",
+    "identity_source": "En-tête du reçu fourni data/recu_maxi.jpg ; choix utilisateur",
+    "price_scope_status": "not_verified",
+    "api_identity_source": "Apify raw.json de maxi-apify-01 : 100 lignes location=8661, Maxi Montréal Côte-des-Neiges, H3S 2B6 ; identité déclarée par la source, prix non vérifiés"
+  },
+  "ingredients": [
+    {
+      "id": "ing_tomate_fraiche",
+      "name": "Tomate fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "tomato",
+        "tomatoes",
+        "tomate",
+        "tomates"
+      ],
+      "excluded_terms": [
+        "sauce",
+        "paste",
+        "pate",
+        "conserve",
+        "canned",
+        "diced",
+        "crushed",
+        "soup",
+        "soupe",
+        "juice",
+        "jus",
+        "dried",
+        "seche",
+        "ketchup"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_pomme_de_terre",
+      "name": "Pomme de terre fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "potato",
+        "potatoes",
+        "pomme de terre",
+        "pommes de terre"
+      ],
+      "excluded_terms": [
+        "sweet",
+        "douce",
+        "douces",
+        "chips",
+        "frites",
+        "fries",
+        "mashed",
+        "puree",
+        "frozen",
+        "surgele",
+        "salad",
+        "salade"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_poivron_frais",
+      "name": "Poivron frais",
+      "category": "vegetables",
+      "aliases": [
+        "bell pepper",
+        "bell peppers",
+        "sweet pepper",
+        "sweet peppers",
+        "poivron",
+        "poivrons"
+      ],
+      "excluded_terms": [
+        "pickled",
+        "marine",
+        "roasted",
+        "roti",
+        "frozen",
+        "surgele",
+        "sauce",
+        "seasoning"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_brocoli_frais",
+      "name": "Brocoli frais",
+      "category": "vegetables",
+      "aliases": [
+        "broccoli",
+        "brocoli",
+        "brocolis"
+      ],
+      "excluded_terms": [
+        "frozen",
+        "surgele",
+        "soup",
+        "soupe",
+        "sauce",
+        "cheese",
+        "fromage",
+        "mix",
+        "melange"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_courgette_fraiche",
+      "name": "Courgette fraîche",
+      "category": "vegetables",
+      "aliases": [
+        "zucchini",
+        "zucchinis",
+        "courgette",
+        "courgettes"
+      ],
+      "excluded_terms": [
+        "frozen",
+        "surgele",
+        "bread",
+        "pain",
+        "muffin",
+        "pickled",
+        "marine"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_pomme_fraiche",
+      "name": "Pomme fraîche",
+      "category": "fruits",
+      "aliases": [
+        "apple",
+        "apples",
+        "pomme",
+        "pommes"
+      ],
+      "excluded_terms": [
+        "juice",
+        "jus",
+        "sauce",
+        "compote",
+        "pie",
+        "tarte",
+        "cider",
+        "cidre",
+        "dried",
+        "seche",
+        "chips",
+        "potato",
+        "terre"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_citron_frais",
+      "name": "Citron frais",
+      "category": "fruits",
+      "aliases": [
+        "lemon",
+        "lemons",
+        "citron",
+        "citrons"
+      ],
+      "excluded_terms": [
+        "juice",
+        "jus",
+        "lemonade",
+        "limonade",
+        "cake",
+        "gateau",
+        "pie",
+        "tarte",
+        "extract",
+        "extrait",
+        "soap",
+        "savon",
+        "cleaner",
+        "nettoyant",
+        "pepper",
+        "poivre",
+        "tea",
+        "the"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_boeuf_hache",
+      "name": "Bœuf haché cru",
+      "category": "meat",
+      "aliases": [
+        "ground beef",
+        "minced beef",
+        "boeuf hache"
+      ],
+      "excluded_terms": [
+        "cooked",
+        "cuit",
+        "seasoned",
+        "assaisonne",
+        "burger",
+        "patty",
+        "patties",
+        "meatballs",
+        "boulettes",
+        "plant based",
+        "vegetal"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_saumon",
+      "name": "Saumon nature",
+      "category": "fish",
+      "aliases": [
+        "salmon",
+        "saumon"
+      ],
+      "excluded_terms": [
+        "smoked",
+        "fume",
+        "canned",
+        "conserve",
+        "seasoned",
+        "assaisonne",
+        "marinated",
+        "marine",
+        "sushi",
+        "spread",
+        "tartinade",
+        "pet",
+        "cat",
+        "dog"
+      ],
+      "required_any": []
+    },
+    {
+      "id": "ing_thon_conserve",
+      "name": "Thon en conserve",
+      "category": "fish",
+      "aliases": [
+        "tuna",
+        "thon"
+      ],
+      "excluded_terms": [
+        "salad",
+        "salade",
+        "fresh",
+        "frais",
+        "steak",
+        "sushi",
+        "spread",
+        "tartinade",
+        "kit"
+      ],
+      "required_any": []
+    }
+  ],
+  "products": [
+    {
+      "id": "apify_product_021a7d4f315ff943e970",
+      "external_product_id": "20069080_EA",
+      "identity_status": "source_candidate",
+      "name": "Tomato Ketchup",
+      "brand": "Heinz",
+      "barcode": null,
+      "format": {
+        "raw": "1l",
+        "kind": "fixed",
+        "quantity": "1000",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_4ffd10883abaa02f69a6",
+      "external_product_id": "20143381001_KG",
+      "identity_status": "source_candidate",
+      "name": "Roma Tomatoes",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "0.12kg",
+        "kind": "variable_weight",
+        "quantity": null,
+        "unit": null,
+        "package_count": null,
+        "warnings": [
+          "provider_weight_may_be_estimated"
+        ]
+      }
+    },
+    {
+      "id": "apify_product_d9ad580c0b56e41b5edd",
+      "external_product_id": "21618217_EA",
+      "identity_status": "source_candidate",
+      "name": "Tomato & Basil Pasta Sauce",
+      "brand": "Classico",
+      "barcode": null,
+      "format": {
+        "raw": "600ml",
+        "kind": "fixed",
+        "quantity": "600",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_7999b8e5e01f1f3b6e56",
+      "external_product_id": "20128881_EA",
+      "identity_status": "source_candidate",
+      "name": "Tomato Ketchup",
+      "brand": "Heinz",
+      "barcode": null,
+      "format": {
+        "raw": "375ml",
+        "kind": "fixed",
+        "quantity": "375",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_dee31f4e774dabf16a42",
+      "external_product_id": "20026703001_KG",
+      "identity_status": "source_candidate",
+      "name": "Tomato On The Vine Red (1 Bunch)",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "0.71kg",
+        "kind": "variable_weight",
+        "quantity": null,
+        "unit": null,
+        "package_count": null,
+        "warnings": [
+          "provider_weight_may_be_estimated"
+        ]
+      }
+    },
+    {
+      "id": "apify_product_34cd78c96907a1a32014",
+      "external_product_id": "20031752_EA",
+      "identity_status": "source_candidate",
+      "name": "Tomato Ketchup Lower Sodium",
+      "brand": "Heinz",
+      "barcode": null,
+      "format": {
+        "raw": "750ml",
+        "kind": "fixed",
+        "quantity": "750",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_22fea82a9d3f5ad8d0b2",
+      "external_product_id": "20426141001_KG",
+      "identity_status": "source_candidate",
+      "name": "Tomato Beefsteak  Red",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "0.268kg",
+        "kind": "variable_weight",
+        "quantity": null,
+        "unit": null,
+        "package_count": null,
+        "warnings": [
+          "provider_weight_may_be_estimated"
+        ]
+      }
+    },
+    {
+      "id": "apify_product_c1e116c27efe1eff5c8b",
+      "external_product_id": "20176214001_EA",
+      "identity_status": "source_candidate",
+      "name": "Condensed Soup Tomato",
+      "brand": "Campbell's",
+      "barcode": null,
+      "format": {
+        "raw": "284ml",
+        "kind": "fixed",
+        "quantity": "284",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_3b55748eb2cde9eee4eb",
+      "external_product_id": "21367888001_EA",
+      "identity_status": "source_candidate",
+      "name": "Grape Tomatoes",
+      "brand": "Farmer's Market",
+      "barcode": null,
+      "format": {
+        "raw": "283g",
+        "kind": "fixed",
+        "quantity": "283",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_814dcaeaef909ff0495c",
+      "external_product_id": "21618426_EA",
+      "identity_status": "source_candidate",
+      "name": "Sweet Basil Marinara Pasta Sauce",
+      "brand": "Classico",
+      "barcode": null,
+      "format": {
+        "raw": "600ml",
+        "kind": "fixed",
+        "quantity": "600",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c0a834dcacbd6f07e099",
+      "external_product_id": "20799522_EA",
+      "identity_status": "source_candidate",
+      "name": "Tasti Taters, Tater Tots",
+      "brand": "McCain",
+      "barcode": null,
+      "format": {
+        "raw": "800g",
+        "kind": "fixed",
+        "quantity": "800",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_793451eb9d8856ae587d",
+      "external_product_id": "20601017001_EA",
+      "identity_status": "source_candidate",
+      "name": "Yellow Potato, 10 lb Bag",
+      "brand": "Farmer's Market",
+      "barcode": null,
+      "format": {
+        "raw": "4.54kg",
+        "kind": "fixed",
+        "quantity": "4540.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c19ffc7520db036e3c80",
+      "external_product_id": "21285884_EA",
+      "identity_status": "source_candidate",
+      "name": "Bistro Selects™ Super Crisps Straight Cut French Fries",
+      "brand": "McCain",
+      "barcode": null,
+      "format": {
+        "raw": "650g",
+        "kind": "fixed",
+        "quantity": "650",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_8e68f4759030279282d5",
+      "external_product_id": "20798866_EA",
+      "identity_status": "source_candidate",
+      "name": "Superfries Extra Crispy Spicy Straight Cut Fries",
+      "brand": "McCain",
+      "barcode": null,
+      "format": {
+        "raw": "650g",
+        "kind": "fixed",
+        "quantity": "650",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_6865bc3642e2b9ff8919",
+      "external_product_id": "20600997001_EA",
+      "identity_status": "source_candidate",
+      "name": "White Potatoes, 10 lb Bag",
+      "brand": "Farmer's Market",
+      "barcode": null,
+      "format": {
+        "raw": "4.54kg",
+        "kind": "fixed",
+        "quantity": "4540.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_60151cbdfebd4671370d",
+      "external_product_id": "20799502_EA",
+      "identity_status": "source_candidate",
+      "name": "Super Spirals - Curly Fries",
+      "brand": "McCain",
+      "barcode": null,
+      "format": {
+        "raw": "650g",
+        "kind": "fixed",
+        "quantity": "650",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a8ffe3f3c8c1eb0aa903",
+      "external_product_id": "21247300001_EA",
+      "identity_status": "source_candidate",
+      "name": "Yellow Mini Potatoes",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "0.68kg",
+        "kind": "fixed",
+        "quantity": "680.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_39247ce5853b1833e5a9",
+      "external_product_id": "20325644004_EA",
+      "identity_status": "source_candidate",
+      "name": "Potato Pancakes",
+      "brand": "McCain",
+      "barcode": null,
+      "format": {
+        "raw": "600g",
+        "kind": "fixed",
+        "quantity": "600",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_ecdab7af1ee58edc2247",
+      "external_product_id": "20601014001_EA",
+      "identity_status": "source_candidate",
+      "name": "Yellow Potatoes, 5 lb Bag",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "2.268kg",
+        "kind": "fixed",
+        "quantity": "2268.000",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_b178baa10e4d7f30c256",
+      "external_product_id": "20797308_EA",
+      "identity_status": "source_candidate",
+      "name": "Smiles - Smiley Face Fries",
+      "brand": "McCain",
+      "barcode": null,
+      "format": {
+        "raw": "650g",
+        "kind": "fixed",
+        "quantity": "650",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_41a4af30a2d63f1430e1",
+      "external_product_id": "21551951_EA",
+      "identity_status": "source_candidate",
+      "name": "Pink Pepper Salametti",
+      "brand": "Fantino & Mondello",
+      "barcode": null,
+      "format": {
+        "raw": "175g",
+        "kind": "fixed",
+        "quantity": "175",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_9b714e79c0cbfb128570",
+      "external_product_id": "20921434001_EA",
+      "identity_status": "source_candidate",
+      "name": "Naturally Imperfect Mixed Sweet Peppers 2.5lb Bag",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "1.113kg",
+        "kind": "fixed",
+        "quantity": "1113.000",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_5fa9b2be1417bb26444b",
+      "external_product_id": "20110052004_EA",
+      "identity_status": "source_candidate",
+      "name": "Fried Rice Cups",
+      "brand": "Minute Rice",
+      "barcode": null,
+      "format": {
+        "raw": "250g",
+        "kind": "fixed",
+        "quantity": "250",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_7aae56d70dac408579b9",
+      "external_product_id": "20136806_EA",
+      "identity_status": "source_candidate",
+      "name": "Pepper Black Whole",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "135g",
+        "kind": "fixed",
+        "quantity": "135",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_5644d5d7e0c315649b46",
+      "external_product_id": "20117550001_EA",
+      "identity_status": "source_candidate",
+      "name": "Sweet Baby Peppers (4-Pack)",
+      "brand": "Farmer's Market",
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_fef5f107c0e0ada21e60",
+      "external_product_id": "20145609_EA",
+      "identity_status": "source_candidate",
+      "name": "Ground Black Pepper",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "115g",
+        "kind": "fixed",
+        "quantity": "115",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_39922f77591308bf1bdf",
+      "external_product_id": "20007535001_KG",
+      "identity_status": "source_candidate",
+      "name": "Red Peppers    ",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "0.239kg",
+        "kind": "variable_weight",
+        "quantity": null,
+        "unit": null,
+        "package_count": null,
+        "warnings": [
+          "provider_weight_may_be_estimated"
+        ]
+      }
+    },
+    {
+      "id": "apify_product_db1d891556991262e88e",
+      "external_product_id": "20027862_EA",
+      "identity_status": "source_candidate",
+      "name": "Crushed Red Pepper",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "70g",
+        "kind": "fixed",
+        "quantity": "70",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_afbcf059ba860705437a",
+      "external_product_id": "20425893001_KG",
+      "identity_status": "source_candidate",
+      "name": "Sweet Green Peppers",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "0.244kg",
+        "kind": "variable_weight",
+        "quantity": null,
+        "unit": null,
+        "package_count": null,
+        "warnings": [
+          "provider_weight_may_be_estimated"
+        ]
+      }
+    },
+    {
+      "id": "apify_product_28d6dece8fc9370b9ef2",
+      "external_product_id": "20971498_EA",
+      "identity_status": "source_candidate",
+      "name": "Mexican Style Light Tuna Salad ",
+      "brand": "Rio Mare",
+      "barcode": null,
+      "format": {
+        "raw": "160g",
+        "kind": "fixed",
+        "quantity": "160",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_893f595af5ec5fc9ab2b",
+      "external_product_id": "20321430015_EA",
+      "identity_status": "source_candidate",
+      "name": "Sidekicks Rice Side Dish Cheddar & Broccoli",
+      "brand": "Knorr",
+      "barcode": null,
+      "format": {
+        "raw": "130g",
+        "kind": "fixed",
+        "quantity": "130",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_e2253a9541d791c27cc4",
+      "external_product_id": "21121560001_EA",
+      "identity_status": "source_candidate",
+      "name": "Broccoli Crown",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c60e41bec308601b957d",
+      "external_product_id": "21574222_EA",
+      "identity_status": "source_candidate",
+      "name": "Plant-Based Garlic & Herbs Spreadable Cheese 8P",
+      "brand": "The Laughing Cow",
+      "barcode": null,
+      "format": {
+        "raw": "128g",
+        "kind": "fixed",
+        "quantity": "128",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_3f6101c5ef1bdc69b56a",
+      "external_product_id": "20145621001_EA",
+      "identity_status": "source_candidate",
+      "name": "Broccoli",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_1b55498259b67ec6841d",
+      "external_product_id": "20318915_EA",
+      "identity_status": "source_candidate",
+      "name": "Broccoli Florets",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "500g",
+        "kind": "fixed",
+        "quantity": "500",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_91090abb2238108e1176",
+      "external_product_id": "20149635001_EA",
+      "identity_status": "source_candidate",
+      "name": "Broccoli",
+      "brand": "PC Organics",
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_547e3a01cf3eb69a6e80",
+      "external_product_id": "20154907_EA",
+      "identity_status": "source_candidate",
+      "name": "Broccolini",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_448405083d732f36b312",
+      "external_product_id": "20416869002_EA",
+      "identity_status": "source_candidate",
+      "name": "Frozen Broccoli Florets, Organic",
+      "brand": "PC Organics",
+      "barcode": null,
+      "format": {
+        "raw": "500g",
+        "kind": "fixed",
+        "quantity": "500",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_46e81fb6a88844852b66",
+      "external_product_id": "21096317_EA",
+      "identity_status": "source_candidate",
+      "name": "Frozen Broccoli Florets Club Size",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "1.75kg",
+        "kind": "fixed",
+        "quantity": "1750.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a4e7d530ca8e0f4c5806",
+      "external_product_id": "21116011_EA",
+      "identity_status": "source_candidate",
+      "name": "Organics Frozen Broccoli Florets Club Size",
+      "brand": "PC Organics",
+      "barcode": null,
+      "format": {
+        "raw": "1.5kg",
+        "kind": "fixed",
+        "quantity": "1500.0",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_ffbba1f0c5996173f9cf",
+      "external_product_id": "21042179001_EA",
+      "identity_status": "source_candidate",
+      "name": "Green Zucchini",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "3000ml",
+        "kind": "fixed",
+        "quantity": "3000",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a067e30a77cd1b5e236a",
+      "external_product_id": "20700462_EA",
+      "identity_status": "source_candidate",
+      "name": "Doré-Mi Haloumi Cheese with Jalapeno",
+      "brand": "Saputo",
+      "barcode": null,
+      "format": {
+        "raw": "160g",
+        "kind": "fixed",
+        "quantity": "160",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_51b92ad98ef475554ab8",
+      "external_product_id": "21581737_EA",
+      "identity_status": "source_candidate",
+      "name": "Cucumber Greek Dressing & Marinade",
+      "brand": "Kraft",
+      "barcode": null,
+      "format": {
+        "raw": "355ml",
+        "kind": "fixed",
+        "quantity": "355",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_8eca93152c4fdeab5175",
+      "external_product_id": "20426596001_KG",
+      "identity_status": "source_candidate",
+      "name": "Zucchini",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "0.279kg",
+        "kind": "variable_weight",
+        "quantity": null,
+        "unit": null,
+        "package_count": null,
+        "warnings": [
+          "provider_weight_may_be_estimated"
+        ]
+      }
+    },
+    {
+      "id": "apify_product_b9202967d26d662c9587",
+      "external_product_id": "20700411_EA",
+      "identity_status": "source_candidate",
+      "name": "Doré-Mi Haloumi with Mediterranean Spices Cheese",
+      "brand": "Saputo",
+      "barcode": null,
+      "format": {
+        "raw": "160g",
+        "kind": "fixed",
+        "quantity": "160",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_b6a80db6f7973e8f8d27",
+      "external_product_id": "20148363001_KG",
+      "identity_status": "source_candidate",
+      "name": "Yellow Zucchini",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "0.269kg",
+        "kind": "variable_weight",
+        "quantity": null,
+        "unit": null,
+        "package_count": null,
+        "warnings": [
+          "provider_weight_may_be_estimated"
+        ]
+      }
+    },
+    {
+      "id": "apify_product_ba97c89c56192e7e67e9",
+      "external_product_id": "21105530001_EA",
+      "identity_status": "source_candidate",
+      "name": "Naturally Imperfect Zucchini 2.5L",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "1.13kg",
+        "kind": "fixed",
+        "quantity": "1130.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_5889d03c1c85bf747bd9",
+      "external_product_id": "20878973001_EA",
+      "identity_status": "source_candidate",
+      "name": "Organic Green Zucchini",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_568cc0700f25c6ad6dbf",
+      "external_product_id": "21181365_EA",
+      "identity_status": "source_candidate",
+      "name": "Ready Veggie Zucchini Noodles ",
+      "brand": "President's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "350g",
+        "kind": "fixed",
+        "quantity": "350",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a46c37ab455034d2b083",
+      "external_product_id": "21547695_EA",
+      "identity_status": "source_candidate",
+      "name": "Fruitz & Veggiez Fruit Sauce, Apple Pear Carrot & Apple Peach Sweet Potato, 12 Pack",
+      "brand": "GoGo squeez",
+      "barcode": null,
+      "format": {
+        "raw": "1.08kg",
+        "kind": "fixed",
+        "quantity": "1080.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_5ba7424abcd270b4ed45",
+      "external_product_id": "20868985001_EA",
+      "identity_status": "source_candidate",
+      "name": "Naturally Imperfect Apples, 6 lb bag",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "2.72kg",
+        "kind": "fixed",
+        "quantity": "2720.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_7ad9b95ddaff2f6500bb",
+      "external_product_id": "21620638_EA",
+      "identity_status": "source_candidate",
+      "name": "Fruit Sauce Apple Apple",
+      "brand": "GoGo squeez",
+      "barcode": null,
+      "format": {
+        "raw": "90g",
+        "kind": "fixed",
+        "quantity": "90",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_650e7d111c723b5864f3",
+      "external_product_id": "20336726001_EA",
+      "identity_status": "source_candidate",
+      "name": "Apple Juice Carton",
+      "brand": "Minute Maid",
+      "barcode": null,
+      "format": {
+        "raw": "1l",
+        "kind": "fixed",
+        "quantity": "1000",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c3adebb51de4eede4f2e",
+      "external_product_id": "20606349001_EA",
+      "identity_status": "source_candidate",
+      "name": "Gala Apples, 3 lb Bag",
+      "brand": "PC Organics",
+      "barcode": null,
+      "format": {
+        "raw": "1.36kg",
+        "kind": "fixed",
+        "quantity": "1360.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_edc5b7bab94bea753644",
+      "external_product_id": "20322697002_EA",
+      "identity_status": "source_candidate",
+      "name": "Fruit Sauce, Apple Apple 4P",
+      "brand": "GoGo squeez",
+      "barcode": null,
+      "format": {
+        "raw": "90g",
+        "kind": "fixed",
+        "quantity": "90",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_53738632b3022901b6d0",
+      "external_product_id": "20723960001_EA",
+      "identity_status": "source_candidate",
+      "name": "Honeycrisp Apples, 4 lb Bag",
+      "brand": "Farmer's Market",
+      "barcode": null,
+      "format": {
+        "raw": "1.81kg",
+        "kind": "fixed",
+        "quantity": "1810.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_594a64cad39732b5731b",
+      "external_product_id": "21092667_EA",
+      "identity_status": "source_candidate",
+      "name": "Apple Juice Cartons",
+      "brand": "Minute Maid",
+      "barcode": null,
+      "format": {
+        "raw": "200ml",
+        "kind": "fixed",
+        "quantity": "200",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_1e4cf06053fe6b6ef6ac",
+      "external_product_id": "20713211001_EA",
+      "identity_status": "source_candidate",
+      "name": "McIntosh Apples, 4 lb Bag",
+      "brand": "Farmer's Market",
+      "barcode": null,
+      "format": {
+        "raw": "1.81kg",
+        "kind": "fixed",
+        "quantity": "1810.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_ff215c530ff88d460337",
+      "external_product_id": "20333714001_EA",
+      "identity_status": "source_candidate",
+      "name": "Apple Juice Boxes",
+      "brand": "Kiju",
+      "barcode": null,
+      "format": {
+        "raw": "200ml",
+        "kind": "fixed",
+        "quantity": "200",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_1445f2ebdfdf89539fab",
+      "external_product_id": "20312710004_EA",
+      "identity_status": "source_candidate",
+      "name": "Lemonade Fruit Juice Blend",
+      "brand": "Kiju",
+      "barcode": null,
+      "format": {
+        "raw": "1l",
+        "kind": "fixed",
+        "quantity": "1000",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_f6b0599bdb92bdece4f8",
+      "external_product_id": "20028593001_EA",
+      "identity_status": "source_candidate",
+      "name": "Lemon",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c93dc806faf50f2e4f6d",
+      "external_product_id": "21590856_C06",
+      "identity_status": "source_candidate",
+      "name": "Light Lemon, Sparkling Fruit Beverage",
+      "brand": "San Pellegrino",
+      "barcode": null,
+      "format": {
+        "raw": "330ml",
+        "kind": "fixed",
+        "quantity": "330",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_fc8d4b6cf5a6d5d0ce9a",
+      "external_product_id": "21367721_EA",
+      "identity_status": "source_candidate",
+      "name": "Iced Tea Strawberry Lemon Love Can",
+      "brand": "Peace Tea",
+      "barcode": null,
+      "format": {
+        "raw": "695ml",
+        "kind": "fixed",
+        "quantity": "695",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_9a23fcfe1f94ef507770",
+      "external_product_id": "20795315001_EA",
+      "identity_status": "source_candidate",
+      "name": "Lemons, 2 lb Bag",
+      "brand": "Farmer's Market",
+      "barcode": null,
+      "format": {
+        "raw": "907g",
+        "kind": "fixed",
+        "quantity": "907",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_8906e573751692ba091d",
+      "external_product_id": "21170793_EA",
+      "identity_status": "source_candidate",
+      "name": "Lemonade Bottle",
+      "brand": "Simply",
+      "barcode": null,
+      "format": {
+        "raw": "1.54l",
+        "kind": "fixed",
+        "quantity": "1540.00",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_261066f774ad86028052",
+      "external_product_id": "21124487001_EA",
+      "identity_status": "source_candidate",
+      "name": "Naturally Imperfect Lemons 3lb Bag",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "1.36kg",
+        "kind": "fixed",
+        "quantity": "1360.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_9efeae9b20b6fbbbf539",
+      "external_product_id": "20300740001_EA",
+      "identity_status": "source_candidate",
+      "name": "20ct Lemon & Ginger",
+      "brand": "Twinings",
+      "barcode": null,
+      "format": {
+        "raw": "20ea",
+        "kind": "fixed",
+        "quantity": "20",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_03e32800d1d39f4b8155",
+      "external_product_id": "20040489001_EA",
+      "identity_status": "source_candidate",
+      "name": "Limes",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "1ea",
+        "kind": "fixed",
+        "quantity": "1",
+        "unit": "unit",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_4c6dde4790c1eebfb5ed",
+      "external_product_id": "21723771_C06",
+      "identity_status": "source_candidate",
+      "name": "Lemon Iced Tea",
+      "brand": "Pure Leaf",
+      "barcode": null,
+      "format": {
+        "raw": "340ml",
+        "kind": "fixed",
+        "quantity": "340",
+        "unit": "ml",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_4fa8e8ed6963a73dd140",
+      "external_product_id": "21465951_EA",
+      "identity_status": "source_candidate",
+      "name": "Sliced Meat Mock Chicken Meat Loaf",
+      "brand": "Olymel",
+      "barcode": null,
+      "format": {
+        "raw": "500g",
+        "kind": "fixed",
+        "quantity": "500",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_f85eb7671d62998d6a26",
+      "external_product_id": "21604443_EA",
+      "identity_status": "source_candidate",
+      "name": "Lean Ground Beef",
+      "brand": "Butcher's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "0.45kg",
+        "kind": "fixed",
+        "quantity": "450.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_ffbab0d481aa8c23ea49",
+      "external_product_id": "21683297_EA",
+      "identity_status": "source_candidate",
+      "name": "Premium Roasted Beef Flavour Bouillon Base Paste",
+      "brand": "Knorr",
+      "barcode": null,
+      "format": {
+        "raw": "311g",
+        "kind": "fixed",
+        "quantity": "311",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_e7d98e5c3f9e6881b275",
+      "external_product_id": "20143053_EA",
+      "identity_status": "source_candidate",
+      "name": "Goat Stew Bone In",
+      "brand": "New Zealand",
+      "barcode": null,
+      "format": {
+        "raw": "1kg",
+        "kind": "fixed",
+        "quantity": "1000",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_dd4897c67201bb78cf23",
+      "external_product_id": "21618300_EA",
+      "identity_status": "source_candidate",
+      "name": "Grass Fed Lean Ground Beef, 2-Pack",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "900g",
+        "kind": "fixed",
+        "quantity": "900",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_32913a634f1325ea1737",
+      "external_product_id": "20180764_EA",
+      "identity_status": "source_candidate",
+      "name": "Garlic Powder",
+      "brand": "Club House",
+      "barcode": null,
+      "format": {
+        "raw": "165g",
+        "kind": "fixed",
+        "quantity": "165",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_20bfffc50a9bafe3b6d0",
+      "external_product_id": "21604812_EA",
+      "identity_status": "source_candidate",
+      "name": "Extra Lean Ground Beef",
+      "brand": "Butcher's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "0.45kg",
+        "kind": "fixed",
+        "quantity": "450.00",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_78ef74ae2a1ff03fbdc6",
+      "external_product_id": "21661729_EA",
+      "identity_status": "source_candidate",
+      "name": "Mild Taco Seasoning Mix",
+      "brand": "Taco Bell",
+      "barcode": null,
+      "format": {
+        "raw": "28g",
+        "kind": "fixed",
+        "quantity": "28",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_a039685de66f72c1f990",
+      "external_product_id": "21604937_EA",
+      "identity_status": "source_candidate",
+      "name": "Medium Ground Beef",
+      "brand": "Butcher's Choice",
+      "barcode": null,
+      "format": {
+        "raw": "450g",
+        "kind": "fixed",
+        "quantity": "450",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_6673d5ec4189528f1ea8",
+      "external_product_id": "21085513_EA",
+      "identity_status": "source_candidate",
+      "name": "Sweet & Tangy Pulled Pork with Spicy Sweet Potatoes Frozen Meal",
+      "brand": "Crave",
+      "barcode": null,
+      "format": {
+        "raw": "283g",
+        "kind": "fixed",
+        "quantity": "283",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_ecfa56d9ee94ffe50a61",
+      "external_product_id": "21385413_EA",
+      "identity_status": "source_candidate",
+      "name": "Salmon Fillet In Extra Virgin Olive Oil",
+      "brand": "Rio Mare",
+      "barcode": null,
+      "format": {
+        "raw": "125g",
+        "kind": "fixed",
+        "quantity": "125",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_5ce4b6c8c6e94cbfa3b2",
+      "external_product_id": "21473104_EA",
+      "identity_status": "source_candidate",
+      "name": "Skin-On Boneless Wild Pink Salmon Portions",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "650g",
+        "kind": "fixed",
+        "quantity": "650",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_aa068a435d3c23c11f4a",
+      "external_product_id": "21595037_EA",
+      "identity_status": "source_candidate",
+      "name": "Solid Light Tuna in Olive Oil, Lemon & Black Pepper",
+      "brand": "Rio Mare",
+      "barcode": null,
+      "format": {
+        "raw": "195g",
+        "kind": "fixed",
+        "quantity": "195",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_e4cc98798d9d0f4e2d6a",
+      "external_product_id": "21314740_EA",
+      "identity_status": "source_candidate",
+      "name": "Pink Salmon Fillets",
+      "brand": "Seaquest",
+      "barcode": null,
+      "format": {
+        "raw": "400g",
+        "kind": "fixed",
+        "quantity": "400",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_4be4a31a00d8ed1e02ae",
+      "external_product_id": "21093881_EA",
+      "identity_status": "source_candidate",
+      "name": "Signature Cuts Wild Caught Pacific Salmon Fillets - Pink Salmon",
+      "brand": "High Liner",
+      "barcode": null,
+      "format": {
+        "raw": "400g",
+        "kind": "fixed",
+        "quantity": "400",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_0c8f71366b4d71b5d295",
+      "external_product_id": "20296596003_EA",
+      "identity_status": "source_candidate",
+      "name": "Pan Sear Selects Mediterranean Salmon",
+      "brand": "High Liner",
+      "barcode": null,
+      "format": {
+        "raw": "540g",
+        "kind": "fixed",
+        "quantity": "540",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_dd367d6eb71fdf5ada7d",
+      "external_product_id": "21634491_EA",
+      "identity_status": "source_candidate",
+      "name": "Atlantic Salmon Fillet",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "405g",
+        "kind": "fixed",
+        "quantity": "405",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_2daebb1e6c8024173039",
+      "external_product_id": "21634448_EA",
+      "identity_status": "source_candidate",
+      "name": "Atlantic Salmon Portion",
+      "brand": null,
+      "barcode": null,
+      "format": {
+        "raw": "195g",
+        "kind": "fixed",
+        "quantity": "195",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_3f26ab237257fc449712",
+      "external_product_id": "21314738_EA",
+      "identity_status": "source_candidate",
+      "name": "Pink Salmon Fillets",
+      "brand": "Seaquest",
+      "barcode": null,
+      "format": {
+        "raw": "1kg",
+        "kind": "fixed",
+        "quantity": "1000",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_cf67cb7ccc2c74547b6b",
+      "external_product_id": "21178602_EA",
+      "identity_status": "source_candidate",
+      "name": "Pink Salmon Wild Pacific",
+      "brand": "Clover Leaf",
+      "barcode": null,
+      "format": {
+        "raw": "142g",
+        "kind": "fixed",
+        "quantity": "142",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_60075505eadf999f4c69",
+      "external_product_id": "20521648_EA",
+      "identity_status": "source_candidate",
+      "name": "Flaked Light Tuna Packed in Water",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "170g",
+        "kind": "fixed",
+        "quantity": "170",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_e619b348e40983c6fbde",
+      "external_product_id": "20970856_EA",
+      "identity_status": "source_candidate",
+      "name": "Insalatissime Cous Cous with Tuna",
+      "brand": "Rio Mare",
+      "barcode": null,
+      "format": {
+        "raw": "160g",
+        "kind": "fixed",
+        "quantity": "160",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_fb7e7e1d73979c2b40e8",
+      "external_product_id": "20035383_EA",
+      "identity_status": "source_candidate",
+      "name": "Tuna, Solid Light In Olive Oil",
+      "brand": "Rio Mare",
+      "barcode": null,
+      "format": {
+        "raw": "80g",
+        "kind": "fixed",
+        "quantity": "80",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_f89e07bba4c4394a72eb",
+      "external_product_id": "20573583_EA",
+      "identity_status": "source_candidate",
+      "name": "Flaked Light Tuna, Skip Jack In Water",
+      "brand": "Clover Leaf",
+      "barcode": null,
+      "format": {
+        "raw": "170g",
+        "kind": "fixed",
+        "quantity": "170",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_c2ce5e52e2461dc37222",
+      "external_product_id": "21667511_EA",
+      "identity_status": "source_candidate",
+      "name": "Solid Light Tuna In Olive Oil Family Size",
+      "brand": "Rio Mare",
+      "barcode": null,
+      "format": {
+        "raw": "320g",
+        "kind": "fixed",
+        "quantity": "320",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_be46bd20b33ce447ccd3",
+      "external_product_id": "20521647_EA",
+      "identity_status": "source_candidate",
+      "name": "Chunk Light Tuna Packed in Water",
+      "brand": "No Name",
+      "barcode": null,
+      "format": {
+        "raw": "170g",
+        "kind": "fixed",
+        "quantity": "170",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_e2543531ee3757487694",
+      "external_product_id": "20971501_EA",
+      "identity_status": "source_candidate",
+      "name": "Tuna Salad with Corn",
+      "brand": "Rio Mare",
+      "barcode": null,
+      "format": {
+        "raw": "160g",
+        "kind": "fixed",
+        "quantity": "160",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_bdcf739655a7095451c7",
+      "external_product_id": "20167571_EA",
+      "identity_status": "source_candidate",
+      "name": "Albacore Tuna White Flake in Water",
+      "brand": "Clover Leaf",
+      "barcode": null,
+      "format": {
+        "raw": "170g",
+        "kind": "fixed",
+        "quantity": "170",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    },
+    {
+      "id": "apify_product_157fe1c0a77063b9792a",
+      "external_product_id": "21639369_EA",
+      "identity_status": "source_candidate",
+      "name": "Solid Light Tuna In Olive Oil Filod'olio",
+      "brand": "Rio Mare",
+      "barcode": null,
+      "format": {
+        "raw": "195g",
+        "kind": "fixed",
+        "quantity": "195",
+        "unit": "g",
+        "package_count": 1,
+        "warnings": []
+      }
+    }
+  ],
+  "offers": [
+    {
+      "id": "apify_offer_f670de2066d52c4ca2a9",
+      "product_id": "apify_product_021a7d4f315ff943e970",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 l, $0.50/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/tomato-ketchup/p/20069080_EA",
+      "capture_id": "ing_tomate_fraiche/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_09c5e04132da2f76eebb",
+      "product_id": "apify_product_4ffd10883abaa02f69a6",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "$6.15/1kg $2.79/1lb",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "0.74",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/roma-tomatoes/p/20143381001_KG",
+      "capture_id": "ing_tomate_fraiche/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "provider_weight_may_be_estimated",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_83d004ea75b5d3c34152",
+      "product_id": "apify_product_d9ad580c0b56e41b5edd",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "600 ml, $0.58/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/tomato-basil-pasta-sauce/p/21618217_EA",
+      "capture_id": "ing_tomate_fraiche/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_eb4ec0bff7ac80effa7a",
+      "product_id": "apify_product_7999b8e5e01f1f3b6e56",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "375 ml, $0.74/100ml",
+      "multi_buy_deal": "SAVE $0.21",
+      "loyalty_offer": null,
+      "amount": "2.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/tomato-ketchup/p/20128881_EA",
+      "capture_id": "ing_tomate_fraiche/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_204ee48be28311b932ca",
+      "product_id": "apify_product_dee31f4e774dabf16a42",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "$6.59/1kg $2.99/1lb",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.68",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/tomato-on-the-vine-red-1-bunch/p/20026703001_KG",
+      "capture_id": "ing_tomate_fraiche/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "provider_weight_may_be_estimated",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_d71abde97cfeed018964",
+      "product_id": "apify_product_34cd78c96907a1a32014",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "750 ml, $0.67/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/tomato-ketchup-lower-sodium/p/20031752_EA",
+      "capture_id": "ing_tomate_fraiche/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_01b02453ae5210025df5",
+      "product_id": "apify_product_22fea82a9d3f5ad8d0b2",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "$6.15/1kg $2.79/1lb",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.65",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/tomato-beefsteak-red/p/20426141001_KG",
+      "capture_id": "ing_tomate_fraiche/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "provider_weight_may_be_estimated",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_19c26367dec091c0c425",
+      "product_id": "apify_product_c1e116c27efe1eff5c8b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "284 ml, $0.52/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/condensed-soup-tomato/p/20176214001_EA",
+      "capture_id": "ing_tomate_fraiche/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_b82444a8bf53ce071be8",
+      "product_id": "apify_product_3b55748eb2cde9eee4eb",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "283 g, $1.06/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/grape-tomatoes/p/21367888001_EA",
+      "capture_id": "ing_tomate_fraiche/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_e64aac469270934222e8",
+      "product_id": "apify_product_814dcaeaef909ff0495c",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "600 ml, $0.58/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:07:44.525266Z",
+      "retrieved_at": "2026-09-30T14:07:44.525266Z",
+      "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
+      "retailer_url": "https://www.maxi.ca/en/sweet-basil-marinara-pasta-sauce/p/21618426_EA",
+      "capture_id": "ing_tomate_fraiche/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_4519f91fca721e16dfc7",
+      "product_id": "apify_product_c0a834dcacbd6f07e099",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "800 g, $0.38/100g",
+      "multi_buy_deal": "SAVE $1.99",
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/tasti-taters-tater-tots/p/20799522_EA",
+      "capture_id": "ing_pomme_de_terre/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_5fe5dd6f4a31374334d4",
+      "product_id": "apify_product_793451eb9d8856ae587d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "4.54 kg, $0.15/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/yellow-potato-10-lb-bag/p/20601017001_EA",
+      "capture_id": "ing_pomme_de_terre/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_197d2864d0ea7f21f184",
+      "product_id": "apify_product_c19ffc7520db036e3c80",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "650 g, $0.46/100g",
+      "multi_buy_deal": "SAVE $1.99",
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/bistro-selects-super-crisps-straight-cut-french-fr/p/21285884_EA",
+      "capture_id": "ing_pomme_de_terre/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_342297f838d7e3d07b3d",
+      "product_id": "apify_product_8e68f4759030279282d5",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "650 g, $0.46/100g",
+      "multi_buy_deal": "SAVE $1.99",
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/superfries-extra-crispy-spicy-straight-cut-fries/p/20798866_EA",
+      "capture_id": "ing_pomme_de_terre/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_68a57e1c926ab0fdc2f0",
+      "product_id": "apify_product_6865bc3642e2b9ff8919",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "4.54 kg, $0.04/100g",
+      "multi_buy_deal": "SAVE $3.04",
+      "loyalty_offer": null,
+      "amount": "1.95",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/white-potatoes-10-lb-bag/p/20600997001_EA",
+      "capture_id": "ing_pomme_de_terre/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_931fd9beed2472d027be",
+      "product_id": "apify_product_60151cbdfebd4671370d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "650 g, $0.46/100g",
+      "multi_buy_deal": "SAVE $1.99",
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/super-spirals-curly-fries/p/20799502_EA",
+      "capture_id": "ing_pomme_de_terre/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_8a520edac8b9204ba227",
+      "product_id": "apify_product_a8ffe3f3c8c1eb0aa903",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "0.68 kg, $0.66/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/yellow-mini-potatoes/p/21247300001_EA",
+      "capture_id": "ing_pomme_de_terre/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_fa85e62c7b12b3e07c95",
+      "product_id": "apify_product_39247ce5853b1833e5a9",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "600 g, $0.50/100g",
+      "multi_buy_deal": "SAVE $1.99",
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/potato-pancakes/p/20325644004_EA",
+      "capture_id": "ing_pomme_de_terre/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_b05a214ad54982409a61",
+      "product_id": "apify_product_ecdab7af1ee58edc2247",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "2.268 kg, $0.22/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/yellow-potatoes-5-lb-bag/p/20601014001_EA",
+      "capture_id": "ing_pomme_de_terre/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_c6444a1f6f8dcb27fc8c",
+      "product_id": "apify_product_b178baa10e4d7f30c256",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "650 g, $0.46/100g",
+      "multi_buy_deal": "SAVE $1.99",
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:00.642958Z",
+      "retrieved_at": "2026-09-30T14:08:00.642958Z",
+      "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
+      "retailer_url": "https://www.maxi.ca/en/smiles-smiley-face-fries/p/20797308_EA",
+      "capture_id": "ing_pomme_de_terre/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_62ccd5654b73a6ce17a2",
+      "product_id": "apify_product_41a4af30a2d63f1430e1",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "175 g, $3.43/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/pink-pepper-salametti/p/21551951_EA",
+      "capture_id": "ing_poivron_frais/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_0890dae356ecfc7212f1",
+      "product_id": "apify_product_9b714e79c0cbfb128570",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.113 kg, $0.63/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/naturally-imperfect-mixed-sweet-peppers-2-5lb-bag/p/20921434001_EA",
+      "capture_id": "ing_poivron_frais/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_8f23ec0d87522f667ac2",
+      "product_id": "apify_product_5fa9b2be1417bb26444b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "250 g, $1.32/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/fried-rice-cups/p/20110052004_EA",
+      "capture_id": "ing_poivron_frais/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_a423c1bd4ccbc1525b59",
+      "product_id": "apify_product_7aae56d70dac408579b9",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "135 g, $4.81/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/pepper-black-whole/p/20136806_EA",
+      "capture_id": "ing_poivron_frais/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_286e2abf121fc9667fbe",
+      "product_id": "apify_product_5644d5d7e0c315649b46",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $1.37/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/sweet-baby-peppers-4-pack/p/20117550001_EA",
+      "capture_id": "ing_poivron_frais/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_99d03a66fd3f13d3145b",
+      "product_id": "apify_product_fef5f107c0e0ada21e60",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "115 g, $5.64/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/ground-black-pepper/p/20145609_EA",
+      "capture_id": "ing_poivron_frais/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_0099303b2ca7581fb780",
+      "product_id": "apify_product_39922f77591308bf1bdf",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "$2.09/1kg $0.95/1lb",
+      "multi_buy_deal": "SAVE $1.61",
+      "loyalty_offer": null,
+      "amount": "0.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/red-peppers/p/20007535001_KG",
+      "capture_id": "ing_poivron_frais/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "provider_weight_may_be_estimated",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_b61fadead776872d1c39",
+      "product_id": "apify_product_db1d891556991262e88e",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "70 g, $9.27/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/crushed-red-pepper/p/20027862_EA",
+      "capture_id": "ing_poivron_frais/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_d606e79bf57054818ef7",
+      "product_id": "apify_product_afbcf059ba860705437a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "$2.09/1kg $0.95/1lb",
+      "multi_buy_deal": "SAVE $0.57",
+      "loyalty_offer": null,
+      "amount": "0.51",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/sweet-green-peppers/p/20425893001_KG",
+      "capture_id": "ing_poivron_frais/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "provider_weight_may_be_estimated",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_cc08cc2bf2974b0d6f24",
+      "product_id": "apify_product_28d6dece8fc9370b9ef2",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "160 g, $2.81/100g",
+      "multi_buy_deal": "SAVE $0.50",
+      "loyalty_offer": "Member Price: 3.50",
+      "amount": "4.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:12.654429Z",
+      "retrieved_at": "2026-09-30T14:08:12.654429Z",
+      "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
+      "retailer_url": "https://www.maxi.ca/en/mexican-style-light-tuna-salad/p/20971498_EA",
+      "capture_id": "ing_poivron_frais/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_5e4fb8113986bd573d56",
+      "product_id": "apify_product_893f595af5ec5fc9ab2b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "130 g, $1.68/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2.19",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/sidekicks-rice-side-dish-cheddar-broccoli/p/20321430015_EA",
+      "capture_id": "ing_brocoli_frais/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_7ec3175e273931d594ee",
+      "product_id": "apify_product_e2253a9541d791c27cc4",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $0.95/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "0.95",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/broccoli-crown/p/21121560001_EA",
+      "capture_id": "ing_brocoli_frais/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_1e4a641c21fcecd40bfd",
+      "product_id": "apify_product_c60e41bec308601b957d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "128 g, $4.30/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/plant-based-garlic-herbs-spreadable-cheese-8p/p/21574222_EA",
+      "capture_id": "ing_brocoli_frais/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_de013bb6dd76615361f2",
+      "product_id": "apify_product_3f6101c5ef1bdc69b56a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $2.50/1ea",
+      "multi_buy_deal": "SAVE $0.50",
+      "loyalty_offer": null,
+      "amount": "2.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/broccoli/p/20145621001_EA",
+      "capture_id": "ing_brocoli_frais/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_bfe10220324d94686a68",
+      "product_id": "apify_product_1b55498259b67ec6841d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "500 g, $0.90/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/broccoli-florets/p/20318915_EA",
+      "capture_id": "ing_brocoli_frais/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_65a56ee7a695d30f4115",
+      "product_id": "apify_product_91090abb2238108e1176",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $4.79/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/broccoli/p/20149635001_EA",
+      "capture_id": "ing_brocoli_frais/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_5a9622c471774a39bd56",
+      "product_id": "apify_product_547e3a01cf3eb69a6e80",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $4.00/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/broccolini/p/20154907_EA",
+      "capture_id": "ing_brocoli_frais/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_c28a5857b5286d64ae8c",
+      "product_id": "apify_product_448405083d732f36b312",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "500 g, $1.00/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/frozen-broccoli-florets-organic/p/20416869002_EA",
+      "capture_id": "ing_brocoli_frais/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_03f43911a8923e48196b",
+      "product_id": "apify_product_46e81fb6a88844852b66",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.75 kg, $0.57/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "9.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/frozen-broccoli-florets-club-size/p/21096317_EA",
+      "capture_id": "ing_brocoli_frais/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_fc862fc070803b75041e",
+      "product_id": "apify_product_a4e7d530ca8e0f4c5806",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.5 kg, $0.87/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "12.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:28.662525Z",
+      "retrieved_at": "2026-09-30T14:08:28.662525Z",
+      "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
+      "retailer_url": "https://www.maxi.ca/en/organics-frozen-broccoli-florets-club-size/p/21116011_EA",
+      "capture_id": "ing_brocoli_frais/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_bca4754365019daff818",
+      "product_id": "apify_product_c1e116c27efe1eff5c8b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "284 ml, $0.52/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/condensed-soup-tomato/p/20176214001_EA",
+      "capture_id": "ing_courgette_fraiche/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_0250ce2e2d63a4b97334",
+      "product_id": "apify_product_ffbba1f0c5996173f9cf",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "3000 ml, $0.20/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/green-zucchini/p/21042179001_EA",
+      "capture_id": "ing_courgette_fraiche/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_faba630ebe47d525bf4f",
+      "product_id": "apify_product_a067e30a77cd1b5e236a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "160 g, $5.00/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "8",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/dor-mi-haloumi-cheese-with-jalapeno/p/20700462_EA",
+      "capture_id": "ing_courgette_fraiche/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_3891ad69aa0e4ab18035",
+      "product_id": "apify_product_51b92ad98ef475554ab8",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "355 ml, $1.32/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.69",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/cucumber-greek-dressing-marinade/p/21581737_EA",
+      "capture_id": "ing_courgette_fraiche/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_87ca512ca166f7e0fe61",
+      "product_id": "apify_product_8eca93152c4fdeab5175",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "$5.05/1kg $2.29/1lb",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.41",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/zucchini/p/20426596001_KG",
+      "capture_id": "ing_courgette_fraiche/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "provider_weight_may_be_estimated",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_371a655a2800547ad060",
+      "product_id": "apify_product_b9202967d26d662c9587",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "160 g, $5.00/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "8",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/dor-mi-haloumi-with-mediterranean-spices-cheese/p/20700411_EA",
+      "capture_id": "ing_courgette_fraiche/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_8ef113cbd7b18306de5c",
+      "product_id": "apify_product_b6a80db6f7973e8f8d27",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "$6.61/1kg $3.00/1lb",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.78",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/yellow-zucchini/p/20148363001_KG",
+      "capture_id": "ing_courgette_fraiche/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "provider_weight_may_be_estimated",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_47cdd22dd16da6d9e3ed",
+      "product_id": "apify_product_ba97c89c56192e7e67e9",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.13 kg, $0.31/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/naturally-imperfect-zucchini-2-5l/p/21105530001_EA",
+      "capture_id": "ing_courgette_fraiche/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_189ce451f6697a91287d",
+      "product_id": "apify_product_5889d03c1c85bf747bd9",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "2x1.0 ea, $2.50/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/organic-green-zucchini/p/20878973001_EA",
+      "capture_id": "ing_courgette_fraiche/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_74e4f18e68ead228208a",
+      "product_id": "apify_product_568cc0700f25c6ad6dbf",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "350 g, $1.29/100g",
+      "multi_buy_deal": "SAVE $0.50",
+      "loyalty_offer": null,
+      "amount": "4.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:45.644556Z",
+      "retrieved_at": "2026-09-30T14:08:45.644556Z",
+      "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
+      "retailer_url": "https://www.maxi.ca/en/ready-veggie-zucchini-noodles/p/21181365_EA",
+      "capture_id": "ing_courgette_fraiche/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_0a73d9019e255a6db99d",
+      "product_id": "apify_product_a46c37ab455034d2b083",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.08 kg, $1.11/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "12",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/fruitz-veggiez-fruit-sauce-apple-pear-carrot-apple/p/21547695_EA",
+      "capture_id": "ing_pomme_fraiche/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_4a5aa14f738191c9308d",
+      "product_id": "apify_product_5ba7424abcd270b4ed45",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "2.72 kg, $0.28/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/naturally-imperfect-apples-6-lb-bag/p/20868985001_EA",
+      "capture_id": "ing_pomme_fraiche/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_39fe35703697f666c337",
+      "product_id": "apify_product_7ad9b95ddaff2f6500bb",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "20x90.0 g, $0.79/100g",
+      "multi_buy_deal": "SAVE $1.71",
+      "loyalty_offer": null,
+      "amount": "14.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/fruit-sauce-apple-apple/p/21620638_EA",
+      "capture_id": "ing_pomme_fraiche/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_3d45793ade0bb4a97e10",
+      "product_id": "apify_product_650e7d111c723b5864f3",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 l, $0.20/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/apple-juice-carton/p/20336726001_EA",
+      "capture_id": "ing_pomme_fraiche/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_a64ff05e48f86f02e5ed",
+      "product_id": "apify_product_c3adebb51de4eede4f2e",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.36 kg, $0.66/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "9",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/gala-apples-3-lb-bag/p/20606349001_EA",
+      "capture_id": "ing_pomme_fraiche/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_0daaa74215557ee9d30c",
+      "product_id": "apify_product_edc5b7bab94bea753644",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "4x90.0 g, $0.83/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/fruit-sauce-apple-apple-4p/p/20322697002_EA",
+      "capture_id": "ing_pomme_fraiche/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_bef45683753eb1b98476",
+      "product_id": "apify_product_53738632b3022901b6d0",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.81 kg, $0.50/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "9",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/honeycrisp-apples-4-lb-bag/p/20723960001_EA",
+      "capture_id": "ing_pomme_fraiche/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_be17eb07162c1415113a",
+      "product_id": "apify_product_594a64cad39732b5731b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "8x200.0 ml, $0.19/100ml",
+      "multi_buy_deal": "SAVE $1.00",
+      "loyalty_offer": null,
+      "amount": "3",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/apple-juice-cartons/p/21092667_EA",
+      "capture_id": "ing_pomme_fraiche/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_b5be07e7acf3748e3ec1",
+      "product_id": "apify_product_1e4cf06053fe6b6ef6ac",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.81 kg, $0.39/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/mcintosh-apples-4-lb-bag/p/20713211001_EA",
+      "capture_id": "ing_pomme_fraiche/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_65dae3397dad38162db4",
+      "product_id": "apify_product_ff215c530ff88d460337",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "4x200.0 ml, $0.44/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:08:56.442895Z",
+      "retrieved_at": "2026-09-30T14:08:56.442895Z",
+      "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
+      "retailer_url": "https://www.maxi.ca/en/apple-juice-boxes/p/20333714001_EA",
+      "capture_id": "ing_pomme_fraiche/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_a23e5cd2e8dd897a7c10",
+      "product_id": "apify_product_1445f2ebdfdf89539fab",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 l, $0.35/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "3.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/lemonade-fruit-juice-blend/p/20312710004_EA",
+      "capture_id": "ing_citron_frais/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_e74e595cf128294e6a99",
+      "product_id": "apify_product_f6b0599bdb92bdece4f8",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $0.97/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "0.97",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/lemon/p/20028593001_EA",
+      "capture_id": "ing_citron_frais/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_3a7858834bc447721093",
+      "product_id": "apify_product_c93dc806faf50f2e4f6d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "6x330.0 ml, $0.35/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/light-lemon-sparkling-fruit-beverage/p/21590856_C06",
+      "capture_id": "ing_citron_frais/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_a7262b9ec2d25e60f785",
+      "product_id": "apify_product_fc8d4b6cf5a6d5d0ce9a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "695 ml, $0.26/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.79",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/iced-tea-strawberry-lemon-love-can/p/21367721_EA",
+      "capture_id": "ing_citron_frais/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_e13d5fa2a40eab77c4d2",
+      "product_id": "apify_product_9a23fcfe1f94ef507770",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "907 g, $0.66/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/lemons-2-lb-bag/p/20795315001_EA",
+      "capture_id": "ing_citron_frais/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_afe47dd8f2ea245b1fdf",
+      "product_id": "apify_product_8906e573751692ba091d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.54 l, $0.36/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "5.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/lemonade-bottle/p/21170793_EA",
+      "capture_id": "ing_citron_frais/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_392ff76ff11f5d7eb57c",
+      "product_id": "apify_product_261066f774ad86028052",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1.36 kg, $0.37/100g",
+      "multi_buy_deal": "SAVE $2.99",
+      "loyalty_offer": null,
+      "amount": "5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/naturally-imperfect-lemons-3lb-bag/p/21124487001_EA",
+      "capture_id": "ing_citron_frais/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_14cb90c101091ea0876b",
+      "product_id": "apify_product_9efeae9b20b6fbbbf539",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "20 ea, $0.20/1ea",
+      "multi_buy_deal": "SAVE $1.51",
+      "loyalty_offer": null,
+      "amount": "3.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/20ct-lemon-ginger/p/20300740001_EA",
+      "capture_id": "ing_citron_frais/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_4cf61e0d85f87a2ad8b4",
+      "product_id": "apify_product_03e32800d1d39f4b8155",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 ea, $0.69/1ea",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "0.69",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/limes/p/20040489001_EA",
+      "capture_id": "ing_citron_frais/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_f56000f0bb1a1140b6f9",
+      "product_id": "apify_product_4c6dde4790c1eebfb5ed",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "6x340.0 ml, $0.36/100ml",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:12.530534Z",
+      "retrieved_at": "2026-09-30T14:09:12.530534Z",
+      "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
+      "retailer_url": "https://www.maxi.ca/en/lemon-iced-tea/p/21723771_C06",
+      "capture_id": "ing_citron_frais/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_858104b409aac8594852",
+      "product_id": "apify_product_4fa8e8ed6963a73dd140",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "500 g, $1.30/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/sliced-meat-mock-chicken-meat-loaf/p/21465951_EA",
+      "capture_id": "ing_boeuf_hache/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_4e47b006a1146ad4a811",
+      "product_id": "apify_product_f85eb7671d62998d6a26",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "0.45 kg, $2.00/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "9",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/lean-ground-beef/p/21604443_EA",
+      "capture_id": "ing_boeuf_hache/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_6fa6e7c969b5e630f08b",
+      "product_id": "apify_product_ffbab0d481aa8c23ea49",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "311 g, $2.57/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "7.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/premium-roasted-beef-flavour-bouillon-base-paste/p/21683297_EA",
+      "capture_id": "ing_boeuf_hache/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_6713d4e63c1bd59b3007",
+      "product_id": "apify_product_e7d98e5c3f9e6881b275",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 kg, $2.50/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "24.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/goat-stew-bone-in/p/20143053_EA",
+      "capture_id": "ing_boeuf_hache/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_3a9d5d7135e5b9e08203",
+      "product_id": "apify_product_dd4897c67201bb78cf23",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "900 g, $1.83/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "16.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/grass-fed-lean-ground-beef-2-pack/p/21618300_EA",
+      "capture_id": "ing_boeuf_hache/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_291f130cae9161810664",
+      "product_id": "apify_product_32913a634f1325ea1737",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "165 g, $3.93/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "6.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/garlic-powder/p/20180764_EA",
+      "capture_id": "ing_boeuf_hache/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_5c4c543d09b96f2b9e64",
+      "product_id": "apify_product_20bfffc50a9bafe3b6d0",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "0.45 kg, $2.22/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "10",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/extra-lean-ground-beef/p/21604812_EA",
+      "capture_id": "ing_boeuf_hache/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_d7083d2eb52ea7aa2f31",
+      "product_id": "apify_product_78ef74ae2a1ff03fbdc6",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "28 g, $4.96/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "1.39",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/mild-taco-seasoning-mix/p/21661729_EA",
+      "capture_id": "ing_boeuf_hache/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_cbc102530a51d09ee996",
+      "product_id": "apify_product_a039685de66f72c1f990",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "450 g, $1.89/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "8.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/medium-ground-beef/p/21604937_EA",
+      "capture_id": "ing_boeuf_hache/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_8cc116060e468983c4cf",
+      "product_id": "apify_product_6673d5ec4189528f1ea8",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "283 g, $1.59/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:23.307031Z",
+      "retrieved_at": "2026-09-30T14:09:23.307031Z",
+      "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
+      "retailer_url": "https://www.maxi.ca/en/sweet-tangy-pulled-pork-with-spicy-sweet-potatoes/p/21085513_EA",
+      "capture_id": "ing_boeuf_hache/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_29dc93a37f6e5d9a24e1",
+      "product_id": "apify_product_ecfa56d9ee94ffe50a61",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "125 g, $7.59/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "9.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/salmon-fillet-in-extra-virgin-olive-oil/p/21385413_EA",
+      "capture_id": "ing_saumon/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_d51860e3fe2a0f4de4e7",
+      "product_id": "apify_product_5ce4b6c8c6e94cbfa3b2",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "650 g, $1.54/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "10",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/skin-on-boneless-wild-pink-salmon-portions/p/21473104_EA",
+      "capture_id": "ing_saumon/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_90f9a64c2f88ebb66011",
+      "product_id": "apify_product_aa068a435d3c23c11f4a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "195 g, $4.35/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "8.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/solid-light-tuna-in-olive-oil-lemon-black-pepper/p/21595037_EA",
+      "capture_id": "ing_saumon/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_c87f7a5b6ba7843825eb",
+      "product_id": "apify_product_e4cc98798d9d0f4e2d6a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "400 g, $2.50/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "10",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/pink-salmon-fillets/p/21314740_EA",
+      "capture_id": "ing_saumon/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_6808d0015321c9a26808",
+      "product_id": "apify_product_4be4a31a00d8ed1e02ae",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "400 g, $2.62/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "10.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/signature-cuts-wild-caught-pacific-salmon-fillets/p/21093881_EA",
+      "capture_id": "ing_saumon/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_e900c7327bb3cd571269",
+      "product_id": "apify_product_0c8f71366b4d71b5d295",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "540 g, $2.59/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "14",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/pan-sear-selects-mediterranean-salmon/p/20296596003_EA",
+      "capture_id": "ing_saumon/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_0d744fc5a3be63bbf7df",
+      "product_id": "apify_product_dd367d6eb71fdf5ada7d",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "405 g, $4.20/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "17",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/atlantic-salmon-fillet/p/21634491_EA",
+      "capture_id": "ing_saumon/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_82cc04d8c6c9e0a2754b",
+      "product_id": "apify_product_2daebb1e6c8024173039",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "195 g, $5.13/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "10",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/atlantic-salmon-portion/p/21634448_EA",
+      "capture_id": "ing_saumon/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_aa4672bfdde9a12611d8",
+      "product_id": "apify_product_3f26ab237257fc449712",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "1 kg, $1.90/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "19",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/pink-salmon-fillets/p/21314738_EA",
+      "capture_id": "ing_saumon/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_11c8a59c9be545ad405f",
+      "product_id": "apify_product_cf67cb7ccc2c74547b6b",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "142 g, $3.02/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4.29",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:34.234868Z",
+      "retrieved_at": "2026-09-30T14:09:34.234868Z",
+      "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
+      "retailer_url": "https://www.maxi.ca/en/pink-salmon-wild-pacific/p/21178602_EA",
+      "capture_id": "ing_saumon/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_5a0ec21da438ebc3e242",
+      "product_id": "apify_product_28d6dece8fc9370b9ef2",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "160 g, $2.81/100g",
+      "multi_buy_deal": "SAVE $0.50",
+      "loyalty_offer": "Member Price: 3.50",
+      "amount": "4.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/mexican-style-light-tuna-salad/p/20971498_EA",
+      "capture_id": "ing_thon_conserve/row_0",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_4b420e7e5d74699f2207",
+      "product_id": "apify_product_60075505eadf999f4c69",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "170 g, $0.59/100g",
+      "multi_buy_deal": "SAVE $0.39",
+      "loyalty_offer": null,
+      "amount": "1",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/flaked-light-tuna-packed-in-water/p/20521648_EA",
+      "capture_id": "ing_thon_conserve/row_1",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_1998ffed0a61eb235eb2",
+      "product_id": "apify_product_e619b348e40983c6fbde",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "160 g, $2.81/100g",
+      "multi_buy_deal": "SAVE $0.50",
+      "loyalty_offer": "Member Price: 3.50",
+      "amount": "4.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/insalatissime-cous-cous-with-tuna/p/20970856_EA",
+      "capture_id": "ing_thon_conserve/row_2",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_91d95768438c225329d4",
+      "product_id": "apify_product_fb7e7e1d73979c2b40e8",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "3x80.0 g, $3.54/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "8.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/tuna-solid-light-in-olive-oil/p/20035383_EA",
+      "capture_id": "ing_thon_conserve/row_3",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_f0780e6e326bb6ce9da0",
+      "product_id": "apify_product_f89e07bba4c4394a72eb",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "170 g, $1.18/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "2",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/flaked-light-tuna-skip-jack-in-water/p/20573583_EA",
+      "capture_id": "ing_thon_conserve/row_4",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_f23bb0302e2d39725345",
+      "product_id": "apify_product_c2ce5e52e2461dc37222",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "320 g, $3.43/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "10.99",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/solid-light-tuna-in-olive-oil-family-size/p/21667511_EA",
+      "capture_id": "ing_thon_conserve/row_5",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_b72a5984ba275d3420cb",
+      "product_id": "apify_product_be46bd20b33ce447ccd3",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "170 g, $0.59/100g",
+      "multi_buy_deal": "SAVE $0.39",
+      "loyalty_offer": null,
+      "amount": "1",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/chunk-light-tuna-packed-in-water/p/20521647_EA",
+      "capture_id": "ing_thon_conserve/row_6",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_b5d592760da2ac76f33e",
+      "product_id": "apify_product_e2543531ee3757487694",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "160 g, $2.81/100g",
+      "multi_buy_deal": "SAVE $0.50",
+      "loyalty_offer": "Member Price: 3.50",
+      "amount": "4.5",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": true,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/tuna-salad-with-corn/p/20971501_EA",
+      "capture_id": "ing_thon_conserve/row_7",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_52278a83fd56f4c72ee2",
+      "product_id": "apify_product_bdcf739655a7095451c7",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "170 g, $2.35/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "4",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/albacore-tuna-white-flake-in-water/p/20167571_EA",
+      "capture_id": "ing_thon_conserve/row_8",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    },
+    {
+      "id": "apify_offer_223cdce1d5a2ed70f60d",
+      "product_id": "apify_product_157fe1c0a77063b9792a",
+      "retailer_id": "maxi",
+      "store_id": null,
+      "scope_kind": "source_reported_store",
+      "source_name": "apify_loblaws",
+      "external_store_id": "8661",
+      "source_unit_price": "195 g, $4.35/100g",
+      "multi_buy_deal": null,
+      "loyalty_offer": null,
+      "amount": "8.49",
+      "currency": "CAD",
+      "price_kind": "commercial",
+      "basis": "unknown",
+      "is_promotion": false,
+      "loyalty_required": null,
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-09-30T14:09:45.965144Z",
+      "retrieved_at": "2026-09-30T14:09:45.965144Z",
+      "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
+      "retailer_url": "https://www.maxi.ca/en/solid-light-tuna-in-olive-oil-filod-olio/p/21639369_EA",
+      "capture_id": "ing_thon_conserve/row_9",
+      "review_required": true,
+      "eligible_for_optimizer": false,
+      "warnings": [
+        "online_price_not_verified_in_store",
+        "ingredient_match_requires_review",
+        "promotion_conditions_require_review",
+        "sale_basis_unknown"
+      ]
+    }
+  ],
+  "matches": [
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_021a7d4f315ff943e970",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:ketchup"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_4ffd10883abaa02f69a6",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_d9ad580c0b56e41b5edd",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_7999b8e5e01f1f3b6e56",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:ketchup"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_dee31f4e774dabf16a42",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_34cd78c96907a1a32014",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:ketchup"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_22fea82a9d3f5ad8d0b2",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_c1e116c27efe1eff5c8b",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:soup"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_3b55748eb2cde9eee4eb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_793451eb9d8856ae587d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_6865bc3642e2b9ff8919",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_a8ffe3f3c8c1eb0aa903",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_39247ce5853b1833e5a9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_ecdab7af1ee58edc2247",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_poivron_frais",
+      "product_id": "apify_product_9b714e79c0cbfb128570",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sweet peppers",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_28d6dece8fc9370b9ef2",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salad"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_893f595af5ec5fc9ab2b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:broccoli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_e2253a9541d791c27cc4",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:broccoli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_3f6101c5ef1bdc69b56a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:broccoli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_1b55498259b67ec6841d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:broccoli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_91090abb2238108e1176",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:broccoli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_448405083d732f36b312",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:frozen"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_46e81fb6a88844852b66",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:frozen"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_a4e7d530ca8e0f4c5806",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:frozen"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_ffbba1f0c5996173f9cf",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_8eca93152c4fdeab5175",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_b6a80db6f7973e8f8d27",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_ba97c89c56192e7e67e9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_5889d03c1c85bf747bd9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_568cc0700f25c6ad6dbf",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_a46c37ab455034d2b083",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sweet"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_a46c37ab455034d2b083",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce",
+        "excluded_term:potato"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_5ba7424abcd270b4ed45",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_7ad9b95ddaff2f6500bb",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_650e7d111c723b5864f3",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:juice"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_c3adebb51de4eede4f2e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_edc5b7bab94bea753644",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sauce"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_53738632b3022901b6d0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_594a64cad39732b5731b",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:juice"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_1e4cf06053fe6b6ef6ac",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_ff215c530ff88d460337",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:juice"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_f6b0599bdb92bdece4f8",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_c93dc806faf50f2e4f6d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_fc8d4b6cf5a6d5d0ce9a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:tea"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_9a23fcfe1f94ef507770",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemons",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_261066f774ad86028052",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemons",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_9efeae9b20b6fbbbf539",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_4c6dde4790c1eebfb5ed",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:tea"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_f85eb7671d62998d6a26",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_dd4897c67201bb78cf23",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_20bfffc50a9bafe3b6d0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_a039685de66f72c1f990",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_6673d5ec4189528f1ea8",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:sweet",
+        "excluded_term:frozen"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_ecfa56d9ee94ffe50a61",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_5ce4b6c8c6e94cbfa3b2",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_aa068a435d3c23c11f4a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:pepper"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_aa068a435d3c23c11f4a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_e4cc98798d9d0f4e2d6a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_4be4a31a00d8ed1e02ae",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_0c8f71366b4d71b5d295",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_dd367d6eb71fdf5ada7d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_2daebb1e6c8024173039",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_3f26ab237257fc449712",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_cf67cb7ccc2c74547b6b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_60075505eadf999f4c69",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_e619b348e40983c6fbde",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_fb7e7e1d73979c2b40e8",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_f89e07bba4c4394a72eb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_c2ce5e52e2461dc37222",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_be46bd20b33ce447ccd3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_e2543531ee3757487694",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:salad"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_bdcf739655a7095451c7",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_157fe1c0a77063b9792a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    }
+  ],
+  "coverage": [
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "candidate_count": 4,
+      "offer_count": 4,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "candidate_count": 5,
+      "offer_count": 5,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_poivron_frais",
+      "candidate_count": 1,
+      "offer_count": 1,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "candidate_count": 5,
+      "offer_count": 5,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "candidate_count": 6,
+      "offer_count": 6,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "candidate_count": 4,
+      "offer_count": 4,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "candidate_count": 5,
+      "offer_count": 5,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "candidate_count": 4,
+      "offer_count": 4,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "candidate_count": 9,
+      "offer_count": 9,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "candidate_count": 9,
+      "offer_count": 9,
+      "verified_store_offer_count": 0,
+      "status": "review_required"
+    }
+  ],
+  "collection": {
+    "source": "apify_loblaws",
+    "strategy": "per_ingredient",
+    "capture_count": 100,
+    "errors": [],
+    "truncations": [
+      "ing_tomate_fraiche:result_limit_reached",
+      "ing_pomme_de_terre:result_limit_reached",
+      "ing_poivron_frais:result_limit_reached",
+      "ing_brocoli_frais:result_limit_reached",
+      "ing_courgette_fraiche:result_limit_reached",
+      "ing_pomme_fraiche:result_limit_reached",
+      "ing_citron_frais:result_limit_reached",
+      "ing_boeuf_hache:result_limit_reached",
+      "ing_saumon:result_limit_reached",
+      "ing_thon_conserve:result_limit_reached"
+    ],
+    "searches": [
+      {
+        "ingredient_id": "ing_tomate_fraiche",
+        "query": "tomatoes",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "ZFX0uivU8nHtCx45u"
+      },
+      {
+        "ingredient_id": "ing_pomme_de_terre",
+        "query": "potatoes",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "WEZsSYRsdfuXd2rsD"
+      },
+      {
+        "ingredient_id": "ing_poivron_frais",
+        "query": "bell peppers",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "bAYfXQ2z0Q23o7hcB"
+      },
+      {
+        "ingredient_id": "ing_brocoli_frais",
+        "query": "broccoli",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "sGw73IC8eT4IQpYhG"
+      },
+      {
+        "ingredient_id": "ing_courgette_fraiche",
+        "query": "zucchini",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "D5cK7GJmf84rHQr1c"
+      },
+      {
+        "ingredient_id": "ing_pomme_fraiche",
+        "query": "apples",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "j4vRycXKDQDeYBP6u"
+      },
+      {
+        "ingredient_id": "ing_citron_frais",
+        "query": "lemons",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "BKe6pfKCgkhjfqfLW"
+      },
+      {
+        "ingredient_id": "ing_boeuf_hache",
+        "query": "ground beef",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "NAJEIJHTCsOvNxyq3"
+      },
+      {
+        "ingredient_id": "ing_saumon",
+        "query": "salmon",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "01g45u77OKizBvqsN"
+      },
+      {
+        "ingredient_id": "ing_thon_conserve",
+        "query": "canned tuna",
+        "row_count": 10,
+        "limit": 10,
+        "complete": true,
+        "run_id": "nzFNGqSJtC5sFZua4"
+      }
+    ],
+    "rejected_search_rows": [],
+    "complete_catalog": false
+  },
+  "warnings": [
+    "source_reported_location_requires_identity_check",
+    "bounded_sample_not_store_inventory",
+    "no_automatic_ingredient_approval"
+  ]
+}
