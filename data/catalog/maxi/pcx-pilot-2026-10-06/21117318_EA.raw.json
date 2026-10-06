@@ -1,0 +1,543 @@
+{
+  "code": "21117318_EA",
+  "name": "Paprika",
+  "description": "<p>Le paprika est une épice sucrée et poivrée qui ajoute une touche de piquant aux marinades et aux épices à viande. Il ajoute de la saveur et une belle couleur à vos soupes, ragoûts et sauces.</p>",
+  "brand": "le Choix du Président",
+  "imageAssets": [
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    }
+  ],
+  "isPrimaryVariant": false,
+  "packageSize": "48 g",
+  "mchCode": "M10210602",
+  "offers": [
+    {
+      "price": {
+        "value": 6.0,
+        "unit": "ch",
+        "quantity": 1,
+        "reasonCode": 4,
+        "type": "REGULAR",
+        "expiryDate": "9999-12-31T00:00"
+      },
+      "wasPrice": null,
+      "comparisonPrices": [
+        {
+          "value": 12.5,
+          "unit": "g",
+          "quantity": 100,
+          "reasonCode": null,
+          "type": "REGULAR",
+          "expiryDate": null
+        }
+      ],
+      "memberOnlyPrice": null,
+      "memberOnlyComparisonPrices": [],
+      "sellerId": "",
+      "sellerName": null,
+      "promotions": [],
+      "memberOnlyPromotions": null,
+      "stockStatus": "OK",
+      "taxes": {
+        "gst": false,
+        "gstExemptTaxFlag": "",
+        "hst": false,
+        "ppft": false,
+        "preparedFoodTaxType": "N",
+        "pst": false,
+        "spft": false
+      },
+      "fees": null,
+      "shoppable": true,
+      "specifications": null,
+      "offerId": null,
+      "offerType": "OG",
+      "status": null,
+      "badges": {
+        "textBadge": null,
+        "loyaltyBadge": null,
+        "dealBadge": null,
+        "newItemBadge": null,
+        "hotmBadge": null,
+        "promotionalBadge": null,
+        "recyclingFeeBadge": null,
+        "subscribeEarnBadge": null,
+        "mustTryBadge": null,
+        "preparedInCanadaBadge": {
+          "type": "PREPARED_IN_CANADA",
+          "text": "Préparé au Canada",
+          "mopDealText": null,
+          "points": null,
+          "name": "PREPARED_IN_CANADA",
+          "expiryDate": null,
+          "promoType": null
+        },
+        "madeInCanadaBadge": null,
+        "productOfCanadaBadge": null,
+        "tariffAppliedBadge": null,
+        "preparedInQuebecBadge": null
+      },
+      "dealPrice": null,
+      "mopDealPrice": null,
+      "ehfTotal": null,
+      "deposit": null,
+      "environmentalHandlingFee": null,
+      "taxInfo": ""
+    }
+  ],
+  "pricingUnits": {
+    "type": "SOLD_BY_EACH",
+    "unit": "ch",
+    "interval": 1,
+    "minOrderQuantity": 1,
+    "maxOrderQuantity": 24,
+    "weighted": false
+  },
+  "breadcrumbs": [
+    {
+      "categoryCode": "27985",
+      "name": "Alimentation",
+      "url": "/alimentation/c/27985"
+    },
+    {
+      "categoryCode": "28006",
+      "name": "Garde-manger",
+      "url": "/alimentation/garde-manger/c/28006"
+    },
+    {
+      "categoryCode": "28188",
+      "name": "Épices et assaisonnements",
+      "url": "/alimentation/garde-manger/pices-et-assaisonnements/c/28188"
+    }
+  ],
+  "articleNumber": "21117318",
+  "ingredients": null,
+  "nutritionFacts": [
+    {
+      "topNutrition": [
+        {
+          "code": "servingSizeFR",
+          "valueInGram": "0 g",
+          "valuePercent": null,
+          "subNutrients": null
+        }
+      ],
+      "calories": {
+        "code": "calories",
+        "valueInGram": "0 cal",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "totalFat": {
+        "code": "totalFat",
+        "valueInGram": "0.0 g",
+        "valuePercent": "0 %",
+        "subNutrients": [
+          {
+            "code": "saturatedFat",
+            "valueInGram": "0.0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          {
+            "code": "transFat",
+            "valueInGram": "0.0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          {
+            "code": "saturatedTransFat",
+            "valueInGram": "0.0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          }
+        ]
+      },
+      "totalCarbohydrate": {
+        "code": "totalCarbohydrate",
+        "valueInGram": null,
+        "valuePercent": "0 %",
+        "subNutrients": [
+          {
+            "code": "sugar",
+            "valueInGram": "0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          {
+            "code": "dietaryFiber",
+            "valueInGram": "0 g",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          }
+        ]
+      },
+      "protein": {
+        "code": "protein",
+        "valueInGram": "0.1 g",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "potassium": {
+        "code": "potassium",
+        "valueInGram": "0 mg",
+        "valuePercent": "0 %",
+        "subNutrients": null
+      },
+      "microNutrition": [
+        {
+          "code": "vitaminA",
+          "valueInGram": "24.63 µg",
+          "valuePercent": "0 %",
+          "subNutrients": null
+        },
+        {
+          "code": "vitaminC",
+          "valueInGram": "0 mg",
+          "valuePercent": "0 %",
+          "subNutrients": null
+        },
+        {
+          "code": "calcium",
+          "valueInGram": null,
+          "valuePercent": "0 %",
+          "subNutrients": null
+        },
+        {
+          "code": "iron",
+          "valueInGram": null,
+          "valuePercent": "0 %",
+          "subNutrients": null
+        }
+      ],
+      "disclaimer": null,
+      "ingredients": null,
+      "cholesterol": {
+        "code": "cholesterol",
+        "valueInGram": "0 mg",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "sodium": {
+        "code": "sodium",
+        "valueInGram": "0 mg",
+        "valuePercent": "0 %",
+        "subNutrients": null
+      }
+    }
+  ],
+  "isVariant": false,
+  "variantTheme": null,
+  "variantGroupId": null,
+  "uom": "EA",
+  "variants": [
+    {
+      "code": "21117318_EA",
+      "name": "Paprika",
+      "description": "<p>Le paprika est une épice sucrée et poivrée qui ajoute une touche de piquant aux marinades et aux épices à viande. Il ajoute de la saveur et une belle couleur à vos soupes, ragoûts et sauces.</p>",
+      "brand": "le Choix du Président",
+      "imageAssets": [
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/1/21117318_enfr_front_v1_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_fr_angle_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21117318_EA/fr/2/21117318_enfr_angle_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        }
+      ],
+      "isPrimaryVariant": false,
+      "packageSize": "48 g",
+      "mchCode": "M10210602",
+      "offers": [
+        {
+          "price": {
+            "value": 6.0,
+            "unit": "ch",
+            "quantity": 1,
+            "reasonCode": 4,
+            "type": "REGULAR",
+            "expiryDate": "9999-12-31T00:00"
+          },
+          "wasPrice": null,
+          "comparisonPrices": [
+            {
+              "value": 12.5,
+              "unit": "g",
+              "quantity": 100,
+              "reasonCode": null,
+              "type": "REGULAR",
+              "expiryDate": null
+            }
+          ],
+          "memberOnlyPrice": null,
+          "memberOnlyComparisonPrices": [],
+          "sellerId": "",
+          "sellerName": null,
+          "promotions": [],
+          "memberOnlyPromotions": null,
+          "stockStatus": "OK",
+          "taxes": {
+            "gst": false,
+            "gstExemptTaxFlag": "",
+            "hst": false,
+            "ppft": false,
+            "preparedFoodTaxType": "N",
+            "pst": false,
+            "spft": false
+          },
+          "fees": null,
+          "shoppable": true,
+          "specifications": null,
+          "offerId": null,
+          "offerType": "OG",
+          "status": null,
+          "badges": {
+            "textBadge": null,
+            "loyaltyBadge": null,
+            "dealBadge": null,
+            "newItemBadge": null,
+            "hotmBadge": null,
+            "promotionalBadge": null,
+            "recyclingFeeBadge": null,
+            "subscribeEarnBadge": null,
+            "mustTryBadge": null,
+            "preparedInCanadaBadge": {
+              "type": "PREPARED_IN_CANADA",
+              "text": "Préparé au Canada",
+              "mopDealText": null,
+              "points": null,
+              "name": "PREPARED_IN_CANADA",
+              "expiryDate": null,
+              "promoType": null
+            },
+            "madeInCanadaBadge": null,
+            "productOfCanadaBadge": null,
+            "tariffAppliedBadge": null,
+            "preparedInQuebecBadge": null
+          },
+          "dealPrice": null,
+          "mopDealPrice": null,
+          "ehfTotal": null,
+          "deposit": null,
+          "environmentalHandlingFee": null,
+          "taxInfo": ""
+        }
+      ],
+      "pricingUnits": {
+        "type": "SOLD_BY_EACH",
+        "unit": "ch",
+        "interval": 1,
+        "minOrderQuantity": 1,
+        "maxOrderQuantity": 24,
+        "weighted": false
+      },
+      "breadcrumbs": [
+        {
+          "categoryCode": "27985",
+          "name": "Alimentation",
+          "url": "/alimentation/c/27985"
+        },
+        {
+          "categoryCode": "28006",
+          "name": "Garde-manger",
+          "url": "/alimentation/garde-manger/c/28006"
+        },
+        {
+          "categoryCode": "28188",
+          "name": "Épices et assaisonnements",
+          "url": "/alimentation/garde-manger/pices-et-assaisonnements/c/28188"
+        }
+      ],
+      "articleNumber": "21117318",
+      "ingredients": null,
+      "nutritionFacts": [
+        {
+          "topNutrition": [
+            {
+              "code": "servingSizeFR",
+              "valueInGram": "0 g",
+              "valuePercent": null,
+              "subNutrients": null
+            }
+          ],
+          "calories": {
+            "code": "calories",
+            "valueInGram": "0 cal",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "totalFat": {
+            "code": "totalFat",
+            "valueInGram": "0.0 g",
+            "valuePercent": "0 %",
+            "subNutrients": [
+              {
+                "code": "saturatedFat",
+                "valueInGram": "0.0 g",
+                "valuePercent": null,
+                "subNutrients": null
+              },
+              {
+                "code": "transFat",
+                "valueInGram": "0.0 g",
+                "valuePercent": null,
+                "subNutrients": null
+              },
+              {
+                "code": "saturatedTransFat",
+                "valueInGram": "0.0 g",
+                "valuePercent": null,
+                "subNutrients": null
+              }
+            ]
+          },
+          "totalCarbohydrate": {
+            "code": "totalCarbohydrate",
+            "valueInGram": null,
+            "valuePercent": "0 %",
+            "subNutrients": [
+              {
+                "code": "sugar",
+                "valueInGram": "0 g",
+                "valuePercent": null,
+                "subNutrients": null
+              },
+              {
+                "code": "dietaryFiber",
+                "valueInGram": "0 g",
+                "valuePercent": "0 %",
+                "subNutrients": null
+              }
+            ]
+          },
+          "protein": {
+            "code": "protein",
+            "valueInGram": "0.1 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "potassium": {
+            "code": "potassium",
+            "valueInGram": "0 mg",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          },
+          "microNutrition": [
+            {
+              "code": "vitaminA",
+              "valueInGram": "24.63 µg",
+              "valuePercent": "0 %",
+              "subNutrients": null
+            },
+            {
+              "code": "vitaminC",
+              "valueInGram": "0 mg",
+              "valuePercent": "0 %",
+              "subNutrients": null
+            },
+            {
+              "code": "calcium",
+              "valueInGram": null,
+              "valuePercent": "0 %",
+              "subNutrients": null
+            },
+            {
+              "code": "iron",
+              "valueInGram": null,
+              "valuePercent": "0 %",
+              "subNutrients": null
+            }
+          ],
+          "disclaimer": null,
+          "ingredients": null,
+          "cholesterol": {
+            "code": "cholesterol",
+            "valueInGram": "0 mg",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "sodium": {
+            "code": "sodium",
+            "valueInGram": "0 mg",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          }
+        }
+      ],
+      "isVariant": false,
+      "variantTheme": null,
+      "variantGroupId": null,
+      "uom": "EA",
+      "variants": null,
+      "link": "/paprika/p/21117318_EA",
+      "averageWeight": null,
+      "upcomingSubscriptionDate": null,
+      "subscriptionPoints": null,
+      "subscriptionAvailableCadences": [],
+      "gtin": "00060383185572"
+    }
+  ],
+  "link": "/paprika/p/21117318_EA",
+  "averageWeight": null,
+  "upcomingSubscriptionDate": null,
+  "subscriptionPoints": null,
+  "subscriptionAvailableCadences": [],
+  "gtin": "00060383185572"
+}

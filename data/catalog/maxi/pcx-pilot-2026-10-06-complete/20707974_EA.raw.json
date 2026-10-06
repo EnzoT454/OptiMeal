@@ -1,0 +1,721 @@
+{
+  "code": "20707974_EA",
+  "name": "Sauce pour pâtes rosée",
+  "description": "<p>Inspirée par la région côtière de Ligurie, la savoureuse sauce pour pâtes Classico di Liguria Tomates Alfredo vous offre le meilleur des deux mondes avec son mélange de tomates italiennes bien mûres, de crème et de fromages riches. Chez Classico, nous concoctons des sauces pour pâtes d’inspiration italienne depuis plus de 25 ans. Nous utilisons des ingrédients de premier choix, dont les tomates mûries sur vigne, les fromages goûteux et l’huile d’olive, que nous assaisonnons des meilleures herbes et épices pour sublimer chacune des saveurs. Nous suivons des recettes qui ont passé l’épreuve du temps pour obtenir le goût de sauce maison que vous attendez de Classico. C’est comme si vous l’aviez faite vous-même.</p><ul><li>Classico propose une sauce pour pâtes rosée, préparée à partir d'ingrédients de qualité, parfaite pour apporter une saveur délicieuse aux repas familiaux</li><li>Notre recette à succès est faite à partir de crème, de fromage romano et de tomates</li><li>Appropriez-vous la recette en la personnalisant avec vos ingrédients préférés</li><li>C'est vous qui la rendez parfaite - il suffit de faire mijoter et de servir notre sauce prête-à-servir avec votre met favori</li><li>Réfrigérer après ouverture: notre pot en verre est refermable pour une utilisation continue</li></ul>",
+  "brand": "Classico",
+  "imageAssets": [
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    }
+  ],
+  "isPrimaryVariant": false,
+  "packageSize": "410 ml",
+  "mchCode": "M10210805",
+  "offers": [
+    {
+      "price": {
+        "value": 2.97,
+        "unit": "ch",
+        "quantity": 1,
+        "reasonCode": 1,
+        "type": "SPECIAL",
+        "expiryDate": "2026-10-07T00:00"
+      },
+      "wasPrice": {
+        "value": 3.49,
+        "unit": "ch",
+        "quantity": 1,
+        "reasonCode": null,
+        "type": "WAS",
+        "expiryDate": null
+      },
+      "comparisonPrices": [
+        {
+          "value": 0.72,
+          "unit": "ml",
+          "quantity": 100,
+          "reasonCode": null,
+          "type": "REGULAR",
+          "expiryDate": null
+        }
+      ],
+      "memberOnlyPrice": null,
+      "memberOnlyComparisonPrices": [],
+      "sellerId": "",
+      "sellerName": null,
+      "promotions": [],
+      "memberOnlyPromotions": null,
+      "stockStatus": "OK",
+      "taxes": {
+        "gst": false,
+        "gstExemptTaxFlag": "",
+        "hst": false,
+        "ppft": false,
+        "preparedFoodTaxType": "N",
+        "pst": false,
+        "spft": false
+      },
+      "fees": null,
+      "shoppable": true,
+      "specifications": null,
+      "offerId": null,
+      "offerType": "OG",
+      "status": null,
+      "badges": {
+        "textBadge": null,
+        "loyaltyBadge": null,
+        "dealBadge": {
+          "type": "SALE",
+          "text": "0,52 $ DE RABAIS",
+          "mopDealText": null,
+          "points": null,
+          "name": "SPÉCIAL",
+          "expiryDate": "2026-10-07T00:00:00Z",
+          "promoType": null
+        },
+        "newItemBadge": null,
+        "hotmBadge": null,
+        "promotionalBadge": null,
+        "recyclingFeeBadge": null,
+        "subscribeEarnBadge": null,
+        "mustTryBadge": null,
+        "preparedInCanadaBadge": null,
+        "madeInCanadaBadge": null,
+        "productOfCanadaBadge": null,
+        "tariffAppliedBadge": null,
+        "preparedInQuebecBadge": null
+      },
+      "dealPrice": null,
+      "mopDealPrice": null,
+      "ehfTotal": null,
+      "deposit": null,
+      "environmentalHandlingFee": null,
+      "taxInfo": ""
+    }
+  ],
+  "pricingUnits": {
+    "type": "SOLD_BY_EACH",
+    "unit": "ch",
+    "interval": 1,
+    "minOrderQuantity": 1,
+    "maxOrderQuantity": 24,
+    "weighted": false
+  },
+  "breadcrumbs": [
+    {
+      "categoryCode": "27985",
+      "name": "Alimentation",
+      "url": "/alimentation/c/27985"
+    },
+    {
+      "categoryCode": "28006",
+      "name": "Garde-manger",
+      "url": "/alimentation/garde-manger/c/28006"
+    },
+    {
+      "categoryCode": "28247",
+      "name": "Pâtes et Sauce Pour Pâtes",
+      "url": "/alimentation/garde-manger/p-tes-et-sauce-pour-p-tes/c/28247"
+    },
+    {
+      "categoryCode": "29705",
+      "name": "Sauce pour pâtes",
+      "url": "/alimentation/garde-manger/p-tes-et-sauce-pour-p-tes/sauce-pour-p-tes/c/29705"
+    }
+  ],
+  "articleNumber": "20707974",
+  "ingredients": "Eau, Crème, Purée De Tomate, Amidon De Maïs Modifié, Fromage Romano (au Lait De Vache), Beurre, Tomates, Sucre, Jus De Tomate, Sel, Gomme Arabique, Gomme De Xanthane, Jus De Citron Concentré, Ail Déshydraté, Persil Déshydraté, Épices, Saveur, Acide Citrique, Acide Lactique, Chlorure De Calcium.",
+  "nutritionFacts": [
+    {
+      "topNutrition": [
+        {
+          "code": "houseHoldServingSize",
+          "valueInGram": "1.0 /4 cup",
+          "valuePercent": null,
+          "subNutrients": null
+        },
+        {
+          "code": "servingSizeFR",
+          "valueInGram": "pour 1/4 tasse  (60 ml)",
+          "valuePercent": null,
+          "subNutrients": null
+        }
+      ],
+      "calories": {
+        "code": "calories",
+        "valueInGram": "70 cal",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "totalFat": {
+        "code": "totalFat",
+        "valueInGram": "4.5 g",
+        "valuePercent": "7 %",
+        "subNutrients": [
+          {
+            "code": "saturatedFat",
+            "valueInGram": "3.0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          {
+            "code": "transFat",
+            "valueInGram": "0.1 g",
+            "valuePercent": "7 %",
+            "subNutrients": null
+          }
+        ]
+      },
+      "totalCarbohydrate": {
+        "code": "totalCarbohydrate",
+        "valueInGram": "5 g",
+        "valuePercent": "2 %",
+        "subNutrients": [
+          {
+            "code": "sugar",
+            "valueInGram": "2 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          {
+            "code": "dietaryFiber",
+            "valueInGram": "0 g",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          }
+        ]
+      },
+      "protein": {
+        "code": "protein",
+        "valueInGram": "2 g",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "potassium": {
+        "code": "potassium",
+        "valueInGram": "0 mg",
+        "valuePercent": "0 %",
+        "subNutrients": null
+      },
+      "microNutrition": [
+        {
+          "code": "vitaminA",
+          "valueInGram": null,
+          "valuePercent": "2 %",
+          "subNutrients": null
+        },
+        {
+          "code": "vitaminC",
+          "valueInGram": null,
+          "valuePercent": "4 %",
+          "subNutrients": null
+        },
+        {
+          "code": "calcium",
+          "valueInGram": null,
+          "valuePercent": "4 %",
+          "subNutrients": null
+        },
+        {
+          "code": "iron",
+          "valueInGram": null,
+          "valuePercent": "2 %",
+          "subNutrients": null
+        }
+      ],
+      "disclaimer": "CLASSICO SAUCE ROSEE LOMBARDIA",
+      "ingredients": "Eau, Crème, Purée De Tomate, Amidon De Maïs Modifié, Fromage Romano (au Lait De Vache), Beurre, Tomates, Sucre, Jus De Tomate, Sel, Gomme Arabique, Gomme De Xanthane, Jus De Citron Concentré, Ail Déshydraté, Persil Déshydraté, Épices, Saveur, Acide Citrique, Acide Lactique, Chlorure De Calcium.",
+      "cholesterol": {
+        "code": "cholesterol",
+        "valueInGram": "15 mg",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "sodium": {
+        "code": "sodium",
+        "valueInGram": "240 mg",
+        "valuePercent": "10 %",
+        "subNutrients": null
+      }
+    }
+  ],
+  "isVariant": false,
+  "variantTheme": null,
+  "variantGroupId": null,
+  "uom": "EA",
+  "variants": [
+    {
+      "code": "20707974_EA",
+      "name": "Sauce pour pâtes rosée",
+      "description": "<p>Inspirée par la région côtière de Ligurie, la savoureuse sauce pour pâtes Classico di Liguria Tomates Alfredo vous offre le meilleur des deux mondes avec son mélange de tomates italiennes bien mûres, de crème et de fromages riches. Chez Classico, nous concoctons des sauces pour pâtes d’inspiration italienne depuis plus de 25 ans. Nous utilisons des ingrédients de premier choix, dont les tomates mûries sur vigne, les fromages goûteux et l’huile d’olive, que nous assaisonnons des meilleures herbes et épices pour sublimer chacune des saveurs. Nous suivons des recettes qui ont passé l’épreuve du temps pour obtenir le goût de sauce maison que vous attendez de Classico. C’est comme si vous l’aviez faite vous-même.</p><ul><li>Classico propose une sauce pour pâtes rosée, préparée à partir d'ingrédients de qualité, parfaite pour apporter une saveur délicieuse aux repas familiaux</li><li>Notre recette à succès est faite à partir de crème, de fromage romano et de tomates</li><li>Appropriez-vous la recette en la personnalisant avec vos ingrédients préférés</li><li>C'est vous qui la rendez parfaite - il suffit de faire mijoter et de servir notre sauce prête-à-servir avec votre met favori</li><li>Réfrigérer après ouverture: notre pot en verre est refermable pour une utilisation continue</li></ul>",
+      "brand": "Classico",
+      "imageAssets": [
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/1/20707974_fr_front_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/2/20707974_fr_angle_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/3/20707974_fr_side_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/4/20707974_fr_back_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/5/20707974_fr_top_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/6/20707974_fr_open_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/7/20707974_fr_closed_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/8/20707974_fr_beauty_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/9/20707974_fr_banner_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20707974_EA/fr/10/20707974_fr_brand_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        }
+      ],
+      "isPrimaryVariant": false,
+      "packageSize": "410 ml",
+      "mchCode": "M10210805",
+      "offers": [
+        {
+          "price": {
+            "value": 2.97,
+            "unit": "ch",
+            "quantity": 1,
+            "reasonCode": 1,
+            "type": "SPECIAL",
+            "expiryDate": "2026-10-07T00:00"
+          },
+          "wasPrice": {
+            "value": 3.49,
+            "unit": "ch",
+            "quantity": 1,
+            "reasonCode": null,
+            "type": "WAS",
+            "expiryDate": null
+          },
+          "comparisonPrices": [
+            {
+              "value": 0.72,
+              "unit": "ml",
+              "quantity": 100,
+              "reasonCode": null,
+              "type": "REGULAR",
+              "expiryDate": null
+            }
+          ],
+          "memberOnlyPrice": null,
+          "memberOnlyComparisonPrices": [],
+          "sellerId": "",
+          "sellerName": null,
+          "promotions": [],
+          "memberOnlyPromotions": null,
+          "stockStatus": "OK",
+          "taxes": {
+            "gst": false,
+            "gstExemptTaxFlag": "",
+            "hst": false,
+            "ppft": false,
+            "preparedFoodTaxType": "N",
+            "pst": false,
+            "spft": false
+          },
+          "fees": null,
+          "shoppable": true,
+          "specifications": null,
+          "offerId": null,
+          "offerType": "OG",
+          "status": null,
+          "badges": {
+            "textBadge": null,
+            "loyaltyBadge": null,
+            "dealBadge": {
+              "type": "SALE",
+              "text": "0,52 $ DE RABAIS",
+              "mopDealText": null,
+              "points": null,
+              "name": "SPÉCIAL",
+              "expiryDate": "2026-10-07T00:00:00Z",
+              "promoType": null
+            },
+            "newItemBadge": null,
+            "hotmBadge": null,
+            "promotionalBadge": null,
+            "recyclingFeeBadge": null,
+            "subscribeEarnBadge": null,
+            "mustTryBadge": null,
+            "preparedInCanadaBadge": null,
+            "madeInCanadaBadge": null,
+            "productOfCanadaBadge": null,
+            "tariffAppliedBadge": null,
+            "preparedInQuebecBadge": null
+          },
+          "dealPrice": null,
+          "mopDealPrice": null,
+          "ehfTotal": null,
+          "deposit": null,
+          "environmentalHandlingFee": null,
+          "taxInfo": ""
+        }
+      ],
+      "pricingUnits": {
+        "type": "SOLD_BY_EACH",
+        "unit": "ch",
+        "interval": 1,
+        "minOrderQuantity": 1,
+        "maxOrderQuantity": 24,
+        "weighted": false
+      },
+      "breadcrumbs": [
+        {
+          "categoryCode": "27985",
+          "name": "Alimentation",
+          "url": "/alimentation/c/27985"
+        },
+        {
+          "categoryCode": "28006",
+          "name": "Garde-manger",
+          "url": "/alimentation/garde-manger/c/28006"
+        },
+        {
+          "categoryCode": "28247",
+          "name": "Pâtes et Sauce Pour Pâtes",
+          "url": "/alimentation/garde-manger/p-tes-et-sauce-pour-p-tes/c/28247"
+        },
+        {
+          "categoryCode": "29705",
+          "name": "Sauce pour pâtes",
+          "url": "/alimentation/garde-manger/p-tes-et-sauce-pour-p-tes/sauce-pour-p-tes/c/29705"
+        }
+      ],
+      "articleNumber": "20707974",
+      "ingredients": "Eau, Crème, Purée De Tomate, Amidon De Maïs Modifié, Fromage Romano (au Lait De Vache), Beurre, Tomates, Sucre, Jus De Tomate, Sel, Gomme Arabique, Gomme De Xanthane, Jus De Citron Concentré, Ail Déshydraté, Persil Déshydraté, Épices, Saveur, Acide Citrique, Acide Lactique, Chlorure De Calcium.",
+      "nutritionFacts": [
+        {
+          "topNutrition": [
+            {
+              "code": "houseHoldServingSize",
+              "valueInGram": "1.0 /4 cup",
+              "valuePercent": null,
+              "subNutrients": null
+            },
+            {
+              "code": "servingSizeFR",
+              "valueInGram": "pour 1/4 tasse  (60 ml)",
+              "valuePercent": null,
+              "subNutrients": null
+            }
+          ],
+          "calories": {
+            "code": "calories",
+            "valueInGram": "70 cal",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "totalFat": {
+            "code": "totalFat",
+            "valueInGram": "4.5 g",
+            "valuePercent": "7 %",
+            "subNutrients": [
+              {
+                "code": "saturatedFat",
+                "valueInGram": "3.0 g",
+                "valuePercent": null,
+                "subNutrients": null
+              },
+              {
+                "code": "transFat",
+                "valueInGram": "0.1 g",
+                "valuePercent": "7 %",
+                "subNutrients": null
+              }
+            ]
+          },
+          "totalCarbohydrate": {
+            "code": "totalCarbohydrate",
+            "valueInGram": "5 g",
+            "valuePercent": "2 %",
+            "subNutrients": [
+              {
+                "code": "sugar",
+                "valueInGram": "2 g",
+                "valuePercent": null,
+                "subNutrients": null
+              },
+              {
+                "code": "dietaryFiber",
+                "valueInGram": "0 g",
+                "valuePercent": "0 %",
+                "subNutrients": null
+              }
+            ]
+          },
+          "protein": {
+            "code": "protein",
+            "valueInGram": "2 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "potassium": {
+            "code": "potassium",
+            "valueInGram": "0 mg",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          },
+          "microNutrition": [
+            {
+              "code": "vitaminA",
+              "valueInGram": null,
+              "valuePercent": "2 %",
+              "subNutrients": null
+            },
+            {
+              "code": "vitaminC",
+              "valueInGram": null,
+              "valuePercent": "4 %",
+              "subNutrients": null
+            },
+            {
+              "code": "calcium",
+              "valueInGram": null,
+              "valuePercent": "4 %",
+              "subNutrients": null
+            },
+            {
+              "code": "iron",
+              "valueInGram": null,
+              "valuePercent": "2 %",
+              "subNutrients": null
+            }
+          ],
+          "disclaimer": "CLASSICO SAUCE ROSEE LOMBARDIA",
+          "ingredients": "Eau, Crème, Purée De Tomate, Amidon De Maïs Modifié, Fromage Romano (au Lait De Vache), Beurre, Tomates, Sucre, Jus De Tomate, Sel, Gomme Arabique, Gomme De Xanthane, Jus De Citron Concentré, Ail Déshydraté, Persil Déshydraté, Épices, Saveur, Acide Citrique, Acide Lactique, Chlorure De Calcium.",
+          "cholesterol": {
+            "code": "cholesterol",
+            "valueInGram": "15 mg",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "sodium": {
+            "code": "sodium",
+            "valueInGram": "240 mg",
+            "valuePercent": "10 %",
+            "subNutrients": null
+          }
+        }
+      ],
+      "isVariant": false,
+      "variantTheme": null,
+      "variantGroupId": null,
+      "uom": "EA",
+      "variants": null,
+      "link": "/sauce-pour-p-tes-ros-e/p/20707974_EA",
+      "averageWeight": null,
+      "upcomingSubscriptionDate": null,
+      "subscriptionPoints": null,
+      "subscriptionAvailableCadences": [],
+      "gtin": "00057000034603"
+    }
+  ],
+  "link": "/sauce-pour-p-tes-ros-e/p/20707974_EA",
+  "averageWeight": null,
+  "upcomingSubscriptionDate": null,
+  "subscriptionPoints": null,
+  "subscriptionAvailableCadences": [],
+  "gtin": "00057000034603"
+}

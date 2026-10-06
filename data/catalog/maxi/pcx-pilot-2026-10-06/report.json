@@ -1,0 +1,148 @@
+{
+  "experimental": true,
+  "store_id_requested": "8661",
+  "requested_date": "2026-10-06",
+  "receipt_purchase_date": "2026-10-03",
+  "collected_at": "2026-10-06T22:28:59.839663+00:00",
+  "items": [
+    {
+      "receipt_code": "05700003460",
+      "receipt_name": "CLASS SCE ROSEE",
+      "receipt_line_total": "2.97",
+      "product_id": null,
+      "status": "needs_product_id",
+      "search_http_status": 403,
+      "search_url": "https://www.maxi.ca/fr/search?search-bar=05700003460&storeId=8661"
+    },
+    {
+      "receipt_code": "06038318557",
+      "receipt_name": "PC PAPRIKA",
+      "receipt_line_total": "6.00",
+      "product_id": "21117318_EA",
+      "http_status": 200,
+      "source_url": "https://api.pcexpress.ca/pcx-bff/api/v1/products/21117318_EA?lang=fr&date=06102026&pickupType=STORE&storeId=8661&banner=maxi",
+      "product": {
+        "product_id": "21117318_EA",
+        "name": "Paprika",
+        "brand": "le Choix du Président",
+        "package_size": "48 g",
+        "gtin": "00060383185572",
+        "receipt_code_matches_upc_body": true,
+        "matching_requires_review": true,
+        "offers": [
+          {
+            "price": {
+              "value": 6.0,
+              "unit": "ch",
+              "quantity": 1,
+              "reasonCode": 4,
+              "type": "REGULAR",
+              "expiryDate": "9999-12-31T00:00"
+            },
+            "wasPrice": null,
+            "comparisonPrices": [
+              {
+                "value": 12.5,
+                "unit": "g",
+                "quantity": 100,
+                "reasonCode": null,
+                "type": "REGULAR",
+                "expiryDate": null
+              }
+            ],
+            "memberOnlyPrice": null,
+            "memberOnlyComparisonPrices": [],
+            "sellerId": "",
+            "sellerName": null,
+            "promotions": [],
+            "memberOnlyPromotions": null,
+            "stockStatus": "OK",
+            "taxes": {
+              "gst": false,
+              "gstExemptTaxFlag": "",
+              "hst": false,
+              "ppft": false,
+              "preparedFoodTaxType": "N",
+              "pst": false,
+              "spft": false
+            },
+            "fees": null,
+            "shoppable": true,
+            "specifications": null,
+            "offerId": null,
+            "offerType": "OG",
+            "status": null,
+            "badges": {
+              "textBadge": null,
+              "loyaltyBadge": null,
+              "dealBadge": null,
+              "newItemBadge": null,
+              "hotmBadge": null,
+              "promotionalBadge": null,
+              "recyclingFeeBadge": null,
+              "subscribeEarnBadge": null,
+              "mustTryBadge": null,
+              "preparedInCanadaBadge": {
+                "type": "PREPARED_IN_CANADA",
+                "text": "Préparé au Canada",
+                "mopDealText": null,
+                "points": null,
+                "name": "PREPARED_IN_CANADA",
+                "expiryDate": null,
+                "promoType": null
+              },
+              "madeInCanadaBadge": null,
+              "productOfCanadaBadge": null,
+              "tariffAppliedBadge": null,
+              "preparedInQuebecBadge": null
+            },
+            "dealPrice": null,
+            "mopDealPrice": null,
+            "ehfTotal": null,
+            "deposit": null,
+            "environmentalHandlingFee": null,
+            "taxInfo": ""
+          }
+        ],
+        "pricing_units": {
+          "type": "SOLD_BY_EACH",
+          "unit": "ch",
+          "interval": 1,
+          "minOrderQuantity": 1,
+          "maxOrderQuantity": 24,
+          "weighted": false
+        },
+        "link": "/paprika/p/21117318_EA"
+      },
+      "status": "retrieved",
+      "raw_file": "21117318_EA.raw.json"
+    },
+    {
+      "receipt_code": "06620001994",
+      "receipt_name": "CLBH CRCMA MOULU",
+      "receipt_line_total": "6.49",
+      "product_id": null,
+      "status": "needs_product_id",
+      "search_http_status": 403,
+      "search_url": "https://www.maxi.ca/fr/search?search-bar=06620001994&storeId=8661"
+    },
+    {
+      "receipt_code": "06780000049",
+      "receipt_name": "UNICO THON DOLIV",
+      "receipt_line_total": "5.99",
+      "product_id": null,
+      "status": "needs_product_id",
+      "search_http_status": 403,
+      "search_url": "https://www.maxi.ca/fr/search?search-bar=06780000049&storeId=8661"
+    },
+    {
+      "receipt_code": "08870201640",
+      "receipt_name": "BM CONFITURE",
+      "receipt_line_total": "6.29",
+      "product_id": null,
+      "status": "needs_product_id",
+      "search_http_status": 403,
+      "search_url": "https://www.maxi.ca/fr/search?search-bar=08870201640&storeId=8661"
+    }
+  ]
+}

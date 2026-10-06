@@ -1,0 +1,538 @@
+{
+  "experimental": true,
+  "store_id_requested": "8661",
+  "requested_date": "2026-10-06",
+  "receipt_purchase_date": "2026-10-03",
+  "collected_at": "2026-10-06T22:33:19.460664+00:00",
+  "items": [
+    {
+      "receipt_code": "05700003460",
+      "receipt_name": "CLASS SCE ROSEE",
+      "receipt_line_total": "2.97",
+      "product_id": "20707974_EA",
+      "http_status": 200,
+      "source_url": "https://api.pcexpress.ca/pcx-bff/api/v1/products/20707974_EA?lang=fr&date=06102026&pickupType=STORE&storeId=8661&banner=maxi",
+      "product": {
+        "product_id": "20707974_EA",
+        "name": "Sauce pour pâtes rosée",
+        "brand": "Classico",
+        "package_size": "410 ml",
+        "gtin": "00057000034603",
+        "receipt_code_matches_upc_body": true,
+        "matching_requires_review": true,
+        "offers": [
+          {
+            "price": {
+              "value": 2.97,
+              "unit": "ch",
+              "quantity": 1,
+              "reasonCode": 1,
+              "type": "SPECIAL",
+              "expiryDate": "2026-10-07T00:00"
+            },
+            "wasPrice": {
+              "value": 3.49,
+              "unit": "ch",
+              "quantity": 1,
+              "reasonCode": null,
+              "type": "WAS",
+              "expiryDate": null
+            },
+            "comparisonPrices": [
+              {
+                "value": 0.72,
+                "unit": "ml",
+                "quantity": 100,
+                "reasonCode": null,
+                "type": "REGULAR",
+                "expiryDate": null
+              }
+            ],
+            "memberOnlyPrice": null,
+            "memberOnlyComparisonPrices": [],
+            "sellerId": "",
+            "sellerName": null,
+            "promotions": [],
+            "memberOnlyPromotions": null,
+            "stockStatus": "OK",
+            "taxes": {
+              "gst": false,
+              "gstExemptTaxFlag": "",
+              "hst": false,
+              "ppft": false,
+              "preparedFoodTaxType": "N",
+              "pst": false,
+              "spft": false
+            },
+            "fees": null,
+            "shoppable": true,
+            "specifications": null,
+            "offerId": null,
+            "offerType": "OG",
+            "status": null,
+            "badges": {
+              "textBadge": null,
+              "loyaltyBadge": null,
+              "dealBadge": {
+                "type": "SALE",
+                "text": "0,52 $ DE RABAIS",
+                "mopDealText": null,
+                "points": null,
+                "name": "SPÉCIAL",
+                "expiryDate": "2026-10-07T00:00:00Z",
+                "promoType": null
+              },
+              "newItemBadge": null,
+              "hotmBadge": null,
+              "promotionalBadge": null,
+              "recyclingFeeBadge": null,
+              "subscribeEarnBadge": null,
+              "mustTryBadge": null,
+              "preparedInCanadaBadge": null,
+              "madeInCanadaBadge": null,
+              "productOfCanadaBadge": null,
+              "tariffAppliedBadge": null,
+              "preparedInQuebecBadge": null
+            },
+            "dealPrice": null,
+            "mopDealPrice": null,
+            "ehfTotal": null,
+            "deposit": null,
+            "environmentalHandlingFee": null,
+            "taxInfo": ""
+          }
+        ],
+        "pricing_units": {
+          "type": "SOLD_BY_EACH",
+          "unit": "ch",
+          "interval": 1,
+          "minOrderQuantity": 1,
+          "maxOrderQuantity": 24,
+          "weighted": false
+        },
+        "link": "/sauce-pour-p-tes-ros-e/p/20707974_EA"
+      },
+      "status": "retrieved",
+      "raw_file": "20707974_EA.raw.json"
+    },
+    {
+      "receipt_code": "06038318557",
+      "receipt_name": "PC PAPRIKA",
+      "receipt_line_total": "6.00",
+      "product_id": "21117318_EA",
+      "http_status": 200,
+      "source_url": "https://api.pcexpress.ca/pcx-bff/api/v1/products/21117318_EA?lang=fr&date=06102026&pickupType=STORE&storeId=8661&banner=maxi",
+      "product": {
+        "product_id": "21117318_EA",
+        "name": "Paprika",
+        "brand": "le Choix du Président",
+        "package_size": "48 g",
+        "gtin": "00060383185572",
+        "receipt_code_matches_upc_body": true,
+        "matching_requires_review": true,
+        "offers": [
+          {
+            "price": {
+              "value": 6.0,
+              "unit": "ch",
+              "quantity": 1,
+              "reasonCode": 4,
+              "type": "REGULAR",
+              "expiryDate": "9999-12-31T00:00"
+            },
+            "wasPrice": null,
+            "comparisonPrices": [
+              {
+                "value": 12.5,
+                "unit": "g",
+                "quantity": 100,
+                "reasonCode": null,
+                "type": "REGULAR",
+                "expiryDate": null
+              }
+            ],
+            "memberOnlyPrice": null,
+            "memberOnlyComparisonPrices": [],
+            "sellerId": "",
+            "sellerName": null,
+            "promotions": [],
+            "memberOnlyPromotions": null,
+            "stockStatus": "OK",
+            "taxes": {
+              "gst": false,
+              "gstExemptTaxFlag": "",
+              "hst": false,
+              "ppft": false,
+              "preparedFoodTaxType": "N",
+              "pst": false,
+              "spft": false
+            },
+            "fees": null,
+            "shoppable": true,
+            "specifications": null,
+            "offerId": null,
+            "offerType": "OG",
+            "status": null,
+            "badges": {
+              "textBadge": null,
+              "loyaltyBadge": null,
+              "dealBadge": null,
+              "newItemBadge": null,
+              "hotmBadge": null,
+              "promotionalBadge": null,
+              "recyclingFeeBadge": null,
+              "subscribeEarnBadge": null,
+              "mustTryBadge": null,
+              "preparedInCanadaBadge": {
+                "type": "PREPARED_IN_CANADA",
+                "text": "Préparé au Canada",
+                "mopDealText": null,
+                "points": null,
+                "name": "PREPARED_IN_CANADA",
+                "expiryDate": null,
+                "promoType": null
+              },
+              "madeInCanadaBadge": null,
+              "productOfCanadaBadge": null,
+              "tariffAppliedBadge": null,
+              "preparedInQuebecBadge": null
+            },
+            "dealPrice": null,
+            "mopDealPrice": null,
+            "ehfTotal": null,
+            "deposit": null,
+            "environmentalHandlingFee": null,
+            "taxInfo": ""
+          }
+        ],
+        "pricing_units": {
+          "type": "SOLD_BY_EACH",
+          "unit": "ch",
+          "interval": 1,
+          "minOrderQuantity": 1,
+          "maxOrderQuantity": 24,
+          "weighted": false
+        },
+        "link": "/paprika/p/21117318_EA"
+      },
+      "status": "retrieved",
+      "raw_file": "21117318_EA.raw.json"
+    },
+    {
+      "receipt_code": "06620001994",
+      "receipt_name": "CLBH CRCMA MOULU",
+      "receipt_line_total": "6.49",
+      "product_id": "21038672_EA",
+      "http_status": 200,
+      "source_url": "https://api.pcexpress.ca/pcx-bff/api/v1/products/21038672_EA?lang=fr&date=06102026&pickupType=STORE&storeId=8661&banner=maxi",
+      "product": {
+        "product_id": "21038672_EA",
+        "name": "Curcuma Moulu",
+        "brand": "Club House",
+        "package_size": "102 g",
+        "gtin": "00066200019945",
+        "receipt_code_matches_upc_body": true,
+        "matching_requires_review": true,
+        "offers": [
+          {
+            "price": {
+              "value": 6.49,
+              "unit": "ch",
+              "quantity": 1,
+              "reasonCode": 4,
+              "type": "REGULAR",
+              "expiryDate": "9999-12-31T00:00"
+            },
+            "wasPrice": null,
+            "comparisonPrices": [
+              {
+                "value": 6.36,
+                "unit": "g",
+                "quantity": 100,
+                "reasonCode": null,
+                "type": "REGULAR",
+                "expiryDate": null
+              }
+            ],
+            "memberOnlyPrice": null,
+            "memberOnlyComparisonPrices": [],
+            "sellerId": "",
+            "sellerName": null,
+            "promotions": [
+              {
+                "type": "LOYALTY",
+                "quantity": null,
+                "savings": 3500,
+                "value": null,
+                "promoCode": "121514486",
+                "expiryDate": "2026-10-07T23:59:59Z",
+                "title": "PC Optimum Offer",
+                "promoType": "0004",
+                "pricingMethod": null,
+                "text": "Obtenez 3500 points prime PC Optimum pour chaque 14,97$ dépensé en produits participants",
+                "reward": "3500Points PC Optimum",
+                "callToAction": null
+              }
+            ],
+            "memberOnlyPromotions": null,
+            "stockStatus": "OK",
+            "taxes": {
+              "gst": false,
+              "gstExemptTaxFlag": "",
+              "hst": false,
+              "ppft": false,
+              "preparedFoodTaxType": "N",
+              "pst": false,
+              "spft": false
+            },
+            "fees": null,
+            "shoppable": true,
+            "specifications": null,
+            "offerId": null,
+            "offerType": "OG",
+            "status": null,
+            "badges": {
+              "textBadge": null,
+              "loyaltyBadge": {
+                "type": "LOYALTY",
+                "text": "Offre PC Optimum",
+                "mopDealText": null,
+                "points": 3500,
+                "name": "LOYALTY",
+                "expiryDate": "2026-10-07T23:59:59Z",
+                "promoType": "0004"
+              },
+              "dealBadge": null,
+              "newItemBadge": null,
+              "hotmBadge": null,
+              "promotionalBadge": null,
+              "recyclingFeeBadge": null,
+              "subscribeEarnBadge": null,
+              "mustTryBadge": null,
+              "preparedInCanadaBadge": {
+                "type": "PREPARED_IN_CANADA",
+                "text": "Préparé au Canada",
+                "mopDealText": null,
+                "points": null,
+                "name": "PREPARED_IN_CANADA",
+                "expiryDate": null,
+                "promoType": null
+              },
+              "madeInCanadaBadge": null,
+              "productOfCanadaBadge": null,
+              "tariffAppliedBadge": null,
+              "preparedInQuebecBadge": null
+            },
+            "dealPrice": null,
+            "mopDealPrice": null,
+            "ehfTotal": null,
+            "deposit": null,
+            "environmentalHandlingFee": null,
+            "taxInfo": ""
+          }
+        ],
+        "pricing_units": {
+          "type": "SOLD_BY_EACH",
+          "unit": "ch",
+          "interval": 1,
+          "minOrderQuantity": 1,
+          "maxOrderQuantity": 24,
+          "weighted": false
+        },
+        "link": "/curcuma-moulu/p/21038672_EA"
+      },
+      "status": "retrieved",
+      "raw_file": "21038672_EA.raw.json"
+    },
+    {
+      "receipt_code": "06780000049",
+      "receipt_name": "UNICO THON DOLIV",
+      "receipt_line_total": "5.99",
+      "product_id": "20415991_EA",
+      "http_status": 200,
+      "source_url": "https://api.pcexpress.ca/pcx-bff/api/v1/products/20415991_EA?lang=fr&date=06102026&pickupType=STORE&storeId=8661&banner=maxi",
+      "product": {
+        "product_id": "20415991_EA",
+        "name": "Thon à l’huile d’olive",
+        "brand": "Unico",
+        "package_size": "3x80.0 g",
+        "gtin": "00067800000494",
+        "receipt_code_matches_upc_body": true,
+        "matching_requires_review": true,
+        "offers": [
+          {
+            "price": {
+              "value": 5.99,
+              "unit": "ch",
+              "quantity": 1,
+              "reasonCode": 4,
+              "type": "REGULAR",
+              "expiryDate": "9999-12-31T00:00"
+            },
+            "wasPrice": null,
+            "comparisonPrices": [
+              {
+                "value": 2.5,
+                "unit": "g",
+                "quantity": 100,
+                "reasonCode": null,
+                "type": "REGULAR",
+                "expiryDate": null
+              }
+            ],
+            "memberOnlyPrice": null,
+            "memberOnlyComparisonPrices": [],
+            "sellerId": "",
+            "sellerName": null,
+            "promotions": [],
+            "memberOnlyPromotions": null,
+            "stockStatus": "OK",
+            "taxes": {
+              "gst": false,
+              "gstExemptTaxFlag": "",
+              "hst": false,
+              "ppft": false,
+              "preparedFoodTaxType": "N",
+              "pst": false,
+              "spft": false
+            },
+            "fees": null,
+            "shoppable": true,
+            "specifications": null,
+            "offerId": null,
+            "offerType": "OG",
+            "status": null,
+            "badges": {
+              "textBadge": null,
+              "loyaltyBadge": null,
+              "dealBadge": null,
+              "newItemBadge": null,
+              "hotmBadge": null,
+              "promotionalBadge": null,
+              "recyclingFeeBadge": null,
+              "subscribeEarnBadge": null,
+              "mustTryBadge": null,
+              "preparedInCanadaBadge": null,
+              "madeInCanadaBadge": null,
+              "productOfCanadaBadge": null,
+              "tariffAppliedBadge": null,
+              "preparedInQuebecBadge": null
+            },
+            "dealPrice": null,
+            "mopDealPrice": null,
+            "ehfTotal": null,
+            "deposit": null,
+            "environmentalHandlingFee": null,
+            "taxInfo": ""
+          }
+        ],
+        "pricing_units": {
+          "type": "SOLD_BY_EACH",
+          "unit": "ch",
+          "interval": 1,
+          "minOrderQuantity": 1,
+          "maxOrderQuantity": 24,
+          "weighted": false
+        },
+        "link": "/thon-l-huile-d-olive/p/20415991_EA"
+      },
+      "status": "retrieved",
+      "raw_file": "20415991_EA.raw.json"
+    },
+    {
+      "receipt_code": "08870201640",
+      "receipt_name": "BM CONFITURE",
+      "receipt_line_total": "6.29",
+      "product_id": "20307313006_EA",
+      "http_status": 200,
+      "source_url": "https://api.pcexpress.ca/pcx-bff/api/v1/products/20307313006_EA?lang=fr&date=06102026&pickupType=STORE&storeId=8661&banner=maxi",
+      "product": {
+        "product_id": "20307313006_EA",
+        "name": "Confiture de framboise",
+        "brand": "Bonne Maman",
+        "package_size": "250 ml",
+        "gtin": "00088702016406",
+        "receipt_code_matches_upc_body": true,
+        "matching_requires_review": true,
+        "offers": [
+          {
+            "price": {
+              "value": 6.29,
+              "unit": "ch",
+              "quantity": 1,
+              "reasonCode": 2,
+              "type": "SPECIAL",
+              "expiryDate": "2026-10-07T00:00"
+            },
+            "wasPrice": null,
+            "comparisonPrices": [
+              {
+                "value": 2.52,
+                "unit": "ml",
+                "quantity": 100,
+                "reasonCode": null,
+                "type": "REGULAR",
+                "expiryDate": null
+              }
+            ],
+            "memberOnlyPrice": null,
+            "memberOnlyComparisonPrices": [],
+            "sellerId": "",
+            "sellerName": null,
+            "promotions": [],
+            "memberOnlyPromotions": null,
+            "stockStatus": "OK",
+            "taxes": {
+              "gst": false,
+              "gstExemptTaxFlag": "",
+              "hst": false,
+              "ppft": false,
+              "preparedFoodTaxType": "N",
+              "pst": false,
+              "spft": false
+            },
+            "fees": null,
+            "shoppable": true,
+            "specifications": null,
+            "offerId": null,
+            "offerType": "OG",
+            "status": null,
+            "badges": {
+              "textBadge": null,
+              "loyaltyBadge": null,
+              "dealBadge": null,
+              "newItemBadge": null,
+              "hotmBadge": null,
+              "promotionalBadge": null,
+              "recyclingFeeBadge": null,
+              "subscribeEarnBadge": null,
+              "mustTryBadge": null,
+              "preparedInCanadaBadge": null,
+              "madeInCanadaBadge": null,
+              "productOfCanadaBadge": null,
+              "tariffAppliedBadge": null,
+              "preparedInQuebecBadge": null
+            },
+            "dealPrice": null,
+            "mopDealPrice": null,
+            "ehfTotal": null,
+            "deposit": null,
+            "environmentalHandlingFee": null,
+            "taxInfo": ""
+          }
+        ],
+        "pricing_units": {
+          "type": "SOLD_BY_EACH",
+          "unit": "ch",
+          "interval": 1,
+          "minOrderQuantity": 1,
+          "maxOrderQuantity": 24,
+          "weighted": false
+        },
+        "link": "/confiture-de-framboise/p/20307313006_EA"
+      },
+      "status": "retrieved",
+      "raw_file": "20307313006_EA.raw.json"
+    }
+  ]
+}
