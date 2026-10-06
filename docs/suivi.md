@@ -166,35 +166,58 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 ### Travail réalisé
 
-- Mise en place d’un connecteur Apify pour récupérer les produits et les prix de Maxi Côte-des-Neiges
-    - Recherches réparties en trois lots couvrant 31 ingrédients
-    - Ajout de la collecte des promotions alimentaires
-    - Conservation des réponses pour pouvoir les vérifier et les retraiter sans nouvelle collecte
-    - Vérification par Hamza des données Maxi récupérées : les produits, les prix et la succursale sont corrects
-    - Mise au même format que Super C des 31 produits et des 196 promotions Maxi ; la validation et les détails techniques sont conservés dans le guide et les archives
-- Ajout de routes FastAPI pour consulter le catalogue collecté
-- Préparation d’un modèle de données pour les ingrédients, les produits, les prix et les reçus ; la base PostgreSQL n’est pas encore créée
-- Mise en place de l’extraction locale des reçus avec Apple Vision sur Mac et Tesseract + OpenCV pour Windows
-    - Amélioration de la lecture des articles, des quantités et des rabais
-    - Vérification des montants sur quatre reçus Maxi et Metro avec Tesseract + OpenCV
-    - Le 4 octobre, Hamza a vérifié et confirmé les prix extraits de cet échantillon
+- Collecte et vérification des produits, des prix et des promotions Maxi avec Apify
+- Regroupement des données Maxi dans le même format que l’échantillon Super C
+- Ajout de la consultation du catalogue dans le serveur
+- Essais de lecture des reçus avec Apple Vision et Tesseract + OpenCV ; vérification des prix sur quatre reçus Maxi et Metro
+- Préparation du modèle de base de données ; PostgreSQL reste à mettre en place
 
 ### Décisions et ajustements
 
 - Utiliser Apify pour les données Maxi
-- Utiliser l’extraction web avec un modèle IA pour Metro et Super C ; cette partie reste à développer
+- Poursuivre l’extraction web avec un modèle IA pour Metro et Super C
 - Ne plus utiliser épiceries.ca ni poursuivre l’extraction des circulaires PDF comme source de données
-- Conserver les deux méthodes de lecture des reçus : Apple Vision pour Mac et Tesseract + OpenCV pour Windows
+- Conserver Apple Vision pour Mac et Tesseract + OpenCV comme solution pour Windows, à tester sur PC
 
 ### Difficultés rencontrées
 
-- Les recherches Apify ont parfois retourné des produits proches de l’ingrédient demandé. Une sélection a été nécessaire avant de vérifier les produits retenus
-- La lecture du rabais Metro a demandé un modèle Tesseract complémentaire. Apple Vision lit encore ce rabais incorrectement
-- Les essais Tesseract ont été réalisés sur Mac ; le fonctionnement sur un PC Windows et la lecture des reçus Super C restent à vérifier
-- Les reçus restent locaux : leur correction et leur confirmation ne sont pas encore intégrées à l’application ou à la base de données
+- Certaines recherches Apify retournent des produits proches de ceux demandés ; une vérification reste nécessaire
+- Un rabais du reçu Metro est encore mal lu par Apple Vision
+- La lecture des reçus sur Windows et pour Super C reste à vérifier ; les essais actuels ont été réalisés sur Mac
 
 ### Prochaines étapes
 
 - Développer et évaluer la collecte web pour Metro et Super C
 - Reproduire les essais de reçus sur Windows et ajouter un reçu Super C
+- Mettre en place PostgreSQL et commencer la connexion entre le mobile et le serveur
+
+---
+
+## Semaine 6 (5–11 octobre — en cours)
+
+### Objectifs de la période
+
+- Explorer une autre méthode de récupération des données Maxi
+- Compléter les échantillons de produits des trois enseignes
+
+### Travail réalisé
+
+- Essai de récupération directe des données Maxi via PC Express sur cinq produits retrouvés à partir des codes d’un reçu
+- Récupération réussie des noms, formats et prix des cinq produits ; les codes et les prix correspondent à l’échantillon du reçu
+- Ajout d’un échantillon de 31 produits Metro au format JSON, comme pour Super C
+
+### Décisions et ajustements
+
+- Demander l’avis du professeur avant de poursuivre la piste PC Express, notamment sur les conditions d’utilisation des données
+- Conserver Apify comme source Maxi retenue en attendant cet avis
+
+### Difficultés rencontrées
+
+- La recherche automatisée des produits sur le site Maxi est bloquée ; les liens ont été retrouvés manuellement pour l’essai
+- Le fonctionnement de la récupération directe dans la durée reste à évaluer
+
+### Prochaines étapes
+
+- Recueillir l’avis du professeur sur la piste PC Express
+- Valider les échantillons Metro et Super C et poursuivre l’étude de leur collecte
 - Mettre en place PostgreSQL et commencer la connexion entre le mobile et le serveur

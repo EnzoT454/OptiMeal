@@ -19,11 +19,11 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 ## Statut actuel
 
-Nous avons mis en place le site de suivi, une API FastAPI et un [connecteur Apify pour Maxi](backend/docs/APIFY.md). Le catalogue conserve les réponses sources, propose des correspondances avec les ingrédients et peut être consulté dans l’API. Trois lots couvrent les recherches de 31 ingrédients ; la collecte des promotions alimentaires est également disponible. Les données Maxi récupérées avec Apify ont été vérifiées par Hamza : les produits, les prix et la succursale Maxi Côte-des-Neiges sont corrects. Cette validation a été consignée le 4 octobre 2026.
+Nous avons mis en place le site de suivi, une API FastAPI et un [connecteur Apify pour Maxi](backend/docs/APIFY.md). Le catalogue conserve les réponses sources, propose des correspondances avec les ingrédients et peut être consulté dans l’API. Trois lots couvrent les recherches de 31 ingrédients ; la collecte des promotions alimentaires est également disponible. Les données Maxi récupérées avec Apify ont été vérifiées : les produits, les prix et la succursale Maxi Côte-des-Neiges sont corrects. Cette validation a été consignée le 4 octobre 2026.
 
 Pour Metro et Super C, nous retenons l’extraction des pages web avec un modèle IA. Ce traitement reste à développer et à évaluer. Épiceries.ca et les circulaires PDF ont été testés auparavant ; ils ne sont plus retenus pour la collecte.
 
-L’extraction locale des reçus conserve deux chemins : Apple Vision sur Mac et Tesseract + OpenCV pour Windows. Le 4 octobre 2026, Hamza a confirmé les prix extraits des reçus Maxi et Metro de notre échantillon. Le [guide OCR](backend/docs/RECEIPTS.md#validation-humaine-des-prix--4-octobre-2026) détaille les limites : Super C et l’exécution sur un PC Windows restent à valider, et Apple Vision garde une erreur sur le rabais du reçu Metro.
+L’extraction locale des reçus conserve deux chemins : Apple Vision sur Mac et Tesseract + OpenCV pour Windows. Le 4 octobre 2026, les prix extraits des reçus Maxi et Metro de notre échantillon ont été confirmés. Le [guide OCR](backend/docs/RECEIPTS.md#validation-humaine-des-prix--4-octobre-2026) détaille les limites : Super C et l’exécution sur un PC Windows restent à valider, et Apple Vision garde une erreur sur le rabais du reçu Metro.
 
 L’application mobile, les comptes, PostgreSQL et le parcours de confirmation des reçus restent à développer. Les prochaines étapes sont de préparer la collecte Metro/Super C, mettre en place PostgreSQL et relier le mobile au serveur.
 

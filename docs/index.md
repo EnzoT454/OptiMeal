@@ -42,7 +42,9 @@ Les principaux objectifs sont les suivants :
 - **Préparer les achats** : regrouper les quantités nécessaires et produire une liste par magasin tenant compte des formats, des prix et des contraintes choisies. L’utilisateur pourra cocher, supprimer ou remplacer des articles, avec recalcul et conservation de ses choix manuels.
 - **Aider aux choix économiques** : proposer des recettes selon les promotions et un catalogue couvrant aussi les produits hors promotion. Distinguer les prix connus, déclarés après achat, estimés et inconnus ; permettre à l’utilisateur de photographier son reçu à la fin de ses courses pour contribuer, s’il le souhaite, aux prix payés. Il pourra vérifier et corriger les informations extraites avant de les confirmer pour améliorer les estimations.
 
-L’application cherchera à réduire le coût des achats, sans garantir le meilleur panier possible parmi toutes les combinaisons. Lorsque les données ne permettent pas de donner un prix précis, elle affichera une fourchette estimée min–max à partir des références disponibles. Si certains prix ne peuvent pas être estimés, ils seront signalés : la fourchette portera alors seulement sur la partie calculable de la liste. Le dépôt contient maintenant un backend FastAPI, un connecteur Apify pour Maxi et une extraction locale de reçus. Le mobile, les comptes et la persistance restent à développer.
+L’application cherchera à réduire le coût des achats, sans garantir le meilleur panier possible parmi toutes les combinaisons. Lorsque les données ne permettent pas de donner un prix précis, elle affichera une fourchette estimée min–max à partir des références disponibles. Si certains prix ne peuvent pas être estimés, ils seront signalés : la fourchette portera alors seulement sur la partie calculable de la liste.
+
+Le dépôt contient un backend FastAPI, une collecte Maxi avec Apify, des échantillons Metro et Super C et une extraction locale de reçus. Un essai de récupération directe des données Maxi via PC Express a réussi sur cinq produits ; nous attendons l’avis du professeur avant de poursuivre cette piste. Le mobile, les comptes et la persistance restent à développer.
 
 ## Méthodologie
 
@@ -50,7 +52,9 @@ Le travail sera réalisé par 2 étudiants sur environ 15 semaines, à raison de
 
 La démarche sera progressive : préciser les parcours et étudier les sources de données, établir la communication entre le mobile et le serveur, puis développer les comptes, les recettes et le calendrier. Le catalogue, les promotions et les estimations permettront ensuite de construire les listes d’achats et les recommandations économiques. Chaque étape sera intégrée et vérifiée avant de poursuivre ; la charge restante sera réévaluée régulièrement.
 
-L’interface utilisera **React Native avec TypeScript et Expo**, le serveur **Python avec FastAPI**, et le stockage **PostgreSQL**. L’IA sera évaluée pour proposer des recettes, structurer un texte de recette et extraire les prix des pages web de Metro et Super C. Les reçus utilisent Apple Vision sur Mac et Tesseract + OpenCV pour Windows. Ses résultats seront validés ; les calculs de quantités et de prix seront effectués par le serveur. Apify est retenu pour les données Maxi ; le modèle IA utilisé pour Metro et Super C reste à choisir et à évaluer.
+L’interface utilisera **React Native avec TypeScript et Expo**, le serveur **Python avec FastAPI**, et le stockage **PostgreSQL**. L’IA sera évaluée pour proposer des recettes, structurer un texte de recette et extraire les prix des pages web de Metro et Super C. Les résultats seront vérifiés ; les calculs de quantités et de prix seront effectués par le serveur.
+
+Les reçus sont lus avec Apple Vision sur Mac et Tesseract + OpenCV, dont le fonctionnement sur Windows reste à vérifier. Apify reste la source retenue pour Maxi. Les échantillons Metro et Super C sont disponibles au format JSON ; leur validation et leur collecte automatisée restent à compléter.
 
 Un jeu de données de démonstration clairement identifié permettra de tester le projet même si les sources externes sont indisponibles. Le travail sera versionné avec Git et documenté régulièrement sur la page de [suivi](suivi.md).
 
@@ -67,7 +71,7 @@ L’évaluation reposera sur des scénarios reproductibles et des données dont 
 | Protection et conservation des données | Vérifier avec deux comptes que les données privées restent séparées et qu’une modification de recette ou de prix ne change pas les anciennes semaines. |
 | Utilisabilité et gestion des erreurs | Réaliser le parcours complet de planification et d’achat ; relever les blocages et vérifier les états de chargement, de contenu vide et d’erreur réseau, ainsi que la clarté des avertissements. |
 
-Les résultats, les limites observées et les fonctionnalités effectivement réalisées seront présentés dans la [synthèse](synthese.md). Aucune évaluation fonctionnelle n’a encore été réalisée.
+Les résultats, les limites observées et les fonctionnalités effectivement réalisées seront présentés dans la [synthèse](synthese.md). Des tests du backend et des vérifications sur les données et les reçus ont été réalisés ; l’application complète reste à évaluer.
 
 
 ## Échéancier
@@ -81,3 +85,4 @@ Les résultats, les limites observées et les fonctionnalités effectivement ré
 | Analyse des applications existantes, prototype et modèle C4 | 14 sept. | 20 sept. | Présentation au professeur | ✅ Terminé |
 | Évaluation initiale des sources de données et tests d'extraction (circulaires, reçus) | 21 sept. | 27 sept. | Résultats des tests initiaux et choix d’une méthode | ✅ Terminé |
 | Poursuite de l'extraction et construction de la base de données | 28 sept. | 4 oct. | Collectes Maxi, OCR des reçus et modèle de base proposé ; persistance à réaliser | 🔄 En cours |
+| Exploration de PC Express et ajout de l’échantillon Metro | 5 oct. | 11 oct. | Essai sur cinq produits Maxi et échantillon Metro au format JSON ; avis du professeur à recueillir | 🔄 En cours |
