@@ -9,11 +9,16 @@ La configuration des collectes et le code restent dans `backend/`. Les anciennes
 ```text
 data/
 ├── README.md                       # Repère local vers ce guide
+├── message.txt                     # Données Super C fournies, source conservée
 ├── catalog/
+│   ├── superc/
+│   │   └── produits.json           # Les 31 ingrédients et leurs produits Super C
 │   └── maxi/
 │       ├── data_final/
+│       │   ├── README.md            # Format commun et validation humaine
 │       │   ├── produits.json        # Les 31 références sélectionnées dans les trois lots
 │       │   └── promos.json          # Les 196 offres promotionnelles par rayon alimentaire
+│       ├── archives/data_final-before-common-format/ # Ancien format complet et validation
 │       ├── maxi-apify-01/           # Première capture, limitée à la recherche garlic
 │       ├── maxi-apify-01-reviewed/  # Rejeu avec règles lexicales corrigées
 │       ├── maxi-apify-02/           # Premier lot de dix ingrédients, recherches réparties
@@ -37,11 +42,17 @@ data/
         └── collectes/              # Quatre anciens imports/rejeux épiceries.ca
 ```
 
-Metro et Super C n’ont pas encore de collecte web IA intégrée. Créer leurs dossiers dans `catalog/` lorsqu’un premier jeu de données sera produit.
+Un premier jeu de données Super C fourni est maintenant disponible. Metro n’a pas encore de jeu de données dans `catalog/`. Le pipeline de collecte web IA n’est pas encore intégré au backend.
+
+## Données Super C
+
+`data/catalog/superc/produits.json` reprend le tableau de `data/message.txt` : 31 ingrédients avec catégorie, alias et produits associés à la succursale `605`. Les champs et valeurs d’origine sont conservés, notamment les identifiants sous forme de texte, les prix, unités, quantités, dates, indicateurs de promotion et URL. `DateFin: null` reste une date inconnue ; aucune date n’est inventée.
+
+Ce fichier est une mise en forme des données fournies, pas une vérification des prix ni une collecte lancée par le backend. Aucune confirmation humaine Super C n’a encore été consignée. Ce format n’est pas directement compatible avec les exports `catalog-pilot-1.0` chargés par FastAPI ; une adaptation sera nécessaire pour l’intégration.
 
 ## Fichiers d’une collecte Maxi
 
-Pour consulter les données regroupées, utiliser `data/catalog/maxi/data_final/produits.json` et `promos.json`. Le premier contient les 31 références des fichiers `selected_items.json` des trois lots ; le second contient les 196 offres distinctes de `maxi-food-promos-01/catalog.json`. Chaque entrée de `items` conserve `product` et `offer`, avec les prix, formats, dates et sources d’origine. Ces fichiers utilisent le format de regroupement `maxi-final-1.0` ; FastAPI continue à charger les exports `catalog-pilot-1.0` des collectes. Hamza a confirmé la vérification des produits, prix et de la succursale des données Maxi récupérées avec Apify ; cette validation est consignée le 4 octobre 2026 dans le [guide Apify](APIFY.md#validation-humaine-des-données-maxi--4-octobre-2026). Les fichiers finaux indiquent `status: reviewed_and_verified` et enregistrent la confirmation dans `human_validation`. Les offres ont `review_required: false` ; les captures historiques restent inchangées.
+Pour consulter les données regroupées, utiliser `data/catalog/maxi/data_final/produits.json` (31 références) et `promos.json` (196 offres). Les deux fichiers utilisent exactement les attributs de Super C, avec une liste de produits dans `Produits`. Les prix sont conservés ; les dates et quantités inconnues restent nulles. La validation humaine de Hamza du 4 octobre 2026 et tous les détails du format précédent sont conservés dans `data/catalog/maxi/archives/data_final-before-common-format/`. Le [guide du format commun](../../data/catalog/maxi/data_final/README.md) détaille les correspondances. FastAPI continue à charger les exports sources `catalog-pilot-1.0`, pas ces tableaux simplifiés.
 
 Chaque dossier correspond à une exécution ou à un rejeu. Commencer par `report.md` pour comprendre le résultat.
 

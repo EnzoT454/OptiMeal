@@ -171,7 +171,7 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
     - Ajout de la collecte des promotions alimentaires
     - Conservation des réponses pour pouvoir les vérifier et les retraiter sans nouvelle collecte
     - Vérification par Hamza des données Maxi récupérées : les produits, les prix et la succursale sont corrects
-    - Les fichiers finaux des 31 produits et des 196 promotions indiquent maintenant que les données ont été revues et vérifiées
+    - Mise au même format que Super C des 31 produits et des 196 promotions Maxi ; la validation et les détails techniques sont conservés dans le guide et les archives
 - Ajout de routes FastAPI pour consulter le catalogue collecté
 - Préparation d’un modèle de données pour les ingrédients, les produits, les prix et les reçus ; la base PostgreSQL n’est pas encore créée
 - Mise en place de l’extraction locale des reçus avec Apple Vision sur Mac et Tesseract + OpenCV pour Windows

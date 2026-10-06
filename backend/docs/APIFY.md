@@ -87,7 +87,7 @@ Pour Apify, `observed_at` et `retrieved_at` représentent l’instant local du d
 
 Hamza confirme que les données Maxi récupérées par Apify ont été vérifiées et sont correctes pour les produits, les prix et la succursale Maxi Côte-des-Neiges (`8661`). La validation est consignée le 4 octobre 2026 et couvre les données retenues, dont les 31 produits et les promotions regroupés dans `data/catalog/maxi/data_final/`.
 
-Les captures historiques et leurs indicateurs techniques restent conservés tels quels. Les deux fichiers de `data_final/` portent désormais `status: reviewed_and_verified`, une section `human_validation` (Hamza, 4 octobre 2026, produits/prix/succursale) et `review_required: false` sur les offres. Les avertissements de prix non vérifiés et de correspondances à revoir y sont retirés. Les autres limites restent présentes, notamment les dates et conditions inconnues ; `eligible_for_optimizer` reste faux. L’enregistrement de cette confirmation dans le parcours applicatif et en base reste à développer.
+Les captures historiques restent conservées. Les fichiers de `data_final/` utilisent maintenant le même format simplifié que Super C, sans attribut supplémentaire de validation. Les versions précédentes, leur statut `reviewed_and_verified` et leur section `human_validation` sont conservés dans `data/catalog/maxi/archives/data_final-before-common-format/`. La confirmation de Hamza reste valable pour les données retenues. Les dates et conditions inconnues ne sont pas inventées ; l’intégration applicative et en base reste à développer.
 
 ## Sources et validation
 
