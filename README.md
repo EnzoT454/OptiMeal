@@ -171,8 +171,13 @@ OptiMeal/
 │   ├── README.md                     # Repères pour comprendre les données
 │   ├── catalog/maxi/                 # Collectes Apify, rapports et sélections
 │   │   └── data_final/               # Données Maxi regroupées
+│   │       ├── README.md             # Format commun et validation Maxi
 │   │       ├── produits.json         # Les 31 produits sélectionnés
 │   │       └── promos.json           # Les 196 offres promotionnelles
+│   ├── catalog/maxi/archives/         # Ancien format Maxi complet et validation conservés
+│   ├── catalog/superc/
+│   │   └── produits.json             # Les 31 ingrédients et produits Super C fournis
+│   ├── message.txt                   # Source des données Super C
 │   ├── receipts/                     # Images, extractions et diagnostics des reçus
 │   │   ├── images/                   # Photos originales
 │   │   ├── extractions/              # Articles et montants extraits en JSON

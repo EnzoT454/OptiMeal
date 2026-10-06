@@ -50,7 +50,7 @@ Le contrat Pydantic `catalog-pilot-1.0` conserve ingrédients, produits, formats
 
 Les indicateurs des exports historiques décrivent l’état de l’extraction avant confirmation humaine. Les offres portent `review_required: true`, `eligible_for_optimizer: false` et un `store_id` interne nul. La localisation déclarée par Apify est conservée séparément et ne confirme pas le prix en caisse. Une période promotionnelle absente n’est pas inventée.
 
-Les fichiers finaux `data/catalog/maxi/data_final/produits.json` et `promos.json` portent `status: reviewed_and_verified` et `human_validation`, avec `review_required: false` sur les offres. Cette confirmation de Hamza couvre les produits, prix et la succursale des données retenues ; elle ne s’applique pas automatiquement aux nouvelles collectes. Les limites de dates et conditions restent conservées, et les offres ne deviennent pas automatiquement éligibles à l’optimiseur.
+Les fichiers finaux `data/catalog/maxi/data_final/produits.json` et `promos.json` utilisent le même format que Super C. La confirmation de Hamza couvre les produits, prix et la succursale des données retenues ; elle reste documentée et conservée avec les anciens attributs de validation dans `data/catalog/maxi/archives/data_final-before-common-format/`. Elle ne s’applique pas automatiquement aux nouvelles collectes et ne rend pas les offres automatiquement éligibles à l’optimiseur.
 
 Les quotas bornent les recherches : le résultat ne représente pas l’inventaire complet de Maxi. Le rapport distingue candidats trouvés, prix relevés et prix vérifiés en succursale.
 

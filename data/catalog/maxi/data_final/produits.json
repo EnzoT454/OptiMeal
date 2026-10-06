@@ -1,1707 +1,784 @@
-{
-  "schema_version": "maxi-final-1.0",
-  "retailer_id": "maxi",
-  "external_store_id": "8661",
-  "status": "reviewed_and_verified",
-  "human_validation": {
-    "reviewed": true,
-    "verified": true,
-    "verified_by": "Hamza",
-    "verified_on": "2026-10-04",
-    "scope": ["products", "prices", "store"],
-    "external_store_id": "8661"
+[
+  {
+    "Id": 1,
+    "NomProduit": "Ail frais",
+    "Categorie": "Légumes",
+    "alias": [
+      "ail",
+      "garlic"
+    ],
+    "Produits": [
+      {
+        "Id": "21004355001_EA",
+        "Description": "Garlic Bulbs, 3-count",
+        "Id_magasin": "8661",
+        "Prix": 1.0,
+        "Unité": "g",
+        "Quantité": 90,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/garlic-bulbs-3-count/p/21004355001_EA"
+      }
+    ]
   },
-  "note": "Produits, prix et succursale revus et vérifiés par Hamza. Les valeurs Apify et les captures sources sont conservées. Les dates et conditions absentes restent inconnues ; la validation ne rend pas automatiquement les offres utilisables par l’optimiseur.",
-  "dataset_type": "selected_products",
-  "source_files": [
-    "data/catalog/maxi/maxi-apify-02/selected_items.json",
-    "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json",
-    "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-  ],
-  "item_count": 31,
-  "items": [
-    {
-      "ingredient_id": "ing_ail_frais",
-      "ingredient_name": "Ail frais",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_f9517243479819e29547",
-        "external_product_id": "21004355001_EA",
-        "identity_status": "source_candidate",
-        "name": "Garlic Bulbs, 3-count",
-        "brand": "Rooster",
-        "barcode": null,
-        "format": {
-          "raw": "90g",
-          "kind": "fixed",
-          "quantity": "90",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_5aafcd7ffb27a76e65e7",
-        "product_id": "apify_product_f9517243479819e29547",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "90 g, $0.33/1ea",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "1",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:48:28.676311Z",
-        "retrieved_at": "2026-09-29T14:48:28.676311Z",
-        "source_url": "https://api.apify.com/v2/datasets/edmkcgrRuj29qcLdc/items",
-        "retailer_url": "https://www.maxi.ca/en/garlic-bulbs-3-count/p/21004355001_EA",
-        "capture_id": "ing_ail_frais/row_4",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_oignon_jaune",
-      "ingredient_name": "Oignon jaune",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_1759e66dc34c2ee766fb",
-        "external_product_id": "20811994001_EA",
-        "identity_status": "source_candidate",
-        "name": "Yellow Onions, 3 lb Bag",
-        "brand": "Farmer's Market",
-        "barcode": null,
-        "format": {
-          "raw": "1.36kg",
-          "kind": "fixed",
-          "quantity": "1360.00",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_b633b51b6500564ac04c",
-        "product_id": "apify_product_1759e66dc34c2ee766fb",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "1.36 kg, $0.24/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "3.29",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:48:34.402881Z",
-        "retrieved_at": "2026-09-29T14:48:34.402881Z",
-        "source_url": "https://api.apify.com/v2/datasets/miP1oIdLNeUJAIAzQ/items",
-        "retailer_url": "https://www.maxi.ca/en/yellow-onions-3-lb-bag/p/20811994001_EA",
-        "capture_id": "ing_oignon_jaune/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_carotte_fraiche",
-      "ingredient_name": "Carotte fraîche",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_28a6c7bc0204df5f30ce",
-        "external_product_id": "20600927001_EA",
-        "identity_status": "source_candidate",
-        "name": "Carrots, 3 lb Bag",
-        "brand": "Farmer's Market",
-        "barcode": null,
-        "format": {
-          "raw": "1.362kg",
-          "kind": "fixed",
-          "quantity": "1362.000",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_7775aec724a8cea94727",
-        "product_id": "apify_product_28a6c7bc0204df5f30ce",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "1.362 kg, $0.29/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "4",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:48:50.309245Z",
-        "retrieved_at": "2026-09-29T14:48:50.309245Z",
-        "source_url": "https://api.apify.com/v2/datasets/198QcITySIXXTCtSc/items",
-        "retailer_url": "https://www.maxi.ca/en/carrots-3-lb-bag/p/20600927001_EA",
-        "capture_id": "ing_carotte_fraiche/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_banane_fraiche",
-      "ingredient_name": "Banane fraîche",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_8584d2d82986780de3c9",
-        "external_product_id": "20139509001_KG",
-        "identity_status": "source_candidate",
-        "name": "Organic Bananas, Bunch",
-        "brand": "PC Organics",
-        "barcode": null,
-        "format": {
-          "raw": "1.1kg",
-          "kind": "variable_weight",
-          "quantity": null,
-          "unit": null,
-          "package_count": null,
-          "warnings": [
-            "provider_weight_may_be_estimated"
-          ]
-        }
-      },
-      "offer": {
-        "id": "apify_offer_600f05571f63e7d3e622",
-        "product_id": "apify_product_8584d2d82986780de3c9",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "$2.40/1kg $1.09/1lb",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "2.64",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:49:01.012661Z",
-        "retrieved_at": "2026-09-29T14:49:01.012661Z",
-        "source_url": "https://api.apify.com/v2/datasets/Ejs81OK4LEsBZxvqY/items",
-        "retailer_url": "https://www.maxi.ca/en/organic-bananas-bunch/p/20139509001_KG",
-        "capture_id": "ing_banane_fraiche/row_4",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "provider_weight_may_be_estimated",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_poitrine_poulet",
-      "ingredient_name": "Poitrine de poulet fraîche",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_4c879774c853488670f4",
-        "external_product_id": "20028450_KG",
-        "identity_status": "source_candidate",
-        "name": "Chicken Breast Boneless Skinless Club Pack",
-        "brand": null,
-        "barcode": null,
-        "format": {
-          "raw": "1.177kg",
-          "kind": "variable_weight",
-          "quantity": null,
-          "unit": null,
-          "package_count": null,
-          "warnings": [
-            "provider_weight_may_be_estimated"
-          ]
-        }
-      },
-      "offer": {
-        "id": "apify_offer_4842164f78fec021362b",
-        "product_id": "apify_product_4c879774c853488670f4",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "$15.41/1kg $6.99/1lb",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "18.14",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:49:11.819354Z",
-        "retrieved_at": "2026-09-29T14:49:11.819354Z",
-        "source_url": "https://api.apify.com/v2/datasets/kpbPhXRaH8ZyTMnM9/items",
-        "retailer_url": "https://www.maxi.ca/en/chicken-breast-boneless-skinless-club-pack/p/20028450_KG",
-        "capture_id": "ing_poitrine_poulet/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "provider_weight_may_be_estimated",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_lait_2",
-      "ingredient_name": "Lait de vache 2 %",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_0083495fe58fd7f49c80",
-        "external_product_id": "20020563_EA",
-        "identity_status": "source_candidate",
-        "name": "Purfiltre Partially Skimmed Milk 2%",
-        "brand": "Lactantia",
-        "barcode": null,
-        "format": {
-          "raw": "2l",
-          "kind": "fixed",
-          "quantity": "2000",
-          "unit": "ml",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_41f142f50f8fbec6831b",
-        "product_id": "apify_product_0083495fe58fd7f49c80",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "2 l, $0.26/100ml",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "5.25",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:49:22.474758Z",
-        "retrieved_at": "2026-09-29T14:49:22.474758Z",
-        "source_url": "https://api.apify.com/v2/datasets/BcFbL6ZHdJ3lkhupt/items",
-        "retailer_url": "https://www.maxi.ca/en/purfiltre-partially-skimmed-milk-2/p/20020563_EA",
-        "capture_id": "ing_lait_2/row_3",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_oeuf_gros",
-      "ingredient_name": "Œufs gros",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_49b005c956dc22eb14ac",
-        "external_product_id": "21435777001_EA",
-        "identity_status": "source_candidate",
-        "name": "Large Size Eggs",
-        "brand": "No Name",
-        "barcode": null,
-        "format": {
-          "raw": "30ea",
-          "kind": "fixed",
-          "quantity": "30",
-          "unit": "unit",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_d1d9795f0d3dc2f5213a",
-        "product_id": "apify_product_49b005c956dc22eb14ac",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "30 ea, $0.34/1ea",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "10.19",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:49:28.061708Z",
-        "retrieved_at": "2026-09-29T14:49:28.061708Z",
-        "source_url": "https://api.apify.com/v2/datasets/XU08u311sCoesoePo/items",
-        "retailer_url": "https://www.maxi.ca/en/large-size-eggs/p/21435777001_EA",
-        "capture_id": "ing_oeuf_gros/row_5",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_riz_basmati_blanc",
-      "ingredient_name": "Riz basmati blanc sec",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_1ac66c1f66a10fd3634a",
-        "external_product_id": "20065191_EA",
-        "identity_status": "source_candidate",
-        "name": "Pure Original Basmati Rice",
-        "brand": "Tilda",
-        "barcode": null,
-        "format": {
-          "raw": "907g",
-          "kind": "fixed",
-          "quantity": "907",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_835965c33ed982ba05b1",
-        "product_id": "apify_product_1ac66c1f66a10fd3634a",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "907 g, $0.83/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "7.49",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:49:38.971316Z",
-        "retrieved_at": "2026-09-29T14:49:38.971316Z",
-        "source_url": "https://api.apify.com/v2/datasets/amuf4xtJQAG4c07Sk/items",
-        "retailer_url": "https://www.maxi.ca/en/pure-original-basmati-rice/p/20065191_EA",
-        "capture_id": "ing_riz_basmati_blanc/row_0",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_pois_chiche_conserve",
-      "ingredient_name": "Pois chiches en conserve",
-      "selection_status": "assumed_variant",
-      "selection_note": "No Name retenu à 1,50 CAD plutôt que PC Blue Menu à 1,79 CAD : marque non précisée dans la demande.",
-      "product": {
-        "id": "apify_product_bf5c6143c27038899df8",
-        "external_product_id": "20325921001_EA",
-        "identity_status": "source_candidate",
-        "name": "Chickpeas",
-        "brand": "No Name",
-        "barcode": null,
-        "format": {
-          "raw": "540ml",
-          "kind": "fixed",
-          "quantity": "540",
-          "unit": "ml",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_883bd344039cc7399553",
-        "product_id": "apify_product_bf5c6143c27038899df8",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "540 ml, $0.28/100ml",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "1.5",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:49:50.739105Z",
-        "retrieved_at": "2026-09-29T14:49:50.739105Z",
-        "source_url": "https://api.apify.com/v2/datasets/nfTwkt8GgtU47DYCO/items",
-        "retailer_url": "https://www.maxi.ca/en/chickpeas/p/20325921001_EA",
-        "capture_id": "ing_pois_chiche_conserve/row_4",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_huile_olive",
-      "ingredient_name": "Huile d’olive",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_74bec09ead81756ee3fc",
-        "external_product_id": "20105368_EA",
-        "identity_status": "source_candidate",
-        "name": "Extra Virgin Olive Oil",
-        "brand": "Gallo",
-        "barcode": null,
-        "format": {
-          "raw": "1l",
-          "kind": "fixed",
-          "quantity": "1000",
-          "unit": "ml",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_40ce3d900e69f9ec77e0",
-        "product_id": "apify_product_74bec09ead81756ee3fc",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "1 l, $1.40/100ml",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "13.99",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-29T14:50:01.529411Z",
-        "retrieved_at": "2026-09-29T14:50:01.529411Z",
-        "source_url": "https://api.apify.com/v2/datasets/hByhGcrqMdvJSZ1qU/items",
-        "retailer_url": "https://www.maxi.ca/en/extra-virgin-olive-oil/p/20105368_EA",
-        "capture_id": "ing_huile_olive/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-02/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_tomate_fraiche",
-      "ingredient_name": "Tomate fraîche",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_3b55748eb2cde9eee4eb",
-        "external_product_id": "21367888001_EA",
-        "identity_status": "source_candidate",
-        "name": "Grape Tomatoes",
-        "brand": "Farmer's Market",
-        "barcode": null,
-        "format": {
-          "raw": "283g",
-          "kind": "fixed",
-          "quantity": "283",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_b82444a8bf53ce071be8",
-        "product_id": "apify_product_3b55748eb2cde9eee4eb",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "283 g, $1.06/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "3",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:07:44.525266Z",
-        "retrieved_at": "2026-09-30T14:07:44.525266Z",
-        "source_url": "https://api.apify.com/v2/datasets/Zvdnwh3I7ry5M4pXP/items",
-        "retailer_url": "https://www.maxi.ca/en/grape-tomatoes/p/21367888001_EA",
-        "capture_id": "ing_tomate_fraiche/row_8",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_pomme_de_terre",
-      "ingredient_name": "Pomme de terre fraîche",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_793451eb9d8856ae587d",
-        "external_product_id": "20601017001_EA",
-        "identity_status": "source_candidate",
-        "name": "Yellow Potato, 10 lb Bag",
-        "brand": "Farmer's Market",
-        "barcode": null,
-        "format": {
-          "raw": "4.54kg",
-          "kind": "fixed",
-          "quantity": "4540.00",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_5fe5dd6f4a31374334d4",
-        "product_id": "apify_product_793451eb9d8856ae587d",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "4.54 kg, $0.15/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "6.79",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:08:00.642958Z",
-        "retrieved_at": "2026-09-30T14:08:00.642958Z",
-        "source_url": "https://api.apify.com/v2/datasets/3YLcMWpbdIBkFtOdc/items",
-        "retailer_url": "https://www.maxi.ca/en/yellow-potato-10-lb-bag/p/20601017001_EA",
-        "capture_id": "ing_pomme_de_terre/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_poivron_frais",
-      "ingredient_name": "Poivron frais",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_9b714e79c0cbfb128570",
-        "external_product_id": "20921434001_EA",
-        "identity_status": "source_candidate",
-        "name": "Naturally Imperfect Mixed Sweet Peppers 2.5lb Bag",
-        "brand": "No Name",
-        "barcode": null,
-        "format": {
-          "raw": "1.113kg",
-          "kind": "fixed",
-          "quantity": "1113.000",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_0890dae356ecfc7212f1",
-        "product_id": "apify_product_9b714e79c0cbfb128570",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "1.113 kg, $0.63/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "6.99",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:08:12.654429Z",
-        "retrieved_at": "2026-09-30T14:08:12.654429Z",
-        "source_url": "https://api.apify.com/v2/datasets/x3JoyQPDRwfvocFLF/items",
-        "retailer_url": "https://www.maxi.ca/en/naturally-imperfect-mixed-sweet-peppers-2-5lb-bag/p/20921434001_EA",
-        "capture_id": "ing_poivron_frais/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_brocoli_frais",
-      "ingredient_name": "Brocoli frais",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_e2253a9541d791c27cc4",
-        "external_product_id": "21121560001_EA",
-        "identity_status": "source_candidate",
-        "name": "Broccoli Crown",
-        "brand": null,
-        "barcode": null,
-        "format": {
-          "raw": "1ea",
-          "kind": "fixed",
-          "quantity": "1",
-          "unit": "unit",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_7ec3175e273931d594ee",
-        "product_id": "apify_product_e2253a9541d791c27cc4",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "1 ea, $0.95/1ea",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "0.95",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:08:28.662525Z",
-        "retrieved_at": "2026-09-30T14:08:28.662525Z",
-        "source_url": "https://api.apify.com/v2/datasets/ZYdQALkxm7wQ9NoNl/items",
-        "retailer_url": "https://www.maxi.ca/en/broccoli-crown/p/21121560001_EA",
-        "capture_id": "ing_brocoli_frais/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_courgette_fraiche",
-      "ingredient_name": "Courgette fraîche",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_8eca93152c4fdeab5175",
-        "external_product_id": "20426596001_KG",
-        "identity_status": "source_candidate",
-        "name": "Zucchini",
-        "brand": null,
-        "barcode": null,
-        "format": {
-          "raw": "0.279kg",
-          "kind": "variable_weight",
-          "quantity": null,
-          "unit": null,
-          "package_count": null,
-          "warnings": [
-            "provider_weight_may_be_estimated"
-          ]
-        }
-      },
-      "offer": {
-        "id": "apify_offer_87ca512ca166f7e0fe61",
-        "product_id": "apify_product_8eca93152c4fdeab5175",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "$5.05/1kg $2.29/1lb",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "1.41",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:08:45.644556Z",
-        "retrieved_at": "2026-09-30T14:08:45.644556Z",
-        "source_url": "https://api.apify.com/v2/datasets/TSnhPZi4YGkbafVzt/items",
-        "retailer_url": "https://www.maxi.ca/en/zucchini/p/20426596001_KG",
-        "capture_id": "ing_courgette_fraiche/row_4",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "provider_weight_may_be_estimated",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_pomme_fraiche",
-      "ingredient_name": "Pomme fraîche",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_1e4cf06053fe6b6ef6ac",
-        "external_product_id": "20713211001_EA",
-        "identity_status": "source_candidate",
-        "name": "McIntosh Apples, 4 lb Bag",
-        "brand": "Farmer's Market",
-        "barcode": null,
-        "format": {
-          "raw": "1.81kg",
-          "kind": "fixed",
-          "quantity": "1810.00",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_b5be07e7acf3748e3ec1",
-        "product_id": "apify_product_1e4cf06053fe6b6ef6ac",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "1.81 kg, $0.39/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "6.99",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:08:56.442895Z",
-        "retrieved_at": "2026-09-30T14:08:56.442895Z",
-        "source_url": "https://api.apify.com/v2/datasets/Xf0ZUQ7utsEw54kWk/items",
-        "retailer_url": "https://www.maxi.ca/en/mcintosh-apples-4-lb-bag/p/20713211001_EA",
-        "capture_id": "ing_pomme_fraiche/row_8",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_citron_frais",
-      "ingredient_name": "Citron frais",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_f6b0599bdb92bdece4f8",
-        "external_product_id": "20028593001_EA",
-        "identity_status": "source_candidate",
-        "name": "Lemon",
-        "brand": null,
-        "barcode": null,
-        "format": {
-          "raw": "1ea",
-          "kind": "fixed",
-          "quantity": "1",
-          "unit": "unit",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_e74e595cf128294e6a99",
-        "product_id": "apify_product_f6b0599bdb92bdece4f8",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "1 ea, $0.97/1ea",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "0.97",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:09:12.530534Z",
-        "retrieved_at": "2026-09-30T14:09:12.530534Z",
-        "source_url": "https://api.apify.com/v2/datasets/pIEMCBDdJc5n7IyF0/items",
-        "retailer_url": "https://www.maxi.ca/en/lemon/p/20028593001_EA",
-        "capture_id": "ing_citron_frais/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_boeuf_hache",
-      "ingredient_name": "Bœuf haché cru",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_f85eb7671d62998d6a26",
-        "external_product_id": "21604443_EA",
-        "identity_status": "source_candidate",
-        "name": "Lean Ground Beef",
-        "brand": "Butcher's Choice",
-        "barcode": null,
-        "format": {
-          "raw": "0.45kg",
-          "kind": "fixed",
-          "quantity": "450.00",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_4e47b006a1146ad4a811",
-        "product_id": "apify_product_f85eb7671d62998d6a26",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "0.45 kg, $2.00/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "9",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:09:23.307031Z",
-        "retrieved_at": "2026-09-30T14:09:23.307031Z",
-        "source_url": "https://api.apify.com/v2/datasets/l4lThrLcFa9bDPSIg/items",
-        "retailer_url": "https://www.maxi.ca/en/lean-ground-beef/p/21604443_EA",
-        "capture_id": "ing_boeuf_hache/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_saumon",
-      "ingredient_name": "Saumon nature",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_dd367d6eb71fdf5ada7d",
-        "external_product_id": "21634491_EA",
-        "identity_status": "source_candidate",
-        "name": "Atlantic Salmon Fillet",
-        "brand": null,
-        "barcode": null,
-        "format": {
-          "raw": "405g",
-          "kind": "fixed",
-          "quantity": "405",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_0d744fc5a3be63bbf7df",
-        "product_id": "apify_product_dd367d6eb71fdf5ada7d",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "405 g, $4.20/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "17",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:09:34.234868Z",
-        "retrieved_at": "2026-09-30T14:09:34.234868Z",
-        "source_url": "https://api.apify.com/v2/datasets/zJ26bS54j02KN9lQE/items",
-        "retailer_url": "https://www.maxi.ca/en/atlantic-salmon-fillet/p/21634491_EA",
-        "capture_id": "ing_saumon/row_6",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_thon_conserve",
-      "ingredient_name": "Thon en conserve",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_60075505eadf999f4c69",
-        "external_product_id": "20521648_EA",
-        "identity_status": "source_candidate",
-        "name": "Flaked Light Tuna Packed in Water",
-        "brand": "No Name",
-        "barcode": null,
-        "format": {
-          "raw": "170g",
-          "kind": "fixed",
-          "quantity": "170",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_4b420e7e5d74699f2207",
-        "product_id": "apify_product_60075505eadf999f4c69",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "170 g, $0.59/100g",
-        "multi_buy_deal": "SAVE $0.39",
-        "loyalty_offer": null,
-        "amount": "1",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": true,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:09:45.965144Z",
-        "retrieved_at": "2026-09-30T14:09:45.965144Z",
-        "source_url": "https://api.apify.com/v2/datasets/KkGcmy0jFKfmbdkHw/items",
-        "retailer_url": "https://www.maxi.ca/en/flaked-light-tuna-packed-in-water/p/20521648_EA",
-        "capture_id": "ing_thon_conserve/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch2-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_crevettes",
-      "ingredient_name": "Crevettes nature",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_0a0d375723f8e15ad0ed",
-        "external_product_id": "20789931_EA",
-        "identity_status": "source_candidate",
-        "name": "Peeled Raw Pacific White Shrimp",
-        "brand": "President's Choice",
-        "barcode": null,
-        "format": {
-          "raw": "400g",
-          "kind": "fixed",
-          "quantity": "400",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_7a528db529b65795af37",
-        "product_id": "apify_product_0a0d375723f8e15ad0ed",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "400 g, $2.75/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "11",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:23:46.626308Z",
-        "retrieved_at": "2026-09-30T14:23:46.626308Z",
-        "source_url": "https://api.apify.com/v2/datasets/dlqrg1gts0sSkk5BS/items",
-        "retailer_url": "https://www.maxi.ca/en/peeled-raw-pacific-white-shrimp/p/20789931_EA",
-        "capture_id": "ing_crevettes/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_fromage_cheddar",
-      "ingredient_name": "Fromage cheddar",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_d6103b97873d8c60bae8",
-        "external_product_id": "20975873_EA",
-        "identity_status": "source_candidate",
-        "name": "Old Cheddar Cheese",
-        "brand": "No Name",
-        "barcode": null,
-        "format": {
-          "raw": "700g",
-          "kind": "fixed",
-          "quantity": "700",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_8aa0b415406d91a5d07a",
-        "product_id": "apify_product_d6103b97873d8c60bae8",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "700 g, $1.33/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "9.29",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:23:58.432281Z",
-        "retrieved_at": "2026-09-30T14:23:58.432281Z",
-        "source_url": "https://api.apify.com/v2/datasets/j9Mj9yWuLC9ytQbtO/items",
-        "retailer_url": "https://www.maxi.ca/en/old-cheddar-cheese/p/20975873_EA",
-        "capture_id": "ing_fromage_cheddar/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_yogourt_nature",
-      "ingredient_name": "Yogourt nature",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_e60dedda3130ef401f1a",
-        "external_product_id": "20165226001_EA",
-        "identity_status": "source_candidate",
-        "name": "Original Balkan Style Plain Yogurt 6%",
-        "brand": "Astro",
-        "barcode": null,
-        "format": {
-          "raw": "750g",
-          "kind": "fixed",
-          "quantity": "750",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_7a5b0747506637f19af2",
-        "product_id": "apify_product_e60dedda3130ef401f1a",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "750 g, $0.47/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "3.49",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:24:09.384882Z",
-        "retrieved_at": "2026-09-30T14:24:09.384882Z",
-        "source_url": "https://api.apify.com/v2/datasets/HvZBg2b9W1oFVyjoJ/items",
-        "retailer_url": "https://www.maxi.ca/en/original-balkan-style-plain-yogurt-6/p/20165226001_EA",
-        "capture_id": "ing_yogourt_nature/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_beurre",
-      "ingredient_name": "Beurre",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_58ddfb01054ffa11e1e4",
-        "external_product_id": "20325029_EA",
-        "identity_status": "source_candidate",
-        "name": "Salted Butter",
-        "brand": "No Name",
-        "barcode": null,
-        "format": {
-          "raw": "454g",
-          "kind": "fixed",
-          "quantity": "454",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_6e76af3403e56dbb7d5c",
-        "product_id": "apify_product_58ddfb01054ffa11e1e4",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "454 g, $1.32/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "6",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:24:20.223640Z",
-        "retrieved_at": "2026-09-30T14:24:20.223640Z",
-        "source_url": "https://api.apify.com/v2/datasets/YPDW9nUwo8P17xzUW/items",
-        "retailer_url": "https://www.maxi.ca/en/salted-butter/p/20325029_EA",
-        "capture_id": "ing_beurre/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_pates_seches",
-      "ingredient_name": "Pâtes alimentaires sèches",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_a7931765c8d001b234dd",
-        "external_product_id": "20315613006_EA",
-        "identity_status": "source_candidate",
-        "name": "Penne Rigate Pasta",
-        "brand": "No Name",
-        "barcode": null,
-        "format": {
-          "raw": "900g",
-          "kind": "fixed",
-          "quantity": "900",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_22597e51db60293dc641",
-        "product_id": "apify_product_a7931765c8d001b234dd",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "900 g, $0.22/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "2",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:24:26.924096Z",
-        "retrieved_at": "2026-09-30T14:24:26.924096Z",
-        "source_url": "https://api.apify.com/v2/datasets/nDatdoRpk1DFIKwbq/items",
-        "retailer_url": "https://www.maxi.ca/en/penne-rigate-pasta/p/20315613006_EA",
-        "capture_id": "ing_pates_seches/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_haricots_rouges_conserve",
-      "ingredient_name": "Haricots rouges en conserve",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_c6c86305f2a51735349a",
-        "external_product_id": "20554593_EA",
-        "identity_status": "source_candidate",
-        "name": "Dark Red Kidney Beans",
-        "brand": "No Name",
-        "barcode": null,
-        "format": {
-          "raw": "540ml",
-          "kind": "fixed",
-          "quantity": "540",
-          "unit": "ml",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_19e2c91c50b2c12d7e8a",
-        "product_id": "apify_product_c6c86305f2a51735349a",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "540 ml, $0.28/100ml",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "1.5",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:24:32.676016Z",
-        "retrieved_at": "2026-09-30T14:24:32.676016Z",
-        "source_url": "https://api.apify.com/v2/datasets/XwT6OR9cPjzQ2JoMJ/items",
-        "retailer_url": "https://www.maxi.ca/en/dark-red-kidney-beans/p/20554593_EA",
-        "capture_id": "ing_haricots_rouges_conserve/row_4",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_tomates_conserve",
-      "ingredient_name": "Tomates en conserve",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_6443efb1226b3d109e4f",
-        "external_product_id": "20314629001_EA",
-        "identity_status": "source_candidate",
-        "name": "Diced Tomatoes",
-        "brand": "Unico",
-        "barcode": null,
-        "format": {
-          "raw": "796ml",
-          "kind": "fixed",
-          "quantity": "796",
-          "unit": "ml",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_b1b197c7b6cbed2f30d0",
-        "product_id": "apify_product_6443efb1226b3d109e4f",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "796 ml, $0.21/100ml",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "1.69",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:24:43.775179Z",
-        "retrieved_at": "2026-09-30T14:24:43.775179Z",
-        "source_url": "https://api.apify.com/v2/datasets/2U58GSMk8DrG9ux30/items",
-        "retailer_url": "https://www.maxi.ca/en/diced-tomatoes/p/20314629001_EA",
-        "capture_id": "ing_tomates_conserve/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_farine",
-      "ingredient_name": "Farine de blé tout usage",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_9019596477fa6d8fc066",
-        "external_product_id": "20013256_EA",
-        "identity_status": "source_candidate",
-        "name": "All-Purpose Flour",
-        "brand": "No Name",
-        "barcode": null,
-        "format": {
-          "raw": "2.5kg",
-          "kind": "fixed",
-          "quantity": "2500.0",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_f2b3b4f494b51b6f0226",
-        "product_id": "apify_product_9019596477fa6d8fc066",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "2.5 kg, $0.15/100g",
-        "multi_buy_deal": "SAVE $0.21",
-        "loyalty_offer": null,
-        "amount": "3.79",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": true,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:24:54.546260Z",
-        "retrieved_at": "2026-09-30T14:24:54.546260Z",
-        "source_url": "https://api.apify.com/v2/datasets/vtUpZJX11ZLtcYUbM/items",
-        "retailer_url": "https://www.maxi.ca/en/all-purpose-flour/p/20013256_EA",
-        "capture_id": "ing_farine/row_0",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_sucre",
-      "ingredient_name": "Sucre blanc granulé",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_f4634852b188d85fe4fe",
-        "external_product_id": "20145033_EA",
-        "identity_status": "source_candidate",
-        "name": "Granulated Sugar",
-        "brand": "Lantic",
-        "barcode": null,
-        "format": {
-          "raw": "2kg",
-          "kind": "fixed",
-          "quantity": "2000",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_1c4e00dc80e14d4c7957",
-        "product_id": "apify_product_f4634852b188d85fe4fe",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "2 kg, $0.15/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "2.99",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:25:01.307938Z",
-        "retrieved_at": "2026-09-30T14:25:01.307938Z",
-        "source_url": "https://api.apify.com/v2/datasets/XitZgavR6CKIohoSc/items",
-        "retailer_url": "https://www.maxi.ca/en/granulated-sugar/p/20145033_EA",
-        "capture_id": "ing_sucre/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_sel",
-      "ingredient_name": "Sel de table",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_f31ad442775cdfe09f0e",
-        "external_product_id": "20126203_EA",
-        "identity_status": "source_candidate",
-        "name": "Iodized Table Salt",
-        "brand": "Windsor",
-        "barcode": null,
-        "format": {
-          "raw": "1kg",
-          "kind": "fixed",
-          "quantity": "1000",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_9745017ceab0ba1c970b",
-        "product_id": "apify_product_f31ad442775cdfe09f0e",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "1 kg, $0.18/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "1.79",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:25:12.236272Z",
-        "retrieved_at": "2026-09-30T14:25:12.236272Z",
-        "source_url": "https://api.apify.com/v2/datasets/Ae0xG8eJZvpFwVgy0/items",
-        "retailer_url": "https://www.maxi.ca/en/iodized-table-salt/p/20126203_EA",
-        "capture_id": "ing_sel/row_1",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    },
-    {
-      "ingredient_id": "ing_pain_tranche",
-      "ingredient_name": "Pain tranché",
-      "selection_status": "selected_by_user",
-      "selection_note": null,
-      "product": {
-        "id": "apify_product_ccae543b8553cad3f4f2",
-        "external_product_id": "20038335_EA",
-        "identity_status": "source_candidate",
-        "name": "Thick Slice Original White Bread",
-        "brand": "D'Italiano",
-        "barcode": null,
-        "format": {
-          "raw": "675g",
-          "kind": "fixed",
-          "quantity": "675",
-          "unit": "g",
-          "package_count": 1,
-          "warnings": []
-        }
-      },
-      "offer": {
-        "id": "apify_offer_9045b5e1329f1360a962",
-        "product_id": "apify_product_ccae543b8553cad3f4f2",
-        "retailer_id": "maxi",
-        "store_id": null,
-        "scope_kind": "source_reported_store",
-        "source_name": "apify_loblaws",
-        "external_store_id": "8661",
-        "source_unit_price": "675 g, $0.59/100g",
-        "multi_buy_deal": null,
-        "loyalty_offer": null,
-        "amount": "4",
-        "currency": "CAD",
-        "price_kind": "commercial",
-        "basis": "unknown",
-        "is_promotion": false,
-        "loyalty_required": null,
-        "valid_from": null,
-        "valid_to": null,
-        "observed_at": "2026-09-30T14:25:23.015835Z",
-        "retrieved_at": "2026-09-30T14:25:23.015835Z",
-        "source_url": "https://api.apify.com/v2/datasets/2Pha5zONz49GDYe32/items",
-        "retailer_url": "https://www.maxi.ca/en/thick-slice-original-white-bread/p/20038335_EA",
-        "capture_id": "ing_pain_tranche/row_4",
-        "review_required": false,
-        "eligible_for_optimizer": false,
-        "warnings": [
-          "promotion_conditions_require_review",
-          "sale_basis_unknown"
-        ]
-      },
-      "source_selection": "data/catalog/maxi/maxi-apify-batch3-01/selected_items.json"
-    }
-  ]
-}
+  {
+    "Id": 2,
+    "NomProduit": "Oignon jaune",
+    "Categorie": "Légumes",
+    "alias": [
+      "oignon jaune",
+      "oignons jaunes",
+      "yellow onion",
+      "yellow onions"
+    ],
+    "Produits": [
+      {
+        "Id": "20811994001_EA",
+        "Description": "Yellow Onions, 3 lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 3.29,
+        "Unité": "g",
+        "Quantité": 1360,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/yellow-onions-3-lb-bag/p/20811994001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 3,
+    "NomProduit": "Carotte fraîche",
+    "Categorie": "Légumes",
+    "alias": [
+      "carotte",
+      "carottes",
+      "carrot",
+      "carrots"
+    ],
+    "Produits": [
+      {
+        "Id": "20600927001_EA",
+        "Description": "Carrots, 3 lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 4.0,
+        "Unité": "g",
+        "Quantité": 1362,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/carrots-3-lb-bag/p/20600927001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 4,
+    "NomProduit": "Banane fraîche",
+    "Categorie": "Fruits",
+    "alias": [
+      "banane",
+      "bananes",
+      "banana",
+      "bananas"
+    ],
+    "Produits": [
+      {
+        "Id": "20139509001_KG",
+        "Description": "Organic Bananas, Bunch",
+        "Id_magasin": "8661",
+        "Prix": 2.64,
+        "Unité": null,
+        "Quantité": null,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/organic-bananas-bunch/p/20139509001_KG"
+      }
+    ]
+  },
+  {
+    "Id": 5,
+    "NomProduit": "Poitrine de poulet fraîche",
+    "Categorie": "Viandes",
+    "alias": [
+      "poitrine",
+      "poitrines",
+      "chicken breast"
+    ],
+    "Produits": [
+      {
+        "Id": "20028450_KG",
+        "Description": "Chicken Breast Boneless Skinless Club Pack",
+        "Id_magasin": "8661",
+        "Prix": 18.14,
+        "Unité": null,
+        "Quantité": null,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/chicken-breast-boneless-skinless-club-pack/p/20028450_KG"
+      }
+    ]
+  },
+  {
+    "Id": 6,
+    "NomProduit": "Lait de vache 2 %",
+    "Categorie": "Produits laitiers",
+    "alias": [
+      "lait",
+      "milk"
+    ],
+    "Produits": [
+      {
+        "Id": "20020563_EA",
+        "Description": "Purfiltre Partially Skimmed Milk 2%",
+        "Id_magasin": "8661",
+        "Prix": 5.25,
+        "Unité": "ml",
+        "Quantité": 2000,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/purfiltre-partially-skimmed-milk-2/p/20020563_EA"
+      }
+    ]
+  },
+  {
+    "Id": 7,
+    "NomProduit": "Œufs gros",
+    "Categorie": "Œufs",
+    "alias": [
+      "oeufs",
+      "œufs",
+      "eggs"
+    ],
+    "Produits": [
+      {
+        "Id": "21435777001_EA",
+        "Description": "Large Size Eggs",
+        "Id_magasin": "8661",
+        "Prix": 10.19,
+        "Unité": "un",
+        "Quantité": 30,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/large-size-eggs/p/21435777001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 8,
+    "NomProduit": "Riz basmati blanc sec",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "basmati"
+    ],
+    "Produits": [
+      {
+        "Id": "20065191_EA",
+        "Description": "Pure Original Basmati Rice",
+        "Id_magasin": "8661",
+        "Prix": 7.49,
+        "Unité": "g",
+        "Quantité": 907,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/pure-original-basmati-rice/p/20065191_EA"
+      }
+    ]
+  },
+  {
+    "Id": 9,
+    "NomProduit": "Pois chiches en conserve",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "pois chiches",
+      "chickpeas"
+    ],
+    "Produits": [
+      {
+        "Id": "20325921001_EA",
+        "Description": "Chickpeas",
+        "Id_magasin": "8661",
+        "Prix": 1.5,
+        "Unité": "ml",
+        "Quantité": 540,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/chickpeas/p/20325921001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 10,
+    "NomProduit": "Huile d’olive",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "huile olive",
+      "huile d olive",
+      "olive oil"
+    ],
+    "Produits": [
+      {
+        "Id": "20105368_EA",
+        "Description": "Extra Virgin Olive Oil",
+        "Id_magasin": "8661",
+        "Prix": 13.99,
+        "Unité": "ml",
+        "Quantité": 1000,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/extra-virgin-olive-oil/p/20105368_EA"
+      }
+    ]
+  },
+  {
+    "Id": 11,
+    "NomProduit": "Tomate fraîche",
+    "Categorie": "Légumes",
+    "alias": [
+      "tomato",
+      "tomatoes",
+      "tomate",
+      "tomates"
+    ],
+    "Produits": [
+      {
+        "Id": "21367888001_EA",
+        "Description": "Grape Tomatoes",
+        "Id_magasin": "8661",
+        "Prix": 3.0,
+        "Unité": "g",
+        "Quantité": 283,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/grape-tomatoes/p/21367888001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 12,
+    "NomProduit": "Pomme de terre fraîche",
+    "Categorie": "Légumes",
+    "alias": [
+      "potato",
+      "potatoes",
+      "pomme de terre",
+      "pommes de terre"
+    ],
+    "Produits": [
+      {
+        "Id": "20601017001_EA",
+        "Description": "Yellow Potato, 10 lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 6.79,
+        "Unité": "g",
+        "Quantité": 4540,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/yellow-potato-10-lb-bag/p/20601017001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 13,
+    "NomProduit": "Poivron frais",
+    "Categorie": "Légumes",
+    "alias": [
+      "bell pepper",
+      "bell peppers",
+      "sweet pepper",
+      "sweet peppers",
+      "poivron",
+      "poivrons"
+    ],
+    "Produits": [
+      {
+        "Id": "20921434001_EA",
+        "Description": "Naturally Imperfect Mixed Sweet Peppers 2.5lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 6.99,
+        "Unité": "g",
+        "Quantité": 1113,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/naturally-imperfect-mixed-sweet-peppers-2-5lb-bag/p/20921434001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 14,
+    "NomProduit": "Brocoli frais",
+    "Categorie": "Légumes",
+    "alias": [
+      "broccoli",
+      "brocoli",
+      "brocolis"
+    ],
+    "Produits": [
+      {
+        "Id": "21121560001_EA",
+        "Description": "Broccoli Crown",
+        "Id_magasin": "8661",
+        "Prix": 0.95,
+        "Unité": "un",
+        "Quantité": 1,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/broccoli-crown/p/21121560001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 15,
+    "NomProduit": "Courgette fraîche",
+    "Categorie": "Légumes",
+    "alias": [
+      "zucchini",
+      "zucchinis",
+      "courgette",
+      "courgettes"
+    ],
+    "Produits": [
+      {
+        "Id": "20426596001_KG",
+        "Description": "Zucchini",
+        "Id_magasin": "8661",
+        "Prix": 1.41,
+        "Unité": null,
+        "Quantité": null,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/zucchini/p/20426596001_KG"
+      }
+    ]
+  },
+  {
+    "Id": 16,
+    "NomProduit": "Pomme fraîche",
+    "Categorie": "Fruits",
+    "alias": [
+      "apple",
+      "apples",
+      "pomme",
+      "pommes"
+    ],
+    "Produits": [
+      {
+        "Id": "20713211001_EA",
+        "Description": "McIntosh Apples, 4 lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 6.99,
+        "Unité": "g",
+        "Quantité": 1810,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/mcintosh-apples-4-lb-bag/p/20713211001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 17,
+    "NomProduit": "Citron frais",
+    "Categorie": "Fruits",
+    "alias": [
+      "lemon",
+      "lemons",
+      "citron",
+      "citrons"
+    ],
+    "Produits": [
+      {
+        "Id": "20028593001_EA",
+        "Description": "Lemon",
+        "Id_magasin": "8661",
+        "Prix": 0.97,
+        "Unité": "un",
+        "Quantité": 1,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/lemon/p/20028593001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 18,
+    "NomProduit": "Bœuf haché cru",
+    "Categorie": "Viandes",
+    "alias": [
+      "ground beef",
+      "minced beef",
+      "boeuf hache"
+    ],
+    "Produits": [
+      {
+        "Id": "21604443_EA",
+        "Description": "Lean Ground Beef",
+        "Id_magasin": "8661",
+        "Prix": 9.0,
+        "Unité": "g",
+        "Quantité": 450,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/lean-ground-beef/p/21604443_EA"
+      }
+    ]
+  },
+  {
+    "Id": 19,
+    "NomProduit": "Saumon nature",
+    "Categorie": "Poissons",
+    "alias": [
+      "salmon",
+      "saumon"
+    ],
+    "Produits": [
+      {
+        "Id": "21634491_EA",
+        "Description": "Atlantic Salmon Fillet",
+        "Id_magasin": "8661",
+        "Prix": 17.0,
+        "Unité": "g",
+        "Quantité": 405,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/atlantic-salmon-fillet/p/21634491_EA"
+      }
+    ]
+  },
+  {
+    "Id": 20,
+    "NomProduit": "Thon en conserve",
+    "Categorie": "Poissons",
+    "alias": [
+      "tuna",
+      "thon"
+    ],
+    "Produits": [
+      {
+        "Id": "20521648_EA",
+        "Description": "Flaked Light Tuna Packed in Water",
+        "Id_magasin": "8661",
+        "Prix": 1.0,
+        "Unité": "g",
+        "Quantité": 170,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": true,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/flaked-light-tuna-packed-in-water/p/20521648_EA"
+      }
+    ]
+  },
+  {
+    "Id": 21,
+    "NomProduit": "Crevettes nature",
+    "Categorie": "Poissons",
+    "alias": [
+      "shrimp",
+      "shrimps",
+      "prawn",
+      "prawns",
+      "crevette",
+      "crevettes"
+    ],
+    "Produits": [
+      {
+        "Id": "20789931_EA",
+        "Description": "Peeled Raw Pacific White Shrimp",
+        "Id_magasin": "8661",
+        "Prix": 11.0,
+        "Unité": "g",
+        "Quantité": 400,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/peeled-raw-pacific-white-shrimp/p/20789931_EA"
+      }
+    ]
+  },
+  {
+    "Id": 22,
+    "NomProduit": "Fromage cheddar",
+    "Categorie": "Produits laitiers",
+    "alias": [
+      "cheddar"
+    ],
+    "Produits": [
+      {
+        "Id": "20975873_EA",
+        "Description": "Old Cheddar Cheese",
+        "Id_magasin": "8661",
+        "Prix": 9.29,
+        "Unité": "g",
+        "Quantité": 700,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/old-cheddar-cheese/p/20975873_EA"
+      }
+    ]
+  },
+  {
+    "Id": 23,
+    "NomProduit": "Yogourt nature",
+    "Categorie": "Produits laitiers",
+    "alias": [
+      "yogurt",
+      "yoghurt",
+      "yogourt",
+      "yogourts"
+    ],
+    "Produits": [
+      {
+        "Id": "20165226001_EA",
+        "Description": "Original Balkan Style Plain Yogurt 6%",
+        "Id_magasin": "8661",
+        "Prix": 3.49,
+        "Unité": "g",
+        "Quantité": 750,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/original-balkan-style-plain-yogurt-6/p/20165226001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 24,
+    "NomProduit": "Beurre",
+    "Categorie": "Produits laitiers",
+    "alias": [
+      "butter",
+      "beurre"
+    ],
+    "Produits": [
+      {
+        "Id": "20325029_EA",
+        "Description": "Salted Butter",
+        "Id_magasin": "8661",
+        "Prix": 6.0,
+        "Unité": "g",
+        "Quantité": 454,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/salted-butter/p/20325029_EA"
+      }
+    ]
+  },
+  {
+    "Id": 25,
+    "NomProduit": "Pâtes alimentaires sèches",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "pasta",
+      "spaghetti",
+      "penne",
+      "fusilli",
+      "macaroni",
+      "rotini",
+      "linguine",
+      "fettuccine",
+      "pates"
+    ],
+    "Produits": [
+      {
+        "Id": "20315613006_EA",
+        "Description": "Penne Rigate Pasta",
+        "Id_magasin": "8661",
+        "Prix": 2.0,
+        "Unité": "g",
+        "Quantité": 900,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/penne-rigate-pasta/p/20315613006_EA"
+      }
+    ]
+  },
+  {
+    "Id": 26,
+    "NomProduit": "Haricots rouges en conserve",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "kidney beans",
+      "haricots rouges"
+    ],
+    "Produits": [
+      {
+        "Id": "20554593_EA",
+        "Description": "Dark Red Kidney Beans",
+        "Id_magasin": "8661",
+        "Prix": 1.5,
+        "Unité": "ml",
+        "Quantité": 540,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/dark-red-kidney-beans/p/20554593_EA"
+      }
+    ]
+  },
+  {
+    "Id": 27,
+    "NomProduit": "Tomates en conserve",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "tomato",
+      "tomatoes",
+      "tomate",
+      "tomates"
+    ],
+    "Produits": [
+      {
+        "Id": "20314629001_EA",
+        "Description": "Diced Tomatoes",
+        "Id_magasin": "8661",
+        "Prix": 1.69,
+        "Unité": "ml",
+        "Quantité": 796,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/diced-tomatoes/p/20314629001_EA"
+      }
+    ]
+  },
+  {
+    "Id": 28,
+    "NomProduit": "Farine de blé tout usage",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "flour",
+      "farine"
+    ],
+    "Produits": [
+      {
+        "Id": "20013256_EA",
+        "Description": "All-Purpose Flour",
+        "Id_magasin": "8661",
+        "Prix": 3.79,
+        "Unité": "g",
+        "Quantité": 2500,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": true,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/all-purpose-flour/p/20013256_EA"
+      }
+    ]
+  },
+  {
+    "Id": 29,
+    "NomProduit": "Sucre blanc granulé",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "sugar",
+      "sucre"
+    ],
+    "Produits": [
+      {
+        "Id": "20145033_EA",
+        "Description": "Granulated Sugar",
+        "Id_magasin": "8661",
+        "Prix": 2.99,
+        "Unité": "g",
+        "Quantité": 2000,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/granulated-sugar/p/20145033_EA"
+      }
+    ]
+  },
+  {
+    "Id": 30,
+    "NomProduit": "Sel de table",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "salt",
+      "sel"
+    ],
+    "Produits": [
+      {
+        "Id": "20126203_EA",
+        "Description": "Iodized Table Salt",
+        "Id_magasin": "8661",
+        "Prix": 1.79,
+        "Unité": "g",
+        "Quantité": 1000,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/iodized-table-salt/p/20126203_EA"
+      }
+    ]
+  },
+  {
+    "Id": 31,
+    "NomProduit": "Pain tranché",
+    "Categorie": "Boulangerie",
+    "alias": [
+      "bread",
+      "pain"
+    ],
+    "Produits": [
+      {
+        "Id": "20038335_EA",
+        "Description": "Thick Slice Original White Bread",
+        "Id_magasin": "8661",
+        "Prix": 4.0,
+        "Unité": "g",
+        "Quantité": 675,
+        "DateDebut": null,
+        "DateFin": null,
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/thick-slice-original-white-bread/p/20038335_EA"
+      }
+    ]
+  }
+]
