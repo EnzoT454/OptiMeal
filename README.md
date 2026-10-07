@@ -19,17 +19,28 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 ## Statut actuel
 
-Nous avons mis en place le site de suivi, une API FastAPI et un [connecteur Apify pour Maxi](backend/docs/APIFY.md). Le catalogue conserve les réponses sources, propose des correspondances avec les ingrédients et peut être consulté dans l’API. Trois lots couvrent les recherches de 31 ingrédients ; la collecte des promotions alimentaires est également disponible. Les données Maxi récupérées avec Apify ont été vérifiées par Hamza : les produits, les prix et la succursale Maxi Côte-des-Neiges sont corrects. Cette validation a été consignée le 4 octobre 2026.
+Éléments réalisés :
 
-Pour Metro et Super C, nous retenons l’extraction des pages web avec un modèle IA. Ce traitement reste à développer et à évaluer. Épiceries.ca et les circulaires PDF ont été testés auparavant ; ils ne sont plus retenus pour la collecte.
+- Site de suivi et documentation du projet.
+- API FastAPI permettant de consulter le catalogue.
+- Collecte des produits et promotions Maxi avec Apify, avec vérification des données.
+- Échantillons de produits Metro et Super C disponibles au format JSON.
+- Extraction locale des reçus et vérification des prix sur un échantillon Maxi et Metro.
+- Essai de récupération directe des données Maxi via PC Express ; poursuite en attente de l’avis du professeur.
 
-L’extraction locale des reçus conserve deux chemins : Apple Vision sur Mac et Tesseract + OpenCV pour Windows. Le 4 octobre 2026, Hamza a confirmé les prix extraits des reçus Maxi et Metro de notre échantillon. Le [guide OCR](backend/docs/RECEIPTS.md#validation-humaine-des-prix--4-octobre-2026) détaille les limites : Super C et l’exécution sur un PC Windows restent à valider, et Apple Vision garde une erreur sur le rabais du reçu Metro.
+À faire :
 
-L’application mobile, les comptes, PostgreSQL et le parcours de confirmation des reçus restent à développer. Les prochaines étapes sont de préparer la collecte Metro/Super C, mettre en place PostgreSQL et relier le mobile au serveur.
+- Valider les échantillons Metro et Super C et développer leur collecte automatisée.
+- Compléter la validation de l’extraction des reçus, notamment sur Windows et pour Super C.
+- Mettre en place PostgreSQL, les comptes et l’authentification.
+- Développer l’application mobile, la gestion des recettes, la planification et les listes d’épicerie.
+- Intégrer les estimations de prix et la confirmation des reçus dans l’application.
 
 ## Installation
 
 Pour lancer le backend et la documentation en local : **Python 3.11+** et **Git**.
+
+macOS / Linux :
 
 ```bash
 git clone https://github.com/EnzoT454/OptiMeal.git
@@ -39,25 +50,51 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
+Windows (PowerShell) :
+
+```powershell
+git clone https://github.com/EnzoT454/OptiMeal.git
+cd OptiMeal
+py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
+
+Sur Windows, si PowerShell bloque l’activation, utiliser directement `.\.venv\Scripts\python.exe` à la place de `python` dans les commandes suivantes, y compris l’installation des dépendances.
+
 ## Lancer le backend
 
-Depuis la racine du projet, avec l’environnement virtuel activé :
+Depuis la racine du projet, avec l’environnement virtuel activé, la commande est identique sur macOS, Linux et Windows (PowerShell) :
 
-```bash
+```text
 python -m uvicorn backend.app.main:app --reload --port 8001
 ```
 
 L’API est accessible sur `http://localhost:8001`, avec sa documentation interactive sur `http://localhost:8001/docs`.
 
-Pour exposer une collecte, exporter aussi `CATALOG_IMPORT_PATH=data/catalog/maxi/<collecte>/catalog.json` avant le démarrage. Sans catalogue configuré, `/health` fonctionne et les routes du catalogue renvoient une erreur 503.
+Pour exposer une collecte, définir `CATALOG_IMPORT_PATH` dans le même terminal avant de démarrer le backend. Remplacer `<collecte>` par le nom du dossier contenant le fichier `catalog.json`.
+
+macOS / Linux :
+
+```bash
+export CATALOG_IMPORT_PATH="data/catalog/maxi/<collecte>/catalog.json"
+```
+
+Windows (PowerShell) :
+
+```powershell
+$env:CATALOG_IMPORT_PATH = "data/catalog/maxi/<collecte>/catalog.json"
+```
+
+Sans catalogue configuré, `/health` fonctionne et les routes du catalogue renvoient une erreur 503.
 
 Le [guide du backend](backend/README.md) détaille les routes disponibles et les limites des données. Une [collection Postman](backend/postman/OptiMeal.postman_collection.json) permet aussi d’essayer les requêtes.
 
 ## Tests
 
-Les tests du backend utilisent des réponses enregistrées et ne font pas d’appels réseau :
+Les tests du backend utilisent des réponses enregistrées et ne font pas d’appels réseau. Avec l’environnement virtuel activé, la commande est identique sur macOS, Linux et Windows (PowerShell) :
 
-```bash
+```text
 python -m pytest backend/tests -q
 ```
 
@@ -77,7 +114,6 @@ OptiMeal/
 │   └── docs.yml                      # Construit le site et le publie depuis main
 ├── backend/                          # Serveur et traitements de l’application
 │   ├── README.md                     # Guide de développement du backend
-│   ├── .env.example                  # Exemple des variables de configuration
 │   ├── app/                          # Code du serveur et des composantes métier
 │   │   ├── main.py                   # Démarre FastAPI et ajoute les routes
 │   │   ├── config.py                 # Lit les paramètres du serveur
@@ -188,20 +224,12 @@ OptiMeal/
 │       ├── README.md                 # Explique les anciens essais
 │       ├── circulaires/              # PDF sources conservés
 │       └── epiceries/                # Anciennes études et collectes épiceries.ca
-├── docs/                             # Pages du site de suivi du cours
-│   ├── index.md                      # Objectifs, présentation et échéancier
-│   ├── suivi.md                      # Avancement semaine par semaine
-│   ├── synthese.md                   # Bilan final à compléter
-│   ├── references.md                 # Sources et utilisation de l’IA
-│   └── css/no-sidebar.css            # Ajuste l’apparence du site
-├── presentations/                    # Supports du cours, ignorés par Git
-│   └── miseEC1.md                    # Préparation de la première présentation
-└── tools/                            # Documents de travail, ignorés par Git
-    ├── AGENTS.md                     # Consignes pour travailler sur le projet
-    ├── ARCHITECTURE.md               # Organisation et fonctionnement prévus
-    ├── API.md                        # Routes actuelles et futures
-    ├── DECISIONS.md                  # Choix retenus et questions ouvertes
-    └── TASKS.md                      # Tâches, étapes et critères de validation
+└── docs/                             # Pages du site de suivi du cours
+    ├── index.md                      # Objectifs, présentation et échéancier
+    ├── suivi.md                      # Avancement semaine par semaine
+    ├── synthese.md                   # Bilan final à compléter
+    ├── references.md                 # Sources et utilisation de l’IA
+    └── css/no-sidebar.css            # Ajuste l’apparence du site
 ```
 
 Les fichiers `__init__.py` identifient les dossiers Python comme des packages ; ils ne sont pas répétés dans l’arbre. Les captures et anciennes sorties de `data/` sont détaillées dans le [guide des données](backend/docs/DATA.md). Les dossiers générés comme `site/`, `.venv/`, `.cache/` et `__pycache__/` sont ignorés par Git et ne figurent pas ici. Le dossier mobile reste à créer.
@@ -215,13 +243,19 @@ Les fichiers `__init__.py` identifient les dossiers Python comme des packages ; 
 
 Le [site de suivi du projet](https://enzot454.github.io/OptiMeal/) regroupe nos objectifs, notre avancement et les références utilisées. Il reprend le [template du cours IFT3150](https://github.com/udem-diro/template-projet).
 
-Pour le consulter en local, lancer cette commande dans un autre terminal avec l’environnement virtuel activé :
+Pour le consulter en local, ouvrir un autre terminal à la racine du projet et activer l’environnement virtuel avec la commande correspondant à votre système dans la section Installation. Les commandes suivantes sont identiques sur macOS, Linux et Windows (PowerShell).
 
-```bash
-zensical serve
+```text
+python -m zensical serve
 ```
 
-Le site est accessible sur `http://localhost:8000`. Pour vérifier sa construction : `zensical build --clean`. La publication sur GitHub Pages se fait automatiquement lors des mises à jour de `main`.
+Le site est accessible sur `http://localhost:8000`. Pour vérifier sa construction :
+
+```text
+python -m zensical build --clean
+```
+
+La publication sur GitHub Pages se fait automatiquement lors des mises à jour de `main`.
 
 ## Équipe
 
@@ -232,4 +266,4 @@ Le site est accessible sur `http://localhost:8000`. Pour vérifier sa constructi
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 4 octobre 2026*
+*Dernière mise à jour : 6 octobre 2026*

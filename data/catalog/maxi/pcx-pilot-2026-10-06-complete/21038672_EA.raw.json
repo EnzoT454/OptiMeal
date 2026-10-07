@@ -1,0 +1,699 @@
+{
+  "code": "21038672_EA",
+  "name": "Curcuma Moulu",
+  "description": "Le curcuma moulu Club HouseMD est derrière le beau jaune éclatant, le goût vif et les arômes subtils d’agrumes des préparations telles que la poudre de cari, la moutarde et les plats à base de riz. C’est aussi l’ingrédient clé du fameux lait d’or. Épice d’un jaune éclatant aux saveurs subtiles de terre. Bouteille facile à manipuler pour remplir les pots d’épices. Indispensable dans les mélanges d’épices indiens et caribéens. Ingrédient clé du fameux lait d’or. Donne couleur et arôme aux chutneys, plats de riz, beurres et plus encore",
+  "brand": "Club House",
+  "imageAssets": [
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    }
+  ],
+  "isPrimaryVariant": false,
+  "packageSize": "102 g",
+  "mchCode": "M10210602",
+  "offers": [
+    {
+      "price": {
+        "value": 6.49,
+        "unit": "ch",
+        "quantity": 1,
+        "reasonCode": 4,
+        "type": "REGULAR",
+        "expiryDate": "9999-12-31T00:00"
+      },
+      "wasPrice": null,
+      "comparisonPrices": [
+        {
+          "value": 6.36,
+          "unit": "g",
+          "quantity": 100,
+          "reasonCode": null,
+          "type": "REGULAR",
+          "expiryDate": null
+        }
+      ],
+      "memberOnlyPrice": null,
+      "memberOnlyComparisonPrices": [],
+      "sellerId": "",
+      "sellerName": null,
+      "promotions": [
+        {
+          "type": "LOYALTY",
+          "quantity": null,
+          "savings": 3500,
+          "value": null,
+          "promoCode": "121514486",
+          "expiryDate": "2026-10-07T23:59:59Z",
+          "title": "PC Optimum Offer",
+          "promoType": "0004",
+          "pricingMethod": null,
+          "text": "Obtenez 3500 points prime PC Optimum pour chaque 14,97$ dépensé en produits participants",
+          "reward": "3500Points PC Optimum",
+          "callToAction": null
+        }
+      ],
+      "memberOnlyPromotions": null,
+      "stockStatus": "OK",
+      "taxes": {
+        "gst": false,
+        "gstExemptTaxFlag": "",
+        "hst": false,
+        "ppft": false,
+        "preparedFoodTaxType": "N",
+        "pst": false,
+        "spft": false
+      },
+      "fees": null,
+      "shoppable": true,
+      "specifications": null,
+      "offerId": null,
+      "offerType": "OG",
+      "status": null,
+      "badges": {
+        "textBadge": null,
+        "loyaltyBadge": {
+          "type": "LOYALTY",
+          "text": "Offre PC Optimum",
+          "mopDealText": null,
+          "points": 3500,
+          "name": "LOYALTY",
+          "expiryDate": "2026-10-07T23:59:59Z",
+          "promoType": "0004"
+        },
+        "dealBadge": null,
+        "newItemBadge": null,
+        "hotmBadge": null,
+        "promotionalBadge": null,
+        "recyclingFeeBadge": null,
+        "subscribeEarnBadge": null,
+        "mustTryBadge": null,
+        "preparedInCanadaBadge": {
+          "type": "PREPARED_IN_CANADA",
+          "text": "Préparé au Canada",
+          "mopDealText": null,
+          "points": null,
+          "name": "PREPARED_IN_CANADA",
+          "expiryDate": null,
+          "promoType": null
+        },
+        "madeInCanadaBadge": null,
+        "productOfCanadaBadge": null,
+        "tariffAppliedBadge": null,
+        "preparedInQuebecBadge": null
+      },
+      "dealPrice": null,
+      "mopDealPrice": null,
+      "ehfTotal": null,
+      "deposit": null,
+      "environmentalHandlingFee": null,
+      "taxInfo": ""
+    }
+  ],
+  "pricingUnits": {
+    "type": "SOLD_BY_EACH",
+    "unit": "ch",
+    "interval": 1,
+    "minOrderQuantity": 1,
+    "maxOrderQuantity": 24,
+    "weighted": false
+  },
+  "breadcrumbs": [
+    {
+      "categoryCode": "27985",
+      "name": "Alimentation",
+      "url": "/alimentation/c/27985"
+    },
+    {
+      "categoryCode": "28006",
+      "name": "Garde-manger",
+      "url": "/alimentation/garde-manger/c/28006"
+    },
+    {
+      "categoryCode": "28188",
+      "name": "Épices et assaisonnements",
+      "url": "/alimentation/garde-manger/pices-et-assaisonnements/c/28188"
+    }
+  ],
+  "articleNumber": "21038672",
+  "ingredients": "Curcuma Moulu",
+  "nutritionFacts": [
+    {
+      "topNutrition": [
+        {
+          "code": "servingSizeFR",
+          "valueInGram": "Par 0.5 G",
+          "valuePercent": null,
+          "subNutrients": null
+        }
+      ],
+      "calories": {
+        "code": "calories",
+        "valueInGram": "0 cal",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "totalFat": {
+        "code": "totalFat",
+        "valueInGram": "0.0 g",
+        "valuePercent": "0 %",
+        "subNutrients": [
+          {
+            "code": "saturatedFat",
+            "valueInGram": "0.0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          {
+            "code": "transFat",
+            "valueInGram": "0.0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          {
+            "code": "saturatedTransFat",
+            "valueInGram": null,
+            "valuePercent": "0 %",
+            "subNutrients": null
+          }
+        ]
+      },
+      "totalCarbohydrate": {
+        "code": "totalCarbohydrate",
+        "valueInGram": "0 g",
+        "valuePercent": "0 %",
+        "subNutrients": [
+          {
+            "code": "sugar",
+            "valueInGram": "0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          {
+            "code": "dietaryFiber",
+            "valueInGram": "0 g",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          }
+        ]
+      },
+      "protein": {
+        "code": "protein",
+        "valueInGram": "0.0 g",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "potassium": {
+        "code": "potassium",
+        "valueInGram": "0 mg",
+        "valuePercent": "0 %",
+        "subNutrients": null
+      },
+      "microNutrition": [
+        {
+          "code": "vitaminA",
+          "valueInGram": null,
+          "valuePercent": "0 %",
+          "subNutrients": null
+        },
+        {
+          "code": "vitaminC",
+          "valueInGram": null,
+          "valuePercent": "0 %",
+          "subNutrients": null
+        },
+        {
+          "code": "calcium",
+          "valueInGram": null,
+          "valuePercent": "0 %",
+          "subNutrients": null
+        },
+        {
+          "code": "iron",
+          "valueInGram": null,
+          "valuePercent": "2 %",
+          "subNutrients": null
+        }
+      ],
+      "disclaimer": null,
+      "ingredients": "Curcuma Moulu",
+      "cholesterol": {
+        "code": "cholesterol",
+        "valueInGram": "0 mg",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "sodium": {
+        "code": "sodium",
+        "valueInGram": "0 mg",
+        "valuePercent": "0 %",
+        "subNutrients": null
+      }
+    }
+  ],
+  "isVariant": false,
+  "variantTheme": null,
+  "variantGroupId": null,
+  "uom": "EA",
+  "variants": [
+    {
+      "code": "21038672_EA",
+      "name": "Curcuma Moulu",
+      "description": "Le curcuma moulu Club HouseMD est derrière le beau jaune éclatant, le goût vif et les arômes subtils d’agrumes des préparations telles que la poudre de cari, la moutarde et les plats à base de riz. C’est aussi l’ingrédient clé du fameux lait d’or. Épice d’un jaune éclatant aux saveurs subtiles de terre. Bouteille facile à manipuler pour remplir les pots d’épices. Indispensable dans les mélanges d’épices indiens et caribéens. Ingrédient clé du fameux lait d’or. Donne couleur et arôme aux chutneys, plats de riz, beurres et plus encore",
+      "brand": "Club House",
+      "imageAssets": [
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/1/21038672_enfr_front_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/2/21038672_enfr_angle_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/3/21038672_enfr_side_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/4/21038672_enfr_back_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/5/21038672_enfr_top_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/8/21038672_enfr_beauty_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/9/21038672_enfr_banner_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/21038672_EA/fr/10/21038672_enfr_brand_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        }
+      ],
+      "isPrimaryVariant": false,
+      "packageSize": "102 g",
+      "mchCode": "M10210602",
+      "offers": [
+        {
+          "price": {
+            "value": 6.49,
+            "unit": "ch",
+            "quantity": 1,
+            "reasonCode": 4,
+            "type": "REGULAR",
+            "expiryDate": "9999-12-31T00:00"
+          },
+          "wasPrice": null,
+          "comparisonPrices": [
+            {
+              "value": 6.36,
+              "unit": "g",
+              "quantity": 100,
+              "reasonCode": null,
+              "type": "REGULAR",
+              "expiryDate": null
+            }
+          ],
+          "memberOnlyPrice": null,
+          "memberOnlyComparisonPrices": [],
+          "sellerId": "",
+          "sellerName": null,
+          "promotions": [
+            {
+              "type": "LOYALTY",
+              "quantity": null,
+              "savings": 3500,
+              "value": null,
+              "promoCode": "121514486",
+              "expiryDate": "2026-10-07T23:59:59Z",
+              "title": "PC Optimum Offer",
+              "promoType": "0004",
+              "pricingMethod": null,
+              "text": "Obtenez 3500 points prime PC Optimum pour chaque 14,97$ dépensé en produits participants",
+              "reward": "3500Points PC Optimum",
+              "callToAction": null
+            }
+          ],
+          "memberOnlyPromotions": null,
+          "stockStatus": "OK",
+          "taxes": {
+            "gst": false,
+            "gstExemptTaxFlag": "",
+            "hst": false,
+            "ppft": false,
+            "preparedFoodTaxType": "N",
+            "pst": false,
+            "spft": false
+          },
+          "fees": null,
+          "shoppable": true,
+          "specifications": null,
+          "offerId": null,
+          "offerType": "OG",
+          "status": null,
+          "badges": {
+            "textBadge": null,
+            "loyaltyBadge": {
+              "type": "LOYALTY",
+              "text": "Offre PC Optimum",
+              "mopDealText": null,
+              "points": 3500,
+              "name": "LOYALTY",
+              "expiryDate": "2026-10-07T23:59:59Z",
+              "promoType": "0004"
+            },
+            "dealBadge": null,
+            "newItemBadge": null,
+            "hotmBadge": null,
+            "promotionalBadge": null,
+            "recyclingFeeBadge": null,
+            "subscribeEarnBadge": null,
+            "mustTryBadge": null,
+            "preparedInCanadaBadge": {
+              "type": "PREPARED_IN_CANADA",
+              "text": "Préparé au Canada",
+              "mopDealText": null,
+              "points": null,
+              "name": "PREPARED_IN_CANADA",
+              "expiryDate": null,
+              "promoType": null
+            },
+            "madeInCanadaBadge": null,
+            "productOfCanadaBadge": null,
+            "tariffAppliedBadge": null,
+            "preparedInQuebecBadge": null
+          },
+          "dealPrice": null,
+          "mopDealPrice": null,
+          "ehfTotal": null,
+          "deposit": null,
+          "environmentalHandlingFee": null,
+          "taxInfo": ""
+        }
+      ],
+      "pricingUnits": {
+        "type": "SOLD_BY_EACH",
+        "unit": "ch",
+        "interval": 1,
+        "minOrderQuantity": 1,
+        "maxOrderQuantity": 24,
+        "weighted": false
+      },
+      "breadcrumbs": [
+        {
+          "categoryCode": "27985",
+          "name": "Alimentation",
+          "url": "/alimentation/c/27985"
+        },
+        {
+          "categoryCode": "28006",
+          "name": "Garde-manger",
+          "url": "/alimentation/garde-manger/c/28006"
+        },
+        {
+          "categoryCode": "28188",
+          "name": "Épices et assaisonnements",
+          "url": "/alimentation/garde-manger/pices-et-assaisonnements/c/28188"
+        }
+      ],
+      "articleNumber": "21038672",
+      "ingredients": "Curcuma Moulu",
+      "nutritionFacts": [
+        {
+          "topNutrition": [
+            {
+              "code": "servingSizeFR",
+              "valueInGram": "Par 0.5 G",
+              "valuePercent": null,
+              "subNutrients": null
+            }
+          ],
+          "calories": {
+            "code": "calories",
+            "valueInGram": "0 cal",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "totalFat": {
+            "code": "totalFat",
+            "valueInGram": "0.0 g",
+            "valuePercent": "0 %",
+            "subNutrients": [
+              {
+                "code": "saturatedFat",
+                "valueInGram": "0.0 g",
+                "valuePercent": null,
+                "subNutrients": null
+              },
+              {
+                "code": "transFat",
+                "valueInGram": "0.0 g",
+                "valuePercent": null,
+                "subNutrients": null
+              },
+              {
+                "code": "saturatedTransFat",
+                "valueInGram": null,
+                "valuePercent": "0 %",
+                "subNutrients": null
+              }
+            ]
+          },
+          "totalCarbohydrate": {
+            "code": "totalCarbohydrate",
+            "valueInGram": "0 g",
+            "valuePercent": "0 %",
+            "subNutrients": [
+              {
+                "code": "sugar",
+                "valueInGram": "0 g",
+                "valuePercent": null,
+                "subNutrients": null
+              },
+              {
+                "code": "dietaryFiber",
+                "valueInGram": "0 g",
+                "valuePercent": "0 %",
+                "subNutrients": null
+              }
+            ]
+          },
+          "protein": {
+            "code": "protein",
+            "valueInGram": "0.0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "potassium": {
+            "code": "potassium",
+            "valueInGram": "0 mg",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          },
+          "microNutrition": [
+            {
+              "code": "vitaminA",
+              "valueInGram": null,
+              "valuePercent": "0 %",
+              "subNutrients": null
+            },
+            {
+              "code": "vitaminC",
+              "valueInGram": null,
+              "valuePercent": "0 %",
+              "subNutrients": null
+            },
+            {
+              "code": "calcium",
+              "valueInGram": null,
+              "valuePercent": "0 %",
+              "subNutrients": null
+            },
+            {
+              "code": "iron",
+              "valueInGram": null,
+              "valuePercent": "2 %",
+              "subNutrients": null
+            }
+          ],
+          "disclaimer": null,
+          "ingredients": "Curcuma Moulu",
+          "cholesterol": {
+            "code": "cholesterol",
+            "valueInGram": "0 mg",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "sodium": {
+            "code": "sodium",
+            "valueInGram": "0 mg",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          }
+        }
+      ],
+      "isVariant": false,
+      "variantTheme": null,
+      "variantGroupId": null,
+      "uom": "EA",
+      "variants": null,
+      "link": "/curcuma-moulu/p/21038672_EA",
+      "averageWeight": null,
+      "upcomingSubscriptionDate": null,
+      "subscriptionPoints": null,
+      "subscriptionAvailableCadences": [],
+      "gtin": "00066200019945"
+    }
+  ],
+  "link": "/curcuma-moulu/p/21038672_EA",
+  "averageWeight": null,
+  "upcomingSubscriptionDate": null,
+  "subscriptionPoints": null,
+  "subscriptionAvailableCadences": [],
+  "gtin": "00066200019945"
+}

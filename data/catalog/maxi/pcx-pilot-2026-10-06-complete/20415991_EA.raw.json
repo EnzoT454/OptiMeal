@@ -1,0 +1,571 @@
+{
+  "code": "20415991_EA",
+  "name": "Thon à l’huile d’olive",
+  "description": null,
+  "brand": "Unico",
+  "imageAssets": [
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    },
+    {
+      "imageUrl": null,
+      "thumbnailUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_120.png",
+      "smallUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_250.png",
+      "mediumUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_400.png",
+      "largeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_800.png",
+      "extraLargeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_1200.png",
+      "smallRetinaUrl": null,
+      "mediumRetinaUrl": null,
+      "largeRetinaUrl": null
+    }
+  ],
+  "isPrimaryVariant": false,
+  "packageSize": "3x80.0 g",
+  "mchCode": "M10210701",
+  "offers": [
+    {
+      "price": {
+        "value": 5.99,
+        "unit": "ch",
+        "quantity": 1,
+        "reasonCode": 4,
+        "type": "REGULAR",
+        "expiryDate": "9999-12-31T00:00"
+      },
+      "wasPrice": null,
+      "comparisonPrices": [
+        {
+          "value": 2.5,
+          "unit": "g",
+          "quantity": 100,
+          "reasonCode": null,
+          "type": "REGULAR",
+          "expiryDate": null
+        }
+      ],
+      "memberOnlyPrice": null,
+      "memberOnlyComparisonPrices": [],
+      "sellerId": "",
+      "sellerName": null,
+      "promotions": [],
+      "memberOnlyPromotions": null,
+      "stockStatus": "OK",
+      "taxes": {
+        "gst": false,
+        "gstExemptTaxFlag": "",
+        "hst": false,
+        "ppft": false,
+        "preparedFoodTaxType": "N",
+        "pst": false,
+        "spft": false
+      },
+      "fees": null,
+      "shoppable": true,
+      "specifications": null,
+      "offerId": null,
+      "offerType": "OG",
+      "status": null,
+      "badges": {
+        "textBadge": null,
+        "loyaltyBadge": null,
+        "dealBadge": null,
+        "newItemBadge": null,
+        "hotmBadge": null,
+        "promotionalBadge": null,
+        "recyclingFeeBadge": null,
+        "subscribeEarnBadge": null,
+        "mustTryBadge": null,
+        "preparedInCanadaBadge": null,
+        "madeInCanadaBadge": null,
+        "productOfCanadaBadge": null,
+        "tariffAppliedBadge": null,
+        "preparedInQuebecBadge": null
+      },
+      "dealPrice": null,
+      "mopDealPrice": null,
+      "ehfTotal": null,
+      "deposit": null,
+      "environmentalHandlingFee": null,
+      "taxInfo": ""
+    }
+  ],
+  "pricingUnits": {
+    "type": "SOLD_BY_EACH",
+    "unit": "ch",
+    "interval": 1,
+    "minOrderQuantity": 1,
+    "maxOrderQuantity": 24,
+    "weighted": false
+  },
+  "breadcrumbs": [
+    {
+      "categoryCode": "27985",
+      "name": "Alimentation",
+      "url": "/alimentation/c/27985"
+    },
+    {
+      "categoryCode": "28006",
+      "name": "Garde-manger",
+      "url": "/alimentation/garde-manger/c/28006"
+    },
+    {
+      "categoryCode": "28187",
+      "name": "Produits en conserve et marinés ",
+      "url": "/alimentation/garde-manger/produits-en-conserve-et-marin-s/c/28187"
+    },
+    {
+      "categoryCode": "29698",
+      "name": "Thon en conserve",
+      "url": "/alimentation/garde-manger/produits-en-conserve-et-marin-s/thon-en-conserve/c/29698"
+    }
+  ],
+  "articleNumber": "20415991",
+  "ingredients": "Thon  Listao, Huile D'olive Extra Vierge, Eau, Sel.",
+  "nutritionFacts": [
+    {
+      "topNutrition": [
+        {
+          "code": "houseHoldServingSize",
+          "valueInGram": "1.0 can drained",
+          "valuePercent": null,
+          "subNutrients": null
+        },
+        {
+          "code": "servingSizeFR",
+          "valueInGram": "pour 1 boîte égouttée  (55 g)",
+          "valuePercent": null,
+          "subNutrients": null
+        }
+      ],
+      "calories": {
+        "code": "calories",
+        "valueInGram": "110 cal",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "totalFat": {
+        "code": "totalFat",
+        "valueInGram": "6 g",
+        "valuePercent": "8 %",
+        "subNutrients": [
+          {
+            "code": "saturatedFat",
+            "valueInGram": "1.0 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          {
+            "code": "transFat",
+            "valueInGram": "0.0 g",
+            "valuePercent": "8 %",
+            "subNutrients": null
+          },
+          {
+            "code": "saturatedTransFat",
+            "valueInGram": null,
+            "valuePercent": "5 %",
+            "subNutrients": null
+          }
+        ]
+      },
+      "totalCarbohydrate": {
+        "code": "totalCarbohydrate",
+        "valueInGram": "0 g",
+        "valuePercent": "0 %",
+        "subNutrients": [
+          {
+            "code": "sugar",
+            "valueInGram": "0 g",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          },
+          {
+            "code": "dietaryFiber",
+            "valueInGram": "0 g",
+            "valuePercent": "0 %",
+            "subNutrients": null
+          }
+        ]
+      },
+      "protein": {
+        "code": "protein",
+        "valueInGram": "15 g",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "potassium": {
+        "code": "potassium",
+        "valueInGram": "150 mg",
+        "valuePercent": "3 %",
+        "subNutrients": null
+      },
+      "microNutrition": [
+        {
+          "code": "vitaminA",
+          "valueInGram": null,
+          "valuePercent": "0 %",
+          "subNutrients": null
+        },
+        {
+          "code": "vitaminC",
+          "valueInGram": null,
+          "valuePercent": "0 %",
+          "subNutrients": null
+        },
+        {
+          "code": "calcium",
+          "valueInGram": "0 mg",
+          "valuePercent": "0 %",
+          "subNutrients": null
+        },
+        {
+          "code": "iron",
+          "valueInGram": "0.5 mg",
+          "valuePercent": "3 %",
+          "subNutrients": null
+        }
+      ],
+      "disclaimer": "UNICO THON A L'HUILE D'OLIVE",
+      "ingredients": "Thon  Listao, Huile D'olive Extra Vierge, Eau, Sel.",
+      "cholesterol": {
+        "code": "cholesterol",
+        "valueInGram": "25 mg",
+        "valuePercent": null,
+        "subNutrients": null
+      },
+      "sodium": {
+        "code": "sodium",
+        "valueInGram": "240 mg",
+        "valuePercent": "10 %",
+        "subNutrients": null
+      }
+    }
+  ],
+  "isVariant": false,
+  "variantTheme": null,
+  "variantGroupId": null,
+  "uom": "EA",
+  "variants": [
+    {
+      "code": "20415991_EA",
+      "name": "Thon à l’huile d’olive",
+      "description": null,
+      "brand": "Unico",
+      "imageAssets": [
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/1/6780000049_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/2/6780000049_enfr_front_left_marketing_GS1_Ecommerce_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/3/6780000049_enfr_front_right_marketing_GS1_Ecommerce_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        },
+        {
+          "imageUrl": null,
+          "thumbnailUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_120.png",
+          "smallUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_250.png",
+          "mediumUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_400.png",
+          "largeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_800.png",
+          "extraLargeUrl": "https://digital.loblaws.ca/PCX/20415991_EA/fr/8/6780000049_enfr_front_noPlunge_ecomm_GS1_Ecommerce_1200.png",
+          "smallRetinaUrl": null,
+          "mediumRetinaUrl": null,
+          "largeRetinaUrl": null
+        }
+      ],
+      "isPrimaryVariant": false,
+      "packageSize": "3x80.0 g",
+      "mchCode": "M10210701",
+      "offers": [
+        {
+          "price": {
+            "value": 5.99,
+            "unit": "ch",
+            "quantity": 1,
+            "reasonCode": 4,
+            "type": "REGULAR",
+            "expiryDate": "9999-12-31T00:00"
+          },
+          "wasPrice": null,
+          "comparisonPrices": [
+            {
+              "value": 2.5,
+              "unit": "g",
+              "quantity": 100,
+              "reasonCode": null,
+              "type": "REGULAR",
+              "expiryDate": null
+            }
+          ],
+          "memberOnlyPrice": null,
+          "memberOnlyComparisonPrices": [],
+          "sellerId": "",
+          "sellerName": null,
+          "promotions": [],
+          "memberOnlyPromotions": null,
+          "stockStatus": "OK",
+          "taxes": {
+            "gst": false,
+            "gstExemptTaxFlag": "",
+            "hst": false,
+            "ppft": false,
+            "preparedFoodTaxType": "N",
+            "pst": false,
+            "spft": false
+          },
+          "fees": null,
+          "shoppable": true,
+          "specifications": null,
+          "offerId": null,
+          "offerType": "OG",
+          "status": null,
+          "badges": {
+            "textBadge": null,
+            "loyaltyBadge": null,
+            "dealBadge": null,
+            "newItemBadge": null,
+            "hotmBadge": null,
+            "promotionalBadge": null,
+            "recyclingFeeBadge": null,
+            "subscribeEarnBadge": null,
+            "mustTryBadge": null,
+            "preparedInCanadaBadge": null,
+            "madeInCanadaBadge": null,
+            "productOfCanadaBadge": null,
+            "tariffAppliedBadge": null,
+            "preparedInQuebecBadge": null
+          },
+          "dealPrice": null,
+          "mopDealPrice": null,
+          "ehfTotal": null,
+          "deposit": null,
+          "environmentalHandlingFee": null,
+          "taxInfo": ""
+        }
+      ],
+      "pricingUnits": {
+        "type": "SOLD_BY_EACH",
+        "unit": "ch",
+        "interval": 1,
+        "minOrderQuantity": 1,
+        "maxOrderQuantity": 24,
+        "weighted": false
+      },
+      "breadcrumbs": [
+        {
+          "categoryCode": "27985",
+          "name": "Alimentation",
+          "url": "/alimentation/c/27985"
+        },
+        {
+          "categoryCode": "28006",
+          "name": "Garde-manger",
+          "url": "/alimentation/garde-manger/c/28006"
+        },
+        {
+          "categoryCode": "28187",
+          "name": "Produits en conserve et marinés ",
+          "url": "/alimentation/garde-manger/produits-en-conserve-et-marin-s/c/28187"
+        },
+        {
+          "categoryCode": "29698",
+          "name": "Thon en conserve",
+          "url": "/alimentation/garde-manger/produits-en-conserve-et-marin-s/thon-en-conserve/c/29698"
+        }
+      ],
+      "articleNumber": "20415991",
+      "ingredients": "Thon  Listao, Huile D'olive Extra Vierge, Eau, Sel.",
+      "nutritionFacts": [
+        {
+          "topNutrition": [
+            {
+              "code": "houseHoldServingSize",
+              "valueInGram": "1.0 can drained",
+              "valuePercent": null,
+              "subNutrients": null
+            },
+            {
+              "code": "servingSizeFR",
+              "valueInGram": "pour 1 boîte égouttée  (55 g)",
+              "valuePercent": null,
+              "subNutrients": null
+            }
+          ],
+          "calories": {
+            "code": "calories",
+            "valueInGram": "110 cal",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "totalFat": {
+            "code": "totalFat",
+            "valueInGram": "6 g",
+            "valuePercent": "8 %",
+            "subNutrients": [
+              {
+                "code": "saturatedFat",
+                "valueInGram": "1.0 g",
+                "valuePercent": null,
+                "subNutrients": null
+              },
+              {
+                "code": "transFat",
+                "valueInGram": "0.0 g",
+                "valuePercent": "8 %",
+                "subNutrients": null
+              },
+              {
+                "code": "saturatedTransFat",
+                "valueInGram": null,
+                "valuePercent": "5 %",
+                "subNutrients": null
+              }
+            ]
+          },
+          "totalCarbohydrate": {
+            "code": "totalCarbohydrate",
+            "valueInGram": "0 g",
+            "valuePercent": "0 %",
+            "subNutrients": [
+              {
+                "code": "sugar",
+                "valueInGram": "0 g",
+                "valuePercent": "0 %",
+                "subNutrients": null
+              },
+              {
+                "code": "dietaryFiber",
+                "valueInGram": "0 g",
+                "valuePercent": "0 %",
+                "subNutrients": null
+              }
+            ]
+          },
+          "protein": {
+            "code": "protein",
+            "valueInGram": "15 g",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "potassium": {
+            "code": "potassium",
+            "valueInGram": "150 mg",
+            "valuePercent": "3 %",
+            "subNutrients": null
+          },
+          "microNutrition": [
+            {
+              "code": "vitaminA",
+              "valueInGram": null,
+              "valuePercent": "0 %",
+              "subNutrients": null
+            },
+            {
+              "code": "vitaminC",
+              "valueInGram": null,
+              "valuePercent": "0 %",
+              "subNutrients": null
+            },
+            {
+              "code": "calcium",
+              "valueInGram": "0 mg",
+              "valuePercent": "0 %",
+              "subNutrients": null
+            },
+            {
+              "code": "iron",
+              "valueInGram": "0.5 mg",
+              "valuePercent": "3 %",
+              "subNutrients": null
+            }
+          ],
+          "disclaimer": "UNICO THON A L'HUILE D'OLIVE",
+          "ingredients": "Thon  Listao, Huile D'olive Extra Vierge, Eau, Sel.",
+          "cholesterol": {
+            "code": "cholesterol",
+            "valueInGram": "25 mg",
+            "valuePercent": null,
+            "subNutrients": null
+          },
+          "sodium": {
+            "code": "sodium",
+            "valueInGram": "240 mg",
+            "valuePercent": "10 %",
+            "subNutrients": null
+          }
+        }
+      ],
+      "isVariant": false,
+      "variantTheme": null,
+      "variantGroupId": null,
+      "uom": "EA",
+      "variants": null,
+      "link": "/thon-l-huile-d-olive/p/20415991_EA",
+      "averageWeight": null,
+      "upcomingSubscriptionDate": null,
+      "subscriptionPoints": null,
+      "subscriptionAvailableCadences": [],
+      "gtin": "00067800000494"
+    }
+  ],
+  "link": "/thon-l-huile-d-olive/p/20415991_EA",
+  "averageWeight": null,
+  "upcomingSubscriptionDate": null,
+  "subscriptionPoints": null,
+  "subscriptionAvailableCadences": [],
+  "gtin": "00067800000494"
+}

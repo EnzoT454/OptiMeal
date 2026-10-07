@@ -18,8 +18,12 @@ title: Références
 - **[Maquette OptiMeal sur Figma](https://www.figma.com/design/GZnafkmCJzWu1gyl6ZamgP)** : référence prévue pour l’interface mobile.
 
 - **[Connecteur Maxi sur Apify](https://apify.com/sunny_eternity/loblaws-grocery-scraper)** : source retenue pour les produits et prix Maxi.
+- **[Maxi](https://www.maxi.ca/), [Metro](https://www.metro.ca/) et [Super C](https://www.superc.ca/)** : sites des enseignes étudiées et sources des échantillons de produits.
+- **[Documentation Scrapy](https://docs.scrapy.org/en/latest/)** : consultée pour étudier la collecte web ; Scrapy n’est pas utilisé dans le pilote PC Express.
 - **[Apple Vision](https://developer.apple.com/documentation/vision)** et **[Tesseract](https://github.com/tesseract-ocr/tesseract)** : moteurs utilisés pour la lecture locale des reçus.
 
-Pour Metro et Super C, nous retenons l’extraction des pages web avec un modèle IA ; le modèle et le traitement restent à développer et à évaluer.
+Des échantillons Metro et Super C sont disponibles au format JSON. L’extraction web avec un modèle IA reste la méthode envisagée pour leur collecte automatisée ; elle reste à développer et à évaluer.
 
-**Utilisation de l’IA :** Codex (OpenAI) a aidé à rédiger la documentation, analyser les données et développer le connecteur et ses tests.
+Un essai de récupération directe des données Maxi via PC Express a été réalisé sur cinq produits. 
+
+**Utilisation de l’IA :** Codex (OpenAI) a aidé à rédiger la documentation, analyser et organiser les données, et développer les outils de collecte, de lecture des reçus et leurs tests.
