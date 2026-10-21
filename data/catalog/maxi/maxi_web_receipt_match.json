@@ -1,0 +1,708 @@
+[
+  {
+    "product_code": "05700003460",
+    "maxi_product_id": "20707974_EA",
+    "produit": "Sauce pour pâtes rosée",
+    "marque": "Classico",
+    "format": "410 ml",
+    "prix_web": "2.97",
+    "type_fournisseur": "SPECIAL",
+    "store_id": "8661",
+    "currency": "CAD",
+    "gtin": "00057000034603",
+    "url": "https://www.maxi.ca/fr/sauce-pour-p-tes-ros-e/p/20707974_EA",
+    "offres": [
+      {
+        "price": {
+          "value": "2.97",
+          "unit": "ch",
+          "quantity": 1,
+          "reasonCode": 1,
+          "type": "SPECIAL",
+          "expiryDate": "2026-10-07T00:00"
+        },
+        "wasPrice": {
+          "value": "3.49",
+          "unit": "ch",
+          "quantity": 1,
+          "reasonCode": null,
+          "type": "WAS",
+          "expiryDate": null
+        },
+        "comparisonPrices": [
+          {
+            "value": "0.72",
+            "unit": "ml",
+            "quantity": 100,
+            "reasonCode": null,
+            "type": "REGULAR",
+            "expiryDate": null
+          }
+        ],
+        "memberOnlyPrice": null,
+        "memberOnlyComparisonPrices": [],
+        "sellerId": "",
+        "sellerName": null,
+        "promotions": [],
+        "memberOnlyPromotions": null,
+        "stockStatus": "OK",
+        "taxes": {
+          "gst": false,
+          "gstExemptTaxFlag": "",
+          "hst": false,
+          "ppft": false,
+          "preparedFoodTaxType": "N",
+          "pst": false,
+          "spft": false
+        },
+        "fees": null,
+        "shoppable": true,
+        "specifications": null,
+        "offerId": null,
+        "offerType": "OG",
+        "status": null,
+        "badges": {
+          "textBadge": null,
+          "loyaltyBadge": null,
+          "dealBadge": {
+            "type": "SALE",
+            "text": "0,52 $ DE RABAIS",
+            "mopDealText": null,
+            "points": null,
+            "name": "SPÉCIAL",
+            "expiryDate": "2026-10-07T00:00:00Z",
+            "promoType": null
+          },
+          "newItemBadge": null,
+          "hotmBadge": null,
+          "promotionalBadge": null,
+          "recyclingFeeBadge": null,
+          "subscribeEarnBadge": null,
+          "mustTryBadge": null,
+          "preparedInCanadaBadge": null,
+          "madeInCanadaBadge": null,
+          "productOfCanadaBadge": null,
+          "tariffAppliedBadge": null,
+          "preparedInQuebecBadge": null
+        },
+        "dealPrice": null,
+        "mopDealPrice": null,
+        "ehfTotal": null,
+        "deposit": null,
+        "environmentalHandlingFee": null,
+        "taxInfo": ""
+      }
+    ],
+    "pricing_units": {
+      "type": "SOLD_BY_EACH",
+      "unit": "ch",
+      "interval": 1,
+      "minOrderQuantity": 1,
+      "maxOrderQuantity": 24,
+      "weighted": false
+    },
+    "date_ajout": "2026-10-07T00:19:00.397067+00:00",
+    "last_update": "2026-10-07T00:27:02.048212+00:00",
+    "requested_date": "2026-10-06"
+  },
+  {
+    "product_code": "06780000049",
+    "maxi_product_id": "20415991_EA",
+    "produit": "Thon à l’huile d’olive",
+    "marque": "Unico",
+    "format": "3x80.0 g",
+    "prix_web": "5.99",
+    "type_fournisseur": "REGULAR",
+    "store_id": "8661",
+    "currency": "CAD",
+    "gtin": "00067800000494",
+    "url": "https://www.maxi.ca/fr/thon-l-huile-d-olive/p/20415991_EA",
+    "offres": [
+      {
+        "price": {
+          "value": "5.99",
+          "unit": "ch",
+          "quantity": 1,
+          "reasonCode": 4,
+          "type": "REGULAR",
+          "expiryDate": "9999-12-31T00:00"
+        },
+        "wasPrice": null,
+        "comparisonPrices": [
+          {
+            "value": "2.50",
+            "unit": "g",
+            "quantity": 100,
+            "reasonCode": null,
+            "type": "REGULAR",
+            "expiryDate": null
+          }
+        ],
+        "memberOnlyPrice": null,
+        "memberOnlyComparisonPrices": [],
+        "sellerId": "",
+        "sellerName": null,
+        "promotions": [],
+        "memberOnlyPromotions": null,
+        "stockStatus": "OK",
+        "taxes": {
+          "gst": false,
+          "gstExemptTaxFlag": "",
+          "hst": false,
+          "ppft": false,
+          "preparedFoodTaxType": "N",
+          "pst": false,
+          "spft": false
+        },
+        "fees": null,
+        "shoppable": true,
+        "specifications": null,
+        "offerId": null,
+        "offerType": "OG",
+        "status": null,
+        "badges": {
+          "textBadge": null,
+          "loyaltyBadge": null,
+          "dealBadge": null,
+          "newItemBadge": null,
+          "hotmBadge": null,
+          "promotionalBadge": null,
+          "recyclingFeeBadge": null,
+          "subscribeEarnBadge": null,
+          "mustTryBadge": null,
+          "preparedInCanadaBadge": null,
+          "madeInCanadaBadge": null,
+          "productOfCanadaBadge": null,
+          "tariffAppliedBadge": null,
+          "preparedInQuebecBadge": null
+        },
+        "dealPrice": null,
+        "mopDealPrice": null,
+        "ehfTotal": null,
+        "deposit": null,
+        "environmentalHandlingFee": null,
+        "taxInfo": ""
+      }
+    ],
+    "pricing_units": {
+      "type": "SOLD_BY_EACH",
+      "unit": "ch",
+      "interval": 1,
+      "minOrderQuantity": 1,
+      "maxOrderQuantity": 24,
+      "weighted": false
+    },
+    "date_ajout": "2026-10-07T00:19:01.569403+00:00",
+    "last_update": "2026-10-07T00:27:05.719016+00:00",
+    "requested_date": "2026-10-06"
+  },
+  {
+    "product_code": "06038318557",
+    "maxi_product_id": "21117318_EA",
+    "produit": "Paprika",
+    "marque": "le Choix du Président",
+    "format": "48 g",
+    "prix_web": "6.00",
+    "type_fournisseur": "REGULAR",
+    "store_id": "8661",
+    "currency": "CAD",
+    "gtin": "00060383185572",
+    "url": "https://www.maxi.ca/fr/paprika/p/21117318_EA",
+    "offres": [
+      {
+        "price": {
+          "value": "6.00",
+          "unit": "ch",
+          "quantity": 1,
+          "reasonCode": 4,
+          "type": "REGULAR",
+          "expiryDate": "9999-12-31T00:00"
+        },
+        "wasPrice": null,
+        "comparisonPrices": [
+          {
+            "value": "12.50",
+            "unit": "g",
+            "quantity": 100,
+            "reasonCode": null,
+            "type": "REGULAR",
+            "expiryDate": null
+          }
+        ],
+        "memberOnlyPrice": null,
+        "memberOnlyComparisonPrices": [],
+        "sellerId": "",
+        "sellerName": null,
+        "promotions": [],
+        "memberOnlyPromotions": null,
+        "stockStatus": "OK",
+        "taxes": {
+          "gst": false,
+          "gstExemptTaxFlag": "",
+          "hst": false,
+          "ppft": false,
+          "preparedFoodTaxType": "N",
+          "pst": false,
+          "spft": false
+        },
+        "fees": null,
+        "shoppable": true,
+        "specifications": null,
+        "offerId": null,
+        "offerType": "OG",
+        "status": null,
+        "badges": {
+          "textBadge": null,
+          "loyaltyBadge": null,
+          "dealBadge": null,
+          "newItemBadge": null,
+          "hotmBadge": null,
+          "promotionalBadge": null,
+          "recyclingFeeBadge": null,
+          "subscribeEarnBadge": null,
+          "mustTryBadge": null,
+          "preparedInCanadaBadge": {
+            "type": "PREPARED_IN_CANADA",
+            "text": "Préparé au Canada",
+            "mopDealText": null,
+            "points": null,
+            "name": "PREPARED_IN_CANADA",
+            "expiryDate": null,
+            "promoType": null
+          },
+          "madeInCanadaBadge": null,
+          "productOfCanadaBadge": null,
+          "tariffAppliedBadge": null,
+          "preparedInQuebecBadge": null
+        },
+        "dealPrice": null,
+        "mopDealPrice": null,
+        "ehfTotal": null,
+        "deposit": null,
+        "environmentalHandlingFee": null,
+        "taxInfo": ""
+      }
+    ],
+    "pricing_units": {
+      "type": "SOLD_BY_EACH",
+      "unit": "ch",
+      "interval": 1,
+      "minOrderQuantity": 1,
+      "maxOrderQuantity": 24,
+      "weighted": false
+    },
+    "date_ajout": "2026-10-07T00:19:02.770705+00:00",
+    "last_update": "2026-10-07T00:27:07.046772+00:00",
+    "requested_date": "2026-10-06"
+  },
+  {
+    "product_code": "06620001994",
+    "maxi_product_id": "21038672_EA",
+    "produit": "Curcuma Moulu",
+    "marque": "Club House",
+    "format": "102 g",
+    "prix_web": "6.49",
+    "type_fournisseur": "REGULAR",
+    "store_id": "8661",
+    "currency": "CAD",
+    "gtin": "00066200019945",
+    "url": "https://www.maxi.ca/fr/curcuma-moulu/p/21038672_EA",
+    "offres": [
+      {
+        "price": {
+          "value": "6.49",
+          "unit": "ch",
+          "quantity": 1,
+          "reasonCode": 4,
+          "type": "REGULAR",
+          "expiryDate": "9999-12-31T00:00"
+        },
+        "wasPrice": null,
+        "comparisonPrices": [
+          {
+            "value": "6.36",
+            "unit": "g",
+            "quantity": 100,
+            "reasonCode": null,
+            "type": "REGULAR",
+            "expiryDate": null
+          }
+        ],
+        "memberOnlyPrice": null,
+        "memberOnlyComparisonPrices": [],
+        "sellerId": "",
+        "sellerName": null,
+        "promotions": [
+          {
+            "type": "LOYALTY",
+            "quantity": null,
+            "savings": 3500,
+            "value": null,
+            "promoCode": "121514486",
+            "expiryDate": "2026-10-07T23:59:59Z",
+            "title": "PC Optimum Offer",
+            "promoType": "0004",
+            "pricingMethod": null,
+            "text": "Obtenez 3500 points prime PC Optimum pour chaque 14,97$ dépensé en produits participants",
+            "reward": "3500Points PC Optimum",
+            "callToAction": null
+          }
+        ],
+        "memberOnlyPromotions": null,
+        "stockStatus": "OK",
+        "taxes": {
+          "gst": false,
+          "gstExemptTaxFlag": "",
+          "hst": false,
+          "ppft": false,
+          "preparedFoodTaxType": "N",
+          "pst": false,
+          "spft": false
+        },
+        "fees": null,
+        "shoppable": true,
+        "specifications": null,
+        "offerId": null,
+        "offerType": "OG",
+        "status": null,
+        "badges": {
+          "textBadge": null,
+          "loyaltyBadge": {
+            "type": "LOYALTY",
+            "text": "Offre PC Optimum",
+            "mopDealText": null,
+            "points": 3500,
+            "name": "LOYALTY",
+            "expiryDate": "2026-10-07T23:59:59Z",
+            "promoType": "0004"
+          },
+          "dealBadge": null,
+          "newItemBadge": null,
+          "hotmBadge": null,
+          "promotionalBadge": null,
+          "recyclingFeeBadge": null,
+          "subscribeEarnBadge": null,
+          "mustTryBadge": null,
+          "preparedInCanadaBadge": {
+            "type": "PREPARED_IN_CANADA",
+            "text": "Préparé au Canada",
+            "mopDealText": null,
+            "points": null,
+            "name": "PREPARED_IN_CANADA",
+            "expiryDate": null,
+            "promoType": null
+          },
+          "madeInCanadaBadge": null,
+          "productOfCanadaBadge": null,
+          "tariffAppliedBadge": null,
+          "preparedInQuebecBadge": null
+        },
+        "dealPrice": null,
+        "mopDealPrice": null,
+        "ehfTotal": null,
+        "deposit": null,
+        "environmentalHandlingFee": null,
+        "taxInfo": ""
+      }
+    ],
+    "pricing_units": {
+      "type": "SOLD_BY_EACH",
+      "unit": "ch",
+      "interval": 1,
+      "minOrderQuantity": 1,
+      "maxOrderQuantity": 24,
+      "weighted": false
+    },
+    "date_ajout": "2026-10-07T00:19:03.986352+00:00",
+    "last_update": "2026-10-07T00:27:08.176289+00:00",
+    "requested_date": "2026-10-06"
+  },
+  {
+    "product_code": "08870201640",
+    "maxi_product_id": "20307313006_EA",
+    "produit": "Confiture de framboise",
+    "marque": "Bonne Maman",
+    "format": "250 ml",
+    "prix_web": "6.29",
+    "type_fournisseur": "SPECIAL",
+    "store_id": "8661",
+    "currency": "CAD",
+    "gtin": "00088702016406",
+    "url": "https://www.maxi.ca/fr/confiture-de-framboise/p/20307313006_EA",
+    "offres": [
+      {
+        "price": {
+          "value": "6.29",
+          "unit": "ch",
+          "quantity": 1,
+          "reasonCode": 2,
+          "type": "SPECIAL",
+          "expiryDate": "2026-10-07T00:00"
+        },
+        "wasPrice": null,
+        "comparisonPrices": [
+          {
+            "value": "2.52",
+            "unit": "ml",
+            "quantity": 100,
+            "reasonCode": null,
+            "type": "REGULAR",
+            "expiryDate": null
+          }
+        ],
+        "memberOnlyPrice": null,
+        "memberOnlyComparisonPrices": [],
+        "sellerId": "",
+        "sellerName": null,
+        "promotions": [],
+        "memberOnlyPromotions": null,
+        "stockStatus": "OK",
+        "taxes": {
+          "gst": false,
+          "gstExemptTaxFlag": "",
+          "hst": false,
+          "ppft": false,
+          "preparedFoodTaxType": "N",
+          "pst": false,
+          "spft": false
+        },
+        "fees": null,
+        "shoppable": true,
+        "specifications": null,
+        "offerId": null,
+        "offerType": "OG",
+        "status": null,
+        "badges": {
+          "textBadge": null,
+          "loyaltyBadge": null,
+          "dealBadge": null,
+          "newItemBadge": null,
+          "hotmBadge": null,
+          "promotionalBadge": null,
+          "recyclingFeeBadge": null,
+          "subscribeEarnBadge": null,
+          "mustTryBadge": null,
+          "preparedInCanadaBadge": null,
+          "madeInCanadaBadge": null,
+          "productOfCanadaBadge": null,
+          "tariffAppliedBadge": null,
+          "preparedInQuebecBadge": null
+        },
+        "dealPrice": null,
+        "mopDealPrice": null,
+        "ehfTotal": null,
+        "deposit": null,
+        "environmentalHandlingFee": null,
+        "taxInfo": ""
+      }
+    ],
+    "pricing_units": {
+      "type": "SOLD_BY_EACH",
+      "unit": "ch",
+      "interval": 1,
+      "minOrderQuantity": 1,
+      "maxOrderQuantity": 24,
+      "weighted": false
+    },
+    "date_ajout": "2026-10-07T00:19:05.249634+00:00",
+    "last_update": "2026-10-07T00:27:09.417234+00:00",
+    "requested_date": "2026-10-06"
+  },
+  {
+    "product_code": "05719711852",
+    "maxi_product_id": "21295298_EA",
+    "produit": "Rooster Longkou Vermicelle",
+    "marque": "Rooster",
+    "format": "8x50.0 g",
+    "prix_web": "1.98",
+    "type_fournisseur": "SPECIAL",
+    "store_id": "8661",
+    "currency": "CAD",
+    "gtin": "00057197118520",
+    "url": "https://www.maxi.ca/fr/rooster-longkou-vermicelle/p/21295298_EA",
+    "offres": [
+      {
+        "price": {
+          "value": "1.98",
+          "unit": "ch",
+          "quantity": 1,
+          "reasonCode": 2,
+          "type": "SPECIAL",
+          "expiryDate": "2026-10-14T00:00"
+        },
+        "wasPrice": {
+          "value": "2.50",
+          "unit": "ch",
+          "quantity": 1,
+          "reasonCode": null,
+          "type": "WAS",
+          "expiryDate": null
+        },
+        "comparisonPrices": [
+          {
+            "value": "0.50",
+            "unit": "g",
+            "quantity": 100,
+            "reasonCode": null,
+            "type": "REGULAR",
+            "expiryDate": null
+          }
+        ],
+        "memberOnlyPrice": null,
+        "memberOnlyComparisonPrices": [],
+        "sellerId": "",
+        "sellerName": null,
+        "promotions": [],
+        "memberOnlyPromotions": null,
+        "stockStatus": "OK",
+        "taxes": {
+          "gst": false,
+          "gstExemptTaxFlag": "",
+          "hst": false,
+          "ppft": false,
+          "preparedFoodTaxType": "N",
+          "pst": false,
+          "spft": false
+        },
+        "fees": null,
+        "shoppable": true,
+        "specifications": null,
+        "offerId": null,
+        "offerType": "OG",
+        "status": null,
+        "badges": {
+          "textBadge": null,
+          "loyaltyBadge": null,
+          "dealBadge": {
+            "type": "SALE",
+            "text": "0,52 $ DE RABAIS",
+            "mopDealText": null,
+            "points": null,
+            "name": "SPÉCIAL",
+            "expiryDate": "2026-10-14T00:00:00Z",
+            "promoType": null
+          },
+          "newItemBadge": null,
+          "hotmBadge": null,
+          "promotionalBadge": null,
+          "recyclingFeeBadge": null,
+          "subscribeEarnBadge": null,
+          "mustTryBadge": null,
+          "preparedInCanadaBadge": null,
+          "madeInCanadaBadge": null,
+          "productOfCanadaBadge": null,
+          "tariffAppliedBadge": null,
+          "preparedInQuebecBadge": null
+        },
+        "dealPrice": null,
+        "mopDealPrice": null,
+        "ehfTotal": null,
+        "deposit": null,
+        "environmentalHandlingFee": null,
+        "taxInfo": ""
+      }
+    ],
+    "pricing_units": {
+      "type": "SOLD_BY_EACH",
+      "unit": "ch",
+      "interval": 1,
+      "minOrderQuantity": 1,
+      "maxOrderQuantity": 24,
+      "weighted": false
+    },
+    "date_ajout": "2026-10-07T00:24:32.464212+00:00",
+    "last_update": "2026-10-07T00:27:03.287272+00:00",
+    "requested_date": "2026-10-06"
+  },
+  {
+    "product_code": "06038309830",
+    "maxi_product_id": "20315613005_EA",
+    "produit": "Petites coquilles",
+    "marque": "Sans Nom",
+    "format": "900 g",
+    "prix_web": "2.00",
+    "type_fournisseur": "REGULAR",
+    "store_id": "8661",
+    "currency": "CAD",
+    "gtin": "00060383098308",
+    "url": "https://www.maxi.ca/fr/petites-coquilles/p/20315613005_EA",
+    "offres": [
+      {
+        "price": {
+          "value": "2.00",
+          "unit": "ch",
+          "quantity": 1,
+          "reasonCode": 4,
+          "type": "REGULAR",
+          "expiryDate": "9999-12-31T00:00"
+        },
+        "wasPrice": null,
+        "comparisonPrices": [
+          {
+            "value": "0.22",
+            "unit": "g",
+            "quantity": 100,
+            "reasonCode": null,
+            "type": "REGULAR",
+            "expiryDate": null
+          }
+        ],
+        "memberOnlyPrice": null,
+        "memberOnlyComparisonPrices": [],
+        "sellerId": "",
+        "sellerName": null,
+        "promotions": [],
+        "memberOnlyPromotions": null,
+        "stockStatus": "OK",
+        "taxes": {
+          "gst": false,
+          "gstExemptTaxFlag": "",
+          "hst": false,
+          "ppft": false,
+          "preparedFoodTaxType": "N",
+          "pst": false,
+          "spft": false
+        },
+        "fees": null,
+        "shoppable": true,
+        "specifications": null,
+        "offerId": null,
+        "offerType": "OG",
+        "status": null,
+        "badges": {
+          "textBadge": null,
+          "loyaltyBadge": null,
+          "dealBadge": null,
+          "newItemBadge": null,
+          "hotmBadge": null,
+          "promotionalBadge": null,
+          "recyclingFeeBadge": null,
+          "subscribeEarnBadge": null,
+          "mustTryBadge": null,
+          "preparedInCanadaBadge": null,
+          "madeInCanadaBadge": null,
+          "productOfCanadaBadge": null,
+          "tariffAppliedBadge": null,
+          "preparedInQuebecBadge": null
+        },
+        "dealPrice": null,
+        "mopDealPrice": null,
+        "ehfTotal": null,
+        "deposit": null,
+        "environmentalHandlingFee": null,
+        "taxInfo": ""
+      }
+    ],
+    "pricing_units": {
+      "type": "SOLD_BY_EACH",
+      "unit": "ch",
+      "interval": 1,
+      "minOrderQuantity": 1,
+      "maxOrderQuantity": 24,
+      "weighted": false
+    },
+    "date_ajout": "2026-10-07T00:27:04.479871+00:00",
+    "last_update": "2026-10-07T00:27:04.479871+00:00",
+    "requested_date": "2026-10-06"
+  }
+]

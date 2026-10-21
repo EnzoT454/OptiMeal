@@ -1,0 +1,383 @@
+{
+  "$defs": {
+    "OfferRead": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "product_id": {
+          "title": "Product Id",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "pattern": "^ing_[a-z0-9_]+$",
+          "title": "Ingredient Id",
+          "type": "string"
+        },
+        "product_name": {
+          "title": "Product Name",
+          "type": "string"
+        },
+        "retailer": {
+          "enum": [
+            "maxi",
+            "metro",
+            "superc"
+          ],
+          "title": "Retailer",
+          "type": "string"
+        },
+        "store_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Store Id"
+        },
+        "external_store_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "External Store Id"
+        },
+        "external_product_id": {
+          "title": "External Product Id",
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/SourceFormat"
+        },
+        "price": {
+          "$ref": "#/$defs/Price"
+        },
+        "promotion": {
+          "$ref": "#/$defs/Promotion"
+        },
+        "source": {
+          "$ref": "#/$defs/OfferSource"
+        }
+      },
+      "required": [
+        "id",
+        "product_id",
+        "ingredient_id",
+        "product_name",
+        "retailer",
+        "store_id",
+        "external_store_id",
+        "external_product_id",
+        "format",
+        "price",
+        "promotion",
+        "source"
+      ],
+      "title": "OfferRead",
+      "type": "object"
+    },
+    "OfferSource": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Url"
+        },
+        "review_required": {
+          "const": true,
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "url"
+      ],
+      "title": "OfferSource",
+      "type": "object"
+    },
+    "Price": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "commercial",
+            "declared",
+            "estimated",
+            "unknown"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "currency": {
+          "const": "CAD",
+          "default": "CAD",
+          "title": "Currency",
+          "type": "string"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Amount"
+        },
+        "min_amount": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Amount"
+        },
+        "max_amount": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Amount"
+        },
+        "basis": {
+          "const": "source_unspecified",
+          "default": "source_unspecified",
+          "title": "Basis",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Price",
+      "type": "object"
+    },
+    "Promotion": {
+      "additionalProperties": false,
+      "properties": {
+        "declared": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Declared"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid From"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid To"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "expired",
+            "upcoming",
+            "unverifiable",
+            "not_promotion",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evaluated_on": {
+          "format": "date",
+          "title": "Evaluated On",
+          "type": "string"
+        }
+      },
+      "required": [
+        "declared",
+        "valid_from",
+        "valid_to",
+        "status",
+        "evaluated_on"
+      ],
+      "title": "Promotion",
+      "type": "object"
+    },
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "data_source": {
+          "default": "local_json",
+          "enum": [
+            "local_json",
+            "postgresql"
+          ],
+          "title": "Data Source",
+          "type": "string"
+        },
+        "dataset_kind": {
+          "enum": [
+            "source_snapshot",
+            "demo",
+            "user_content",
+            "mixed"
+          ],
+          "title": "Dataset Kind",
+          "type": "string"
+        },
+        "review_required": {
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dataset_kind"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    },
+    "SourceFormat": {
+      "additionalProperties": false,
+      "properties": {
+        "quantity": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quantity"
+        },
+        "unit_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit Raw"
+        },
+        "basis": {
+          "const": "source_unspecified",
+          "default": "source_unspecified",
+          "title": "Basis",
+          "type": "string"
+        }
+      },
+      "required": [
+        "quantity",
+        "unit_raw"
+      ],
+      "title": "SourceFormat",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/$defs/OfferRead"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "total": {
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    },
+    "limit": {
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Limit",
+      "type": "integer"
+    },
+    "offset": {
+      "minimum": 0,
+      "title": "Offset",
+      "type": "integer"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    }
+  },
+  "required": [
+    "items",
+    "total",
+    "limit",
+    "offset",
+    "meta"
+  ],
+  "title": "Page[OfferRead]",
+  "type": "object"
+}

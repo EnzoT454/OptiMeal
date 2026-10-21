@@ -1,0 +1,91 @@
+"""Adaptation des JSON locaux vers les contrats publics, sans réseau ni écriture."""
+from dataclasses import dataclass
+from datetime import date, datetime
+import hashlib
+from pathlib import Path
+import unicodedata
+from zoneinfo import ZoneInfo
+
+from backend.app.catalog.common_schemas import CommonCatalog, IngredientRead, OfferRead, Promotion, SourceProduct
+from backend.app.recipes.schemas import RecipeRead, RecipeSeedDocument, RecipeSummary
+
+ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_CATALOG = ROOT / 'data/catalog/baseCommune/ingredients.json'
+DEFAULT_RECIPES = ROOT / 'data/recipes/initial_recipes.json'
+
+
+def today() -> date:
+    return datetime.now(ZoneInfo('America/Toronto')).date()
+
+
+def search_text(text: str) -> str:
+    text = text.casefold().replace('œ', 'oe').replace('æ', 'ae')
+    return ''.join(c for c in unicodedata.normalize('NFKD', text)
+                   if not unicodedata.combining(c))
+
+
+def promotion(product: SourceProduct, on_date: date) -> Promotion:
+    if product.is_promotion is False:
+        status = 'not_promotion'
+    elif product.is_promotion is None:
+        status = 'unknown'
+    elif product.valid_to and on_date > product.valid_to:
+        status = 'expired'
+    elif product.valid_from and on_date < product.valid_from:
+        status = 'upcoming'
+    elif product.valid_from and product.valid_to:
+        status = 'active'
+    else:
+        status = 'unverifiable'
+    return Promotion(declared=product.is_promotion, valid_from=product.valid_from,
+                     valid_to=product.valid_to, status=status, evaluated_on=on_date)
+
+
+def offer(ingredient_id: str, product: SourceProduct, on_date: date) -> OfferRead:
+    fingerprint = hashlib.sha256((ingredient_id + '\n' + product.model_dump_json()).encode()).hexdigest()[:24]
+    return OfferRead(
+        id='offer_' + fingerprint, product_id=product.id, ingredient_id=ingredient_id,
+        product_name=product.name, retailer=product.retailer,
+        store_id=f'{product.retailer}:{product.store_id}' if product.store_id is not None else None,
+        external_store_id=product.store_id, external_product_id=product.external_product_id,
+        format={'quantity': product.quantity, 'unit_raw': product.unit},
+        price={'kind': 'unknown' if product.price is None else 'commercial', 'amount': product.price},
+        promotion=promotion(product, on_date),
+        source={'kind': product.source, 'url': product.url},
+    )
+
+
+@dataclass(frozen=True)
+class PublicCatalog:
+    source: CommonCatalog
+    ingredients: list[IngredientRead]
+
+    def offers(self, on_date: date) -> list[OfferRead]:
+        return [offer(i.id, p, on_date) for i in self.source.ingredients for p in i.products]
+
+
+@dataclass(frozen=True)
+class PublicRecipes:
+    recipes: list[RecipeRead]
+
+    def summaries(self) -> list[RecipeSummary]:
+        fields = RecipeSummary.model_fields
+        return [RecipeSummary.model_validate(r.model_dump(include=set(fields))) for r in self.recipes]
+
+
+def load_catalog(path: Path) -> PublicCatalog:
+    source = CommonCatalog.model_validate_json(path.read_text(encoding='utf-8'))
+    fields = set(IngredientRead.model_fields)
+    ingredients = [IngredientRead.model_validate(i.model_dump(include=fields)) for i in source.ingredients]
+    return PublicCatalog(source, ingredients)
+
+
+def load_recipes(path: Path, catalog: PublicCatalog) -> PublicRecipes:
+    source = RecipeSeedDocument.model_validate_json(path.read_text(encoding='utf-8'))
+    ids = {i.id for i in catalog.ingredients}
+    recipes = []
+    for seed in source.recipes:
+        if any(i.ingredient_id not in ids for i in seed.ingredients):
+            raise ValueError(f'Ingrédient inconnu dans la recette {seed.seed_key}.')
+        recipes.append(RecipeRead(id='recipe_' + seed.seed_key, **seed.model_dump(exclude={'seed_key'})))
+    return PublicRecipes(recipes)

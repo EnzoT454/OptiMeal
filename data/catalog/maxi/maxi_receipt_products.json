@@ -1,0 +1,202 @@
+[
+  {
+    "product_code": "05700003460",
+    "name": "CLASS SCE ROSEE",
+    "prix_extrait": "2.97",
+    "url": "https://www.maxi.ca/fr/sauce-pour-p-tes-ros-e/p/20707974_EA",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 1
+  },
+  {
+    "product_code": "05719711852",
+    "name": "ROO VERMICELLE",
+    "prix_extrait": "1.98",
+    "url": "https://www.maxi.ca/fr/rooster-longkou-vermicelle/p/21295298_EA",
+    "store_id": "8661",
+    "date_achat": "2026-09-27",
+    "source_receipt": "data/receipts/extractions/recu_maxi.json",
+    "line_id": 2
+  },
+  {
+    "product_code": "06038309830",
+    "name": "SN COQUILLES",
+    "prix_extrait": "2.00",
+    "url": "https://www.maxi.ca/fr/petites-coquilles/p/20315613005_EA",
+    "store_id": "8661",
+    "date_achat": "2026-09-27",
+    "source_receipt": "data/receipts/extractions/recu_maxi.json",
+    "line_id": 3
+  },
+  {
+    "product_code": "06780000049",
+    "name": "UNICO THON DOLIV",
+    "prix_extrait": "5.99",
+    "url": "https://www.maxi.ca/fr/thon-l-huile-d-olive/p/20415991_EA",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 4
+  },
+  {
+    "product_code": "628107321018",
+    "name": "AL SHIFA MIEL",
+    "prix_extrait": "9.49",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-09-27",
+    "source_receipt": "data/receipts/extractions/recu_maxi.json",
+    "line_id": 5
+  },
+  {
+    "product_code": "66151100250",
+    "name": "TISSA SARD HUILE",
+    "prix_extrait": "7.56",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 6
+  },
+  {
+    "product_code": "06038366414",
+    "name": "OEUFS GROS",
+    "prix_extrait": "3.88",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-09-27",
+    "source_receipt": "data/receipts/extractions/recu_maxi.json",
+    "line_id": 7
+  },
+  {
+    "product_code": "03338370278",
+    "name": "COURONNE BROCOLI",
+    "prix_extrait": "0.95",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-09-27",
+    "source_receipt": "data/receipts/extractions/recu_maxi.json",
+    "line_id": 8
+  },
+  {
+    "product_code": "06038305932",
+    "name": "CHAMPIGNONS PC",
+    "prix_extrait": "0.68",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-09-27",
+    "source_receipt": "data/receipts/extractions/recu_maxi.json",
+    "line_id": 9
+  },
+  {
+    "product_code": "06148303301",
+    "name": "OIGNONS DM",
+    "prix_extrait": "3.29",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-09-27",
+    "source_receipt": "data/receipts/extractions/recu_maxi.json",
+    "line_id": 10
+  },
+  {
+    "product_code": "4131",
+    "name": "POMMES FUJI",
+    "prix_extrait": "4.98",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-09-27",
+    "source_receipt": "data/receipts/extractions/recu_maxi.json",
+    "line_id": 11
+  },
+  {
+    "product_code": "94011",
+    "name": "BANANES BIO",
+    "prix_extrait": "2.56",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 9
+  },
+  {
+    "product_code": "87668101932",
+    "name": "SANTOSH NAAN AIL",
+    "prix_extrait": "2.29",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 12
+  },
+  {
+    "product_code": "06038318557",
+    "name": "PC PAPRIKA",
+    "prix_extrait": "6.00",
+    "url": "https://www.maxi.ca/fr/paprika/p/21117318_EA",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 2
+  },
+  {
+    "product_code": "06620001994",
+    "name": "CLBH CRCMA MOULU",
+    "prix_extrait": "6.49",
+    "url": "https://www.maxi.ca/fr/curcuma-moulu/p/21038672_EA",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 3
+  },
+  {
+    "product_code": "08870201640",
+    "name": "BM CONFITURE",
+    "prix_extrait": "6.29",
+    "url": "https://www.maxi.ca/fr/confiture-de-framboise/p/20307313006_EA",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 5
+  },
+  {
+    "product_code": "62902541000",
+    "name": "IOGO YOGOURT",
+    "prix_extrait": "7.29",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 7
+  },
+  {
+    "product_code": "62798733146",
+    "name": "FRAISES 1 L",
+    "prix_extrait": "2.99",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 8
+  },
+  {
+    "product_code": "05657351503",
+    "name": "GADOUA PAIN DUO",
+    "prix_extrait": "6.00",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 10
+  },
+  {
+    "product_code": "62623327240",
+    "name": "AUTH GALETTE MOR",
+    "prix_extrait": "4.00",
+    "url": "",
+    "store_id": "8661",
+    "date_achat": "2026-10-03",
+    "source_receipt": "data/receipts/extractions/recu-maxi-h1-vision.json",
+    "line_id": 11
+  }
+]

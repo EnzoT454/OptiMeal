@@ -1,0 +1,306 @@
+{
+  "$defs": {
+    "InputFingerprint": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "title": "InputFingerprint",
+      "type": "object"
+    },
+    "SourceIngredient": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^ing_[a-z0-9_]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "category": {
+          "minLength": 1,
+          "title": "Category",
+          "type": "string"
+        },
+        "aliases": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Aliases",
+          "type": "array"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/SourceReference"
+          },
+          "title": "Sources",
+          "type": "array"
+        },
+        "products": {
+          "items": {
+            "$ref": "#/$defs/SourceProduct"
+          },
+          "title": "Products",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "category",
+        "aliases",
+        "sources",
+        "products"
+      ],
+      "title": "SourceIngredient",
+      "type": "object"
+    },
+    "SourceProduct": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "retailer": {
+          "enum": [
+            "maxi",
+            "metro",
+            "superc"
+          ],
+          "title": "Retailer",
+          "type": "string"
+        },
+        "store_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Store Id"
+        },
+        "external_product_id": {
+          "minLength": 1,
+          "title": "External Product Id",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "price": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Price"
+        },
+        "currency": {
+          "const": "CAD",
+          "title": "Currency",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quantity"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid From"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid To"
+        },
+        "is_promotion": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Is Promotion"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Url"
+        }
+      },
+      "required": [
+        "id",
+        "retailer",
+        "store_id",
+        "external_product_id",
+        "name",
+        "price",
+        "currency",
+        "unit",
+        "quantity",
+        "valid_from",
+        "valid_to",
+        "is_promotion",
+        "source",
+        "url"
+      ],
+      "title": "SourceProduct",
+      "type": "object"
+    },
+    "SourceReference": {
+      "additionalProperties": false,
+      "properties": {
+        "retailer": {
+          "enum": [
+            "maxi",
+            "metro",
+            "superc"
+          ],
+          "title": "Retailer",
+          "type": "string"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "title": "Ingredient Id",
+          "type": "integer"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "retailer",
+        "path",
+        "ingredient_id",
+        "name"
+      ],
+      "title": "SourceReference",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "common-catalog-1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "const": "assembled_from_local_sources",
+      "title": "Status",
+      "type": "string"
+    },
+    "mapping_status": {
+      "const": "proposed",
+      "title": "Mapping Status",
+      "type": "string"
+    },
+    "inputs": {
+      "items": {
+        "$ref": "#/$defs/InputFingerprint"
+      },
+      "title": "Inputs",
+      "type": "array"
+    },
+    "ingredient_count": {
+      "title": "Ingredient Count",
+      "type": "integer"
+    },
+    "product_count": {
+      "title": "Product Count",
+      "type": "integer"
+    },
+    "ingredients": {
+      "items": {
+        "$ref": "#/$defs/SourceIngredient"
+      },
+      "title": "Ingredients",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "status",
+    "mapping_status",
+    "inputs",
+    "ingredient_count",
+    "product_count",
+    "ingredients"
+  ],
+  "title": "CommonCatalog",
+  "type": "object"
+}

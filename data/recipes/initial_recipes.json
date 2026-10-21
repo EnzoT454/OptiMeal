@@ -1,0 +1,676 @@
+{
+  "schema_version": "recipe-seed-1.0",
+  "dataset_kind": "demo",
+  "status": "review_required",
+  "created_at": "2026-10-20",
+  "source": {
+    "kind": "ai_authored_draft",
+    "reference_model": "https://schema.org/Recipe",
+    "note": "Propositions originales générées avec assistance IA, non testées en cuisine. Schema.org décrit les champs ; il ne fournit pas ces recettes."
+  },
+  "ingredient_mapping": "data/catalog/baseCommune/ingredient_mapping.json",
+  "ingredient_catalog": "data/catalog/baseCommune/ingredients.json",
+  "water_policy": "L’eau de cuisson est un auxiliaire de préparation, hors référentiel des 31 ingrédients et hors calcul de prix de ce jeu.",
+  "recipes": [
+    {
+      "seed_key": "poulet_riz_brocoli",
+      "name": "Poulet, riz et brocoli",
+      "description": "Une assiette de poulet à l’ail avec du riz et du brocoli.",
+      "servings": 2,
+      "prep_time_minutes": 10,
+      "cook_time_minutes": 25,
+      "total_time_minutes": 35,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_poitrine_poulet",
+          "quantity": "300",
+          "unit": "g",
+          "preparation": "cru, coupé en dés"
+        },
+        {
+          "ingredient_id": "ing_riz_basmati_blanc",
+          "quantity": "150",
+          "unit": "g",
+          "preparation": "sec"
+        },
+        {
+          "ingredient_id": "ing_brocoli_frais",
+          "quantity": "250",
+          "unit": "g",
+          "preparation": "en petits bouquets"
+        },
+        {
+          "ingredient_id": "ing_ail_frais",
+          "quantity": "6",
+          "unit": "g",
+          "preparation": "pelé et haché"
+        },
+        {
+          "ingredient_id": "ing_huile_olive",
+          "quantity": "15",
+          "unit": "ml",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_sel",
+          "quantity": "2",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Faire cuire le riz dans l’eau selon les indications du paquet."
+        },
+        {
+          "position": 2,
+          "text": "Cuire le brocoli à la vapeur jusqu’à ce qu’il soit tendre."
+        },
+        {
+          "position": 3,
+          "text": "Chauffer l’huile dans une poêle. Ajouter le poulet et cuire en remuant jusqu’à ce qu’il soit entièrement cuit à cœur."
+        },
+        {
+          "position": 4,
+          "text": "Ajouter l’ail et le sel, poursuivre brièvement la cuisson et servir avec le riz et le brocoli."
+        }
+      ]
+    },
+    {
+      "seed_key": "pates_boeuf_tomate",
+      "name": "Pâtes au bœuf et aux tomates",
+      "description": "Des pâtes accompagnées d’une sauce simple au bœuf haché.",
+      "servings": 2,
+      "prep_time_minutes": 10,
+      "cook_time_minutes": 30,
+      "total_time_minutes": 40,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_pates_seches",
+          "quantity": "180",
+          "unit": "g",
+          "preparation": "sèches"
+        },
+        {
+          "ingredient_id": "ing_boeuf_hache",
+          "quantity": "250",
+          "unit": "g",
+          "preparation": "cru"
+        },
+        {
+          "ingredient_id": "ing_tomates_conserve",
+          "quantity": "400",
+          "unit": "g",
+          "preparation": "avec leur jus"
+        },
+        {
+          "ingredient_id": "ing_oignon_jaune",
+          "quantity": "100",
+          "unit": "g",
+          "preparation": "pelé et haché"
+        },
+        {
+          "ingredient_id": "ing_ail_frais",
+          "quantity": "6",
+          "unit": "g",
+          "preparation": "pelé et haché"
+        },
+        {
+          "ingredient_id": "ing_huile_olive",
+          "quantity": "15",
+          "unit": "ml",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_sel",
+          "quantity": "2",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Faire cuire les pâtes dans l’eau selon les indications du paquet."
+        },
+        {
+          "position": 2,
+          "text": "Chauffer l’huile dans une casserole et faire revenir l’oignon. Ajouter le bœuf et le cuire complètement en l’émiettant."
+        },
+        {
+          "position": 3,
+          "text": "Ajouter l’ail, les tomates et le sel. Laisser mijoter environ 15 minutes."
+        },
+        {
+          "position": 4,
+          "text": "Égoutter les pâtes et les mélanger à la sauce."
+        }
+      ]
+    },
+    {
+      "seed_key": "saumon_citron_legumes",
+      "name": "Saumon au citron et légumes rôtis",
+      "description": "Du saumon servi avec des pommes de terre et de la courgette.",
+      "servings": 2,
+      "prep_time_minutes": 15,
+      "cook_time_minutes": 35,
+      "total_time_minutes": 50,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_saumon",
+          "quantity": "300",
+          "unit": "g",
+          "preparation": "filets crus"
+        },
+        {
+          "ingredient_id": "ing_citron_frais",
+          "quantity": "1",
+          "unit": "unit",
+          "preparation": "jus et zeste"
+        },
+        {
+          "ingredient_id": "ing_pomme_de_terre",
+          "quantity": "400",
+          "unit": "g",
+          "preparation": "en petits cubes"
+        },
+        {
+          "ingredient_id": "ing_courgette_fraiche",
+          "quantity": "250",
+          "unit": "g",
+          "preparation": "en rondelles"
+        },
+        {
+          "ingredient_id": "ing_huile_olive",
+          "quantity": "20",
+          "unit": "ml",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_sel",
+          "quantity": "2",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Préchauffer le four à 200 °C. Mélanger les pommes de terre avec la moitié de l’huile et du sel sur une plaque."
+        },
+        {
+          "position": 2,
+          "text": "Enfourner les pommes de terre environ 15 minutes."
+        },
+        {
+          "position": 3,
+          "text": "Ajouter la courgette et le saumon. Répartir le reste d’huile, le jus et le zeste du citron ainsi que le reste de sel."
+        },
+        {
+          "position": 4,
+          "text": "Poursuivre la cuisson environ 15 à 20 minutes, jusqu’à ce que les légumes soient tendres et que le saumon soit cuit."
+        }
+      ]
+    },
+    {
+      "seed_key": "riz_crevettes_legumes",
+      "name": "Riz aux crevettes et aux légumes",
+      "description": "Du riz mélangé à des crevettes, du poivron et de la carotte.",
+      "servings": 2,
+      "prep_time_minutes": 15,
+      "cook_time_minutes": 25,
+      "total_time_minutes": 40,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_riz_basmati_blanc",
+          "quantity": "150",
+          "unit": "g",
+          "preparation": "sec"
+        },
+        {
+          "ingredient_id": "ing_crevettes",
+          "quantity": "250",
+          "unit": "g",
+          "preparation": "crues, décortiquées"
+        },
+        {
+          "ingredient_id": "ing_poivron_frais",
+          "quantity": "150",
+          "unit": "g",
+          "preparation": "épépiné, en dés"
+        },
+        {
+          "ingredient_id": "ing_carotte_fraiche",
+          "quantity": "150",
+          "unit": "g",
+          "preparation": "en petits dés"
+        },
+        {
+          "ingredient_id": "ing_ail_frais",
+          "quantity": "6",
+          "unit": "g",
+          "preparation": "pelé et haché"
+        },
+        {
+          "ingredient_id": "ing_huile_olive",
+          "quantity": "15",
+          "unit": "ml",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_sel",
+          "quantity": "2",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Cuire le riz dans l’eau selon les indications du paquet."
+        },
+        {
+          "position": 2,
+          "text": "Chauffer l’huile dans une poêle. Ajouter la carotte et le poivron et cuire jusqu’à ce qu’ils soient tendres, avec un peu d’eau au besoin."
+        },
+        {
+          "position": 3,
+          "text": "Ajouter l’ail puis les crevettes. Cuire jusqu’à ce que les crevettes soient entièrement opaques."
+        },
+        {
+          "position": 4,
+          "text": "Ajouter le riz cuit et le sel, mélanger et réchauffer."
+        }
+      ]
+    },
+    {
+      "seed_key": "mijote_pois_chiches_haricots",
+      "name": "Mijoté de pois chiches et de haricots rouges",
+      "description": "Un mijoté de légumineuses avec tomates et poivron.",
+      "servings": 2,
+      "prep_time_minutes": 10,
+      "cook_time_minutes": 25,
+      "total_time_minutes": 35,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_pois_chiche_conserve",
+          "quantity": "240",
+          "unit": "g",
+          "preparation": "en conserve, rincés et égouttés ; masse après égouttage"
+        },
+        {
+          "ingredient_id": "ing_haricots_rouges_conserve",
+          "quantity": "240",
+          "unit": "g",
+          "preparation": "en conserve, rincés et égouttés ; masse après égouttage"
+        },
+        {
+          "ingredient_id": "ing_tomates_conserve",
+          "quantity": "400",
+          "unit": "g",
+          "preparation": "avec leur jus"
+        },
+        {
+          "ingredient_id": "ing_oignon_jaune",
+          "quantity": "100",
+          "unit": "g",
+          "preparation": "pelé et haché"
+        },
+        {
+          "ingredient_id": "ing_poivron_frais",
+          "quantity": "150",
+          "unit": "g",
+          "preparation": "épépiné, en dés"
+        },
+        {
+          "ingredient_id": "ing_huile_olive",
+          "quantity": "15",
+          "unit": "ml",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_sel",
+          "quantity": "2",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Chauffer l’huile dans une casserole. Faire revenir l’oignon et le poivron jusqu’à ce qu’ils commencent à ramollir."
+        },
+        {
+          "position": 2,
+          "text": "Ajouter les tomates et le sel, puis laisser mijoter environ 10 minutes."
+        },
+        {
+          "position": 3,
+          "text": "Ajouter les pois chiches et les haricots rouges rincés et égouttés."
+        },
+        {
+          "position": 4,
+          "text": "Laisser mijoter encore environ 10 minutes en remuant, avec un peu d’eau si nécessaire."
+        }
+      ]
+    },
+    {
+      "seed_key": "omelette_cheddar_tomate",
+      "name": "Omelette au cheddar et aux tomates",
+      "description": "Une omelette accompagnée de pain grillé.",
+      "servings": 2,
+      "prep_time_minutes": 10,
+      "cook_time_minutes": 10,
+      "total_time_minutes": 20,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_oeuf_gros",
+          "quantity": "4",
+          "unit": "unit",
+          "preparation": "cassés et battus"
+        },
+        {
+          "ingredient_id": "ing_fromage_cheddar",
+          "quantity": "60",
+          "unit": "g",
+          "preparation": "râpé"
+        },
+        {
+          "ingredient_id": "ing_tomate_fraiche",
+          "quantity": "150",
+          "unit": "g",
+          "preparation": "en dés"
+        },
+        {
+          "ingredient_id": "ing_beurre",
+          "quantity": "10",
+          "unit": "g",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_pain_tranche",
+          "quantity": "120",
+          "unit": "g",
+          "preparation": "en tranches"
+        },
+        {
+          "ingredient_id": "ing_sel",
+          "quantity": "1",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Griller le pain. Battre les œufs avec le sel."
+        },
+        {
+          "position": 2,
+          "text": "Faire fondre le beurre dans une poêle et cuire brièvement les tomates."
+        },
+        {
+          "position": 3,
+          "text": "Verser les œufs. Cuire à feu doux en ramenant les bords vers le centre."
+        },
+        {
+          "position": 4,
+          "text": "Ajouter le cheddar et terminer la cuisson jusqu’à ce que les œufs soient pris. Servir avec le pain."
+        }
+      ]
+    },
+    {
+      "seed_key": "pates_thon_courgette",
+      "name": "Pâtes au thon et à la courgette",
+      "description": "Des pâtes au thon avec des tomates fraîches.",
+      "servings": 2,
+      "prep_time_minutes": 10,
+      "cook_time_minutes": 20,
+      "total_time_minutes": 30,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_pates_seches",
+          "quantity": "180",
+          "unit": "g",
+          "preparation": "sèches"
+        },
+        {
+          "ingredient_id": "ing_thon_conserve",
+          "quantity": "150",
+          "unit": "g",
+          "preparation": "en conserve, égoutté ; masse après égouttage"
+        },
+        {
+          "ingredient_id": "ing_tomate_fraiche",
+          "quantity": "250",
+          "unit": "g",
+          "preparation": "en dés"
+        },
+        {
+          "ingredient_id": "ing_courgette_fraiche",
+          "quantity": "200",
+          "unit": "g",
+          "preparation": "en petits dés"
+        },
+        {
+          "ingredient_id": "ing_huile_olive",
+          "quantity": "15",
+          "unit": "ml",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_sel",
+          "quantity": "2",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Cuire les pâtes dans l’eau selon les indications du paquet."
+        },
+        {
+          "position": 2,
+          "text": "Chauffer l’huile dans une poêle et cuire la courgette jusqu’à ce qu’elle soit tendre."
+        },
+        {
+          "position": 3,
+          "text": "Ajouter les tomates et le sel. Cuire quelques minutes, puis incorporer le thon égoutté."
+        },
+        {
+          "position": 4,
+          "text": "Égoutter les pâtes et mélanger à la préparation. Réchauffer avant de servir."
+        }
+      ]
+    },
+    {
+      "seed_key": "soupe_carotte_pomme_de_terre",
+      "name": "Soupe de carottes et de pommes de terre",
+      "description": "Une soupe de légumes liée avec du lait.",
+      "servings": 2,
+      "prep_time_minutes": 15,
+      "cook_time_minutes": 30,
+      "total_time_minutes": 45,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_carotte_fraiche",
+          "quantity": "300",
+          "unit": "g",
+          "preparation": "en rondelles"
+        },
+        {
+          "ingredient_id": "ing_pomme_de_terre",
+          "quantity": "250",
+          "unit": "g",
+          "preparation": "pelées, en dés"
+        },
+        {
+          "ingredient_id": "ing_oignon_jaune",
+          "quantity": "100",
+          "unit": "g",
+          "preparation": "pelé et haché"
+        },
+        {
+          "ingredient_id": "ing_lait_2",
+          "quantity": "200",
+          "unit": "ml",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_beurre",
+          "quantity": "15",
+          "unit": "g",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_sel",
+          "quantity": "2",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Faire fondre le beurre dans une casserole et faire revenir l’oignon."
+        },
+        {
+          "position": 2,
+          "text": "Ajouter les carottes, les pommes de terre et 500 ml d’eau."
+        },
+        {
+          "position": 3,
+          "text": "Porter à ébullition puis laisser mijoter jusqu’à ce que les légumes soient très tendres."
+        },
+        {
+          "position": 4,
+          "text": "Mixer prudemment les légumes avec leur eau de cuisson. Ajouter le lait et le sel, puis réchauffer doucement."
+        }
+      ]
+    },
+    {
+      "seed_key": "crepes_banane",
+      "name": "Crêpes à la banane",
+      "description": "Des crêpes fines garnies de banane.",
+      "servings": 2,
+      "prep_time_minutes": 10,
+      "cook_time_minutes": 15,
+      "total_time_minutes": 25,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_farine",
+          "quantity": "120",
+          "unit": "g",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_oeuf_gros",
+          "quantity": "2",
+          "unit": "unit",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_lait_2",
+          "quantity": "250",
+          "unit": "ml",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_banane_fraiche",
+          "quantity": "200",
+          "unit": "g",
+          "preparation": "pelée, en rondelles"
+        },
+        {
+          "ingredient_id": "ing_beurre",
+          "quantity": "15",
+          "unit": "g",
+          "preparation": "pour la poêle"
+        },
+        {
+          "ingredient_id": "ing_sucre",
+          "quantity": "15",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Mélanger la farine et le sucre. Ajouter les œufs puis le lait progressivement pour obtenir une pâte lisse."
+        },
+        {
+          "position": 2,
+          "text": "Chauffer une poêle et la graisser avec une petite partie du beurre."
+        },
+        {
+          "position": 3,
+          "text": "Verser une fine couche de pâte et cuire chaque crêpe des deux côtés. Répéter en utilisant le reste du beurre selon les besoins."
+        },
+        {
+          "position": 4,
+          "text": "Répartir les rondelles de banane dans les crêpes et les replier avant de servir."
+        }
+      ]
+    },
+    {
+      "seed_key": "yogourt_pomme_banane",
+      "name": "Yogourt aux pommes et aux bananes",
+      "description": "Un bol de yogourt nature et de fruits frais.",
+      "servings": 2,
+      "prep_time_minutes": 10,
+      "cook_time_minutes": 0,
+      "total_time_minutes": 10,
+      "image_url": null,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_yogourt_nature",
+          "quantity": "400",
+          "unit": "g",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_pomme_fraiche",
+          "quantity": "200",
+          "unit": "g",
+          "preparation": "trognon retiré, en petits dés"
+        },
+        {
+          "ingredient_id": "ing_banane_fraiche",
+          "quantity": "150",
+          "unit": "g",
+          "preparation": "pelée, en rondelles"
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Répartir le yogourt dans deux bols."
+        },
+        {
+          "position": 2,
+          "text": "Laver la pomme, retirer son trognon et la couper en petits dés."
+        },
+        {
+          "position": 3,
+          "text": "Peler la banane et la couper en rondelles."
+        },
+        {
+          "position": 4,
+          "text": "Répartir les fruits sur le yogourt et servir."
+        }
+      ]
+    }
+  ]
+}

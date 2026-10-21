@@ -1,0 +1,106 @@
+{
+  "requested_date": "2026-10-06",
+  "attempted_at": "2026-10-07T00:27:01.555149+00:00",
+  "items": [
+    {
+      "product_code": "05700003460",
+      "store_id": "8661",
+      "status": "updated"
+    },
+    {
+      "product_code": "05719711852",
+      "store_id": "8661",
+      "status": "updated"
+    },
+    {
+      "product_code": "06038309830",
+      "store_id": "8661",
+      "status": "updated"
+    },
+    {
+      "product_code": "06780000049",
+      "store_id": "8661",
+      "status": "updated"
+    },
+    {
+      "product_code": "628107321018",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "66151100250",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "06038366414",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "03338370278",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "06038305932",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "06148303301",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "4131",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "94011",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "87668101932",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "06038318557",
+      "store_id": "8661",
+      "status": "updated"
+    },
+    {
+      "product_code": "06620001994",
+      "store_id": "8661",
+      "status": "updated"
+    },
+    {
+      "product_code": "08870201640",
+      "store_id": "8661",
+      "status": "updated"
+    },
+    {
+      "product_code": "62902541000",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "62798733146",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "05657351503",
+      "store_id": "8661",
+      "status": "missing_url"
+    },
+    {
+      "product_code": "62623327240",
+      "store_id": "8661",
+      "status": "missing_url"
+    }
+  ]
+}

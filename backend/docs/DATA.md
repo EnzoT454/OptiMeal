@@ -13,6 +13,8 @@ data/
 ├── catalog/
 │   ├── superc/
 │   │   └── produits.json           # Les 31 ingrédients et leurs produits Super C
+│   ├── metro/produits.json      # Échantillon Metro, 31 ingrédients
+│   ├── baseCommune/             # Référentiel commun et correspondance
 │   └── maxi/
 │       ├── data_final/
 │       │   ├── README.md            # Format commun et validation humaine
@@ -28,8 +30,9 @@ data/
 │       ├── maxi-food-promos-01/    # Promotions recherchées par rayon alimentaire
 │       └── synthese/
 │           └── optimeal_produits_promos.md  # Tableau de travail, sélection à vérifier
+├── recipes/initial_recipes.json # 10 recettes de démonstration pour l’import
 ├── receipts/
-│   ├── images/                     # Photos originales des six reçus
+│   ├── images/                     # Photos originales des sept reçus
 │   ├── extractions/                # Articles et montants structurés en JSON
 │   ├── ocr/                        # Blocs de texte OCR pour rejouer le parsing
 │   ├── archives/                   # Anciennes sorties de diagnostic « before »
@@ -42,7 +45,14 @@ data/
         └── collectes/              # Quatre anciens imports/rejeux épiceries.ca
 ```
 
-Un premier jeu de données Super C fourni est maintenant disponible. Metro n’a pas encore de jeu de données dans `catalog/`. Le pipeline de collecte web IA n’est pas encore intégré au backend.
+Les trois enseignes disposent d’un échantillon de 31 ingrédients et fiches
+produits. `catalog/baseCommune/ingredients.json` les rassemble avec des clés
+stables `ing_…` : 31 ingrédients et 93 fiches produits. Voir son
+[guide](../../data/catalog/baseCommune/README.md). Les recettes de départ
+sont décrites dans [data/recipes/](../../data/recipes/README.md).
+Les imports PostgreSQL des ingrédients et recettes sont disponibles ; les
+recettes HTTP lisent la base. Les ingrédients et offres HTTP restent sur le
+catalogue JSON commun. La collecte web IA Metro/Super C n’est pas intégrée.
 
 ## Données Super C
 
@@ -52,7 +62,7 @@ Ce fichier est une mise en forme des données fournies, pas une vérification de
 
 ## Fichiers d’une collecte Maxi
 
-Pour consulter les données regroupées, utiliser `data/catalog/maxi/data_final/produits.json` (31 références) et `promos.json` (196 offres). Les deux fichiers utilisent exactement les attributs de Super C, avec une liste de produits dans `Produits`. Les prix sont conservés ; les dates et quantités inconnues restent nulles. La validation humaine de Hamza du 4 octobre 2026 et tous les détails du format précédent sont conservés dans `data/catalog/maxi/archives/data_final-before-common-format/`. Le [guide du format commun](../../data/catalog/maxi/data_final/README.md) détaille les correspondances. FastAPI continue à charger les exports sources `catalog-pilot-1.0`, pas ces tableaux simplifiés.
+Pour consulter les données regroupées, utiliser `data/catalog/maxi/data_final/produits.json` (31 références) et `promos.json` (196 offres). Les deux fichiers utilisent exactement les attributs de Super C, avec une liste de produits dans `Produits`. Les prix sont conservés ; les dates et quantités inconnues restent nulles. La validation humaine de Hamza du 4 octobre 2026 et tous les détails du format précédent sont conservés dans `data/catalog/maxi/archives/data_final-before-common-format/`. Le [guide du format commun](../../data/catalog/maxi/data_final/README.md) détaille les correspondances. Les routes historiques FastAPI chargent les exports sources `catalog-pilot-1.0`. Les routes v1 d’ingrédients et offres chargent le regroupement `baseCommune`, pas directement ces tableaux simplifiés.
 
 Chaque dossier correspond à une exécution ou à un rejeu. Commencer par `report.md` pour comprendre le résultat.
 
@@ -92,6 +102,7 @@ Les images gardent leur nom original pour retrouver les résultats correspondant
 | --- | --- |
 | `recu-h1.jpg` | Reçu Maxi : comparaison Vision/Tesseract et lecture des quantités. |
 | `recu_maxi.jpg` | Autre reçu Maxi : extraction et rejeu OCR. |
+| `recu_maxi3.jpg` | Nouveau reçu Maxi : reconstitution des colonnes OCR et comparaison Vision/Tesseract. |
 | `recu_metro.png` | Reçu Metro avec rabais membre : cas de correction ciblée sous Tesseract. |
 | `recu_2.png` | Autre reçu Metro : comparaison des moteurs. |
 | `recu-nouh.png`, `recu-nouh2.png` | Reçus d’essai supplémentaires, profils génériques et extractions partielles. |
@@ -102,11 +113,12 @@ Dans `receipts/extractions/`, les anciens noms sont conservés. Le champ `source
 | --- | --- |
 | `recu-2-t.json`, `recu-h1-t.json`, `recu-maxi-t.json` | Résultats Tesseract ; le dernier utilise le recadrage. |
 | `recu-2-vision-test.json`, `recu-h1-vision-test.json`, `recu-maxi-vision.json` | Résultats Apple Vision pour comparer les moteurs. |
+| `recu-maxi3-ocr.json`, `recu-maxi-3-vision.json` | Résultats Tesseract et Vision du nouveau reçu Maxi. |
 | `recu-h1.json`, `recu_2.json` | Autres sorties Vision conservées. |
 | `recu-nouh.json`, `recu-nouh2.json` | Résultats Vision des reçus génériques. |
 | `recu_maxi.json`, `recu_metro.json` | Rejeux à partir de blocs OCR sauvegardés. Ce ne sont pas de nouvelles lectures d’image. |
 
-`receipts/ocr/` contient `recu_maxi.ocr.json`, `recu_metro.ocr.json` et `recu_2.ocr.json` : du texte et des positions, avant reconstruction des articles. Les fichiers `nouh-before*` et `nouh2-before*` sont isolés dans `receipts/archives/` pour conserver les diagnostics antérieurs.
+`receipts/ocr/` contient `recu_maxi.ocr.json`, `recu_metro.ocr.json`, `recu_2.ocr.json` et `recu_maxi3.ocr.json` : du texte et des positions, avant reconstruction des articles. Les fichiers `nouh-before*` et `nouh2-before*` sont isolés dans `receipts/archives/` pour conserver les diagnostics antérieurs.
 
 La validation humaine du 4 octobre concerne les prix de l’échantillon Maxi/Metro, pas tous les JSON historiques. Certaines sorties conservent des erreurs, notamment le rabais Metro sous Vision. Consulter le [guide OCR](RECEIPTS.md#validation-humaine-des-prix--4-octobre-2026) avant de choisir un résultat de référence.
 

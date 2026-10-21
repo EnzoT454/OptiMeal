@@ -1,0 +1,310 @@
+{
+  "ingredients-page": {
+    "items": [
+      {
+        "id": "ing_ail_frais",
+        "name": "Ail frais",
+        "category": "Légumes",
+        "aliases": [
+          "Ail frais",
+          "ail",
+          "garlic",
+          "Ail",
+          "gousse d'ail",
+          "tête d'ail"
+        ]
+      },
+      {
+        "id": "ing_oignon_jaune",
+        "name": "Oignon jaune",
+        "category": "Légumes",
+        "aliases": [
+          "Oignon jaune",
+          "oignon jaune",
+          "oignons jaunes",
+          "yellow onion",
+          "yellow onions",
+          "Oignon",
+          "oignon",
+          "oignons",
+          "onion"
+        ]
+      }
+    ],
+    "total": 31,
+    "limit": 2,
+    "offset": 0,
+    "meta": {
+      "contract_version": "1.0",
+      "data_source": "local_json",
+      "dataset_kind": "source_snapshot",
+      "review_required": true,
+      "warnings": [
+        "source_prices_not_currently_verified",
+        "ingredient_product_mapping_requires_review",
+        "source_units_not_normalized"
+      ]
+    }
+  },
+  "recipes-page": {
+    "items": [
+      {
+        "id": "recipe_crepes_banane",
+        "name": "Crêpes à la banane",
+        "description": "Des crêpes fines garnies de banane.",
+        "servings": 2,
+        "total_time_minutes": 25,
+        "image_url": null,
+        "review_required": true,
+        "is_owned": false,
+        "is_favorite": false
+      },
+      {
+        "id": "recipe_mijote_pois_chiches_haricots",
+        "name": "Mijoté de pois chiches et de haricots rouges",
+        "description": "Un mijoté de légumineuses avec tomates et poivron.",
+        "servings": 2,
+        "total_time_minutes": 35,
+        "image_url": null,
+        "review_required": true,
+        "is_owned": false,
+        "is_favorite": false
+      }
+    ],
+    "total": 10,
+    "limit": 2,
+    "offset": 0,
+    "meta": {
+      "contract_version": "1.0",
+      "data_source": "postgresql",
+      "dataset_kind": "demo",
+      "review_required": true,
+      "warnings": [
+        "recipe_drafts_require_review"
+      ]
+    }
+  },
+  "recipe-detail": {
+    "item": {
+      "id": "recipe_poulet_riz_brocoli",
+      "name": "Poulet, riz et brocoli",
+      "description": "Une assiette de poulet à l’ail avec du riz et du brocoli.",
+      "servings": 2,
+      "total_time_minutes": 35,
+      "image_url": null,
+      "review_required": true,
+      "is_owned": false,
+      "is_favorite": false,
+      "prep_time_minutes": 10,
+      "cook_time_minutes": 25,
+      "ingredients": [
+        {
+          "ingredient_id": "ing_poitrine_poulet",
+          "quantity": "300",
+          "unit": "g",
+          "preparation": "cru, coupé en dés"
+        },
+        {
+          "ingredient_id": "ing_riz_basmati_blanc",
+          "quantity": "150",
+          "unit": "g",
+          "preparation": "sec"
+        },
+        {
+          "ingredient_id": "ing_brocoli_frais",
+          "quantity": "250",
+          "unit": "g",
+          "preparation": "en petits bouquets"
+        },
+        {
+          "ingredient_id": "ing_ail_frais",
+          "quantity": "6",
+          "unit": "g",
+          "preparation": "pelé et haché"
+        },
+        {
+          "ingredient_id": "ing_huile_olive",
+          "quantity": "15",
+          "unit": "ml",
+          "preparation": null
+        },
+        {
+          "ingredient_id": "ing_sel",
+          "quantity": "2",
+          "unit": "g",
+          "preparation": null
+        }
+      ],
+      "instructions": [
+        {
+          "position": 1,
+          "text": "Faire cuire le riz dans l’eau selon les indications du paquet."
+        },
+        {
+          "position": 2,
+          "text": "Cuire le brocoli à la vapeur jusqu’à ce qu’il soit tendre."
+        },
+        {
+          "position": 3,
+          "text": "Chauffer l’huile dans une poêle. Ajouter le poulet et cuire en remuant jusqu’à ce qu’il soit entièrement cuit à cœur."
+        },
+        {
+          "position": 4,
+          "text": "Ajouter l’ail et le sel, poursuivre brièvement la cuisson et servir avec le riz et le brocoli."
+        }
+      ]
+    },
+    "meta": {
+      "contract_version": "1.0",
+      "data_source": "postgresql",
+      "dataset_kind": "demo",
+      "review_required": true,
+      "warnings": [
+        "recipe_drafts_require_review"
+      ]
+    }
+  },
+  "offers-page": {
+    "items": [
+      {
+        "id": "offer_9a2861196bd5f494a0706dd5",
+        "product_id": "superc:605:819377009987",
+        "ingredient_id": "ing_ail_frais",
+        "product_name": "Ail",
+        "retailer": "superc",
+        "store_id": "superc:605",
+        "external_store_id": "605",
+        "external_product_id": "819377009987",
+        "format": {
+          "quantity": "3",
+          "unit_raw": "un",
+          "basis": "source_unspecified"
+        },
+        "price": {
+          "kind": "commercial",
+          "currency": "CAD",
+          "amount": "0.99",
+          "min_amount": null,
+          "max_amount": null,
+          "basis": "source_unspecified"
+        },
+        "promotion": {
+          "declared": false,
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "status": "not_promotion",
+          "evaluated_on": "2026-10-06"
+        },
+        "source": {
+          "kind": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987",
+          "review_required": true
+        }
+      },
+      {
+        "id": "offer_032bc64af419dea33dfc53de",
+        "product_id": "metro:178:819377009987",
+        "ingredient_id": "ing_ail_frais",
+        "product_name": "Ail",
+        "retailer": "metro",
+        "store_id": "metro:178",
+        "external_store_id": "178",
+        "external_product_id": "819377009987",
+        "format": {
+          "quantity": "3",
+          "unit_raw": "un",
+          "basis": "source_unspecified"
+        },
+        "price": {
+          "kind": "commercial",
+          "currency": "CAD",
+          "amount": "1.99",
+          "min_amount": null,
+          "max_amount": null,
+          "basis": "source_unspecified"
+        },
+        "promotion": {
+          "declared": false,
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "status": "not_promotion",
+          "evaluated_on": "2026-10-06"
+        },
+        "source": {
+          "kind": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987",
+          "review_required": true
+        }
+      }
+    ],
+    "total": 93,
+    "limit": 2,
+    "offset": 0,
+    "meta": {
+      "contract_version": "1.0",
+      "data_source": "local_json",
+      "dataset_kind": "source_snapshot",
+      "review_required": true,
+      "warnings": [
+        "source_prices_not_currently_verified",
+        "ingredient_product_mapping_requires_review",
+        "source_units_not_normalized"
+      ]
+    }
+  },
+  "offer-detail": {
+    "item": {
+      "id": "offer_9a2861196bd5f494a0706dd5",
+      "product_id": "superc:605:819377009987",
+      "ingredient_id": "ing_ail_frais",
+      "product_name": "Ail",
+      "retailer": "superc",
+      "store_id": "superc:605",
+      "external_store_id": "605",
+      "external_product_id": "819377009987",
+      "format": {
+        "quantity": "3",
+        "unit_raw": "un",
+        "basis": "source_unspecified"
+      },
+      "price": {
+        "kind": "commercial",
+        "currency": "CAD",
+        "amount": "0.99",
+        "min_amount": null,
+        "max_amount": null,
+        "basis": "source_unspecified"
+      },
+      "promotion": {
+        "declared": false,
+        "valid_from": "2026-10-04",
+        "valid_to": null,
+        "status": "not_promotion",
+        "evaluated_on": "2026-10-06"
+      },
+      "source": {
+        "kind": "scrap",
+        "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987",
+        "review_required": true
+      }
+    },
+    "meta": {
+      "contract_version": "1.0",
+      "data_source": "local_json",
+      "dataset_kind": "source_snapshot",
+      "review_required": true,
+      "warnings": [
+        "source_prices_not_currently_verified",
+        "ingredient_product_mapping_requires_review",
+        "source_units_not_normalized"
+      ]
+    }
+  },
+  "error": {
+    "error": {
+      "code": "RECIPE_NOT_FOUND",
+      "message": "Recette introuvable.",
+      "details": []
+    }
+  }
+}
