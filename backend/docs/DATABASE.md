@@ -1,6 +1,6 @@
 # Catalogue et prix — évaluation et modèle de données proposé
 
-**Conception initiale : 28 septembre 2026. Mise à jour : 4 octobre 2026. Statut : proposition, sans migration ni base créée.**
+**Conception initiale : 28 septembre 2026. Mise à jour : 20 octobre 2026. Statut : référentiel commun d’ingrédients implémenté ; modèle étendu proposé.**
 
 Ce document évalue la structure transmise par l’équipe : un ingrédient canonique contient des produits commerciaux, chacun contenant ses offres. Il couvre le catalogue, les sources de prix et l’intégration des reçus. Les comptes, recettes, plans et listes sont décrits uniquement aux endroits où ils touchent ces données.
 
@@ -23,12 +23,19 @@ La proposition nécessite surtout six ajustements avant l’implémentation :
 
 | Composant | Disponible aujourd’hui | Conséquence pour la conception |
 | --- | --- | --- |
-| `app/database.py`, modèles et `alembic/env.py` | Squelettes conservés, sans connexion, modèles SQL ni migration fonctionnelle | Compléter les fichiers préparés lors de l’intégration PostgreSQL |
+| `app/database.py` et configuration | Moteur SQLAlchemy/Psycopg, sessions par requête et contrôle `/health/db` | Voir le [guide Supabase](SUPABASE.md) ; les recettes lisent PostgreSQL ; ingrédients et offres restent sur JSON |
+| Modèles et `alembic/env.py` | Modèles `Ingredient`, `Recipe`, `RecipeIngredient`, trois migrations, profils/favoris et imports rejouables des ingrédients et recettes | Voir le [guide des migrations](MIGRATIONS.md) ; autres tables à développer |
 | `app/catalog/apify_ingestion.py` et `apify_batch.py` | Normalisation des captures Apify, produits, formats, prix et avertissements | Prévoir l’insertion des données vérifiées ; Metro/Super C web IA restent à développer |
 | `app/receipts/schemas.py` | Contrat `receipt-1.1`, OCR local, articles, ajustements et contrôles | Stocker d’abord une extraction privée à vérifier |
-| Comptes et confirmation des reçus | Non implémentés | Ne pas ouvrir un import partagé avant les contrôles de propriété |
+| Comptes | Supabase Auth, profil minimal et droits sur recettes/favoris | Voir [AUTH.md](AUTH.md) ; préférences détaillées à développer |
+| Confirmation des reçus | Non implémentée | Contrôles de propriété à étendre avant import privé et contribution |
 
-SQLAlchemy et Alembic sont l’approche envisagée dans le backend. Les squelettes présents préparent leur intégration, sans constituer une configuration exécutable. Les migrations devront devenir l’unique référence exécutable du schéma ; ce document ne les remplace pas.
+SQLAlchemy et Psycopg assurent la connexion. Alembic est l’unique chaîne de
+migrations applicatives. `0001_ingredients` crée le référentiel commun,
+`0002_recipes` les recettes et leurs ingrédients, puis `0003_accounts` les
+profils, favoris et liens de propriété. Les autres tables ci-dessous restent
+proposées. Les migrations sont
+la référence exécutable du schéma ; ce document ne les remplace pas.
 
 ## 3. Évaluation des champs transmis
 
@@ -52,7 +59,10 @@ SQLAlchemy et Alembic sont l’approche envisagée dans le backend. Les squelett
 
 ## 4. Relations et tables proposées
 
-Les identifiants internes seront des UUID. Les noms tels que `ing_oignon_jaune` dans les exemples sont des identifiants pédagogiques, pas des UUID à insérer tels quels.
+Le référentiel initial conserve `ingredient.id` en texte avec les clés
+canoniques `ing_…` des JSON. Les références à ces ingrédients doivent donc
+être textuelles. Des UUID restent envisageables pour les autres entités
+du modèle étendu, sans remplacer les clés communes déjà utilisées.
 
 ```text
 ingredient ← ingredient_product → product ← product_listing → retailer
@@ -73,7 +83,7 @@ Une flèche représente une référence, pas une copie du contenu. Une enseigne 
 
 | Table | Champs principaux | Contraintes et rôle |
 | --- | --- | --- |
-| `ingredient` | `id`, `name`, `category_code`, `state`, `created_at` | Concept utilisé par les recettes, par exemple oignon jaune cru |
+| `ingredient` | Implémenté : `id TEXT`, `name`, `category`, `aliases TEXT[]` | Concept partagé Recettes/Promos ; enrichissements du modèle à migrer ultérieurement |
 | `ingredient_alias` | `id`, `ingredient_id`, `label`, `normalized_label`, `locale`, `status` | Unique par ingrédient, alias normalisé et langue ; le même alias peut désigner plusieurs candidats |
 | `ingredient_product` | `ingredient_id`, `product_id`, `match_kind`, `status`, `reason`, `reviewed_at` | Clé composée ; lien explicite entre besoin culinaire et produit |
 
@@ -161,7 +171,7 @@ Les recettes référencent les ingrédients canoniques. Les révisions de plans 
 
 ### Types proposés
 
-- UUID pour les clés internes ; texte pour les identifiants externes et codes-barres.
+- Clés textuelles `ing_…` pour les ingrédients ; UUID envisageables pour les autres clés internes ; texte pour les identifiants externes et codes-barres.
 - `numeric(12,2)` pour les montants facturés, `numeric(18,8)` pour quantités et valeurs unitaires dérivées. Calculs Python avec `Decimal`, chaînes décimales dans le JSON. Ces précisions sont des choix de projet à confirmer sur les sources ; valider les décimales avant insertion afin de ne pas accepter un arrondi silencieux. PostgreSQL fournit `numeric` pour les calculs exacts. [Documentation PostgreSQL](https://www.postgresql.org/docs/current/datatype-numeric.html)
 - `date` pour validité et jour d’achat ; `timestamptz` pour les instants de collecte et de validation. Conserver séparément le fuseau de la succursale : `timestamptz` ne préserve pas le nom du fuseau d’origine. [Dates et heures PostgreSQL](https://www.postgresql.org/docs/current/datatype-datetime.html)
 - Colonnes relationnelles pour identités, montants, unités, dates et relations recherchées. JSONB pour captures brutes, diagnostics et instantanés versionnés ; pas pour enfouir tout le catalogue dans un document unique.
@@ -265,8 +275,8 @@ Cas de validation à préparer avant les migrations et services concernés :
 
 ## 10. Points restant à trancher avant développement
 
-1. Version PostgreSQL, pilote, sessions SQLAlchemy et organisation des migrations : choisir et installer une seule chaîne technique.
-2. Liste initiale d’ingrédients, catégories et règles de substitution : construire un petit référentiel relu.
+1. Connexion SQLAlchemy/Psycopg et chaîne Alembic choisies ; compléter les modèles et migrations des domaines suivants.
+2. Référentiel initial de 31 ingrédients disponible ; poursuivre la relecture des correspondances et définir les règles de substitution.
 3. Sources d’identité des succursales et des zones : éviter de considérer l’enseigne comme une localisation.
 4. Conditions de prix prises en charge au premier import : les cas non pris en charge restent explicites et non calculables.
 5. Définition des rôles de validation du catalogue et de confirmation des reçus ; méthode de rapprochement produit.

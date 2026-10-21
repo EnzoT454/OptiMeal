@@ -572,3 +572,102 @@ def test_metro_tesseract_reread_archive_replays_without_engine(monkeypatch, tmp_
     original.pop('source')
     replay.pop('source')
     assert replay == original
+
+
+def test_tesseract_tsv_quote_does_not_consume_following_words():
+    tsv = ('level\tpage_num\tblock_num\tpar_num\tline_num\tword_num\tleft\ttop\twidth\theight\tconf\ttext\n'
+           '1\t1\t0\t0\t0\t0\t0\t0\t200\t400\t-1\t\n'
+           '5\t1\t1\t1\t1\t1\t10\t20\t10\t10\t20\t"\n'
+           '5\t1\t1\t1\t2\t1\t20\t40\t30\t10\t95\t2.97\n')
+    blocks = tesseract_blocks(tsv)
+    assert [b.text for b in blocks] == ['"', '2.97']
+    assert blocks[1].line_key == '1:1:1:2'
+
+
+@pytest.mark.parametrize('header', ['MAXT&CIE', 'MAXI8CIE', 'MAXT@CIE'])
+def test_tesseract_maxi_company_header_variants_keep_store_and_require_review(header):
+    lines = [f'{header} EXEMPLE (1234)', '21-EPICERIE',
+             '12345678901 RIZ MRJ 2.97', 'SOUS-TOTAL 2.97', 'TOTAL 2.97']
+    source = ReceiptSource(filename='receipt.jpg', sha256='a' * 64, engine='tesseract', elapsed_seconds=0)
+    result = parse_receipt(lines, source)
+    assert result.parsing_profile == 'maxi'
+    assert result.store_id == '1234'
+    assert result.totals.arithmetic_status == 'matches'
+    assert 'tesseract_retailer_header_requires_review' in result.warnings
+    vision = parse_receipt(lines, source.model_copy(update={'engine': 'vision'}))
+    assert vision.retailer is None
+    assert vision.parsing_profile == 'generic'
+    assert 'tesseract_retailer_header_requires_review' not in vision.warnings
+
+
+def test_tesseract_column_crop_requires_repeated_product_and_price_evidence(tmp_path):
+    import cv2
+    import numpy as np
+    from backend.app.receipts.ocr import crop_tesseract_columns
+
+    image, output = tmp_path / 'receipt.png', tmp_path / 'columns.png'
+    pixels = np.full((600, 300), 255, dtype=np.uint8)
+    image.write_bytes(cv2.imencode('.png', pixels)[1].tobytes())
+    original = image.read_bytes()
+    blocks = [OCRBlock(text=text, confidence=.9, x=x, y=.2 + index * .1,
+                       width=width, height=.03, line_key=f'1:1:1:{index}')
+              for index in range(3)
+              for text, x, width in [('12345678901', .12, .2), ('MRJ', .6, .05), ('2.97', .78, .06)]]
+    assert not crop_tesseract_columns(image, blocks[:6], output)
+    assert not output.exists()
+    assert crop_tesseract_columns(image, blocks, output)
+    cropped = cv2.imdecode(np.frombuffer(output.read_bytes(), dtype=np.uint8), 0)
+    assert cropped.shape == (600, 240)
+    assert image.read_bytes() == original
+
+
+@pytest.mark.parametrize('initial_matches,columns_improve', [(True, True), (False, True), (False, False)])
+def test_maxi_tesseract_fallback_preserves_better_reading_and_replays(
+        monkeypatch, tmp_path, initial_matches, columns_improve):
+    import json
+    import sys
+    from backend.cli import extract_receipt as cli
+
+    image, output, archive = tmp_path / 'receipt.jpg', tmp_path / 'result.json', tmp_path / 'ocr.json'
+    image.write_bytes(b'mocked receipt pixels')
+
+    def blocks(price):
+        lines = ['MAXI (1234)', '21-EPICERIE', f'12345678901 RIZ MRJ {price}',
+                 'SOUS-TOTAL 2.97', 'TOTAL 2.97', 'DateTime: 26/10/16']
+        return [OCRBlock(text=line, confidence=.9, x=.1, y=index * .03,
+                         width=.8, height=.01, line_key=f'1:1:1:{index}')
+                for index, line in enumerate(lines)]
+
+    initial = blocks('2.97' if initial_matches else 'illisible')
+    calls = []
+
+    def recognize(path, *args):
+        calls.append(path.name)
+        if path.name == 'columns.png':
+            return blocks('2.97' if columns_improve else 'illisible'), 'tesseract'
+        return initial, 'tesseract'
+
+    monkeypatch.setattr(cli, 'recognize', recognize)
+    monkeypatch.setattr(cli, 'prepare_tesseract_image', lambda *args: None)
+    monkeypatch.setattr(cli, 'crop_tesseract_columns', lambda *args: True)
+    monkeypatch.setattr(cli, 'crop_tesseract_item_area', lambda *args: False)
+    monkeypatch.setattr(sys, 'argv', ['extract', str(image), '--engine', 'tesseract',
+                                    '--output', str(output), '--save-ocr', str(archive)])
+    assert cli.main() == 0
+    original = json.loads(output.read_text())
+    assert original['totals']['arithmetic_status'] == (
+        'matches' if initial_matches or columns_improve else 'unverifiable')
+    if initial_matches:
+        assert calls == ['receipt.jpg']
+    elif columns_improve:
+        assert original['source']['engine'] == 'tesseract-prepared-columns-psm4'
+    else:
+        assert original['source']['engine'] == 'tesseract'
+        assert original['items'][0]['line_total'] is None
+    monkeypatch.setattr(cli, 'recognize', lambda *args: pytest.fail('Rejeu sans moteur OCR'))
+    monkeypatch.setattr(sys, 'argv', ['extract', str(image), '--ocr-json', str(archive), '--output', str(output)])
+    assert cli.main() == 0
+    replay = json.loads(output.read_text())
+    original.pop('source')
+    replay.pop('source')
+    assert replay == original

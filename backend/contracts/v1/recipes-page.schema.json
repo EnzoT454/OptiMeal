@@ -1,0 +1,152 @@
+{
+  "$defs": {
+    "RecipeSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "servings": {
+          "exclusiveMinimum": 0,
+          "title": "Servings",
+          "type": "integer"
+        },
+        "total_time_minutes": {
+          "minimum": 0,
+          "title": "Total Time Minutes",
+          "type": "integer"
+        },
+        "image_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Image Url"
+        },
+        "review_required": {
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        },
+        "is_owned": {
+          "default": false,
+          "title": "Is Owned",
+          "type": "boolean"
+        },
+        "is_favorite": {
+          "default": false,
+          "title": "Is Favorite",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "servings",
+        "total_time_minutes",
+        "image_url"
+      ],
+      "title": "RecipeSummary",
+      "type": "object"
+    },
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "data_source": {
+          "default": "local_json",
+          "enum": [
+            "local_json",
+            "postgresql"
+          ],
+          "title": "Data Source",
+          "type": "string"
+        },
+        "dataset_kind": {
+          "enum": [
+            "source_snapshot",
+            "demo",
+            "user_content",
+            "mixed"
+          ],
+          "title": "Dataset Kind",
+          "type": "string"
+        },
+        "review_required": {
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dataset_kind"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/$defs/RecipeSummary"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "total": {
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    },
+    "limit": {
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Limit",
+      "type": "integer"
+    },
+    "offset": {
+      "minimum": 0,
+      "title": "Offset",
+      "type": "integer"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    }
+  },
+  "required": [
+    "items",
+    "total",
+    "limit",
+    "offset",
+    "meta"
+  ],
+  "title": "Page[RecipeSummary]",
+  "type": "object"
+}

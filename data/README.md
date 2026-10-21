@@ -2,26 +2,31 @@
 
 Le [guide des données](../backend/docs/DATA.md) explique la structure, chaque type de fichier et les commandes à utiliser.
 
+Le [catalogue commun](catalog/baseCommune/README.md) réunit les 31 ingrédients
+et les produits Maxi, Metro et Super C avec des identifiants partagés par les
+[recettes initiales](recipes/README.md). Il se régénère avec
+`python -m backend.cli.build_common_catalog` à partir des fichiers sources.
+
 ```text
 data/
-├── catalog/maxi/       # Collectes Apify, rapports, sélections et synthèse
-│   └── data_final/
-│       ├── README.md      # Format commun et validation des données Maxi
-│       ├── produits.json  # Les 31 produits sélectionnés dans les trois lots
-│       └── promos.json    # Les 196 offres de la collecte par rayons alimentaires
-├── catalog/superc/
-├── catalog/maxi/archives/data_final-before-common-format/ # Ancien format complet et validation
-│   └── produits.json   # Les 31 ingrédients et leurs produits Super C
-├── message.txt         # Fichier source fourni pour les données Super C
+├── catalog/
+│   ├── baseCommune/    # 31 ingrédients, 93 fiches produits et correspondance
+│   ├── metro/         # Échantillon de 31 ingrédients et produits
+│   ├── superc/        # Échantillon de 31 ingrédients et produits
+│   └── maxi/          # Collectes Apify, reçus rapprochés et pilote PC Express
+│       ├── data_final/ # 31 références et 196 promotions, format commun
+│       └── archives/data_final-before-common-format/
+├── recipes/           # 10 recettes de démonstration et guide d’import
+├── message.txt        # Source fournie des données Super C
 ├── receipts/
-│   ├── images/         # Photos originales
-│   ├── extractions/    # Résultats structurés Vision, Tesseract et rejeux
-│   ├── ocr/            # Blocs OCR bruts pour le rejeu
-│   ├── archives/       # Diagnostics antérieurs
+│   ├── images/        # Photos originales
+│   ├── extractions/   # Résultats structurés Vision, Tesseract et rejeux
+│   ├── ocr/           # Blocs OCR bruts pour le rejeu
+│   ├── archives/      # Diagnostics antérieurs
 │   └── receipt.schema.json
 └── archives/
-    ├── circulaires/    # PDF sources de la piste abandonnée
-    └── epiceries/      # Anciennes études et collectes épiceries.ca
+    ├── circulaires/   # PDF sources de la piste abandonnée
+    └── epiceries/     # Anciennes études et collectes épiceries.ca
 ```
 
 Pour une collecte, commencer par `report.md`. `raw.json` est la capture source ; `catalog.json` est l’export pour FastAPI. Les nouvelles collectes demandent une vérification ; les données Maxi retenues dans `data_final/` ont déjà été revues et vérifiées par Hamza.

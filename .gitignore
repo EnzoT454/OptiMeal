@@ -180,3 +180,6 @@ cython_debug/
 
 # Supports de présentation locaux
 /presentations/
+
+
+backend/.env

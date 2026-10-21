@@ -10,7 +10,7 @@ from subprocess import TimeoutExpired
 
 from pydantic import ValidationError
 
-from backend.app.receipts.ocr import crop_tesseract_item_area, prepare_tesseract_image, recognize, reread_member_discount, validate_blocks
+from backend.app.receipts.ocr import crop_tesseract_columns, crop_tesseract_item_area, prepare_tesseract_image, recognize, reread_member_discount, validate_blocks
 from backend.app.receipts.parser import group_rows, parse_receipt
 from backend.app.receipts.schemas import ReceiptExtraction, ReceiptSource
 
@@ -133,14 +133,29 @@ def main() -> int:
                             reread_result.warnings.append('member_discount_reread_requires_review')
                         if improves_extraction(reread_result, result):
                             result, selected_blocks = reread_result, reread_blocks
-                if result.parsing_profile == 'generic' and result.totals.arithmetic_status != 'matches':
+                if result.parsing_profile in ('generic', 'maxi') and result.totals.arithmetic_status != 'matches':
                     prepared = Path(temporary) / 'prepared.png'
                     prepare_tesseract_image(args.image, prepared)
+                    column_blocks = []
                     for prepared_psm in (4, 6, 11):
                         prepared_blocks, _ = recognize(prepared, 'tesseract', args.languages, prepared_psm)
+                        if prepared_psm == 4:
+                            column_blocks = prepared_blocks
                         prepared_result = parse_candidate(prepared_blocks, f'tesseract-prepared-psm{prepared_psm}')
                         if improves_extraction(prepared_result, result):
                             result, selected_blocks = prepared_result, prepared_blocks
+                        if result.parsing_profile == 'maxi' and result.totals.arithmetic_status == 'matches':
+                            break
+                    columns = Path(temporary) / 'columns.png'
+                    if (result.totals.arithmetic_status != 'matches'
+                            and crop_tesseract_columns(prepared, column_blocks, columns)):
+                        for column_psm in (4, 6):
+                            column_blocks, _ = recognize(columns, 'tesseract', args.languages, column_psm)
+                            column_result = parse_candidate(column_blocks, f'tesseract-prepared-columns-psm{column_psm}')
+                            if improves_extraction(column_result, result):
+                                result, selected_blocks = column_result, column_blocks
+                            if result.totals.arithmetic_status == 'matches':
+                                break
                 cropped = Path(temporary) / 'items.png'
                 if (result.totals.arithmetic_status != 'matches'
                         and not result.source.engine.startswith('tesseract-prepared')

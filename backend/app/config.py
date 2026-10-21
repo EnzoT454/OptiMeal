@@ -1,15 +1,34 @@
-"""Configuration centralisée lue depuis les variables d'environnement."""
-from dataclasses import dataclass
+"""Configuration chargée au démarrage, sans modifier l'environnement global."""
+from dataclasses import dataclass, field
 import os
+from pathlib import Path
+
+from dotenv import dotenv_values
+
+ENV_FILE = Path(__file__).resolve().parents[1] / '.env'
 
 
 @dataclass(frozen=True)
 class Settings:
-    """Valeurs partagées par les modules lorsque PostgreSQL et JWT seront activés."""
+    """Une configuration par application ; les secrets sont exclus du repr."""
 
-    database_url: str | None = os.getenv('DATABASE_URL')
-    jwt_secret: str | None = os.getenv('JWT_SECRET')
-    catalog_import_path: str | None = os.getenv('CATALOG_IMPORT_PATH') or None
+    database_url: str | None = field(default=None, repr=False)
+    jwt_secret: str | None = field(default=None, repr=False)
+    supabase_url: str | None = None
+    supabase_publishable_key: str | None = field(default=None, repr=False)
+    catalog_import_path: str | None = None
+    common_catalog_path: str | None = None
+    recipe_seed_path: str | None = None
 
 
-settings = Settings()
+def load_settings(env_file: Path | None = ENV_FILE) -> Settings:
+    values = dict(dotenv_values(env_file)) if env_file is not None else {}
+    # Même une variable exportée vide prévaut sur .env : DATABASE_URL=""
+    # permet de désactiver volontairement la connexion pour une exécution.
+    values.update(os.environ)
+    for key in ('SUPABASE_URL', 'SUPABASE_PUBLISHABLE_KEY'):
+        if key not in values:
+            values[key] = values.get('EXPO_PUBLIC_' + key)
+    return Settings(**{
+        name: values.get(name.upper()) or None for name in Settings.__dataclass_fields__
+    })

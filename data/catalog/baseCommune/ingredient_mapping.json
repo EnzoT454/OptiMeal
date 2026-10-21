@@ -1,0 +1,574 @@
+{
+  "schema_version": "common-ingredient-mapping-1.0",
+  "status": "proposed",
+  "sources": {
+    "superc": "data/catalog/superc/produits.json",
+    "metro": "data/catalog/metro/produits.json",
+    "maxi": "data/catalog/maxi/data_final/produits.json"
+  },
+  "ingredient_configs": [
+    "backend/config/catalog/ingredients.json",
+    "backend/config/catalog/batch2/ingredients.json",
+    "backend/config/catalog/batch3/ingredients.json"
+  ],
+  "ingredients": [
+    {
+      "ingredient_id": "ing_ail_frais",
+      "name": "Ail frais",
+      "source_rows": {
+        "superc": {
+          "id": 1,
+          "name": "Ail"
+        },
+        "metro": {
+          "id": 1,
+          "name": "Ail"
+        },
+        "maxi": {
+          "id": 1,
+          "name": "Ail frais"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_oignon_jaune",
+      "name": "Oignon jaune",
+      "source_rows": {
+        "superc": {
+          "id": 2,
+          "name": "Oignon"
+        },
+        "metro": {
+          "id": 2,
+          "name": "Oignon"
+        },
+        "maxi": {
+          "id": 2,
+          "name": "Oignon jaune"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_carotte_fraiche",
+      "name": "Carotte fraîche",
+      "source_rows": {
+        "superc": {
+          "id": 3,
+          "name": "Carotte"
+        },
+        "metro": {
+          "id": 3,
+          "name": "Carotte"
+        },
+        "maxi": {
+          "id": 3,
+          "name": "Carotte fraîche"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "name": "Tomate fraîche",
+      "source_rows": {
+        "superc": {
+          "id": 4,
+          "name": "Tomate"
+        },
+        "metro": {
+          "id": 4,
+          "name": "Tomate"
+        },
+        "maxi": {
+          "id": 11,
+          "name": "Tomate fraîche"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "name": "Pomme de terre fraîche",
+      "source_rows": {
+        "superc": {
+          "id": 5,
+          "name": "Pomme de terre"
+        },
+        "metro": {
+          "id": 5,
+          "name": "Pomme de terre"
+        },
+        "maxi": {
+          "id": 12,
+          "name": "Pomme de terre fraîche"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_poivron_frais",
+      "name": "Poivron frais",
+      "source_rows": {
+        "superc": {
+          "id": 6,
+          "name": "Poivron"
+        },
+        "metro": {
+          "id": 6,
+          "name": "Poivron"
+        },
+        "maxi": {
+          "id": 13,
+          "name": "Poivron frais"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "name": "Brocoli frais",
+      "source_rows": {
+        "superc": {
+          "id": 7,
+          "name": "Brocoli"
+        },
+        "metro": {
+          "id": 7,
+          "name": "Brocoli"
+        },
+        "maxi": {
+          "id": 14,
+          "name": "Brocoli frais"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "name": "Courgette fraîche",
+      "source_rows": {
+        "superc": {
+          "id": 8,
+          "name": "Courgette"
+        },
+        "metro": {
+          "id": 8,
+          "name": "Courgette"
+        },
+        "maxi": {
+          "id": 15,
+          "name": "Courgette fraîche"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_banane_fraiche",
+      "name": "Banane fraîche",
+      "source_rows": {
+        "superc": {
+          "id": 9,
+          "name": "Banane"
+        },
+        "metro": {
+          "id": 9,
+          "name": "Banane"
+        },
+        "maxi": {
+          "id": 4,
+          "name": "Banane fraîche"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "name": "Pomme fraîche",
+      "source_rows": {
+        "superc": {
+          "id": 10,
+          "name": "Pomme"
+        },
+        "metro": {
+          "id": 10,
+          "name": "Pomme"
+        },
+        "maxi": {
+          "id": 16,
+          "name": "Pomme fraîche"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "name": "Citron frais",
+      "source_rows": {
+        "superc": {
+          "id": 11,
+          "name": "Citron"
+        },
+        "metro": {
+          "id": 11,
+          "name": "Citron"
+        },
+        "maxi": {
+          "id": 17,
+          "name": "Citron frais"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_poitrine_poulet",
+      "name": "Poitrine de poulet fraîche",
+      "source_rows": {
+        "superc": {
+          "id": 12,
+          "name": "Poitrine de poulet"
+        },
+        "metro": {
+          "id": 12,
+          "name": "Poitrine de poulet"
+        },
+        "maxi": {
+          "id": 5,
+          "name": "Poitrine de poulet fraîche"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "name": "Bœuf haché cru",
+      "source_rows": {
+        "superc": {
+          "id": 13,
+          "name": "Bœuf haché"
+        },
+        "metro": {
+          "id": 13,
+          "name": "Bœuf haché"
+        },
+        "maxi": {
+          "id": 18,
+          "name": "Bœuf haché cru"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "name": "Saumon nature",
+      "source_rows": {
+        "superc": {
+          "id": 14,
+          "name": "Saumon"
+        },
+        "metro": {
+          "id": 14,
+          "name": "Saumon"
+        },
+        "maxi": {
+          "id": 19,
+          "name": "Saumon nature"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "name": "Thon en conserve",
+      "source_rows": {
+        "superc": {
+          "id": 15,
+          "name": "Thon en conserve"
+        },
+        "metro": {
+          "id": 15,
+          "name": "Thon en conserve"
+        },
+        "maxi": {
+          "id": 20,
+          "name": "Thon en conserve"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "name": "Crevettes nature",
+      "source_rows": {
+        "superc": {
+          "id": 16,
+          "name": "Crevettes"
+        },
+        "metro": {
+          "id": 16,
+          "name": "Crevettes"
+        },
+        "maxi": {
+          "id": 21,
+          "name": "Crevettes nature"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_lait_2",
+      "name": "Lait de vache 2 %",
+      "source_rows": {
+        "superc": {
+          "id": 17,
+          "name": "Lait"
+        },
+        "metro": {
+          "id": 17,
+          "name": "Lait"
+        },
+        "maxi": {
+          "id": 6,
+          "name": "Lait de vache 2 %"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_fromage_cheddar",
+      "name": "Fromage cheddar",
+      "source_rows": {
+        "superc": {
+          "id": 18,
+          "name": "Fromage cheddar"
+        },
+        "metro": {
+          "id": 18,
+          "name": "Fromage cheddar"
+        },
+        "maxi": {
+          "id": 22,
+          "name": "Fromage cheddar"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "name": "Yogourt nature",
+      "source_rows": {
+        "superc": {
+          "id": 19,
+          "name": "Yogourt nature"
+        },
+        "metro": {
+          "id": 19,
+          "name": "Yogourt nature"
+        },
+        "maxi": {
+          "id": 23,
+          "name": "Yogourt nature"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "name": "Beurre",
+      "source_rows": {
+        "superc": {
+          "id": 20,
+          "name": "Beurre"
+        },
+        "metro": {
+          "id": 20,
+          "name": "Beurre"
+        },
+        "maxi": {
+          "id": 24,
+          "name": "Beurre"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_oeuf_gros",
+      "name": "Œufs gros",
+      "source_rows": {
+        "superc": {
+          "id": 21,
+          "name": "Œufs"
+        },
+        "metro": {
+          "id": 21,
+          "name": "Œufs"
+        },
+        "maxi": {
+          "id": 7,
+          "name": "Œufs gros"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_riz_basmati_blanc",
+      "name": "Riz basmati blanc sec",
+      "source_rows": {
+        "superc": {
+          "id": 22,
+          "name": "Riz"
+        },
+        "metro": {
+          "id": 22,
+          "name": "Riz"
+        },
+        "maxi": {
+          "id": 8,
+          "name": "Riz basmati blanc sec"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_pates_seches",
+      "name": "Pâtes alimentaires sèches",
+      "source_rows": {
+        "superc": {
+          "id": 23,
+          "name": "Pâtes"
+        },
+        "metro": {
+          "id": 23,
+          "name": "Pâtes"
+        },
+        "maxi": {
+          "id": 25,
+          "name": "Pâtes alimentaires sèches"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_pois_chiche_conserve",
+      "name": "Pois chiches en conserve",
+      "source_rows": {
+        "superc": {
+          "id": 24,
+          "name": "Pois chiches"
+        },
+        "metro": {
+          "id": 24,
+          "name": "Pois chiches"
+        },
+        "maxi": {
+          "id": 9,
+          "name": "Pois chiches en conserve"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "name": "Haricots rouges en conserve",
+      "source_rows": {
+        "superc": {
+          "id": 25,
+          "name": "Haricots rouges"
+        },
+        "metro": {
+          "id": 25,
+          "name": "Haricots rouges"
+        },
+        "maxi": {
+          "id": 26,
+          "name": "Haricots rouges en conserve"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_tomates_conserve",
+      "name": "Tomates en conserve",
+      "source_rows": {
+        "superc": {
+          "id": 26,
+          "name": "Tomates en conserve"
+        },
+        "metro": {
+          "id": 26,
+          "name": "Tomates en conserve"
+        },
+        "maxi": {
+          "id": 27,
+          "name": "Tomates en conserve"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_huile_olive",
+      "name": "Huile d’olive",
+      "source_rows": {
+        "superc": {
+          "id": 27,
+          "name": "Huile d’olive"
+        },
+        "metro": {
+          "id": 27,
+          "name": "Huile d’olive"
+        },
+        "maxi": {
+          "id": 10,
+          "name": "Huile d’olive"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "name": "Farine de blé tout usage",
+      "source_rows": {
+        "superc": {
+          "id": 28,
+          "name": "Farine"
+        },
+        "metro": {
+          "id": 28,
+          "name": "Farine"
+        },
+        "maxi": {
+          "id": 28,
+          "name": "Farine de blé tout usage"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "name": "Sucre blanc granulé",
+      "source_rows": {
+        "superc": {
+          "id": 29,
+          "name": "Sucre"
+        },
+        "metro": {
+          "id": 29,
+          "name": "Sucre"
+        },
+        "maxi": {
+          "id": 29,
+          "name": "Sucre blanc granulé"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "name": "Sel de table",
+      "source_rows": {
+        "superc": {
+          "id": 30,
+          "name": "Sel"
+        },
+        "metro": {
+          "id": 30,
+          "name": "Sel"
+        },
+        "maxi": {
+          "id": 30,
+          "name": "Sel de table"
+        }
+      }
+    },
+    {
+      "ingredient_id": "ing_pain_tranche",
+      "name": "Pain tranché",
+      "source_rows": {
+        "superc": {
+          "id": 31,
+          "name": "Pain tranché"
+        },
+        "metro": {
+          "id": 31,
+          "name": "Pain tranché"
+        },
+        "maxi": {
+          "id": 31,
+          "name": "Pain tranché"
+        }
+      }
+    }
+  ]
+}

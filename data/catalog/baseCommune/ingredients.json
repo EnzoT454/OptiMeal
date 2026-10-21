@@ -1,0 +1,2632 @@
+{
+  "schema_version": "common-catalog-1.0",
+  "status": "assembled_from_local_sources",
+  "mapping_status": "proposed",
+  "inputs": [
+    {
+      "path": "data/catalog/baseCommune/ingredient_mapping.json",
+      "sha256": "05668adcf49a7be8ec68c201b1cdcfab9bc999540573e1f79cdf2102e10d3c4d"
+    },
+    {
+      "path": "backend/config/catalog/ingredients.json",
+      "sha256": "db9647330c7d0abe8ba7c27d0c4479b3fcc4fba13ccd63ac2c42cef79c89d07b"
+    },
+    {
+      "path": "backend/config/catalog/batch2/ingredients.json",
+      "sha256": "955b140550fcfdf9e4c3a8e455b670b773459643e7a26d1fb416b5f0bc50e246"
+    },
+    {
+      "path": "backend/config/catalog/batch3/ingredients.json",
+      "sha256": "fb76e59bfe63d32cab703e05fe2b4eb8008563e4452f2ee92eb4f0bf23e53776"
+    },
+    {
+      "path": "data/catalog/superc/produits.json",
+      "sha256": "179045dcf5954bbf1b50039b8706c62aec1955449ab2280b9a158485edaf2b9d"
+    },
+    {
+      "path": "data/catalog/metro/produits.json",
+      "sha256": "437ca58d2853a260f0625816c2aaac0cedc5d9a7fb471cf4e3c2d5a7325ffbde"
+    },
+    {
+      "path": "data/catalog/maxi/data_final/produits.json",
+      "sha256": "f1b25cac5baa8930b678c498de1e0927c845a628f61de7718a6194a78d5dc08b"
+    }
+  ],
+  "ingredient_count": 31,
+  "product_count": 93,
+  "ingredients": [
+    {
+      "id": "ing_ail_frais",
+      "name": "Ail frais",
+      "category": "Légumes",
+      "aliases": [
+        "Ail frais",
+        "ail",
+        "garlic",
+        "Ail",
+        "gousse d'ail",
+        "tête d'ail"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 1,
+          "name": "Ail"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 1,
+          "name": "Ail"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 1,
+          "name": "Ail frais"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:819377009987",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "819377009987",
+          "name": "Ail",
+          "price": "0.99",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "3",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987"
+        },
+        {
+          "id": "metro:178:819377009987",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "819377009987",
+          "name": "Ail",
+          "price": "1.99",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "3",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987"
+        },
+        {
+          "id": "maxi:8661:21004355001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "21004355001_EA",
+          "name": "Garlic Bulbs, 3-count",
+          "price": "1.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "90",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/garlic-bulbs-3-count/p/21004355001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_oignon_jaune",
+      "name": "Oignon jaune",
+      "category": "Légumes",
+      "aliases": [
+        "Oignon jaune",
+        "oignon jaune",
+        "oignons jaunes",
+        "yellow onion",
+        "yellow onions",
+        "Oignon",
+        "oignon",
+        "oignons",
+        "onion"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 2,
+          "name": "Oignon"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 2,
+          "name": "Oignon"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 2,
+          "name": "Oignon jaune"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749900133",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749900133",
+          "name": "Oignons jaunes",
+          "price": "1.66",
+          "currency": "CAD",
+          "unit": "lb",
+          "quantity": "2",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133"
+        },
+        {
+          "id": "metro:178:059749900133",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749900133",
+          "name": "Oignons jaunes",
+          "price": "1.69",
+          "currency": "CAD",
+          "unit": "lb",
+          "quantity": "2",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133"
+        },
+        {
+          "id": "maxi:8661:20811994001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20811994001_EA",
+          "name": "Yellow Onions, 3 lb Bag",
+          "price": "3.29",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "1360",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/yellow-onions-3-lb-bag/p/20811994001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_carotte_fraiche",
+      "name": "Carotte fraîche",
+      "category": "Légumes",
+      "aliases": [
+        "Carotte fraîche",
+        "carotte",
+        "carottes",
+        "carrot",
+        "carrots",
+        "Carotte"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 3,
+          "name": "Carotte"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 3,
+          "name": "Carotte"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 3,
+          "name": "Carotte fraîche"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749854368",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749854368",
+          "name": "Sac de carottes",
+          "price": "1.66",
+          "currency": "CAD",
+          "unit": "lb",
+          "quantity": "2",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368"
+        },
+        {
+          "id": "metro:178:059749854368",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749854368",
+          "name": "Sac de carottes",
+          "price": "1.99",
+          "currency": "CAD",
+          "unit": "lb",
+          "quantity": "2",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368"
+        },
+        {
+          "id": "maxi:8661:20600927001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20600927001_EA",
+          "name": "Carrots, 3 lb Bag",
+          "price": "4.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "1362",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/carrots-3-lb-bag/p/20600927001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_tomate_fraiche",
+      "name": "Tomate fraîche",
+      "category": "Légumes",
+      "aliases": [
+        "Tomate fraîche",
+        "tomato",
+        "tomatoes",
+        "tomate",
+        "tomates",
+        "Tomate"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 4,
+          "name": "Tomate"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 4,
+          "name": "Tomate"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 11,
+          "name": "Tomate fraîche"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:4800",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "4800",
+          "name": "Tomate",
+          "price": "5.49",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800"
+        },
+        {
+          "id": "metro:178:4800",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "4800",
+          "name": "Tomate",
+          "price": "5.49",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800"
+        },
+        {
+          "id": "maxi:8661:21367888001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "21367888001_EA",
+          "name": "Grape Tomatoes",
+          "price": "3.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "283",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/grape-tomatoes/p/21367888001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_pomme_de_terre",
+      "name": "Pomme de terre fraîche",
+      "category": "Légumes",
+      "aliases": [
+        "Pomme de terre fraîche",
+        "potato",
+        "potatoes",
+        "pomme de terre",
+        "pommes de terre",
+        "Pomme de terre",
+        "patate",
+        "patates"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 5,
+          "name": "Pomme de terre"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 5,
+          "name": "Pomme de terre"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 12,
+          "name": "Pomme de terre fraîche"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749868303",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749868303",
+          "name": "Pommes de terre à chair jaune",
+          "price": "3.99",
+          "currency": "CAD",
+          "unit": "lb",
+          "quantity": "10",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303"
+        },
+        {
+          "id": "metro:178:059749868303",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749868303",
+          "name": "Pommes de terre à chair jaune",
+          "price": "6.99",
+          "currency": "CAD",
+          "unit": "lb",
+          "quantity": "10",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303"
+        },
+        {
+          "id": "maxi:8661:20601017001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20601017001_EA",
+          "name": "Yellow Potato, 10 lb Bag",
+          "price": "6.79",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "4540",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/yellow-potato-10-lb-bag/p/20601017001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_poivron_frais",
+      "name": "Poivron frais",
+      "category": "Légumes",
+      "aliases": [
+        "Poivron frais",
+        "bell pepper",
+        "bell peppers",
+        "sweet pepper",
+        "sweet peppers",
+        "poivron",
+        "poivrons",
+        "Poivron",
+        "piment doux"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 6,
+          "name": "Poivron"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 6,
+          "name": "Poivron"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 13,
+          "name": "Poivron frais"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:4065",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "4065",
+          "name": "Poivron vert",
+          "price": "4.39",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065"
+        },
+        {
+          "id": "metro:178:4065",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "4065",
+          "name": "Poivron vert",
+          "price": "5.49",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065"
+        },
+        {
+          "id": "maxi:8661:20921434001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20921434001_EA",
+          "name": "Naturally Imperfect Mixed Sweet Peppers 2.5lb Bag",
+          "price": "6.99",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "1113",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/naturally-imperfect-mixed-sweet-peppers-2-5lb-bag/p/20921434001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_brocoli_frais",
+      "name": "Brocoli frais",
+      "category": "Légumes",
+      "aliases": [
+        "Brocoli frais",
+        "broccoli",
+        "brocoli",
+        "brocolis",
+        "Brocoli"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 7,
+          "name": "Brocoli"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 7,
+          "name": "Brocoli"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 14,
+          "name": "Brocoli frais"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:796631161271",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "796631161271",
+          "name": "Couronne de brocoli enveloppée",
+          "price": "2.49",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "1",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271"
+        },
+        {
+          "id": "metro:178:796631161271",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "796631161271",
+          "name": "Couronne de brocoli enveloppée",
+          "price": "2.99",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271"
+        },
+        {
+          "id": "maxi:8661:21121560001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "21121560001_EA",
+          "name": "Broccoli Crown",
+          "price": "0.95",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "1",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/broccoli-crown/p/21121560001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_courgette_fraiche",
+      "name": "Courgette fraîche",
+      "category": "Légumes",
+      "aliases": [
+        "Courgette fraîche",
+        "zucchini",
+        "zucchinis",
+        "courgette",
+        "courgettes",
+        "Courgette"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 8,
+          "name": "Courgette"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 8,
+          "name": "Courgette"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 15,
+          "name": "Courgette fraîche"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:4067",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "4067",
+          "name": "Courgette",
+          "price": "4.39",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067"
+        },
+        {
+          "id": "metro:178:4067",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "4067",
+          "name": "Courgette",
+          "price": "6.59",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067"
+        },
+        {
+          "id": "maxi:8661:20426596001_KG",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20426596001_KG",
+          "name": "Zucchini",
+          "price": "1.41",
+          "currency": "CAD",
+          "unit": null,
+          "quantity": null,
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/zucchini/p/20426596001_KG"
+        }
+      ]
+    },
+    {
+      "id": "ing_banane_fraiche",
+      "name": "Banane fraîche",
+      "category": "Fruits",
+      "aliases": [
+        "Banane fraîche",
+        "banane",
+        "bananes",
+        "banana",
+        "bananas",
+        "Banane"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 9,
+          "name": "Banane"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 9,
+          "name": "Banane"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 4,
+          "name": "Banane fraîche"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:4011",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "4011",
+          "name": "Banane",
+          "price": "1.74",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011"
+        },
+        {
+          "id": "metro:178:4011",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "4011",
+          "name": "Banane",
+          "price": "2.18",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011"
+        },
+        {
+          "id": "maxi:8661:20139509001_KG",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20139509001_KG",
+          "name": "Organic Bananas, Bunch",
+          "price": "2.64",
+          "currency": "CAD",
+          "unit": null,
+          "quantity": null,
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/organic-bananas-bunch/p/20139509001_KG"
+        }
+      ]
+    },
+    {
+      "id": "ing_pomme_fraiche",
+      "name": "Pomme fraîche",
+      "category": "Fruits",
+      "aliases": [
+        "Pomme fraîche",
+        "apple",
+        "apples",
+        "pomme",
+        "pommes",
+        "Pomme"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 10,
+          "name": "Pomme"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 10,
+          "name": "Pomme"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 16,
+          "name": "Pomme fraîche"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:4173",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "4173",
+          "name": "Pomme, Gala",
+          "price": "5.49",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173"
+        },
+        {
+          "id": "metro:178:4173",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "4173",
+          "name": "Pomme, Gala",
+          "price": "6.59",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173"
+        },
+        {
+          "id": "maxi:8661:20713211001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20713211001_EA",
+          "name": "McIntosh Apples, 4 lb Bag",
+          "price": "6.99",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "1810",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/mcintosh-apples-4-lb-bag/p/20713211001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_citron_frais",
+      "name": "Citron frais",
+      "category": "Fruits",
+      "aliases": [
+        "Citron frais",
+        "lemon",
+        "lemons",
+        "citron",
+        "citrons",
+        "Citron"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 11,
+          "name": "Citron"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 11,
+          "name": "Citron"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 17,
+          "name": "Citron frais"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:4053",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "4053",
+          "name": "Citron",
+          "price": "0.79",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "1",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053"
+        },
+        {
+          "id": "metro:178:4053",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "4053",
+          "name": "Citron",
+          "price": "0.99",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "1",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053"
+        },
+        {
+          "id": "maxi:8661:20028593001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20028593001_EA",
+          "name": "Lemon",
+          "price": "0.97",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "1",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/lemon/p/20028593001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_poitrine_poulet",
+      "name": "Poitrine de poulet fraîche",
+      "category": "Viandes",
+      "aliases": [
+        "Poitrine de poulet fraîche",
+        "poitrine",
+        "poitrines",
+        "chicken breast",
+        "Poitrine de poulet",
+        "poitrine de poulet",
+        "poitrines de poulet",
+        "blanc de poulet",
+        "poulet"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 12,
+          "name": "Poitrine de poulet"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 12,
+          "name": "Poitrine de poulet"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 5,
+          "name": "Poitrine de poulet fraîche"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:201918",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "201918",
+          "name": "Poitrines de poulet désossées sans peau, Format économique",
+          "price": "10.74",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/viandes-et-volailles/poulet-et-dinde/poitrines/poitrines-de-poulet-desossees-sans-peau/p/201918"
+        },
+        {
+          "id": "metro:178:213217",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "213217",
+          "name": "Poitrines de poulet parées et désossées, Format économique",
+          "price": "19.99",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/format-economique/marche-frais/viande-charcuterie-et-poisson/poitrines-de-poulet-parees-et-desossees/p/213217"
+        },
+        {
+          "id": "maxi:8661:20028450_KG",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20028450_KG",
+          "name": "Chicken Breast Boneless Skinless Club Pack",
+          "price": "18.14",
+          "currency": "CAD",
+          "unit": null,
+          "quantity": null,
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/chicken-breast-boneless-skinless-club-pack/p/20028450_KG"
+        }
+      ]
+    },
+    {
+      "id": "ing_boeuf_hache",
+      "name": "Bœuf haché cru",
+      "category": "Viandes",
+      "aliases": [
+        "Bœuf haché cru",
+        "ground beef",
+        "minced beef",
+        "boeuf hache",
+        "Bœuf haché",
+        "bœuf haché",
+        "boeuf haché",
+        "steak haché",
+        "viande hachée"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 13,
+          "name": "Bœuf haché"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 13,
+          "name": "Bœuf haché"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 18,
+          "name": "Bœuf haché cru"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:201020",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "201020",
+          "name": "Bœuf haché maigre",
+          "price": "22.02",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020"
+        },
+        {
+          "id": "metro:178:201020",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "201020",
+          "name": "Bœuf haché maigre",
+          "price": "22.68",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020"
+        },
+        {
+          "id": "maxi:8661:21604443_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "21604443_EA",
+          "name": "Lean Ground Beef",
+          "price": "9.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "450",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/lean-ground-beef/p/21604443_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_saumon",
+      "name": "Saumon nature",
+      "category": "Poissons",
+      "aliases": [
+        "Saumon nature",
+        "salmon",
+        "saumon",
+        "Saumon",
+        "filet de saumon"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 14,
+          "name": "Saumon"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 14,
+          "name": "Saumon"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 19,
+          "name": "Saumon nature"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:222357",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "222357",
+          "name": "Filets de saumon Atlantique frais, Format économique",
+          "price": "30.84",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filets-de-saumon-atlantique-frais/p/222357"
+        },
+        {
+          "id": "metro:178:230119",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "230119",
+          "name": "Filet de saumon Atlantique frais du Canada, Format économique",
+          "price": "39.66",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filet-de-saumon-atlantique-frais-du-canada/p/230119"
+        },
+        {
+          "id": "maxi:8661:21634491_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "21634491_EA",
+          "name": "Atlantic Salmon Fillet",
+          "price": "17.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "405",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/atlantic-salmon-fillet/p/21634491_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_thon_conserve",
+      "name": "Thon en conserve",
+      "category": "Poissons",
+      "aliases": [
+        "Thon en conserve",
+        "tuna",
+        "thon",
+        "thon en conserve",
+        "thon pâle",
+        "canned tuna"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 15,
+          "name": "Thon en conserve"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 15,
+          "name": "Thon en conserve"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 20,
+          "name": "Thon en conserve"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749931922",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749931922",
+          "name": "Thon pâle en morceaux dans l'eau - Selection",
+          "price": "1.39",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "170",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922"
+        },
+        {
+          "id": "metro:178:059749931922",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749931922",
+          "name": "Thon pâle en morceaux dans l'eau - Selection",
+          "price": "1.49",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "170",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922"
+        },
+        {
+          "id": "maxi:8661:20521648_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20521648_EA",
+          "name": "Flaked Light Tuna Packed in Water",
+          "price": "1.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "170",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": true,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/flaked-light-tuna-packed-in-water/p/20521648_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_crevettes",
+      "name": "Crevettes nature",
+      "category": "Poissons",
+      "aliases": [
+        "Crevettes nature",
+        "shrimp",
+        "shrimps",
+        "prawn",
+        "prawns",
+        "crevette",
+        "crevettes",
+        "Crevettes"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 16,
+          "name": "Crevettes"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 16,
+          "name": "Crevettes"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 21,
+          "name": "Crevettes nature"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059072052035",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059072052035",
+          "name": "Crevettes sauvages d'Argentine crues surgelées - Irrésistible",
+          "price": "5.99",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "300",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035"
+        },
+        {
+          "id": "metro:178:059072052035",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059072052035",
+          "name": "Crevettes sauvages d'Argentine crues surgelées - Irrésistible",
+          "price": "8.99",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "300",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-21",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035"
+        },
+        {
+          "id": "maxi:8661:20789931_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20789931_EA",
+          "name": "Peeled Raw Pacific White Shrimp",
+          "price": "11.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "400",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/peeled-raw-pacific-white-shrimp/p/20789931_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_lait_2",
+      "name": "Lait de vache 2 %",
+      "category": "Produits laitiers",
+      "aliases": [
+        "Lait de vache 2 %",
+        "lait",
+        "milk",
+        "Lait",
+        "lait 2 %"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 17,
+          "name": "Lait"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 17,
+          "name": "Lait"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 6,
+          "name": "Lait de vache 2 %"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:055872025019",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "055872025019",
+          "name": "Lait 2 % - Québon",
+          "price": "4.6",
+          "currency": "CAD",
+          "unit": "L",
+          "quantity": "2",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/055872025019"
+        },
+        {
+          "id": "metro:178:068200550916",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "068200550916",
+          "name": "Lait 2 % - Beatrice",
+          "price": "4.6",
+          "currency": "CAD",
+          "unit": "L",
+          "quantity": "2",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/068200550916"
+        },
+        {
+          "id": "maxi:8661:20020563_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20020563_EA",
+          "name": "Purfiltre Partially Skimmed Milk 2%",
+          "price": "5.25",
+          "currency": "CAD",
+          "unit": "ml",
+          "quantity": "2000",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/purfiltre-partially-skimmed-milk-2/p/20020563_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_fromage_cheddar",
+      "name": "Fromage cheddar",
+      "category": "Produits laitiers",
+      "aliases": [
+        "Fromage cheddar",
+        "cheddar",
+        "fromage cheddar",
+        "fromage",
+        "cheddar cheese"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 18,
+          "name": "Fromage cheddar"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 18,
+          "name": "Fromage cheddar"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 22,
+          "name": "Fromage cheddar"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:068200005362",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "068200005362",
+          "name": "Fromage cheddar marbré - P'tit Québec",
+          "price": "4.97",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "400",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362"
+        },
+        {
+          "id": "metro:178:068200005362",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "068200005362",
+          "name": "Fromage cheddar marbré - P'tit Québec",
+          "price": "7.99",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "400",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362"
+        },
+        {
+          "id": "maxi:8661:20975873_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20975873_EA",
+          "name": "Old Cheddar Cheese",
+          "price": "9.29",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "700",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/old-cheddar-cheese/p/20975873_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_yogourt_nature",
+      "name": "Yogourt nature",
+      "category": "Produits laitiers",
+      "aliases": [
+        "Yogourt nature",
+        "yogurt",
+        "yoghurt",
+        "yogourt",
+        "yogourts",
+        "yogourt nature",
+        "yaourt nature",
+        "plain yogurt"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 19,
+          "name": "Yogourt nature"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 19,
+          "name": "Yogourt nature"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 23,
+          "name": "Yogourt nature"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:057825750023",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "057825750023",
+          "name": "Yogourt nature style Balkan 2 %, Original - Astro",
+          "price": "3.33",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "750",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-28",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023"
+        },
+        {
+          "id": "metro:178:057825750023",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "057825750023",
+          "name": "Yogourt nature style Balkan 2 %, Original - Astro",
+          "price": "4.69",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "750",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023"
+        },
+        {
+          "id": "maxi:8661:20165226001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20165226001_EA",
+          "name": "Original Balkan Style Plain Yogurt 6%",
+          "price": "3.49",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "750",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/original-balkan-style-plain-yogurt-6/p/20165226001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_beurre",
+      "name": "Beurre",
+      "category": "Produits laitiers",
+      "aliases": [
+        "Beurre",
+        "butter",
+        "beurre",
+        "beurre salé"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 20,
+          "name": "Beurre"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 20,
+          "name": "Beurre"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 24,
+          "name": "Beurre"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749894784",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749894784",
+          "name": "Beurre salé - Selection",
+          "price": "4.88",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "454",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784"
+        },
+        {
+          "id": "metro:178:059749894784",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749894784",
+          "name": "Beurre salé - Selection",
+          "price": "6.49",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "454",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784"
+        },
+        {
+          "id": "maxi:8661:20325029_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20325029_EA",
+          "name": "Salted Butter",
+          "price": "6.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "454",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/salted-butter/p/20325029_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_oeuf_gros",
+      "name": "Œufs gros",
+      "category": "Œufs",
+      "aliases": [
+        "Œufs gros",
+        "oeufs",
+        "œufs",
+        "eggs",
+        "Œufs",
+        "œuf",
+        "oeuf",
+        "gros œufs"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 21,
+          "name": "Œufs"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 21,
+          "name": "Œufs"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 7,
+          "name": "Œufs gros"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749896054",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749896054",
+          "name": "Gros œufs - Selection",
+          "price": "2.99",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "12",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-14",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054"
+        },
+        {
+          "id": "metro:178:059749896054",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749896054",
+          "name": "Gros œufs - Selection",
+          "price": "4.17",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "12",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054"
+        },
+        {
+          "id": "maxi:8661:21435777001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "21435777001_EA",
+          "name": "Large Size Eggs",
+          "price": "10.19",
+          "currency": "CAD",
+          "unit": "un",
+          "quantity": "30",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/large-size-eggs/p/21435777001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_riz_basmati_blanc",
+      "name": "Riz basmati blanc sec",
+      "category": "Épicerie / Garde-manger",
+      "aliases": [
+        "Riz basmati blanc sec",
+        "basmati",
+        "Riz",
+        "riz",
+        "riz basmati",
+        "rice"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 22,
+          "name": "Riz"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 22,
+          "name": "Riz"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 8,
+          "name": "Riz basmati blanc sec"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749902441",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749902441",
+          "name": "Riz basmati - Selection",
+          "price": "5.49",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "900",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/riz-basmati/p/059749902441"
+        },
+        {
+          "id": "metro:178:059749902441",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749902441",
+          "name": "Riz basmati - Selection",
+          "price": "3.99",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "900",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/riz/riz-basmati/p/059749902441"
+        },
+        {
+          "id": "maxi:8661:20065191_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20065191_EA",
+          "name": "Pure Original Basmati Rice",
+          "price": "7.49",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "907",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/pure-original-basmati-rice/p/20065191_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_pates_seches",
+      "name": "Pâtes alimentaires sèches",
+      "category": "Épicerie / Garde-manger",
+      "aliases": [
+        "Pâtes alimentaires sèches",
+        "pasta",
+        "spaghetti",
+        "penne",
+        "fusilli",
+        "macaroni",
+        "rotini",
+        "linguine",
+        "fettuccine",
+        "pates",
+        "Pâtes",
+        "pâtes",
+        "pâtes alimentaires"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 23,
+          "name": "Pâtes"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 23,
+          "name": "Pâtes"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 25,
+          "name": "Pâtes alimentaires sèches"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749893152",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749893152",
+          "name": "Pâtes fusilli - Selection",
+          "price": "1.97",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "900",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152"
+        },
+        {
+          "id": "metro:178:059749893152",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749893152",
+          "name": "Pâtes fusilli - Selection",
+          "price": "2",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "900",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152"
+        },
+        {
+          "id": "maxi:8661:20315613006_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20315613006_EA",
+          "name": "Penne Rigate Pasta",
+          "price": "2.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "900",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/penne-rigate-pasta/p/20315613006_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_pois_chiche_conserve",
+      "name": "Pois chiches en conserve",
+      "category": "Épicerie / Garde-manger",
+      "aliases": [
+        "Pois chiches en conserve",
+        "pois chiches",
+        "chickpeas",
+        "Pois chiches",
+        "pois chiche"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 24,
+          "name": "Pois chiches"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 24,
+          "name": "Pois chiches"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 9,
+          "name": "Pois chiches en conserve"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749930000",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749930000",
+          "name": "Pois chiches - Selection",
+          "price": "1.49",
+          "currency": "CAD",
+          "unit": "mL",
+          "quantity": "540",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000"
+        },
+        {
+          "id": "metro:178:059749930000",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749930000",
+          "name": "Pois chiches - Selection",
+          "price": "1.5",
+          "currency": "CAD",
+          "unit": "mL",
+          "quantity": "540",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000"
+        },
+        {
+          "id": "maxi:8661:20325921001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20325921001_EA",
+          "name": "Chickpeas",
+          "price": "1.5",
+          "currency": "CAD",
+          "unit": "ml",
+          "quantity": "540",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/chickpeas/p/20325921001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_haricots_rouges_conserve",
+      "name": "Haricots rouges en conserve",
+      "category": "Épicerie / Garde-manger",
+      "aliases": [
+        "Haricots rouges en conserve",
+        "kidney beans",
+        "haricots rouges",
+        "Haricots rouges",
+        "fèves rouges",
+        "red kidney beans"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 25,
+          "name": "Haricots rouges"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 25,
+          "name": "Haricots rouges"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 26,
+          "name": "Haricots rouges en conserve"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749929981",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749929981",
+          "name": "Haricots rouge foncé - Selection",
+          "price": "1.49",
+          "currency": "CAD",
+          "unit": "mL",
+          "quantity": "540",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981"
+        },
+        {
+          "id": "metro:178:059749929981",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749929981",
+          "name": "Haricots rouge foncé - Selection",
+          "price": "1.5",
+          "currency": "CAD",
+          "unit": "mL",
+          "quantity": "540",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981"
+        },
+        {
+          "id": "maxi:8661:20554593_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20554593_EA",
+          "name": "Dark Red Kidney Beans",
+          "price": "1.5",
+          "currency": "CAD",
+          "unit": "ml",
+          "quantity": "540",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/dark-red-kidney-beans/p/20554593_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_tomates_conserve",
+      "name": "Tomates en conserve",
+      "category": "Épicerie / Garde-manger",
+      "aliases": [
+        "Tomates en conserve",
+        "tomato",
+        "tomatoes",
+        "tomate",
+        "tomates",
+        "tomates en conserve",
+        "tomates en dés",
+        "canned tomatoes"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 26,
+          "name": "Tomates en conserve"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 26,
+          "name": "Tomates en conserve"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 27,
+          "name": "Tomates en conserve"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059072050581",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059072050581",
+          "name": "Tomates italiennes en dés - Selection",
+          "price": "1.97",
+          "currency": "CAD",
+          "unit": "mL",
+          "quantity": "796",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581"
+        },
+        {
+          "id": "metro:178:059072050581",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059072050581",
+          "name": "Tomates italiennes en dés - Selection",
+          "price": "2.19",
+          "currency": "CAD",
+          "unit": "mL",
+          "quantity": "796",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581"
+        },
+        {
+          "id": "maxi:8661:20314629001_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20314629001_EA",
+          "name": "Diced Tomatoes",
+          "price": "1.69",
+          "currency": "CAD",
+          "unit": "ml",
+          "quantity": "796",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/diced-tomatoes/p/20314629001_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_huile_olive",
+      "name": "Huile d’olive",
+      "category": "Épicerie / Garde-manger",
+      "aliases": [
+        "Huile d’olive",
+        "huile olive",
+        "huile d olive",
+        "olive oil",
+        "huile d’olive",
+        "huile d'olive"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 27,
+          "name": "Huile d’olive"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 27,
+          "name": "Huile d’olive"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 10,
+          "name": "Huile d’olive"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749888547",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749888547",
+          "name": "Huile d'olive - Selection",
+          "price": "10.99",
+          "currency": "CAD",
+          "unit": "L",
+          "quantity": "1",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547"
+        },
+        {
+          "id": "metro:178:059749888547",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749888547",
+          "name": "Huile d'olive - Selection",
+          "price": "12.99",
+          "currency": "CAD",
+          "unit": "L",
+          "quantity": "1",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547"
+        },
+        {
+          "id": "maxi:8661:20105368_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20105368_EA",
+          "name": "Extra Virgin Olive Oil",
+          "price": "13.99",
+          "currency": "CAD",
+          "unit": "ml",
+          "quantity": "1000",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/extra-virgin-olive-oil/p/20105368_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_farine",
+      "name": "Farine de blé tout usage",
+      "category": "Épicerie / Garde-manger",
+      "aliases": [
+        "Farine de blé tout usage",
+        "flour",
+        "farine",
+        "Farine",
+        "farine tout usage"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 28,
+          "name": "Farine"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 28,
+          "name": "Farine"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 28,
+          "name": "Farine de blé tout usage"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059749892582",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059749892582",
+          "name": "Farine tout usage - Selection",
+          "price": "3.99",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "2.5",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582"
+        },
+        {
+          "id": "metro:178:059749892582",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059749892582",
+          "name": "Farine tout usage - Selection",
+          "price": "3.99",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "2.5",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582"
+        },
+        {
+          "id": "maxi:8661:20013256_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20013256_EA",
+          "name": "All-Purpose Flour",
+          "price": "3.79",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "2500",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": true,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/all-purpose-flour/p/20013256_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_sucre",
+      "name": "Sucre blanc granulé",
+      "category": "Épicerie / Garde-manger",
+      "aliases": [
+        "Sucre blanc granulé",
+        "sugar",
+        "sucre",
+        "Sucre",
+        "sucre granulé",
+        "sucre blanc"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 29,
+          "name": "Sucre"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 29,
+          "name": "Sucre"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 29,
+          "name": "Sucre blanc granulé"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:062847210233",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "062847210233",
+          "name": "Sucre granulé spécial fin - Redpath",
+          "price": "2.97",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "2",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-12-23",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233"
+        },
+        {
+          "id": "metro:178:062847210233",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "062847210233",
+          "name": "Sucre granulé spécial fin - Redpath",
+          "price": "2.99",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "2",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233"
+        },
+        {
+          "id": "maxi:8661:20145033_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20145033_EA",
+          "name": "Granulated Sugar",
+          "price": "2.99",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "2000",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/granulated-sugar/p/20145033_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_sel",
+      "name": "Sel de table",
+      "category": "Épicerie / Garde-manger",
+      "aliases": [
+        "Sel de table",
+        "salt",
+        "sel",
+        "Sel",
+        "sel de table"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 30,
+          "name": "Sel"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 30,
+          "name": "Sel"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 30,
+          "name": "Sel de table"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:066010001055",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "066010001055",
+          "name": "Sel de table iodé - Windsor",
+          "price": "1.99",
+          "currency": "CAD",
+          "unit": "kg",
+          "quantity": "1",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table-iode/p/066010001055"
+        },
+        {
+          "id": "metro:178:067568110909",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "067568110909",
+          "name": "Sel de table - Sifto",
+          "price": "2.49",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "250",
+          "valid_from": "2026-10-06",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table/p/067568110909"
+        },
+        {
+          "id": "maxi:8661:20126203_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20126203_EA",
+          "name": "Iodized Table Salt",
+          "price": "1.79",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "1000",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/iodized-table-salt/p/20126203_EA"
+        }
+      ]
+    },
+    {
+      "id": "ing_pain_tranche",
+      "name": "Pain tranché",
+      "category": "Boulangerie",
+      "aliases": [
+        "Pain tranché",
+        "bread",
+        "pain",
+        "pain tranché",
+        "pain de blé entier",
+        "sliced bread"
+      ],
+      "sources": [
+        {
+          "retailer": "superc",
+          "path": "data/catalog/superc/produits.json",
+          "ingredient_id": 31,
+          "name": "Pain tranché"
+        },
+        {
+          "retailer": "metro",
+          "path": "data/catalog/metro/produits.json",
+          "ingredient_id": 31,
+          "name": "Pain tranché"
+        },
+        {
+          "retailer": "maxi",
+          "path": "data/catalog/maxi/data_final/produits.json",
+          "ingredient_id": 31,
+          "name": "Pain tranché"
+        }
+      ],
+      "products": [
+        {
+          "id": "superc:605:059072051267",
+          "retailer": "superc",
+          "store_id": "605",
+          "external_product_id": "059072051267",
+          "name": "Pain de blé entier tranché - Selection",
+          "price": "2.99",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "720",
+          "valid_from": "2026-10-04",
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "scrap",
+          "url": "https://www.superc.ca/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267"
+        },
+        {
+          "id": "metro:178:059072051267",
+          "retailer": "metro",
+          "store_id": "178",
+          "external_product_id": "059072051267",
+          "name": "Pain de blé entier tranché - Selection",
+          "price": "2.99",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "720",
+          "valid_from": "2026-10-01",
+          "valid_to": "2026-10-07",
+          "is_promotion": true,
+          "source": "scrap",
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267"
+        },
+        {
+          "id": "maxi:8661:20038335_EA",
+          "retailer": "maxi",
+          "store_id": "8661",
+          "external_product_id": "20038335_EA",
+          "name": "Thick Slice Original White Bread",
+          "price": "4.0",
+          "currency": "CAD",
+          "unit": "g",
+          "quantity": "675",
+          "valid_from": null,
+          "valid_to": null,
+          "is_promotion": false,
+          "source": "apify",
+          "url": "https://www.maxi.ca/en/thick-slice-original-white-bread/p/20038335_EA"
+        }
+      ]
+    }
+  ]
+}

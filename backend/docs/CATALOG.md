@@ -56,4 +56,4 @@ Les quotas bornent les recherches : le résultat ne représente pas l’inventai
 
 Pour servir une collecte, définir `CATALOG_IMPORT_PATH` puis démarrer FastAPI. `GET /catalog` lit l’export complet et `GET /catalog/offers` permet un filtre par ingrédient et une pagination. Ces routes ne déclenchent aucune collecte.
 
-Le [modèle PostgreSQL](DATABASE.md) reste une proposition. La fusion des collectes, la confirmation persistée des correspondances et les estimations restent à implémenter.
+Le [modèle PostgreSQL](DATABASE.md) distingue le référentiel d’ingrédients et les tables recettes déjà implémentés du modèle étendu proposé pour produits et prix. La fusion des collectes, la confirmation persistée des correspondances et les estimations restent à implémenter.

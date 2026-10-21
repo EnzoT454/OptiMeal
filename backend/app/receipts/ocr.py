@@ -18,7 +18,9 @@ def validate_blocks(value: object) -> list[OCRBlock]:
 
 
 def tesseract_blocks(tsv: str) -> list[OCRBlock]:
-    rows = list(csv.DictReader(io.StringIO(tsv), delimiter='\t'))
+    # Le texte TSV de Tesseract n'utilise pas l'échappement CSV : un guillemet
+    # reconnu est un caractère, pas le début d'un champ multiligne.
+    rows = list(csv.DictReader(io.StringIO(tsv), delimiter='\t', quoting=csv.QUOTE_NONE))
     page = next((row for row in rows if row['level'] == '1'), None)
     if page is None:
         raise ValueError('Tesseract n’a retourné aucune page TSV.')
@@ -94,6 +96,45 @@ def prepare_tesseract_image(image: Path, output: Path) -> None:
     if not ok:
         raise ValueError('Impossible d’encoder le prétraitement Tesseract.')
     output.write_bytes(encoded.tobytes())
+
+
+def crop_tesseract_columns(image: Path, blocks: list[OCRBlock], output: Path) -> bool:
+    """Retire les bords parasites autour des colonnes Maxi reconnues.
+
+    Les bornes viennent de plusieurs codes et prix lus, jamais du montant
+    attendu. Garder la hauteur complète conserve l'en-tête et la date.
+    """
+    grouped: dict[str, list[OCRBlock]] = {}
+    for block in blocks:
+        if block.line_key:
+            grouped.setdefault(block.line_key, []).append(block)
+    codes, prices = [], []
+    for row in grouped.values():
+        row_codes = [b for b in row if re.fullmatch(r'(?:\(\d+\)\s*)?\d{4,14}', b.text)]
+        if not row_codes or not any(b.text == 'MRJ' for b in row):
+            continue
+        codes.extend(row_codes)
+        prices.extend(b for b in row if re.fullmatch(r'\d+[.,]\d{2}', b.text)
+                      and b.x > max(c.x + c.width for c in row_codes))
+    if len(codes) < 3 or len(prices) < 3:
+        return False
+    left = max(0, min(b.x for b in codes) - .04)
+    right = min(1, max(b.x + b.width for b in prices) + .04)
+    # Une colonne trop étroite n'est pas une zone d'articles fiable.
+    if right - left < .6 or (left == 0 and right == 1):
+        return False
+    import cv2
+    import numpy as np
+
+    pixels = cv2.imdecode(np.frombuffer(image.read_bytes(), dtype=np.uint8), cv2.IMREAD_GRAYSCALE)
+    if pixels is None:
+        raise ValueError('Image illisible pour le recadrage des colonnes Tesseract.')
+    cropped = pixels[:, round(left * pixels.shape[1]):round(right * pixels.shape[1])]
+    ok, encoded = cv2.imencode('.png', cropped)
+    if not ok:
+        raise ValueError('Impossible d’encoder les colonnes Tesseract.')
+    output.write_bytes(encoded.tobytes())
+    return True
 
 
 def reread_member_discount(image: Path, blocks: list[OCRBlock], model_dir: Path,

@@ -7,6 +7,12 @@ pydantic==2.13.5
 httpx==0.28.1
 uvicorn==0.53.0
 opencv-python-headless==5.0.0.93
+SQLAlchemy==2.1.5
+psycopg[binary]==3.3.6
+alembic==1.20.0
+python-dotenv==1.2.4
+# Base de fuseaux IANA pour America/Toronto sur Windows.
+tzdata==2026.5; sys_platform == "win32"
 
 # Tests
 pytest==9.1.1

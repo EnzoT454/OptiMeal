@@ -62,7 +62,7 @@ export CATALOG_IMPORT_PATH=data/catalog/maxi/maxi-apify-01/catalog.json
 - `GET /catalog/offers?ingredient_id=ing_ail_frais&limit=20&offset=0` : prix et produits liés aux suggestions de cet ingrédient, avec pagination et total.
 - Sans fichier configuré : HTTP 503. Ingrédient inconnu : 404. Pagination invalide : 422.
 
-Le catalogue est chargé au démarrage ; redémarrer le serveur après avoir choisi une nouvelle collecte. Un fichier invalide empêche le démarrage. Les lectures HTTP ne déclenchent aucun scraping ni dépense Apify. Les anciennes routes épiceries.ca ont été retirées. Aucun consommateur mobile n’est encore implémenté pour ces nouvelles routes. Le stockage PostgreSQL et la fusion de plusieurs collectes restent à faire.
+Le catalogue est chargé au démarrage ; redémarrer le serveur après avoir choisi une nouvelle collecte. Un fichier invalide empêche le démarrage. Les lectures HTTP ne déclenchent aucun scraping ni dépense Apify. Les anciennes routes épiceries.ca ont été retirées. Aucun consommateur mobile n’est encore implémenté pour ces nouvelles routes. Le stockage PostgreSQL des produits et prix Apify ainsi que la fusion de plusieurs collectes restent à faire ; la base des ingrédients et recettes est déjà disponible.
 
 ## Sens des données
 

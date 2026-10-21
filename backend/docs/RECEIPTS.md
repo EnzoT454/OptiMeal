@@ -45,6 +45,36 @@ Il faut installer séparément l’exécutable `tesseract` et les données de la
 
 Références : [Apple Vision — reconnaître le texte localement](https://developer.apple.com/documentation/vision/recognizing-text-in-images) et [Tesseract — langues, TSV et segmentation](https://tesseract-ocr.github.io/tessdoc/Command-Line-Usage.html).
 
+### Repli pour les bords parasites des reçus Maxi — 20 octobre 2026
+
+Quand le contrôle d'un reçu Maxi échoue, le mode automatique compare aussi
+des lectures après agrandissement et redressement. Si nécessaire, il retire
+les bords latéraux autour des colonnes d'articles : les bornes sont déduites
+d'au moins trois codes produits et trois prix reconnus, avec une marge. La
+hauteur complète est conservée pour garder l'en-tête et la date. Le meilleur
+candidat remplace la lecture initiale selon les mêmes contrôles ; un reçu
+déjà concordant n'emprunte pas ce repli. Aucun montant n'est déduit du total.
+
+La reconnaissance de l'en-tête tolère certaines lectures Tesseract de
+`MAXI&CIE`, comme `MAXT@CIE`, avec avertissement. L'adaptateur TSV conserve
+également les guillemets comme caractères ordinaires pour éviter qu'ils
+absorbent les mots des lignes suivantes. Le traitement Vision est inchangé.
+
+Sur `recu_maxi3.jpg`, Tesseract passe de 14 articles et une somme partielle
+de 14,99 CAD à **14 articles et 57,87 CAD**, avec contrôle `matches`. Les
+14 codes, montants, quantités explicites et prix unitaires correspondent
+à la sortie Vision fournie. Certains noms restent imparfaits (`B10` pour
+`BIO`, par exemple) ; le résultat conserve son statut de vérification.
+L'extraction est dans `extractions/recu-maxi3-ocr.json` et sa capture
+rejouable dans `ocr/recu_maxi3.ocr.json`, sous `data/receipts/`.
+
+Les six anciennes images ont été relues avec Tesseract avant et après la
+correction, dans le même environnement : leur contenu d'extraction est
+inchangé hors provenance et durée. Les cinq anciennes captures OCR ont
+aussi été comparées avec le parseur précédent. Les limites déjà présentes,
+notamment le rabais Metro sans modèle complémentaire et les reçus génériques
+incomplets, restent ouvertes. Ces essais ont été exécutés sur macOS.
+
 ### Modèle complémentaire pour les rabais Metro
 
 Sur `recu_metro.png`, le modèle standard confond le rabais membre **−0,99**

@@ -1,0 +1,211 @@
+{
+  "$defs": {
+    "RecipeIngredient": {
+      "additionalProperties": false,
+      "properties": {
+        "ingredient_id": {
+          "pattern": "^ing_[a-z0-9_]+$",
+          "title": "Ingredient Id",
+          "type": "string"
+        },
+        "quantity": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Quantity",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "ml",
+            "unit"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "preparation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Preparation"
+        }
+      },
+      "required": [
+        "ingredient_id",
+        "quantity",
+        "unit",
+        "preparation"
+      ],
+      "title": "RecipeIngredient",
+      "type": "object"
+    },
+    "RecipeSeed": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "servings": {
+          "exclusiveMinimum": 0,
+          "title": "Servings",
+          "type": "integer"
+        },
+        "prep_time_minutes": {
+          "minimum": 0,
+          "title": "Prep Time Minutes",
+          "type": "integer"
+        },
+        "cook_time_minutes": {
+          "minimum": 0,
+          "title": "Cook Time Minutes",
+          "type": "integer"
+        },
+        "total_time_minutes": {
+          "minimum": 0,
+          "title": "Total Time Minutes",
+          "type": "integer"
+        },
+        "image_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Image Url"
+        },
+        "ingredients": {
+          "items": {
+            "$ref": "#/$defs/RecipeIngredient"
+          },
+          "minItems": 1,
+          "title": "Ingredients",
+          "type": "array"
+        },
+        "instructions": {
+          "items": {
+            "$ref": "#/$defs/RecipeStep"
+          },
+          "minItems": 1,
+          "title": "Instructions",
+          "type": "array"
+        },
+        "seed_key": {
+          "pattern": "^[a-z0-9_]+$",
+          "title": "Seed Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "servings",
+        "prep_time_minutes",
+        "cook_time_minutes",
+        "total_time_minutes",
+        "image_url",
+        "ingredients",
+        "instructions",
+        "seed_key"
+      ],
+      "title": "RecipeSeed",
+      "type": "object"
+    },
+    "RecipeStep": {
+      "additionalProperties": false,
+      "properties": {
+        "position": {
+          "minimum": 1,
+          "title": "Position",
+          "type": "integer"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "position",
+        "text"
+      ],
+      "title": "RecipeStep",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "recipe-seed-1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "dataset_kind": {
+      "const": "demo",
+      "title": "Dataset Kind",
+      "type": "string"
+    },
+    "status": {
+      "const": "review_required",
+      "title": "Status",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date",
+      "title": "Created At",
+      "type": "string"
+    },
+    "source": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Source",
+      "type": "object"
+    },
+    "ingredient_mapping": {
+      "title": "Ingredient Mapping",
+      "type": "string"
+    },
+    "ingredient_catalog": {
+      "title": "Ingredient Catalog",
+      "type": "string"
+    },
+    "water_policy": {
+      "title": "Water Policy",
+      "type": "string"
+    },
+    "recipes": {
+      "items": {
+        "$ref": "#/$defs/RecipeSeed"
+      },
+      "title": "Recipes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "dataset_kind",
+    "status",
+    "created_at",
+    "source",
+    "ingredient_mapping",
+    "ingredient_catalog",
+    "water_policy",
+    "recipes"
+  ],
+  "title": "RecipeSeedDocument",
+  "type": "object"
+}

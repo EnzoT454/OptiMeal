@@ -10,6 +10,8 @@ from .rules import generic, maxi, metro
 from .rules.common import ADJUSTMENT, DETAIL, STOP, TOTAL, decimal, normalized, trailing_amount
 from .validation import validate_totals
 
+TESSERACT_MAXI_HEADER = re.compile(r'\bMAX[IT][&8@]CIE\b')
+
 
 def prepare_tesseract_lines(lines: list[str]) -> tuple[list[str], dict[str, list[str]]]:
     """Retire seulement un préfixe OCR avant une structure Maxi reconnaissable.
@@ -98,7 +100,7 @@ def purchase_date(lines: list[str], order: Literal['ymd', 'dmy']) -> tuple[date 
     return None, ['purchase_date_missing']
 
 
-def detect_profile(lines: list[str], requested: str) -> tuple[str | None, str, list[str]]:
+def detect_profile(lines: list[str], requested: str, tesseract: bool = False) -> tuple[str | None, str, list[str]]:
     # Un OCR peut produire plusieurs lignes de bruit avant l'en-tête. Dès qu'un
     # premier rayon est trouvé, tout ce qui le précède est l'en-tête pertinent.
     first_category = next((index for index, line in enumerate(lines)
@@ -106,14 +108,16 @@ def detect_profile(lines: list[str], requested: str) -> tuple[str | None, str, l
     header = ' '.join(normalized(line) for line in lines[:first_category])
     full = ' '.join(normalized(line) for line in lines)
     brands = []
-    if re.search(r'\bMAXI\b', header):
+    maxi_header = bool(re.search(r'\bMAXI\b', header))
+    maxi_header_variant = tesseract and not maxi_header and bool(TESSERACT_MAXI_HEADER.search(header))
+    if maxi_header or maxi_header_variant:
         brands.append('maxi')
     if re.search(r'\bMETRO\b', header) or re.search(r'\bMETROSONDAGE\s*\.\s*CA\b|RABAIS METRO&MOI', full):
         brands.append('metro')
     retailer = brands[0] if len(brands) == 1 else None
     numbered = any(maxi.category(line) for line in lines)
     named = any(generic.category(line) for line in lines)
-    issues = []
+    issues = ['tesseract_retailer_header_requires_review'] if maxi_header_variant else []
     if requested != 'auto':
         issues.append('parsing_profile_forced')
         if retailer and requested not in (retailer, 'generic'):
@@ -160,7 +164,8 @@ def parse_receipt(lines: list[str], source: ReceiptSource,
     original_lines = {}
     if source.engine.startswith('tesseract'):
         lines, original_lines = prepare_tesseract_lines(lines)
-    retailer, chosen, issues = detect_profile(lines, profile)
+    is_tesseract = source.engine.startswith('tesseract')
+    retailer, chosen, issues = detect_profile(lines, profile, tesseract=is_tesseract)
     discarded_tesseract_noise = []
     if source.engine.startswith('tesseract') and chosen == 'maxi':
         lines, discarded_tesseract_noise = discard_tesseract_maxi_noise(lines)
@@ -179,7 +184,9 @@ def parse_receipt(lines: list[str], source: ReceiptSource,
     store_id = None
     if retailer == 'maxi':
         for line in lines[:10]:
-            if 'MAXI' in normalized(line) and (match := re.search(r'\((\d{3,6})\)', line)):
+            header = normalized(line)
+            is_maxi_header = 'MAXI' in header or (is_tesseract and TESSERACT_MAXI_HEADER.search(header))
+            if is_maxi_header and (match := re.search(r'\((\d{3,6})\)', line)):
                 store_id = match[1]
     bought_on, date_warnings = purchase_date(lines, date_order)
     warnings.extend(date_warnings)
