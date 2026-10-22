@@ -25,9 +25,9 @@ Run lint and typecheck before declaring any task done.
 
 ## Navigation & Routing
 
-- Use **Expo Router** for all navigation. Routes live in `src/app/` — every file there is a screen, `_layout.tsx` files define navigators. Keep non-route code (components, hooks, utils) outside `src/app/`.
-- Import `Link`, `router`, and `useLocalSearchParams` from `expo-router`.
-- Docs: https://docs.expo.dev/router/introduction.md
+- This project uses **React Navigation**, as recorded in `tools/DECISIONS.md`. Keep the five tabs and the recipe stack defined in `App.tsx`.
+- Screens live in `app/`; shared UI, services and types live in their existing directories. Do not introduce a second navigation system.
+- Docs: https://reactnavigation.org/docs/getting-started/
 
 ## Building with EAS
 

@@ -20,7 +20,7 @@
       "prep_time_minutes": 10,
       "cook_time_minutes": 25,
       "total_time_minutes": 35,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette1.png",
       "ingredients": [
         {
           "ingredient_id": "ing_poitrine_poulet",
@@ -86,7 +86,7 @@
       "prep_time_minutes": 10,
       "cook_time_minutes": 30,
       "total_time_minutes": 40,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette2.png",
       "ingredients": [
         {
           "ingredient_id": "ing_pates_seches",
@@ -158,7 +158,7 @@
       "prep_time_minutes": 15,
       "cook_time_minutes": 35,
       "total_time_minutes": 50,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette3.png",
       "ingredients": [
         {
           "ingredient_id": "ing_saumon",
@@ -224,7 +224,7 @@
       "prep_time_minutes": 15,
       "cook_time_minutes": 25,
       "total_time_minutes": 40,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette4.png",
       "ingredients": [
         {
           "ingredient_id": "ing_riz_basmati_blanc",
@@ -296,7 +296,7 @@
       "prep_time_minutes": 10,
       "cook_time_minutes": 25,
       "total_time_minutes": 35,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette5.png",
       "ingredients": [
         {
           "ingredient_id": "ing_pois_chiche_conserve",
@@ -368,7 +368,7 @@
       "prep_time_minutes": 10,
       "cook_time_minutes": 10,
       "total_time_minutes": 20,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette6.png",
       "ingredients": [
         {
           "ingredient_id": "ing_oeuf_gros",
@@ -434,7 +434,7 @@
       "prep_time_minutes": 10,
       "cook_time_minutes": 20,
       "total_time_minutes": 30,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette7.png",
       "ingredients": [
         {
           "ingredient_id": "ing_pates_seches",
@@ -500,7 +500,7 @@
       "prep_time_minutes": 15,
       "cook_time_minutes": 30,
       "total_time_minutes": 45,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette8.png",
       "ingredients": [
         {
           "ingredient_id": "ing_carotte_fraiche",
@@ -566,7 +566,7 @@
       "prep_time_minutes": 10,
       "cook_time_minutes": 15,
       "total_time_minutes": 25,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette9.png",
       "ingredients": [
         {
           "ingredient_id": "ing_farine",
@@ -632,7 +632,7 @@
       "prep_time_minutes": 10,
       "cook_time_minutes": 0,
       "total_time_minutes": 10,
-      "image_url": null,
+      "image_url": "https://itmarimpvqfgsijpzrro.supabase.co/storage/v1/object/public/recipes-images/recette10.png",
       "ingredients": [
         {
           "ingredient_id": "ing_yogourt_nature",

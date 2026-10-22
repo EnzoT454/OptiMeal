@@ -90,6 +90,19 @@ ne crée pas `auth.users` et conserve les imports existants. Les droits sont
 vérifiés côté FastAPI ; RLS reste activée sans accès direct au mobile.
 Voir le [guide Auth](AUTH.md) pour le détail et le parcours de vérification.
 
+## Difficulté et étiquettes
+
+`0004_recipe_metadata` ajoute `recipe.difficulty` (`easy`, `medium`, `hard`
+ou `null`) et `recipe.tags` (tableau vide par défaut, au plus 10 chaînes).
+Les recettes existantes, leurs photos, leurs propriétaires et leurs liens
+sont conservés. Aucune difficulté ni étiquette économique n’est inventée pour
+les recettes initiales. Appliquer `upgrade head` avant de relancer l’API mise à jour.
+
+Le retour en arrière refuse de supprimer ces colonnes si elles contiennent
+des métadonnées. Une ancienne requête PUT qui omet ces nouveaux champs conserve
+leurs valeurs. Le badge Rapide est calculé à partir de la durée totale, sans
+étiquette stockée. Voir les [contrats](CONTRACTS.md).
+
 ## Importer les recettes et rejouer la commande
 
 ```bash

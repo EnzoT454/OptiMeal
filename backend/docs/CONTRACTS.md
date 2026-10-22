@@ -34,6 +34,13 @@ bloque ces lectures, mais pas les recettes en base. `RECIPE_SEED_PATH` sert
 import n’a pas eu lieu. La commande d’export valide les fichiers de départ
 hors réseau. `/health` reste disponible sans base ni catalogue.
 
+Les recettes utilisent le champ nullable `image_url` pour leurs images
+Supabase Storage. Les dix URL initiales sont synchronisées avec le fichier
+d’import ; les photos personnelles sont envoyées par le mobile avant
+POST/PUT de la recette. Le retrait envoie `image_url: null`. Les contrats
+HTTP sont inchangés ; les droits et limites Storage sont décrits dans
+[RECIPE_IMAGES.md](RECIPE_IMAGES.md).
+
 ## Routes et filtres
 
 | Méthode et route | Réponse | Filtres |
@@ -75,6 +82,20 @@ favoris utilisent Supabase Auth ; les parcours IA restent à implémenter.
 Sans jeton, seules les recettes initiales sont visibles ; avec un jeton
 valide, les recettes personnelles du compte s’ajoutent. `favorites=true`
 exige une session. Les droits et routes sont décrits dans [AUTH.md](AUTH.md).
+
+## Difficulté et étiquettes des recettes
+
+Les résumés, détails et écritures acceptent les champs additionnels
+`difficulty` (`easy`, `medium`, `hard` ou `null`) et `tags` (liste de 10 chaînes
+au maximum, chacune de 1 à 40 caractères après retrait des espaces).
+À la création, leur omission donne `null` et `[]` ; en PUT, leur omission
+conserve les valeurs existantes, pour les anciens clients.
+Les doublons sans distinction de casse ou d’accents sont éliminés ;
+`économique` devient `Économique`. `Rapide` est retiré des étiquettes stockées :
+le mobile calcule ce badge avec le même seuil de 30 minutes que le filtre,
+cuisson comprise. Économique est une indication de l’auteur, pas un coût calculé.
+Les recettes initiales conservent une difficulté non précisée et aucune
+étiquette personnelle. La migration requise est `0004_recipe_metadata`.
 
 ## Identifiants partagés
 

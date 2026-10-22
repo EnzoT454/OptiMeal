@@ -1,5 +1,10 @@
 # Supabase Auth — mise en place et vérification
 
+Les photos facultatives des recettes personnelles utilisent aussi la session
+Supabase, avec des écritures Storage limitées au dossier de leur propriétaire.
+Voir le [guide des photos](RECIPE_IMAGES.md) pour leur configuration et la
+lecture publique retenue pour le prototype.
+
 Supabase gère les inscriptions, mots de passe, confirmations et sessions.
 Le mobile utilise `@supabase/supabase-js`. FastAPI reçoit un access token
 Bearer et le vérifie à chaque requête authentifiée avec
@@ -85,7 +90,8 @@ le format d’erreur commun.
 Voir le [guide mobile](../../mobile/README.md) pour le lancement, les URL de
 redirection et les vérifications sur téléphone. La session est persistée
 par AsyncStorage et renouvelée automatiquement au premier plan ; les accès
-métier utilisent uniquement FastAPI. React Navigation conserve les cinq
+métier utilisent FastAPI, avec un accès direct à Storage pour les photos
+de recettes sous les politiques du propriétaire. React Navigation conserve les cinq
 onglets prévus ; seuls le socle Recettes et le compte sont implémentés.
 Les écrans ne prétendent pas reproduire la maquette Figma à ce stade.
 
@@ -110,6 +116,13 @@ Ces essais mobiles complètent les tests d’autorisation côté API. Les essais
 interactifs Android et les scénarios d’erreur complémentaires restent à
 effectuer. L’expiration réelle d’une session et son renouvellement ne sont
 pas établis par le seul essai de fermeture/réouverture de l’application.
+
+Le 21 octobre, l’ajout d’une photo de galerie à une recette personnelle a
+également été confirmé sur téléphone. Les politiques Storage ont été testées
+avec deux identités dans PostgreSQL local et appliquées au bucket existant.
+La lecture publique des photos est un choix du prototype, distinct de la
+visibilité privée des recettes dans FastAPI. Les autres scénarios photo
+restent à confirmer ; voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
 
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native),
 [validation des JWT](https://supabase.com/docs/guides/auth/jwts),

@@ -1,17 +1,17 @@
 import { PropsWithChildren } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
+import { Pressable, ScrollView, StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from 'react-native';
 
-export function Screen({ children }: PropsWithChildren) {
-  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={styles.screen}>{children}</ScrollView>;
+export function Screen({ children, contentStyle }: PropsWithChildren<{ contentStyle?: StyleProp<ViewStyle> }>) {
+  return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[styles.screen, contentStyle]}>{children}</ScrollView>;
 }
 export function Heading({ children }: PropsWithChildren) { return <Text style={styles.heading}>{children}</Text>; }
 export function Message({ text }: { text: string }) { return text ? <Text accessibilityLiveRegion="polite" style={styles.message}>{text}</Text> : null; }
-export function Field({ label, ...props }: TextInputProps & { label: string }) {
-  return <View><Text style={styles.label}>{label}</Text><TextInput accessibilityLabel={label} style={styles.input} {...props} /></View>;
+export function Field({ label, labelStyle, containerStyle, style, ...props }: TextInputProps & { label: string; labelStyle?: StyleProp<TextStyle>; containerStyle?: StyleProp<ViewStyle> }) {
+  return <View style={containerStyle}><Text style={[styles.label, labelStyle]}>{label}</Text><TextInput accessibilityLabel={label} style={[styles.input, style]} {...props} /></View>;
 }
-export function Button({ title, onPress, disabled = false }: { title: string; onPress: () => void; disabled?: boolean }) {
+export function Button({ title, onPress, disabled = false, style, textStyle }: { title: string; onPress: () => void; disabled?: boolean; style?: StyleProp<ViewStyle>; textStyle?: StyleProp<TextStyle> }) {
   return <Pressable accessibilityRole="button" accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
-    style={[styles.button, disabled && { opacity: 0.5 }]}><Text style={styles.buttonText}>{title}</Text></Pressable>;
+    style={[styles.button, style, disabled && { opacity: 0.5 }]}><Text style={[styles.buttonText, textStyle]}>{title}</Text></Pressable>;
 }
 export const styles = StyleSheet.create({
   screen: { padding: 22, paddingBottom: 48, gap: 14, backgroundColor: '#f5f8f4', flexGrow: 1 },

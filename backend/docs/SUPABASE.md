@@ -95,7 +95,7 @@ absente ou invalide, les erreurs de connexion, les sessions, l’arrêt du moteu
 et la conservation des lectures JSON. Un test du cycle SQLAlchemy utilise
 SQLite localement ; il ne remplace pas le contrôle réel de PostgreSQL.
 
-Alembic est configuré avec `0001_ingredients`, `0002_recipes` et `0003_accounts`,
+Alembic est configuré avec `0001_ingredients`, `0002_recipes`, `0003_accounts` et `0004_recipe_metadata`,
 ainsi que les commandes d’import rejouables des 31 ingrédients et 10 recettes.
 Les tables et imports sont disponibles ; `/api/v1/recipes` et son détail
 lisent PostgreSQL à chaque requête, sans chargement du JSON de recettes. Le [guide des migrations](MIGRATIONS.md)

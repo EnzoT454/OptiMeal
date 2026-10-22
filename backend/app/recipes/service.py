@@ -94,7 +94,7 @@ def update_recipe(db: Session, recipe_id: str, body: RecipeWrite, user: CurrentU
     owned_recipe(db, recipe_id, user)
     rows = ingredient_rows(db, body, recipe_id)
     db.execute(update(Recipe).where(Recipe.id == recipe_id, Recipe.owner_id == user.id)
-               .values(**body.model_dump(exclude={'ingredients'})))
+               .values(**body.model_dump(exclude={'ingredients'}, exclude_unset=True)))
     db.execute(delete(RecipeIngredient).where(RecipeIngredient.recipe_id == recipe_id))
     db.execute(insert(RecipeIngredient), rows)
     result = get_recipe(db, recipe_id, user.id)

@@ -27,7 +27,16 @@ requête, indépendamment des fichiers locaux ; voir le
 [guide des migrations](../../backend/docs/MIGRATIONS.md).
 Les recettes sont des propositions originales produites avec assistance IA,
 marquées `review_required`, sans essai en cuisine ni validation humaine.
-Les durées sont indicatives et les images restent inconnues (`null`).
+Les durées sont indicatives. Les champs `image_url` du fichier d’import
+pointent vers les illustrations du bucket public Supabase Storage
+`recipes-images`. Les mêmes URL sont enregistrées dans PostgreSQL ; le
+mobile les utilise dans la liste et le détail via `mobile/components/RecipeImage.tsx`.
+Les fichiers `recette1.png` à `recette10.png` suivent l’ordre des recettes
+dans `initial_recipes.json`. Leur association utilise les identifiants stables,
+indépendamment du tri et des filtres. Une URL d’image fournie par l’API est
+prioritaire ; les fichiers locaux restent utilisés lorsque l’URL est absente.
+Metro inclut encore ces fichiers dans l’application grâce à
+`mobile/metro.config.js` ; aucune réimportation des recettes n’est nécessaire.
 
 ## Identité commune des ingrédients
 

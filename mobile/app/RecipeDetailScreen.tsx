@@ -1,11 +1,14 @@
 import { useCallback, useState } from 'react';
-import { Alert, Text } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Heading, Message, Screen } from '../components/ui';
 import { api } from '../services/api';
 import { Detail, Ingredient, Page, Recipe } from '../types/api';
 import { RecipeStackParams } from '../types/navigation';
+import RecipeImage from '../components/RecipeImage';
+import { RecipeChip, recipeStyles } from '../components/recipes';
+import { difficultyLabels, recipeBadges } from '../services/recipeForm';
 
 export default function RecipeDetailScreen({ route, navigation }: NativeStackScreenProps<RecipeStackParams, 'Detail'>) {
   const [recipe, setRecipe] = useState<Recipe | null>(null); const [names, setNames] = useState<Record<string, string>>({});
@@ -36,9 +39,13 @@ export default function RecipeDetailScreen({ route, navigation }: NativeStackScr
   }
   return <Screen><Message text={error} />
     {!recipe ? <><Text>{error ? 'Recette indisponible.' : 'Chargement…'}</Text><Button title="Réessayer" onPress={() => setRetry(retry + 1)} /></> : <>
-      <Heading>{recipe.name}</Heading><Text>{recipe.description}</Text><Text>{recipe.servings} portions · {recipe.total_time_minutes} min</Text>
+      <RecipeImage recipe={recipe} />
+      <Heading>{recipe.name}</Heading><Text>{recipe.description}</Text>
+      <Text>{recipe.total_time_minutes} min · {recipe.difficulty ? difficultyLabels[recipe.difficulty] : 'Difficulté non précisée'} · {recipe.servings} portions</Text>
       {recipe.review_required && <Text>Recette de démonstration à vérifier avant utilisation.</Text>}
       <Button title={recipe.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'} disabled={busy} onPress={() => void favorite()} />
+      <View style={recipeStyles.chips}>{recipeBadges(recipe).map(tag => <RecipeChip key={tag} label={tag} />)}</View>
+      {recipe.tags?.includes('Économique') && <Text style={recipeStyles.note}>Économique : étiquette choisie par l’auteur, coût non calculé.</Text>}
       <Heading>Ingrédients</Heading>
       {recipe.ingredients.map(i => <Text key={i.ingredient_id}>{i.quantity} {i.unit} · {names[i.ingredient_id] ?? i.ingredient_id}{i.preparation ? ' · ' + i.preparation : ''}</Text>)}
       <Heading>Préparation</Heading>{recipe.instructions.map(step => <Text key={step.position}>{step.position}. {step.text}</Text>)}

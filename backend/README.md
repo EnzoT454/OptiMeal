@@ -43,9 +43,11 @@ backend/
 │   ├── export_shared_contracts.py # Schémas et exemples v1
 │   ├── import_ingredients.py    # Import PostgreSQL du référentiel
 │   ├── import_recipes.py        # Import rejouable sans remplacement
+│   ├── configure_recipe_images.py # Limites et politiques du bucket Storage
 │   ├── ingest_catalog.py        # Collecte, reprise et rejeu Apify
 │   └── extract_receipt.py       # Extraction OCR et export du schéma JSON
 ├── config/catalog/              # 31 ingrédients, requêtes, rayons et succursale
+├── config/storage/              # Configuration du bucket public recipes-images
 ├── docs/
 │   ├── APIFY.md                 # Installation et utilisation d’Apify
 │   ├── CATALOG.md               # Contrat et limites du catalogue
@@ -55,6 +57,7 @@ backend/
 │   ├── CONTRACTS.md             # Contrats publics v1
 │   ├── SUPABASE.md              # Connexion serveur
 │   ├── AUTH.md                  # Comptes, autorisations et vérification
+│   ├── RECIPE_IMAGES.md         # Photos de recettes, droits Storage et essais
 │   ├── MIGRATIONS.md            # Migrations et imports
 │   └── examples/                # Exemple de catalogue fictif
 ├── alembic.ini                  # Configuration sans identifiants
@@ -75,7 +78,11 @@ backend/
 └── postman/                     # Requêtes pour essayer l’API
 ```
 
-Les fichiers `__init__.py` identifient les packages Python. Les squelettes des composantes retenues sont conservés comme base du développement à venir. Ils précisent les responsabilités sans prétendre que les fonctionnalités sont déjà réalisées. Dans chaque domaine, `router.py` recevra les requêtes HTTP, `schemas.py` définira les contrats, `models.py` les modèles persistants et `service.py` les règles métier.
+Les fichiers `__init__.py` identifient les packages Python. Les comptes,
+recettes et contrôles de sécurité sont fonctionnels ; planning et listes
+restent des squelettes. Dans chaque domaine, `router.py` traite les requêtes
+HTTP, `schemas.py` définit les contrats, `models.py` les modèles persistants
+et `service.py` les règles métier, selon l’état d’avancement du domaine.
 
 ## Lancer l’API
 
@@ -129,6 +136,14 @@ python -m backend.cli.import_recipes
 Le [guide des migrations](docs/MIGRATIONS.md) décrit le schéma, le rejeu sans
 doublons et la création des prochaines tables à deux. Les tests PostgreSQL
 utilisent une base locale jetable ; la CI en fournit une automatiquement.
+
+## Images des recettes
+
+Pour les images de recettes, voir [le guide Storage](docs/RECIPE_IMAGES.md).
+Le champ `recipe.image_url` conserve l’URL ; les fichiers sont hébergés dans
+le bucket public `recipes-images`. Les photos personnelles sont envoyées
+depuis la galerie avec des droits d’écriture par propriétaire. Le schéma
+applicatif reste géré par les quatre migrations Alembic existantes.
 
 ## Collecter les données Maxi
 
