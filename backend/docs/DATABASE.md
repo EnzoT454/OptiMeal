@@ -1,6 +1,6 @@
 # Catalogue et prix — évaluation et modèle de données proposé
 
-**Conception initiale : 28 septembre 2026. Mise à jour : 20 octobre 2026. Statut : référentiel commun d’ingrédients implémenté ; modèle étendu proposé.**
+**Conception initiale : 28 septembre 2026. Mise à jour : 21 octobre 2026. Statut : ingrédients, recettes, profils et favoris implémentés ; modèle étendu du catalogue et des prix proposé.**
 
 Ce document évalue la structure transmise par l’équipe : un ingrédient canonique contient des produits commerciaux, chacun contenant ses offres. Il couvre le catalogue, les sources de prix et l’intégration des reçus. Les comptes, recettes, plans et listes sont décrits uniquement aux endroits où ils touchent ces données.
 
@@ -24,16 +24,18 @@ La proposition nécessite surtout six ajustements avant l’implémentation :
 | Composant | Disponible aujourd’hui | Conséquence pour la conception |
 | --- | --- | --- |
 | `app/database.py` et configuration | Moteur SQLAlchemy/Psycopg, sessions par requête et contrôle `/health/db` | Voir le [guide Supabase](SUPABASE.md) ; les recettes lisent PostgreSQL ; ingrédients et offres restent sur JSON |
-| Modèles et `alembic/env.py` | Modèles `Ingredient`, `Recipe`, `RecipeIngredient`, trois migrations, profils/favoris et imports rejouables des ingrédients et recettes | Voir le [guide des migrations](MIGRATIONS.md) ; autres tables à développer |
+| Modèles et `alembic/env.py` | Modèles `Ingredient`, `Recipe`, `RecipeIngredient`, quatre migrations, profils/favoris et imports rejouables des ingrédients et recettes | Voir le [guide des migrations](MIGRATIONS.md) ; autres tables à développer |
 | `app/catalog/apify_ingestion.py` et `apify_batch.py` | Normalisation des captures Apify, produits, formats, prix et avertissements | Prévoir l’insertion des données vérifiées ; Metro/Super C web IA restent à développer |
 | `app/receipts/schemas.py` | Contrat `receipt-1.1`, OCR local, articles, ajustements et contrôles | Stocker d’abord une extraction privée à vérifier |
 | Comptes | Supabase Auth, profil minimal et droits sur recettes/favoris | Voir [AUTH.md](AUTH.md) ; préférences détaillées à développer |
+| Photos de recettes | Fichiers dans le bucket public `recipes-images`, URL dans `recipe.image_url`, ajout depuis la galerie | Voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md) ; écritures Storage par propriétaire, nettoyage à développer |
 | Confirmation des reçus | Non implémentée | Contrôles de propriété à étendre avant import privé et contribution |
 
 SQLAlchemy et Psycopg assurent la connexion. Alembic est l’unique chaîne de
 migrations applicatives. `0001_ingredients` crée le référentiel commun,
 `0002_recipes` les recettes et leurs ingrédients, puis `0003_accounts` les
-profils, favoris et liens de propriété. Les autres tables ci-dessous restent
+profils, favoris et liens de propriété. `0004_recipe_metadata` ajoute difficulté
+facultative et étiquettes aux recettes, sans modifier les données existantes. Les autres tables ci-dessous restent
 proposées. Les migrations sont
 la référence exécutable du schéma ; ce document ne les remplace pas.
 

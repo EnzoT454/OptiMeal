@@ -11,17 +11,24 @@
       "bundleIdentifier": "com.anonymous.optimeal"
     },
     "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
-      },
+      "icon": "./assets/icon.png",
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png"
     },
-    "scheme": "optimeal"
+    "scheme": "optimeal",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "OptiMeal utilise la photo choisie pour illustrer ta recette.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ],
+      "expo-font",
+      "expo-image"
+    ]
   }
 }

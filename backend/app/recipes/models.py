@@ -3,7 +3,7 @@ from decimal import Decimal
 from uuid import UUID
 
 from sqlalchemy import Boolean, CheckConstraint, ForeignKey, Integer, Numeric, Text, UniqueConstraint, Uuid, text
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.database import Base
@@ -18,6 +18,8 @@ class Recipe(Base):
                         name='ownership'),
         CheckConstraint("btrim(name) <> ''", name='name_not_blank'),
         CheckConstraint("btrim(description) <> ''", name='description_not_blank'),
+        CheckConstraint("difficulty IN ('easy', 'medium', 'hard')", name='difficulty_supported'),
+        CheckConstraint('cardinality(tags) <= 10 AND array_position(tags, NULL) IS NULL', name='tags_valid'),
         CheckConstraint('servings > 0', name='servings_positive'),
         CheckConstraint('prep_time_minutes >= 0 AND cook_time_minutes >= 0', name='times_nonnegative'),
         CheckConstraint('total_time_minutes = prep_time_minutes + cook_time_minutes', name='total_time_consistent'),
@@ -35,6 +37,8 @@ class Recipe(Base):
     cook_time_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
     total_time_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
     image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    difficulty: Mapped[str | None] = mapped_column(Text, nullable=True)
+    tags: Mapped[list[str]] = mapped_column(ARRAY(Text), nullable=False, default=list, server_default=text("'{}'::text[]"))
     instructions: Mapped[list[dict]] = mapped_column(JSONB, nullable=False)
     review_required: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text('true'))
 

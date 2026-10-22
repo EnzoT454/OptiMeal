@@ -2,7 +2,8 @@
 
 Socle Expo/TypeScript avec React Navigation : inscription, confirmation de
 courriel, connexion, restauration et renouvellement de session, déconnexion,
-profil minimal et recettes manuelles. Accueil, Recettes, Calendrier, Promos
+profil minimal et recettes manuelles avec photo facultative depuis la galerie.
+Accueil, Promos, Recettes, Calendrier
 et Paramètres sont présents ; Calendrier et Promos sont des emplacements
 pour la suite. Aucune fonction IA n’est intégrée.
 
@@ -144,10 +145,112 @@ une recette et un favori du premier compte jusqu’à sa reconnexion.
 
 Les recettes initiales sont partagées et ne proposent pas d’édition ni de
 suppression. Les confirmations de suppression utilisent le dialogue natif.
-Le coût, Petit budget, les parcours IA et l’ajustement visuel à Figma restent
-à développer.
+Le calcul du coût, le filtre Petit budget et les parcours IA restent à développer.
+Leur accès affiche « Disponible prochainement ».
+
+### Parcours Recettes et maquette
+
+Les éléments retenus de la maquette sont repris dans la liste (en-tête,
+recherche, quatre filtres, bouton d’ajout et collection), les deux écrans de
+choix et le formulaire. Les grandes cartes avec photos restent présentes.
+La police DM Sans et les quatre pictogrammes des parcours sont inclus localement.
+`expo-image` affiche ces SVG ; recompiler l’application après installation
+des dépendances, comme pour les modules photo.
+
+Le chemin fonctionnel est **Ajouter une recette → Entrer manuellement →
+Remplir un formulaire**. Trouver une idée, Cuisiner avec ce qu’on a et
+Structurer une idée affichent un message d’attente.
+Le formulaire présente le nom, la photo, les portions, la préparation,
+les ingrédients avec quantité/unité, les étapes, la difficulté et les étiquettes.
+Le choix d’un ingrédient ouvre une liste consultable avec recherche.
+Les unités acceptées sont `g`, `ml` et `unit` (pièces entières).
+Description et cuisson restent accessibles dans « Autres informations » ;
+les valeurs existantes sont conservées lors d’une modification.
+
+La difficulté est facultative et enregistrée avec les étiquettes. Rapide
+est calculé jusqu’à 30 minutes au total ; Économique est une étiquette de
+l’auteur, sans calcul de prix. Appliquer `0004_recipe_metadata` au backend.
+
+Le 21 octobre 2026, Hamza a confirmé que les ajustements du parcours Recettes
+fonctionnent dans l’application. La prévisualisation à 320 et 390 pixels a
+aussi été contrôlée sans débordement des champs et boutons ; elle utilise
+React Native Web avec des services simulés et ne remplace pas un essai natif.
+
+Pour les vérifications détaillées sur téléphone : les quatre filtres, les
+messages d’attente, le retour entre les choix, le clavier dans le formulaire,
+l’ajout avec photo/difficulté/étiquettes, puis la modification et la reconnexion.
+La confirmation générale ne valide pas séparément tous ces scénarios ;
+les essais d’erreur et le parcours Android restent à compléter.
+
+```bash
+npm test
+```
+
+Les 10 tests couvrent les photos, la lecture des quantités et les badges.
 
 ## Structure et vérification
+
+### Photos des recettes personnelles
+
+Le formulaire propose une photo facultative depuis la galerie, avec aperçu,
+remplacement et retrait. Le sélecteur système donne accès à l’image choisie ;
+une annulation conserve la sélection précédente. `expo-image-picker` ouvre
+la galerie, `expo-image-manipulator` réduit le côté le plus long à 1 200 pixels
+et produit un JPEG compressé, et `expo-file-system` fournit les octets pour
+l’envoi. Ces modules natifs nécessitent de recompiler l’application installée :
+
+```bash
+npm run ios -- --device
+# Sur Android, utiliser plutôt : npm run android -- --device
+```
+
+Avant le premier envoi, configurer les droits du bucket depuis la racine :
+
+```bash
+./.venv/bin/python -m backend.cli.configure_recipe_images
+```
+
+Voir le [guide Storage](../backend/docs/RECIPE_IMAGES.md). La photo est envoyée
+seulement après validation du formulaire, à l’enregistrement. L’URL publique
+est enregistrée dans `recipe.image_url` par FastAPI. Un refus Storage ou une
+erreur réseau conserve le formulaire et permet de réessayer. Si l’envoi réussit
+mais que FastAPI échoue, l’URL reste dans le formulaire pour éviter un second
+envoi. Une recette peut toujours être enregistrée sans photo.
+
+Vérifier sur téléphone : créer avec une photo, relancer l’application,
+remplacer la photo, annuler le sélecteur, retirer la photo puis sauvegarder,
+enregistrer sans photo, et essayer un envoi sans connexion. Les photos sont
+publiques dans ce prototype même si les recettes sont personnelles ; le
+formulaire le précise. Retirer la photo enlève son lien à la recette ; le
+nettoyage des fichiers Storage inutilisés reste à développer.
+
+```bash
+npm run test:images
+```
+
+Les 7 tests du service utilisent des doubles de galerie et de Storage.
+Le 21 octobre 2026, Hamza a confirmé que l’ajout d’une photo depuis la galerie
+fonctionne sur téléphone après recompilation. Les essais complémentaires
+ci-dessus et le parcours Android restent à confirmer. Les tests complètent
+les essais sur téléphone, sans les remplacer. Le lint n’est pas configuré.
+
+### Organisation
+
+L’icône de l’application est dans `assets/icon.png`, copiée du visuel retenu
+`data/recipes/images/optimeal.png`. `app.json` l’utilise pour iOS, Android
+et le favicon web ; Expo produit les tailles natives. Après son remplacement,
+régénérer le projet iOS puis réinstaller l’application :
+
+```bash
+npm exec -- expo prebuild --platform ios --no-install
+npm run ios -- --device
+```
+
+Les cinq onglets utilisent Ionicons via `@expo/vector-icons` et `expo-font` :
+maison, étiquette, couverts, calendrier et engrenage, dans cet ordre. Les associations sont
+définies dans `App.tsx`, avec une variante pleine en vert pour l’onglet actif
+et une variante de contour pour les autres. Ces ressources sont incluses
+dans l’application ; elles ne dépendent pas de Supabase.
 
 - `context/AuthContext.tsx` : session, événements Auth, liens de confirmation et premier plan.
 - `services/supabase.ts` : client Auth public ; `services/api.ts` : client FastAPI avec jeton et délai.

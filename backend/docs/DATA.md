@@ -30,7 +30,9 @@ data/
 │       ├── maxi-food-promos-01/    # Promotions recherchées par rayon alimentaire
 │       └── synthese/
 │           └── optimeal_produits_promos.md  # Tableau de travail, sélection à vérifier
-├── recipes/initial_recipes.json # 10 recettes de démonstration pour l’import
+├── recipes/
+│   ├── initial_recipes.json     # 10 recettes avec URL Supabase Storage pour l’import
+│   └── images/                 # Dix illustrations sources et secours du mobile
 ├── receipts/
 │   ├── images/                     # Photos originales des sept reçus
 │   ├── extractions/                # Articles et montants structurés en JSON
@@ -53,6 +55,11 @@ sont décrites dans [data/recipes/](../../data/recipes/README.md).
 Les imports PostgreSQL des ingrédients et recettes sont disponibles ; les
 recettes HTTP lisent la base. Les ingrédients et offres HTTP restent sur le
 catalogue JSON commun. La collecte web IA Metro/Super C n’est pas intégrée.
+
+Les illustrations initiales sont aussi hébergées dans le bucket public
+`recipes-images`. Leurs URL dans le JSON d’import correspondent à celles de
+PostgreSQL. Les photos personnelles sont envoyées depuis la galerie vers
+Storage, sans être ajoutées au dépôt ; voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
 
 ## Données Super C
 

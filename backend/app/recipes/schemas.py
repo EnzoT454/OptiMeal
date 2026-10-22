@@ -3,11 +3,14 @@ from decimal import Decimal
 from datetime import date
 from typing import Annotated, Literal
 
-from pydantic import Field, StringConstraints, model_validator
+from pydantic import Field, StringConstraints, field_validator, model_validator
+import unicodedata
 
 from backend.app.common.contracts import ContractModel, IngredientId, Quantity, RecipeUnit
 
 NonEmpty = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
+Difficulty = Literal['easy', 'medium', 'hard']
+Tag = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=40)]
 
 
 class RecipeIngredient(ContractModel):
@@ -36,8 +39,24 @@ class RecipeWrite(ContractModel):
     cook_time_minutes: int = Field(ge=0, strict=True)
     total_time_minutes: int = Field(ge=0, strict=True)
     image_url: str | None
+    difficulty: Difficulty | None = None
+    tags: list[Tag] = Field(default_factory=list, max_length=10)
     ingredients: list[RecipeIngredient] = Field(min_length=1)
     instructions: list[RecipeStep] = Field(min_length=1)
+
+    @field_validator('tags')
+    @classmethod
+    def normalize_tags(cls, values: list[str]) -> list[str]:
+        result, seen = [], set()
+        for value in values:
+            key = ''.join(c for c in unicodedata.normalize('NFKD', value.casefold())
+                          if not unicodedata.combining(c))
+            # Rapide dépend de la durée totale, jamais d’une déclaration de l’auteur.
+            if key == 'rapide' or key in seen:
+                continue
+            seen.add(key)
+            result.append('Économique' if key == 'economique' else value)
+        return result
 
     @model_validator(mode='after')
     def coherent_recipe(self):
@@ -62,6 +81,8 @@ class RecipeSummary(ContractModel):
     servings: int = Field(gt=0)
     total_time_minutes: int = Field(ge=0)
     image_url: str | None
+    difficulty: Difficulty | None = None
+    tags: list[Tag] = Field(default_factory=list, max_length=10)
     review_required: bool = True
     is_owned: bool = False
     is_favorite: bool = False
