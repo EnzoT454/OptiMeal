@@ -1,5 +1,25 @@
 {
   "$defs": {
+    "Category": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "integer"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "Category",
+      "type": "object"
+    },
     "InputFingerprint": {
       "additionalProperties": false,
       "properties": {
@@ -43,6 +63,18 @@
           },
           "title": "Aliases",
           "type": "array"
+        },
+        "category_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category Id"
         },
         "sources": {
           "items": {
@@ -119,6 +151,19 @@
           ],
           "title": "Price"
         },
+        "promo_price": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Promo Price"
+        },
         "currency": {
           "const": "CAD",
           "title": "Currency",
@@ -170,6 +215,19 @@
             }
           ],
           "title": "Valid To"
+        },
+        "retrieved_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retrieved At"
         },
         "is_promotion": {
           "anyOf": [
@@ -283,6 +341,21 @@
     "product_count": {
       "title": "Product Count",
       "type": "integer"
+    },
+    "categories": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/Category"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Categories"
     },
     "ingredients": {
       "items": {

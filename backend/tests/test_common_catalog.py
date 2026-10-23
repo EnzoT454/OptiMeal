@@ -16,7 +16,8 @@ ROOT = Path(__file__).resolve().parents[2]
 @pytest.fixture
 def sources(tmp_path):
     mapping = json.loads((ROOT / cli.MAPPING).read_text(encoding='utf-8'))
-    for relative in [cli.MAPPING, *mapping['ingredient_configs'], *mapping['sources'].values()]:
+    categories = [mapping['categories']] if 'categories' in mapping else []
+    for relative in [cli.MAPPING, *categories, *mapping['ingredient_configs'], *mapping['sources'].values()]:
         target = tmp_path / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / relative, target)
@@ -48,16 +49,20 @@ def test_common_catalog_keeps_every_source_value_and_recipe_reference():
             assert len(products) == len(row['Produits'])
             fields = {'external_product_id': 'Id', 'store_id': 'Id_magasin', 'name': 'Description',
                       'unit': 'Unité', 'valid_from': 'DateDebut', 'valid_to': 'DateFin',
-                      'is_promotion': 'IsPromotion', 'source': 'Source', 'url': 'Url'}
+                      'is_promotion': 'IsPromotion', 'source': 'Source', 'url': 'Url',
+                      'retrieved_at': 'DateRecuperation'}
             for actual, original in zip(products, row['Produits'], strict=True):
                 for output_key, input_key in fields.items():
                     assert actual[output_key] == original[input_key]
-                for output_key, input_key in [('price', 'Prix'), ('quantity', 'Quantité')]:
+                for output_key, input_key in [('price', 'Prix'), ('promo_price', 'PrixPromo'),
+                                              ('quantity', 'Quantité')]:
                     assert actual[output_key] == (None if original[input_key] is None else str(original[input_key]))
                 product_ids.append(actual['id'])
     assert len(set(product_ids)) == 93
+    category_ids = {c['name']: c['id'] for c in catalog['categories']}
+    assert all(i['category_id'] == category_ids[i['category']] for i in catalog['ingredients'])
     recipes = json.loads((ROOT / 'data/recipes/initial_recipes.json').read_text(encoding='utf-8'))
-    assert recipes['ingredient_catalog'] == str(cli.OUTPUT)
+    assert recipes['ingredient_catalog'] == cli.OUTPUT.as_posix()
     assert all(i['ingredient_id'] in indexed for r in recipes['recipes'] for i in r['ingredients'])
 
 
