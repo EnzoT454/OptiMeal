@@ -126,5 +126,9 @@ class OfferRead(ContractModel):
     external_product_id: str
     format: SourceFormat
     price: Price
+    # Ajouts page Promos : price = prix de base, promo_price = prix en promotion (null sinon)
+    promo_price: Price | None = None
+    category_id: int | None = Field(default=None, strict=True)
+    retrieved_at: date | None = None
     promotion: Promotion
     source: OfferSource

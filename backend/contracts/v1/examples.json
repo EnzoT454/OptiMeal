@@ -194,6 +194,9 @@
           "max_amount": null,
           "basis": "source_unspecified"
         },
+        "promo_price": null,
+        "category_id": 1,
+        "retrieved_at": "2026-10-04",
         "promotion": {
           "declared": false,
           "valid_from": "2026-10-04",
@@ -229,6 +232,9 @@
           "max_amount": null,
           "basis": "source_unspecified"
         },
+        "promo_price": null,
+        "category_id": 1,
+        "retrieved_at": "2026-10-06",
         "promotion": {
           "declared": false,
           "valid_from": "2026-10-06",
@@ -281,6 +287,9 @@
         "max_amount": null,
         "basis": "source_unspecified"
       },
+      "promo_price": null,
+      "category_id": 1,
+      "retrieved_at": "2026-10-04",
       "promotion": {
         "declared": false,
         "valid_from": "2026-10-04",

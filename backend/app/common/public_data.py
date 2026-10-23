@@ -41,7 +41,8 @@ def promotion(product: SourceProduct, on_date: date) -> Promotion:
                      valid_to=product.valid_to, status=status, evaluated_on=on_date)
 
 
-def offer(ingredient_id: str, product: SourceProduct, on_date: date) -> OfferRead:
+def offer(ingredient_id: str, product: SourceProduct, on_date: date,
+          category_id: int | None = None) -> OfferRead:
     fingerprint = hashlib.sha256((ingredient_id + '\n' + product.model_dump_json()).encode()).hexdigest()[:24]
     return OfferRead(
         id='offer_' + fingerprint, product_id=product.id, ingredient_id=ingredient_id,
@@ -50,6 +51,10 @@ def offer(ingredient_id: str, product: SourceProduct, on_date: date) -> OfferRea
         external_store_id=product.store_id, external_product_id=product.external_product_id,
         format={'quantity': product.quantity, 'unit_raw': product.unit},
         price={'kind': 'unknown' if product.price is None else 'commercial', 'amount': product.price},
+        # Ajouts page Promos
+        promo_price=(None if product.promo_price is None
+                     else {'kind': 'commercial', 'amount': product.promo_price}),
+        category_id=category_id, retrieved_at=product.retrieved_at,
         promotion=promotion(product, on_date),
         source={'kind': product.source, 'url': product.url},
     )
@@ -61,7 +66,8 @@ class PublicCatalog:
     ingredients: list[IngredientRead]
 
     def offers(self, on_date: date) -> list[OfferRead]:
-        return [offer(i.id, p, on_date) for i in self.source.ingredients for p in i.products]
+        return [offer(i.id, p, on_date, i.category_id)
+                for i in self.source.ingredients for p in i.products]
 
 
 @dataclass(frozen=True)

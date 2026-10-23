@@ -53,6 +53,7 @@ def list_ingredients(request: Request, q: Search = '', limit: Limit = 20, offset
 @router.get('/offers', response_model=Page[OfferRead])
 def list_offers(request: Request, ingredient_id: IngredientId | None = None,
                 retailer: Retailer | None = None, store_id: str | None = None,
+                category_id: int | None = None,
                 promotion_only: bool = False, on_date: date | None = None,
                 limit: Limit = 20, offset: Offset = 0):
     data = catalog(request)
@@ -62,6 +63,7 @@ def list_offers(request: Request, ingredient_id: IngredientId | None = None,
              if (ingredient_id is None or o.ingredient_id == ingredient_id)
              and (retailer is None or o.retailer == retailer)
              and (store_id is None or o.store_id == store_id)
+             and (category_id is None or o.category_id == category_id)
              and (not promotion_only or o.promotion.status == 'active')]
     return page(items, limit, offset)
 
