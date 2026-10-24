@@ -16,6 +16,7 @@ from backend.cli.export_shared_contracts import OUTPUT, artifacts
 @pytest.fixture
 def client(monkeypatch):
     monkeypatch.setenv('DATABASE_URL', '')
+    monkeypatch.setenv('OFFERS_SOURCE', 'json')
     monkeypatch.delenv('CATALOG_IMPORT_PATH', raising=False)
     monkeypatch.delenv('COMMON_CATALOG_PATH', raising=False)
     monkeypatch.delenv('RECIPE_SEED_PATH', raising=False)
@@ -70,6 +71,7 @@ def test_missing_resources(client, path, code):
 
 def test_missing_catalog_does_not_break_health_or_legacy_errors(monkeypatch, tmp_path):
     monkeypatch.setenv('DATABASE_URL', '')
+    monkeypatch.setenv('OFFERS_SOURCE', 'json')
     monkeypatch.delenv('CATALOG_IMPORT_PATH', raising=False)
     monkeypatch.setenv('COMMON_CATALOG_PATH', str(tmp_path / 'missing.json'))
     with TestClient(create_app()) as client:
@@ -80,6 +82,25 @@ def test_missing_catalog_does_not_break_health_or_legacy_errors(monkeypatch, tmp
         assert client.get('/catalog').status_code == 503
         assert 'detail' in client.get('/catalog').json()
 
+
+
+def test_database_offers_without_database_return_503(monkeypatch):
+    monkeypatch.setenv('DATABASE_URL', '')
+    monkeypatch.setenv('OFFERS_SOURCE', 'database')
+    with TestClient(create_app()) as client:
+        response = client.get('/api/v1/offers')
+        assert response.status_code == 503
+        assert response.json()['error']['code'] == 'DATABASE_UNAVAILABLE'
+
+
+def test_offer_import_rows_keep_exact_values():
+    from backend.app.catalog.offer_import import read_offers
+    categories, offers = read_offers(DEFAULT_CATALOG)
+    assert len(categories) == 8 and len(offers) == 93
+    assert [o['position'] for o in offers] == list(range(1, 94))
+    catalog = json.loads(DEFAULT_CATALOG.read_text(encoding='utf-8'))
+    first = catalog['ingredients'][0]['products'][0]
+    assert str(offers[0]['price']) == first['price'] and offers[0]['id'] == first['id']
 
 
 @pytest.mark.parametrize('declared,start,end,day,expected', [

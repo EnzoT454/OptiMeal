@@ -6,7 +6,11 @@ from pathlib import Path
 import unicodedata
 from zoneinfo import ZoneInfo
 
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
 from backend.app.catalog.common_schemas import CommonCatalog, IngredientRead, OfferRead, Promotion, SourceProduct
+from backend.app.catalog.models import ProductOffer
 from backend.app.recipes.schemas import RecipeRead, RecipeSeedDocument, RecipeSummary
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -68,6 +72,27 @@ class PublicCatalog:
     def offers(self, on_date: date) -> list[OfferRead]:
         return [offer(i.id, p, on_date, i.category_id)
                 for i in self.source.ingredients for p in i.products]
+
+
+def text_or_none(value) -> str | None:
+    # NUMERIC sans échelle : str(Decimal) redonne exactement le texte importé ('1.0', '2.49').
+    return None if value is None else str(value)
+
+
+def offers_from_database(db: Session, on_date: date) -> list[OfferRead]:
+    """Mêmes offres que le JSON, lues dans public.product_offer, dans le même ordre."""
+    result = []
+    for row in db.scalars(select(ProductOffer).order_by(ProductOffer.position)):
+        product = SourceProduct(
+            id=row.id, retailer=row.retailer, store_id=row.store_id,
+            external_product_id=row.external_product_id, name=row.name,
+            price=text_or_none(row.price), promo_price=text_or_none(row.promo_price),
+            currency=row.currency, unit=row.unit, quantity=text_or_none(row.quantity),
+            valid_from=row.valid_from, valid_to=row.valid_to, retrieved_at=row.retrieved_at,
+            is_promotion=row.is_promotion, source=row.source, url=row.url,
+        )
+        result.append(offer(row.ingredient_id, product, on_date, row.category_id))
+    return result
 
 
 @dataclass(frozen=True)
