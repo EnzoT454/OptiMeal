@@ -20,3 +20,25 @@ export interface Page<T> { items: T[]; total: number; limit: number; offset: num
 export interface Detail<T> { item: T; }
 export interface Ingredient { id: string; name: string; category: string; aliases: string[]; }
 export interface Profile { id: string; email: string | null; display_name: string | null; created_at: string; }
+
+// Promos : une offre renvoyée par GET /api/v1/offers (montants en texte, ex. "2.49").
+export type Retailer = 'maxi' | 'metro' | 'superc';
+export interface Price {
+  kind: 'commercial' | 'declared' | 'estimated' | 'unknown';
+  currency: 'CAD'; amount: string | null; min_amount: string | null; max_amount: string | null;
+}
+export interface Offer {
+  id: string; product_id: string; ingredient_id: string; product_name: string;
+  retailer: Retailer; store_id: string | null; external_store_id: string | null; external_product_id: string;
+  format: { quantity: string | null; unit_raw: string | null };
+  price: Price;              // prix de base
+  promo_price: Price | null; // prix en promotion
+  category_id: number | null;
+  retrieved_at: string | null;
+  promotion: {
+    declared: boolean | null; valid_from: string | null; valid_to: string | null;
+    status: 'active' | 'expired' | 'upcoming' | 'unverifiable' | 'not_promotion' | 'unknown';
+    evaluated_on: string;
+  };
+  source: { kind: string; url: string | null };
+}
