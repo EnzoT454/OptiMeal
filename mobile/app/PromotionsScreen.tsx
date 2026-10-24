@@ -6,14 +6,9 @@ import { Message } from '../components/ui';
 import {
   RecipeButton, RecipeChip, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles, showRecipeComingSoon,
 } from '../components/recipes';
-import { api } from '../services/api';
-import { RETAILERS, currentPrice, discount, formatText, longDate, money, storeName } from '../components/promos';
-import type { Offer, Page, Retailer } from '../types/api';
+import { ON_DATE, RETAILERS, currentPrice, discount, fetchPromos, formatText, longDate, money, storeName } from '../components/promos';
+import type { Offer, Retailer } from '../types/api';
 import { PromoStackParams } from '../types/navigation';
-
-// Pour tester avec des promos passées, mettre une date ici (ex. '2026-10-05').
-// Laisser undefined pour utiliser la date du jour.
-const ON_DATE: string | undefined = undefined;
 
 // Recherche sans accents ni majuscules : « oeuf » trouve « Œufs ».
 function normalize(text: string) {
@@ -33,12 +28,10 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
   useFocusEffect(useCallback(() => {
     let active = true;
     setLoading(true); setError('');
-    const params = new URLSearchParams({ promotion_only: 'true', limit: '100' });
-    if (ON_DATE) params.set('on_date', ON_DATE);
-    api<Page<Offer>>('/api/v1/offers?' + params).then(page => {
+    fetchPromos().then(items => {
       if (!active) return;
-      setOffers(page.items);
-      setEvaluatedOn(page.items[0]?.promotion.evaluated_on ?? ON_DATE ?? null);
+      setOffers(items);
+      setEvaluatedOn(items[0]?.promotion.evaluated_on ?? ON_DATE ?? null);
     }).catch(e => {
       if (active) setError(e instanceof Error ? e.message : 'Impossible de charger les promos.');
     }).finally(() => { if (active) setLoading(false); });
@@ -58,7 +51,7 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
 
     <View style={recipeStyles.chips}>
       <RecipeChip label="Promotions" selected />
-      <RecipeChip label="Circulaires" onPress={() => showRecipeComingSoon('Circulaires')} />
+      <RecipeChip label="Circulaires" onPress={() => navigation.navigate('Circulars')} />
     </View>
 
     <RecipeField label="Rechercher un produit" placeholder="Poulet, lait, légumes…" value={query} onChangeText={setQuery} />
