@@ -1,44 +1,26 @@
 import { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Message } from '../components/ui';
 import {
   RecipeButton, RecipeChip, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles, showRecipeComingSoon,
 } from '../components/recipes';
 import { api } from '../services/api';
+import { RETAILERS, currentPrice, discount, formatText, longDate, money, storeName } from '../components/promos';
 import type { Offer, Page, Retailer } from '../types/api';
+import { PromoStackParams } from '../types/navigation';
 
 // Pour tester avec des promos passées, mettre une date ici (ex. '2026-10-05').
 // Laisser undefined pour utiliser la date du jour.
 const ON_DATE: string | undefined = undefined;
 
-
-const RETAILERS: { id: Retailer; name: string }[] = [
-  { id: 'maxi', name: 'Maxi' }, { id: 'metro', name: 'Metro' }, { id: 'superc', name: 'Super C' },
-];
-const MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-
-function money(amount: string | null | undefined) {
-  return amount == null ? '—' : `${Number(amount).toFixed(2).replace('.', ',')} $`;
-}
-// '2026-10-07' → '7 octobre' (sans passer par Date, pour éviter un décalage de fuseau horaire)
-function longDate(value: string | null | undefined) {
-  if (!value) return null;
-  const [, month, day] = value.split('-').map(Number);
-  return `${day} ${MONTHS[month - 1]}`;
-}
-function discount(offer: Offer) {
-  const regular = Number(offer.price.amount);
-  const promo = Number(offer.promo_price?.amount);
-  if (!regular || !promo || promo >= regular) return null;
-  return Math.round((1 - promo / regular) * 100);
-}
 // Recherche sans accents ni majuscules : « oeuf » trouve « Œufs ».
 function normalize(text: string) {
-  return text.toLowerCase().replace(/œ/g, 'oe').normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return text.toLowerCase().replace(/œ/g, 'oe').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
-export default function PromotionsScreen() {
+export default function PromotionsScreen({ navigation }: NativeStackScreenProps<PromoStackParams, 'List'>) {
   const [offers, setOffers] = useState<Offer[]>([]);
   const [evaluatedOn, setEvaluatedOn] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -107,7 +89,7 @@ export default function PromotionsScreen() {
         </Text>
       </View>
       : <>
-        {visible.map(o => <PromoCard key={o.id} offer={o} />)}
+        {visible.map(o => <PromoCard key={o.id} offer={o} onPress={() => navigation.navigate('Detail', { offer: o })} />)}
         <RecipeButton title="Cuisiner avec les promos" variant="neutral" style={styles.cookButton}
           textStyle={{ color: recipeColors.green }} onPress={() => showRecipeComingSoon('Cuisiner avec les promos')} />
         <Text style={recipeStyles.note}>Prix relevés en ligne : ils peuvent varier en magasin.</Text>
@@ -115,23 +97,21 @@ export default function PromotionsScreen() {
   </RecipeScreen>;
 }
 
-function PromoCard({ offer }: { offer: Offer }) {
-  const store = RETAILERS.find(r => r.id === offer.retailer)?.name ?? offer.retailer;
+function PromoCard({ offer, onPress }: { offer: Offer; onPress: () => void }) {
   const percent = discount(offer);
-  const format = offer.format.quantity && offer.format.unit_raw ? `${offer.format.quantity} ${offer.format.unit_raw}` : null;
   const end = longDate(offer.promotion.valid_to);
-  const details = [format, end && `jusqu’au ${end}`].filter(Boolean).join(' · ');
-  return <View style={styles.card}>
+  const details = [formatText(offer), end && `jusqu’au ${end}`].filter(Boolean).join(' · ');
+  return <Pressable accessibilityRole="button" accessibilityHint="Affiche le détail de la promo" onPress={onPress} style={styles.card}>
     <View style={styles.info}>
       <View style={styles.storeRow}>
-        <Text style={styles.store}>{store.toUpperCase()}</Text>
+        <Text style={styles.store}>{storeName(offer.retailer).toUpperCase()}</Text>
         {percent != null && <View style={styles.badge}><Text style={styles.badgeText}>−{percent} %</Text></View>}
       </View>
       <Text style={styles.name} numberOfLines={2}>{offer.product_name}</Text>
       {!!details && <Text style={recipeStyles.body}>{details}</Text>}
     </View>
-    <Text style={styles.price}>{money(offer.promo_price?.amount ?? offer.price.amount)}</Text>
-  </View>;
+    <Text style={styles.price}>{money(currentPrice(offer))}</Text>
+  </Pressable>;
 }
 
 const styles = StyleSheet.create({
