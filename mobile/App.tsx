@@ -19,10 +19,15 @@ import RecipeDetailScreen from './app/RecipeDetailScreen';
 import RecipeEditorScreen from './app/RecipeEditorScreen';
 import AddRecipeScreen from './app/AddRecipeScreen';
 import ManualEntryScreen from './app/ManualEntryScreen';
-import { MainTabParams, RecipeStackParams } from './types/navigation';
+import PromotionsScreen from './app/PromotionsScreen';
+import PromoDetailScreen from './app/PromoDetailScreen';
+import CircularsScreen from './app/CircularsScreen';
+import CircularScreen from './app/CircularScreen';
+import { MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
 
 const Tabs = createBottomTabNavigator<MainTabParams>();
 const Recipes = createNativeStackNavigator<RecipeStackParams>();
+const Promos = createNativeStackNavigator<PromoStackParams>();
 type IconName = ComponentProps<typeof Ionicons>['name'];
 const tabIcons: Record<keyof MainTabParams, { active: IconName; inactive: IconName }> = {
   Accueil: { active: 'home', inactive: 'home-outline' },
@@ -40,9 +45,16 @@ function RecipeNavigator() {
     <Recipes.Screen name="Editor" component={RecipeEditorScreen} options={{ headerShown: false }} />
   </Recipes.Navigator>;
 }
+function PromoNavigator() {
+  return <Promos.Navigator screenOptions={{ headerShown: false }}>
+    <Promos.Screen name="List" component={PromotionsScreen} />
+    <Promos.Screen name="Detail" component={PromoDetailScreen} />
+    <Promos.Screen name="Circulars" component={CircularsScreen} />
+    <Promos.Screen name="Circular" component={CircularScreen} />
+  </Promos.Navigator>;
+}
 function Home() { return <Screen><Heading>Bienvenue dans OptiMeal</Heading><Text>Retrouve tes recettes et crée tes propres plats dans l’onglet Recettes.</Text></Screen>; }
 function Calendar() { return <Screen><Heading>Calendrier</Heading><Text>La planification des repas sera disponible prochainement.</Text></Screen>; }
-function Promotions() { return <Screen><Heading>Promos</Heading><Text>Les offres des magasins seront disponibles prochainement.</Text></Screen>; }
 function Content() {
   const { session, loading } = useAuth();
   if (loading) return <Screen><Heading>OptiMeal</Heading><Text>Ouverture de ta session…</Text></Screen>;
@@ -54,7 +66,7 @@ function Content() {
       name={tabIcons[route.name][focused ? 'active' : 'inactive']} size={size} color={color} />,
   })}>
     <Tabs.Screen name="Accueil" component={Home} />
-    <Tabs.Screen name="Promos" component={Promotions} />
+    <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Recettes" component={RecipeNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Calendrier" component={Calendar} />
     <Tabs.Screen name="Paramètres" component={ProfileScreen} />

@@ -19,6 +19,8 @@ class Settings:
     catalog_import_path: str | None = None
     common_catalog_path: str | None = None
     recipe_seed_path: str | None = None
+    # Source des offres /api/v1/offers : 'database' (PostgreSQL) ou 'json' (par défaut).
+    offers_source: str | None = None
 
 
 def load_settings(env_file: Path | None = ENV_FILE) -> Settings:

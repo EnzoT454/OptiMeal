@@ -173,7 +173,7 @@
   "offers-page": {
     "items": [
       {
-        "id": "offer_9a2861196bd5f494a0706dd5",
+        "id": "offer_7d8e84965e5fdaa75626742e",
         "product_id": "superc:605:819377009987",
         "ingredient_id": "ing_ail_frais",
         "product_name": "Ail",
@@ -194,6 +194,9 @@
           "max_amount": null,
           "basis": "source_unspecified"
         },
+        "promo_price": null,
+        "category_id": 1,
+        "retrieved_at": "2026-10-04",
         "promotion": {
           "declared": false,
           "valid_from": "2026-10-04",
@@ -208,7 +211,7 @@
         }
       },
       {
-        "id": "offer_032bc64af419dea33dfc53de",
+        "id": "offer_fd3daaf673db6494425c3251",
         "product_id": "metro:178:819377009987",
         "ingredient_id": "ing_ail_frais",
         "product_name": "Ail",
@@ -229,6 +232,9 @@
           "max_amount": null,
           "basis": "source_unspecified"
         },
+        "promo_price": null,
+        "category_id": 1,
+        "retrieved_at": "2026-10-06",
         "promotion": {
           "declared": false,
           "valid_from": "2026-10-06",
@@ -260,7 +266,7 @@
   },
   "offer-detail": {
     "item": {
-      "id": "offer_9a2861196bd5f494a0706dd5",
+      "id": "offer_7d8e84965e5fdaa75626742e",
       "product_id": "superc:605:819377009987",
       "ingredient_id": "ing_ail_frais",
       "product_name": "Ail",
@@ -281,6 +287,9 @@
         "max_amount": null,
         "basis": "source_unspecified"
       },
+      "promo_price": null,
+      "category_id": 1,
+      "retrieved_at": "2026-10-04",
       "promotion": {
         "declared": false,
         "valid_from": "2026-10-04",

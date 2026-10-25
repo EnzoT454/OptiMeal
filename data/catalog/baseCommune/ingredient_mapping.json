@@ -1,6 +1,7 @@
 {
   "schema_version": "common-ingredient-mapping-1.0",
   "status": "proposed",
+  "categories": "data/catalog/baseCommune/categories.json",
   "sources": {
     "superc": "data/catalog/superc/produits.json",
     "metro": "data/catalog/metro/produits.json",

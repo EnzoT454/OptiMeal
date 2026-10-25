@@ -12,6 +12,9 @@ PRODUCT_FIELDS = {
     'Id', 'Description', 'Id_magasin', 'Prix', 'Unité', 'Quantité',
     'DateDebut', 'DateFin', 'IsPromotion', 'Source', 'Url',
 }
+# Champs ajoutés pour la page Promos (demandes du prof) : tous présents ou tous absents.
+# Prix = prix de base ; PrixPromo = prix en promotion (null sinon).
+PROMO_FIELDS = {'PrixPromo', 'DateRecuperation'}
 
 
 def decimal_text(value: object) -> str | None:
@@ -40,11 +43,19 @@ def build_common_catalog(root: Path, mapping_path: Path) -> dict:
     def read(path: str | Path):
         path = (root / path).resolve()
         raw = path.read_bytes()
-        label = str(path.relative_to(root)) if path.is_relative_to(root) else str(path)
+        label = path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix()
         inputs.append({'path': label, 'sha256': hashlib.sha256(raw).hexdigest()})
         return json.loads(raw, parse_float=Decimal)
 
     mapping = read(mapping_path)
+    # Liste des catégories avec leur identifiant (facultative)
+    categories_list = read(mapping['categories']) if 'categories' in mapping else None
+    category_ids = None
+    if categories_list is not None:
+        category_ids = {c['name']: c['id'] for c in categories_list}
+        if len(category_ids) != len(categories_list) or \
+                len({c['id'] for c in categories_list}) != len(categories_list):
+            raise ValueError('Catégorie ou identifiant de catégorie dupliqué.')
     definitions = {}
     for path in mapping['ingredient_configs']:
         for ingredient in read(path)['ingredients']:
@@ -86,7 +97,7 @@ def build_common_catalog(root: Path, mapping_path: Path) -> dict:
             sources.append({'retailer': retailer, 'path': mapping['sources'][retailer],
                             'ingredient_id': row['Id'], 'name': row['NomProduit']})
             for product in row['Produits']:
-                if set(product) != PRODUCT_FIELDS:
+                if set(product) not in (PRODUCT_FIELDS, PRODUCT_FIELDS | PROMO_FIELDS):
                     raise ValueError(f'Champs produit modifiés dans {retailer}/{row["Id"]}.')
                 if not isinstance(product['Id'], str) or not product['Id']:
                     raise ValueError('Un identifiant marchand doit être un texte non vide.')
@@ -101,16 +112,26 @@ def build_common_catalog(root: Path, mapping_path: Path) -> dict:
                 products.append({
                     'id': product_id, 'retailer': retailer, 'store_id': store,
                     'external_product_id': product['Id'], 'name': product['Description'],
-                    'price': decimal_text(product['Prix']), 'currency': 'CAD',
+                    'price': decimal_text(product['Prix']),
+                    'promo_price': decimal_text(product.get('PrixPromo')),
+                    'currency': 'CAD',
                     'unit': product['Unité'], 'quantity': decimal_text(product['Quantité']),
                     'valid_from': product['DateDebut'], 'valid_to': product['DateFin'],
+                    'retrieved_at': product.get('DateRecuperation'),
                     'is_promotion': product['IsPromotion'],
                     'source': product['Source'], 'url': product['Url'],
                 })
         if len(categories) != 1:
             raise ValueError(f'Catégories incohérentes pour {key}.')
+        category = categories.pop()
+        category_id = None
+        if category_ids is not None:
+            if category not in category_ids:
+                raise ValueError(f'Catégorie absente de la liste des catégories : {category}')
+            category_id = category_ids[category]
         ingredients.append({'id': key, 'name': definition['name'],
-                            'category': categories.pop(), 'aliases': list(dict.fromkeys(aliases)),
+                            'category': category, 'category_id': category_id,
+                            'aliases': list(dict.fromkeys(aliases)),
                             'sources': sources, 'products': products})
     if seen != set(definitions):
         raise ValueError('La correspondance ne couvre pas tous les ingrédients configurés.')
@@ -124,6 +145,7 @@ def build_common_catalog(root: Path, mapping_path: Path) -> dict:
         'inputs': inputs,
         'ingredient_count': len(ingredients),
         'product_count': sum(len(i['products']) for i in ingredients),
+        'categories': categories_list,
         'ingredients': ingredients,
     }
     CommonCatalog.model_validate(result)

@@ -1,5 +1,8 @@
-"""Référentiel partagé des ingrédients ; produits et offres restent à ajouter."""
-from sqlalchemy import CheckConstraint, Text, text
+"""Référentiel partagé des ingrédients, catégories et offres des magasins."""
+from datetime import date
+from decimal import Decimal
+
+from sqlalchemy import Boolean, CheckConstraint, Date, ForeignKey, Integer, Numeric, Text, text
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -20,3 +23,52 @@ class Ingredient(Base):
     aliases: Mapped[list[str]] = mapped_column(
         ARRAY(Text), nullable=False, default=list, server_default=text("'{}'::text[]"),
     )
+
+
+class Category(Base):
+    """Rayons communs aux trois magasins (data/catalog/baseCommune/categories.json)."""
+    __tablename__ = 'category'
+    __table_args__ = (
+        CheckConstraint("btrim(name) <> ''", name='name_not_blank'),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=False)
+    name: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+
+
+class ProductOffer(Base):
+    """Un produit vendu dans un magasin, avec son prix de base et son prix promo.
+
+    Une ligne par produit : un nouvel import actualise la ligne de même id.
+    L'historique des prix pourra faire l'objet d'une migration séparée.
+    """
+    __tablename__ = 'product_offer'
+    __table_args__ = (
+        CheckConstraint("retailer IN ('maxi', 'metro', 'superc')", name='retailer_supported'),
+        CheckConstraint("currency = 'CAD'", name='currency_cad'),
+        CheckConstraint('price IS NULL OR price >= 0', name='price_not_negative'),
+        CheckConstraint('promo_price IS NULL OR promo_price >= 0', name='promo_price_not_negative'),
+        CheckConstraint('quantity IS NULL OR quantity > 0', name='quantity_positive'),
+        CheckConstraint('valid_to IS NULL OR valid_from IS NULL OR valid_to >= valid_from', name='validity_ordered'),
+        CheckConstraint('position > 0', name='position_positive'),
+    )
+
+    id: Mapped[str] = mapped_column(Text, primary_key=True)
+    ingredient_id: Mapped[str] = mapped_column(Text, ForeignKey('ingredient.id'), nullable=False, index=True)
+    category_id: Mapped[int | None] = mapped_column(Integer, ForeignKey('category.id'))
+    position: Mapped[int] = mapped_column(Integer, nullable=False)
+    retailer: Mapped[str] = mapped_column(Text, nullable=False)
+    store_id: Mapped[str | None] = mapped_column(Text)
+    external_product_id: Mapped[str] = mapped_column(Text, nullable=False)
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    price: Mapped[Decimal | None] = mapped_column(Numeric)
+    promo_price: Mapped[Decimal | None] = mapped_column(Numeric)
+    currency: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'CAD'"))
+    unit: Mapped[str | None] = mapped_column(Text)
+    quantity: Mapped[Decimal | None] = mapped_column(Numeric)
+    valid_from: Mapped[date | None] = mapped_column(Date)
+    valid_to: Mapped[date | None] = mapped_column(Date)
+    retrieved_at: Mapped[date | None] = mapped_column(Date)
+    is_promotion: Mapped[bool | None] = mapped_column(Boolean)
+    source: Mapped[str] = mapped_column(Text, nullable=False)
+    url: Mapped[str | None] = mapped_column(Text)

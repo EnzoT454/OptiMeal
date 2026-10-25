@@ -29,11 +29,15 @@ class SourceProduct(ContractModel):
     external_product_id: str = Field(min_length=1)
     name: str = Field(min_length=1)
     price: DecimalText | None
+    # Ajout page Promos : price = prix de base, promo_price = prix en promotion (null sinon)
+    promo_price: DecimalText | None = None
     currency: Literal['CAD']
     unit: str | None
     quantity: DecimalText | None
     valid_from: date | None
     valid_to: date | None
+    # Ajout page Promos : jour où les données ont été récupérées
+    retrieved_at: date | None = None
     is_promotion: StrictBool | None
     source: str
     url: str | None
@@ -50,6 +54,8 @@ class SourceProduct(ContractModel):
 
 
 class SourceIngredient(IngredientRead):
+    # Ajout page Promos : numéro de la catégorie (voir categories.json)
+    category_id: int | None = Field(default=None, strict=True)
     sources: list[SourceReference]
     products: list[SourceProduct]
 
@@ -59,6 +65,12 @@ class InputFingerprint(ContractModel):
     sha256: str
 
 
+# Ajout page Promos : liste des catégories avec leur numéro
+class Category(ContractModel):
+    id: int = Field(strict=True)
+    name: str = Field(min_length=1)
+
+
 class CommonCatalog(ContractModel):
     schema_version: Literal['common-catalog-1.0']
     status: Literal['assembled_from_local_sources']
@@ -66,6 +78,7 @@ class CommonCatalog(ContractModel):
     inputs: list[InputFingerprint]
     ingredient_count: int
     product_count: int
+    categories: list[Category] | None = None
     ingredients: list[SourceIngredient]
 
     @model_validator(mode='after')
@@ -113,5 +126,9 @@ class OfferRead(ContractModel):
     external_product_id: str
     format: SourceFormat
     price: Price
+    # Ajouts page Promos : price = prix de base, promo_price = prix en promotion (null sinon)
+    promo_price: Price | None = None
+    category_id: int | None = Field(default=None, strict=True)
+    retrieved_at: date | None = None
     promotion: Promotion
     source: OfferSource
