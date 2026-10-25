@@ -23,6 +23,7 @@ import PromotionsScreen from './app/PromotionsScreen';
 import PromoDetailScreen from './app/PromoDetailScreen';
 import CircularsScreen from './app/CircularsScreen';
 import CircularScreen from './app/CircularScreen';
+import CookWithPromosScreen from './app/CookWithPromosScreen';
 import { MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
 
 const Tabs = createBottomTabNavigator<MainTabParams>();
@@ -51,6 +52,7 @@ function PromoNavigator() {
     <Promos.Screen name="Detail" component={PromoDetailScreen} />
     <Promos.Screen name="Circulars" component={CircularsScreen} />
     <Promos.Screen name="Circular" component={CircularScreen} />
+    <Promos.Screen name="Cook" component={CookWithPromosScreen} />
   </Promos.Navigator>;
 }
 function Home() { return <Screen><Heading>Bienvenue dans OptiMeal</Heading><Text>Retrouve tes recettes et crée tes propres plats dans l’onglet Recettes.</Text></Screen>; }
