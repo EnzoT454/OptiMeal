@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Message } from '../components/ui';
 import {
-  RecipeButton, RecipeChip, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles, showRecipeComingSoon,
+  RecipeButton, RecipeChip, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles,
 } from '../components/recipes';
 import { ON_DATE, RETAILERS, currentPrice, discount, fetchPromos, formatText, longDate, money, storeName } from '../components/promos';
 import type { Offer, Retailer } from '../types/api';
@@ -84,7 +84,7 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
       : <>
         {visible.map(o => <PromoCard key={o.id} offer={o} onPress={() => navigation.navigate('Detail', { offer: o })} />)}
         <RecipeButton title="Cuisiner avec les promos" variant="neutral" style={styles.cookButton}
-          textStyle={{ color: recipeColors.green }} onPress={() => showRecipeComingSoon('Cuisiner avec les promos')} />
+          textStyle={{ color: recipeColors.green }} onPress={() => navigation.navigate('Cook')} />
         <Text style={recipeStyles.note}>Prix relevés en ligne : ils peuvent varier en magasin.</Text>
       </>}
   </RecipeScreen>;
