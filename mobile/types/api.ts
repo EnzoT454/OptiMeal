@@ -41,4 +41,10 @@ export interface Offer {
     evaluated_on: string;
   };
   source: { kind: string; url: string | null };
+
+}
+// Circulaire de la semaine d'un magasin : GET /api/v1/circulars (pages = liens des images, dans l'ordre).
+export interface Circular {
+  retailer: Retailer; valid_from: string; valid_to: string;
+  page_count: number; pages: string[]; imported_at: string;
 }

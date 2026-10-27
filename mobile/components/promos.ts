@@ -1,5 +1,5 @@
 import { api } from '../services/api';
-import type { Offer, Page, Retailer } from '../types/api';
+import type { Circular, Offer, Page, Retailer } from '../types/api';
 
 // Fonctions partagées par les écrans Promos (liste, détail, circulaires).
 
@@ -13,6 +13,18 @@ export async function fetchPromos() {
   if (ON_DATE) params.set('on_date', ON_DATE);
   const page = await api<Page<Offer>>('/api/v1/offers?' + params);
   return page.items;
+}
+
+// Les circulaires de la semaine (une par magasin), avec les liens des pages en images.
+export async function fetchCirculars() {
+  const page = await api<Page<Circular>>('/api/v1/circulars');
+  return page.items;
+}
+
+// Date du jour 'AAAA-MM-JJ' (heure locale), pour savoir si une circulaire est terminée.
+export function todayText() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 // Présentation de chaque magasin dans les circulaires (couleur et slogan de la maquette).
