@@ -14,7 +14,7 @@ from .schemas import RecipeRead, RecipeSummary, RecipeWrite
 
 router = APIRouter(prefix='/api/v1/recipes', tags=['Recettes v1'], responses={
     401: {'model': ErrorResponse}, 404: {'model': ErrorResponse},
-    422: {'model': ErrorResponse}, 503: {'model': ErrorResponse},
+        422: {'model': ErrorResponse, 'description': 'Unprocessable Entity'}, 503: {'model': ErrorResponse},
 })
 
 
