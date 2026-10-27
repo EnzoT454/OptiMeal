@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from backend.app.catalog.circulars import CircularRead, circulars_from_database
 from backend.app.catalog.common_schemas import IngredientRead, OfferRead
 from backend.app.common.contracts import Detail, ErrorResponse, IngredientId, Page, ResponseMeta, Retailer
 from backend.app.common.public_data import PublicCatalog, offers_from_database, search_text, today
@@ -95,6 +96,21 @@ def get_offer(offer_id: str, request: Request, on_date: date | None = None):
         fail(404, 'OFFER_NOT_FOUND', 'Offre introuvable dans cette capture.')
     source = 'postgresql' if offers_source(request) == 'database' else 'local_json'
     return {'item': item, 'meta': meta(source=source)}
+
+
+@router.get('/circulars', response_model=Page[CircularRead])
+def list_circulars(request: Request):
+    """La circulaire de la semaine de chaque magasin, page par page (images publiques)."""
+    factory = request.app.state.database.session_factory
+    supabase_url = getattr(request.app.state, 'supabase_url', None)
+    if factory is None or not supabase_url:
+        fail(503, 'DATABASE_UNAVAILABLE', 'La base de données est indisponible.')
+    try:
+        with factory() as db:
+            items = circulars_from_database(db, supabase_url)
+    except SQLAlchemyError:
+        fail(503, 'DATABASE_UNAVAILABLE', 'La base de données est indisponible.')
+    return page(items, 100, 0, source='postgresql')
 
 
 def install_error_handlers(app):
