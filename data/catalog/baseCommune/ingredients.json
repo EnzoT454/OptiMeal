@@ -5,35 +5,35 @@
   "inputs": [
     {
       "path": "data/catalog/baseCommune/ingredient_mapping.json",
-      "sha256": "a4dc5232840d1fbc54088440f3aa6061600d130537c71466ff1bb9feb8d84069"
+      "sha256": "f6f1d1b44d4b38d360968790be85ef2b12d01a816936e4f0b8471af90f3a0508"
     },
     {
       "path": "data/catalog/baseCommune/categories.json",
-      "sha256": "1d3dc7916c59eea76a6297508d1b164c4743317e7fb19ea8b5eb92d71d36a05a"
+      "sha256": "feeaa3e627a361534a885509ed8d94ff9751a82aa5394e8d7e00cfe84bd1deae"
     },
     {
       "path": "backend/config/catalog/ingredients.json",
-      "sha256": "311dbf47e613cb3e4d559a1773302b0353fcc0ff54f907fc363fed9b59f1d297"
+      "sha256": "db9647330c7d0abe8ba7c27d0c4479b3fcc4fba13ccd63ac2c42cef79c89d07b"
     },
     {
       "path": "backend/config/catalog/batch2/ingredients.json",
-      "sha256": "4724ca7da484fe19d061d6c857f9b70f698f6eb041bfa1d4f9aa1a2fea3292f2"
+      "sha256": "955b140550fcfdf9e4c3a8e455b670b773459643e7a26d1fb416b5f0bc50e246"
     },
     {
       "path": "backend/config/catalog/batch3/ingredients.json",
-      "sha256": "38eca1dea7bff9caaf85109608b740f163421c594a34635d07352819fe88927f"
+      "sha256": "fb76e59bfe63d32cab703e05fe2b4eb8008563e4452f2ee92eb4f0bf23e53776"
     },
     {
       "path": "data/catalog/superc/produits.json",
-      "sha256": "f988722f9605f4153a06499aaa9015e542ad3cbe76d2bd314e55492f0d5964d1"
+      "sha256": "d9a32d0bde1ca8203b9ca73b510ac70de63ebd8cb3d6a70f6c0ce97d463d48ec"
     },
     {
       "path": "data/catalog/metro/produits.json",
-      "sha256": "b2aac96a52f32ea56ee1a403090b8e31c81653d795ed2dc5f70442a7666903c7"
+      "sha256": "358d6984ce2b5623a6cf6d2f411775249d68cc0436055ab0f3bce181874b69fd"
     },
     {
       "path": "data/catalog/maxi/data_final/produits.json",
-      "sha256": "a1b98359845e9270f060a7e6b0ca5e4709a3a4fe18f45e53ed13039bdf2fa7c9"
+      "sha256": "bde7f6ea4eb08a3b457e120cf262221cb6c426299c9fe65f7937992ba41bf00c"
     }
   ],
   "ingredient_count": 31,

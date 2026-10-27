@@ -42,7 +42,8 @@ def build_common_catalog(root: Path, mapping_path: Path) -> dict:
 
     def read(path: str | Path):
         path = (root / path).resolve()
-        raw = path.read_bytes()
+        # Fins de ligne normalisées : même empreinte sous Windows et Linux (CI).
+        raw = path.read_bytes().replace(b'\r\n', b'\n')
         label = path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix()
         inputs.append({'path': label, 'sha256': hashlib.sha256(raw).hexdigest()})
         return json.loads(raw, parse_float=Decimal)
