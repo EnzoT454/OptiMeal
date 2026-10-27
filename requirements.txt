@@ -11,6 +11,8 @@ SQLAlchemy==2.1.5
 psycopg[binary]==3.3.6
 alembic==1.20.0
 python-dotenv==1.2.4
+# Découper les circulaires PDF en images (backend.cli.import_circulars).
+pymupdf==1.28.2
 # Base de fuseaux IANA pour America/Toronto sur Windows.
 tzdata==2026.5; sys_platform == "win32"
 

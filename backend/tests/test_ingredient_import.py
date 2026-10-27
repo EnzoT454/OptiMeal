@@ -90,7 +90,7 @@ def test_offline_migration_and_single_head_need_no_database(monkeypatch):
     assert 'ck_ingredient_ck_' not in sql
     assert sql.count('CREATE TABLE') == 2  # ingredient et suivi Alembic uniquement
     assert 'auth.' not in sql and 'storage.' not in sql
-    assert ScriptDirectory.from_config(config).get_heads() == ['0005_catalog_offers']
+    assert ScriptDirectory.from_config(config).get_heads() == ['0006_circulars']
 
 
 @pytest.fixture
@@ -126,7 +126,7 @@ def test_postgres_migration_matches_model_and_keeps_rls(postgres):
     assert {c['name'] for c in columns} == {'id', 'name', 'category', 'aliases'}
     assert all(not c['nullable'] for c in columns)
     assert postgres.scalar(text("SELECT relrowsecurity FROM pg_class WHERE oid='public.ingredient'::regclass")) is True
-    assert postgres.scalar(text('SELECT version_num FROM public.alembic_version')) == '0005_catalog_offers'
+    assert postgres.scalar(text('SELECT version_num FROM public.alembic_version')) == '0006_circulars'
     command.check(alembic_config(postgres))
 
 

@@ -21,7 +21,9 @@ backend/
 │   ├── catalog/
 │   │   ├── router.py            # GET /catalog et /catalog/offers
 │   │   ├── schemas.py           # Contrat Pydantic du catalogue
-│   │   ├── models.py            # Modèle SQL Ingredient ; autres tables à venir
+│   │   ├── models.py            # Modèles SQL Ingredient, Category, ProductOffer, Circular
+│   │   ├── offer_import.py      # Import des catégories et offres (page Promos)
+│   │   ├── circulars.py         # Circulaires : PDF → images, Storage, lecture
 │   │   ├── service.py           # Futures règles du catalogue persisté
 │   │   ├── formats.py           # Formats, unités et codes-barres
 │   │   ├── matching.py          # Correspondances ingrédient-produit
@@ -42,6 +44,8 @@ backend/
 │   ├── build_common_catalog.py  # Référentiel commun des trois enseignes
 │   ├── export_shared_contracts.py # Schémas et exemples v1
 │   ├── import_ingredients.py    # Import PostgreSQL du référentiel
+│   ├── import_offers.py         # Import PostgreSQL des catégories et offres
+│   ├── import_circulars.py      # Circulaire PDF d'un magasin vers Storage
 │   ├── import_recipes.py        # Import rejouable sans remplacement
 │   ├── configure_recipe_images.py # Limites et politiques du bucket Storage
 │   ├── ingest_catalog.py        # Collecte, reprise et rejeu Apify
@@ -101,8 +105,10 @@ Les fichiers `data_final/produits.json` et `promos.json` servent à consulter le
 ## Contrats communs Recettes et Promos
 
 Le serveur expose aussi `/api/v1/ingredients`, `/api/v1/recipes`,
-`/api/v1/recipes/{id}`, `/api/v1/offers` et `/api/v1/offers/{id}`. Ces routes
-lisent les ingrédients et offres dans le catalogue JSON commun. Les routes
+`/api/v1/recipes/{id}`, `/api/v1/offers`, `/api/v1/offers/{id}` et
+`/api/v1/circulars`. Les ingrédients sont lus dans le catalogue JSON commun ;
+les offres aussi, ou dans PostgreSQL avec `OFFERS_SOURCE=database` dans
+`backend/.env` (sans repli silencieux : 503 si la base est indisponible). Les routes
 Recettes lisent PostgreSQL via `DATABASE_URL`, après migration et import.
 Elles ont les mêmes enveloppes de pagination et d’erreur,
 des identifiants partagés et des prix décimaux en chaînes.
@@ -131,6 +137,7 @@ Alembic gère les modifications du schéma :
 python -m alembic -c backend/alembic.ini upgrade head
 python -m backend.cli.import_ingredients
 python -m backend.cli.import_recipes
+python -m backend.cli.import_offers
 ```
 
 Le [guide des migrations](docs/MIGRATIONS.md) décrit le schéma, le rejeu sans
@@ -143,7 +150,38 @@ Pour les images de recettes, voir [le guide Storage](docs/RECIPE_IMAGES.md).
 Le champ `recipe.image_url` conserve l’URL ; les fichiers sont hébergés dans
 le bucket public `recipes-images`. Les photos personnelles sont envoyées
 depuis la galerie avec des droits d’écriture par propriétaire. Le schéma
-applicatif reste géré par les quatre migrations Alembic existantes.
+applicatif reste géré par les migrations Alembic.
+
+## Promos et circulaires de la semaine
+
+Les offres (prix de base `Prix`, prix promo `PrixPromo`, dates de promotion et
+`DateRecuperation`) viennent des fichiers `produits.json` de chaque magasin. Les
+circulaires (PDF des magasins) sont découpées en images JPEG et envoyées dans le
+bucket Storage public `circulars` ; la table `circular` garde une ligne par magasin.
+
+Prérequis : bucket public `circulars` créé dans Supabase (images JPEG, 5 Mo
+maximum) et `SUPABASE_SECRET_KEY` dans `backend/.env`. Cette clé ne va jamais
+dans le mobile ni dans Git.
+
+Chaque jeudi (semaine du jeudi au mercredi) :
+
+1. Télécharger les PDF du Québec dans `data/circulars/` : `maxi.pdf`, `metro.pdf`,
+   `superc.pdf` (dossier ignoré par Git ; pour Maxi : Imprimer → Enregistrer en PDF).
+2. Envoyer les circulaires :
+   ```bash
+   python -m backend.cli.import_circulars --retailer maxi
+   python -m backend.cli.import_circulars --retailer metro
+   python -m backend.cli.import_circulars --retailer superc
+   ```
+   Sans dates : du jeudi au mercredi. Sinon : `--from AAAA-MM-JJ --to AAAA-MM-JJ`.
+   L'ancienne circulaire du magasin est remplacée et ses images supprimées.
+3. Mettre à jour dans les `produits.json` les produits retrouvés à l'identique dans
+   les circulaires (même produit, même format), puis :
+   ```bash
+   python -m backend.cli.build_common_catalog
+   python -m backend.cli.import_offers
+   ```
+4. Vérifier `GET /api/v1/offers?promotion_only=true` et `GET /api/v1/circulars`.
 
 ## Collecter les données Maxi
 

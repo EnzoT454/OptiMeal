@@ -56,6 +56,8 @@ def create_app(*, settings: Settings | None = None, env_file: Path | None = ENV_
         app.state.public_catalog = None
         # Offres lues dans PostgreSQL seulement si OFFERS_SOURCE=database ; JSON sinon.
         app.state.offers_source = 'database' if config.offers_source == 'database' else 'json'
+        # Adresse Supabase : sert à construire les liens publics des pages de circulaires.
+        app.state.supabase_url = config.supabase_url
 
         try:
             app.state.public_catalog = load_catalog(

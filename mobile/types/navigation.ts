@@ -1,11 +1,11 @@
-import type { Offer, Retailer } from './api';
+import type { Circular, Offer } from './api';
 
 export type RecipeStackParams = {
   List: undefined; Add: undefined; ManualEntry: undefined; Detail: { id: string }; Editor: { id?: string } | undefined;
 };
 
 export type PromoStackParams = {
-  List: undefined; Detail: { offer: Offer }; Circulars: undefined; Circular: { retailer: Retailer }; Cook: undefined;
+  List: undefined; Detail: { offer: Offer }; Circulars: undefined; Circular: { circular: Circular }; Cook: undefined;
 };
 
 export type MainTabParams = {

@@ -435,6 +435,58 @@
         }
       }
     },
+    "/api/v1/circulars": {
+      "get": {
+        "tags": [
+          "Recettes et Promos v1"
+        ],
+        "summary": "List Circulars",
+        "description": "La circulaire de la semaine de chaque magasin, page par page (images publiques).",
+        "operationId": "list_circulars_api_v1_circulars_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_CircularRead_"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/recipes": {
       "get": {
         "tags": [
@@ -1535,6 +1587,57 @@
         ],
         "title": "CatalogProduct"
       },
+      "CircularRead": {
+        "properties": {
+          "retailer": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc"
+            ],
+            "title": "Retailer"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date",
+            "title": "Valid From"
+          },
+          "valid_to": {
+            "type": "string",
+            "format": "date",
+            "title": "Valid To"
+          },
+          "page_count": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Page Count"
+          },
+          "pages": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Pages"
+          },
+          "imported_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Imported At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "retailer",
+          "valid_from",
+          "valid_to",
+          "page_count",
+          "pages",
+          "imported_at"
+        ],
+        "title": "CircularRead"
+      },
       "Coverage": {
         "properties": {
           "ingredient_id": {
@@ -1974,6 +2077,46 @@
           "url"
         ],
         "title": "OfferSource"
+      },
+      "Page_CircularRead_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CircularRead"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Offset"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset",
+          "meta"
+        ],
+        "title": "Page[CircularRead]"
       },
       "Page_IngredientRead_": {
         "properties": {

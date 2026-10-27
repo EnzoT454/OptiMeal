@@ -1,8 +1,8 @@
 """Référentiel partagé des ingrédients, catégories et offres des magasins."""
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Boolean, CheckConstraint, Date, ForeignKey, Integer, Numeric, Text, text
+from sqlalchemy import Boolean, CheckConstraint, Date, DateTime, ForeignKey, Integer, Numeric, Text, text
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -72,3 +72,25 @@ class ProductOffer(Base):
     is_promotion: Mapped[bool | None] = mapped_column(Boolean)
     source: Mapped[str] = mapped_column(Text, nullable=False)
     url: Mapped[str | None] = mapped_column(Text)
+
+
+class Circular(Base):
+    """La circulaire de la semaine d'un magasin : une seule ligne par magasin.
+
+    Les pages sont des images JPEG dans le bucket Storage public « circulars » :
+    {storage_prefix}/p01.jpg, p02.jpg… Un nouvel import remplace la ligne et les images.
+    """
+    __tablename__ = 'circular'
+    __table_args__ = (
+        CheckConstraint("retailer IN ('maxi', 'metro', 'superc')", name='retailer_supported'),
+        CheckConstraint('valid_to >= valid_from', name='validity_ordered'),
+        CheckConstraint('page_count > 0', name='page_count_positive'),
+        CheckConstraint("btrim(storage_prefix) <> ''", name='storage_prefix_not_blank'),
+    )
+
+    retailer: Mapped[str] = mapped_column(Text, primary_key=True)
+    valid_from: Mapped[date] = mapped_column(Date, nullable=False)
+    valid_to: Mapped[date] = mapped_column(Date, nullable=False)
+    page_count: Mapped[int] = mapped_column(Integer, nullable=False)
+    storage_prefix: Mapped[str] = mapped_column(Text, nullable=False)
+    imported_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text('now()'))
