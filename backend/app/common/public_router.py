@@ -15,7 +15,8 @@ from backend.app.common.contracts import Detail, ErrorResponse, IngredientId, Pa
 from backend.app.common.public_data import PublicCatalog, offers_from_database, search_text, today
 
 router = APIRouter(prefix='/api/v1', tags=['Recettes et Promos v1'], responses={
-    404: {'model': ErrorResponse}, 422: {'model': ErrorResponse}, 503: {'model': ErrorResponse},
+    404: {'model': ErrorResponse}, 422: {'model': ErrorResponse, 'description': 'Unprocessable Entity'},
+    503: {'model': ErrorResponse},
 })
 Limit = Annotated[int, Query(ge=1, le=100)]
 Offset = Annotated[int, Query(ge=0)]
