@@ -40,8 +40,9 @@ La commande valide `data/catalog/baseCommune/ingredients.json` avant toute
 connexion. `--input CHEMIN` ou `COMMON_CATALOG_PATH` permet un autre catalogue
 de même format. Les 93 fiches produits, leurs prix, leurs références de source
 et les 10 recettes ne sont pas importés par la commande d’ingrédients.
-Les offres et ingrédients HTTP restent sur JSON ; les recettes HTTP lisent
-PostgreSQL. Le démarrage FastAPI ne migre ni n’importe rien.
+Les ingrédients HTTP restent sur JSON. Les recettes lisent PostgreSQL ; les
+offres utilisent JSON par défaut ou PostgreSQL avec `OFFERS_SOURCE=database`.
+Le démarrage FastAPI ne migre ni n’importe rien.
 
 La migration active RLS sur `ingredient`, sans politique d’accès direct aux
 clients Supabase. L’import et les futurs services utilisent la connexion
@@ -69,8 +70,8 @@ seulement le type tableau et sa présence. Les quantités n’ont pas d’échel
 fixe : elles conservent leurs décimales, sans conversion par un flottant.
 
 RLS est activée sur les deux tables, sans politique d’accès direct depuis
-les clients Supabase. Elles préparent le catalogue commun : les comptes,
-les recettes personnelles et les favoris auront leurs propres migrations.
+les clients Supabase. Les comptes, recettes personnelles et favoris sont
+ajoutés par la révision suivante, `0003_accounts`, décrite ci-dessous.
 L’import des 10 recettes et les lectures HTTP depuis PostgreSQL sont disponibles.
 Les routes `/api/v1/recipes` et `/api/v1/recipes/{id}` requièrent la connexion
 serveur. Une base vide produit une liste vide ; une base inaccessible ou des
@@ -102,6 +103,38 @@ Le retour en arrière refuse de supprimer ces colonnes si elles contiennent
 des métadonnées. Une ancienne requête PUT qui omet ces nouveaux champs conserve
 leurs valeurs. Le badge Rapide est calculé à partir de la durée totale, sans
 étiquette stockée. Voir les [contrats](CONTRACTS.md).
+
+## Catégories, offres et circulaires
+
+`0005_catalog_offers` crée `category` et `product_offer`. Une offre stockée
+référence un ingrédient, un rayon facultatif et un produit marchand : nom,
+enseigne, succursale éventuelle, format, prix de base, prix promo, dates et
+provenance. Les montants utilisent `NUMERIC` sans échelle imposée.
+
+Après l’import des ingrédients :
+
+```bash
+python -m backend.cli.import_offers
+python -m backend.cli.import_offers
+```
+
+La commande valide le catalogue commun et ses catégories avant connexion.
+Elle importe actuellement 8 catégories et 93 fiches produits dans une
+transaction, en conservant leurs identifiants. Un second passage identique
+ne modifie aucune offre. Les lignes modifiées sont actualisées ; celles
+absentes du fichier ne sont pas supprimées. Les anciennes valeurs ne sont
+pas conservées : l’historique des prix reste à développer.
+
+`0006_circulars` crée `circular`, avec une ligne par enseigne : dates de
+validité, nombre de pages, préfixe Storage et date d’import. Les images sont
+dans le bucket public `circulars`. La commande d’import remplace la circulaire
+du magasin ; elle ne conserve pas les anciennes semaines. Voir la
+[procédure d’import](../README.md#promos-et-circulaires-de-la-semaine).
+
+RLS est activée sur ces trois tables, sans accès direct depuis le client
+mobile. FastAPI les lit avec sa connexion serveur. Les retours en arrière de
+`0005` et `0006` suppriment leurs tables et leurs données ; ils ne constituent
+pas une procédure de conservation de l’historique.
 
 ## Importer les recettes et rejouer la commande
 
@@ -181,3 +214,5 @@ quantité et durée, les suppressions et la compatibilité des 10 recettes
 initiales avec les tables. Leurs insertions restent dans la base de test.
 Les tests de l’import vérifient également le rejeu complet, les ingrédients
 manquants, les conflits après modifications et l’annulation des ajouts partiels.
+
+*Dernière mise à jour : 27 octobre 2026*

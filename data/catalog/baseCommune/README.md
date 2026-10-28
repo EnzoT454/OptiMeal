@@ -3,7 +3,9 @@
 `ingredients.json` rassemble les **31 ingrédients et 93 fiches produits**
 des catalogues Maxi, Metro et Super C. Il sert de référentiel local commun
 aux onglets Recettes et Promos. Les ingrédients sont aussi importables dans
-PostgreSQL ; les produits et offres restent à raccorder à la base.
+PostgreSQL. Les catégories et fiches produits sont importables dans
+`category` et `product_offer`, utilisées par les routes des offres lorsque
+`OFFERS_SOURCE=database` est configuré côté serveur.
 
 ## Générer le fichier
 
@@ -51,6 +53,8 @@ conserve ; ils ne doivent pas servir seuls à fusionner des ingrédients.
 | `retailer`, `store_id` | Enseigne du fichier et `Id_magasin` de la succursale |
 | `external_product_id`, `name` | `Id`, `Description` |
 | `price`, `currency` | `Prix`, exprimé en CAD selon les conventions du projet |
+| `promo_price` | `PrixPromo`, prix promotionnel éventuel |
+| `retrieved_at` | `DateRecuperation`, date de récupération indiquée par la source |
 | `quantity`, `unit` | `Quantité`, `Unité`, conservées sans conversion |
 | `valid_from`, `valid_to` | `DateDebut`, `DateFin` |
 | `is_promotion` | `IsPromotion` ; un prix inférieur à une autre source ne crée pas une promotion |
@@ -78,13 +82,28 @@ dupliqués, les lignes renommées ou non reliées et les nouveaux champs produit
 non pris en charge, plutôt que d’ignorer des données. Il n’impose pas de limite
 de 31 ingrédients au code.
 
-Ce format est `common-catalog-1.0`. Les routes `/api/v1/ingredients` et
-`/api/v1/offers` le chargent maintenant en lecture, avec validation Pydantic.
+Ce format est `common-catalog-1.0`. `/api/v1/ingredients` et les offres en
+mode JSON le chargent en lecture, avec validation Pydantic. Les offres en
+mode PostgreSQL utilisent les lignes importées depuis ce même catalogue.
 Voir les [contrats communs](../../../backend/docs/CONTRACTS.md).
 `CATALOG_IMPORT_PATH` reste réservé aux exports historiques `catalog-pilot-1.0` ;
 `COMMON_CATALOG_PATH` permet de choisir un autre catalogue commun.
 La table PostgreSQL `ingredient` et son import rejouable sont disponibles :
 `python -m backend.cli.import_ingredients`, après application des migrations.
 Seuls `id`, `name`, `category` et `aliases` sont importés. Voir le
-[guide des migrations](../../../backend/docs/MIGRATIONS.md). La persistance
-des produits et offres et le raccordement des routes restent à développer.
+[guide des migrations](../../../backend/docs/MIGRATIONS.md).
+
+`categories.json` fournit les 8 rayons intégrés au catalogue commun. Après
+l’import des ingrédients, lancer `python -m backend.cli.import_offers` pour
+insérer ou actualiser les 8 catégories et les 93 fiches produits. Le rejeu
+ne crée pas de doublons et ne supprime pas les lignes absentes du fichier.
+L’import actualise les prix courants sans conserver leurs anciennes valeurs.
+
+Avec `OFFERS_SOURCE=database`, les routes `/api/v1/offers` et leur détail
+lisent PostgreSQL sans repli silencieux sur JSON. Le catalogue JSON reste
+nécessaire au référentiel d’ingrédients pour la liste des offres. L’historique
+des prix et la comparaison des formats pour les listes d’achats restent à
+développer. Les circulaires ont un import distinct ; voir le
+[guide backend](../../../backend/README.md#promos-et-circulaires-de-la-semaine).
+
+*Dernière mise à jour : 27 octobre 2026*

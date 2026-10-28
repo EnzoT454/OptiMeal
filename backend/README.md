@@ -67,10 +67,10 @@ backend/
 ├── alembic.ini                  # Configuration sans identifiants
 ├── alembic/                     # Chaîne unique des migrations PostgreSQL
 │   ├── env.py                   # Métadonnées applicatives et connexion serveur
-│   └── versions/                # ingredient, puis recipe et recipe_ingredient
+│   └── versions/                # Six migrations : comptes, recettes, catalogue et circulaires
 ├── tests/
 │   ├── conftest.py              # Base des futures fixtures partagées
-│   ├── test_accounts.py         # Emplacement des tests comptes
+│   ├── test_accounts.py         # Profils et isolation des comptes
 │   ├── test_recipes.py          # Contraintes des tables recettes
 │   ├── test_recipe_import.py    # Import et conflits
 │   ├── test_recipe_api.py       # Lectures HTTP PostgreSQL
@@ -116,9 +116,9 @@ des identifiants partagés et des prix décimaux en chaînes.
 Le [guide des contrats](docs/CONTRACTS.md) détaille les filtres, dates et limites.
 Les [schémas et exemples](contracts/v1/README.md) peuvent être régénérés avec
 `python -m backend.cli.export_shared_contracts`. La connexion PostgreSQL/Supabase
-est disponible, avec les tables `ingredient`, `recipe` et `recipe_ingredient`,
-et les imports rejouables des ingrédients et recettes. Les autres tables,
-le raccordement des offres et les parcours planning/listes restent à intégrer.
+est disponible avec six migrations couvrant ingrédients, recettes, profils,
+favoris, catégories, offres et circulaires. Les imports des ingrédients,
+recettes et offres sont rejouables. Planning et listes restent à développer.
 Supabase Auth, les profils et les recettes personnelles sont disponibles ;
 voir le [guide Auth](docs/AUTH.md) et le [mobile](../mobile/README.md).
 
@@ -222,6 +222,12 @@ python -m pytest backend/tests -q
 
 Les tests couvrent les modules existants sans collecte externe ni appel payant. Ils ne prouvent pas l’exactitude des prix en magasin.
 
-Pour la suite, ajouter les connecteurs web IA Metro/Super C dans `app/price_sources/`, puis compléter les tables produits/offres, les comptes, les écritures de recettes, le planning et les listes progressivement. Compléter les fichiers déjà préparés dans les domaines concernés et leurs tests. Garder les routes HTTP courtes et les traitements réutilisables hors des commandes.
+Les parcours comptes, recettes, photos et Promos ont été confirmés sur iOS
+et Android par Hamza le 27 octobre 2026, avec des essais Android par son
+coéquipier. Pour la suite, développer les connecteurs web IA Metro/Super C
+dans `app/price_sources/`, les modes IA des recettes, le planning, les listes,
+l’historique des prix et les contributions par reçus. Compléter les fichiers déjà préparés dans les domaines concernés et leurs tests. Garder les routes HTTP courtes et les traitements réutilisables hors des commandes.
 
-Le [guide des données](docs/DATA.md) décrit les fichiers locaux. Le [modèle de base](docs/DATABASE.md) reste une proposition à concrétiser lors de l’intégration PostgreSQL.
+Le [guide des données](docs/DATA.md) décrit les fichiers locaux. Le [guide de la base](docs/DATABASE.md) distingue les tables actuelles du modèle étendu proposé pour l’historique, les reçus et les estimations.
+
+*Dernière mise à jour : 27 octobre 2026*

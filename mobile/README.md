@@ -3,9 +3,11 @@
 Socle Expo/TypeScript avec React Navigation : inscription, confirmation de
 courriel, connexion, restauration et renouvellement de session, déconnexion,
 profil minimal et recettes manuelles avec photo facultative depuis la galerie.
-Accueil, Promos, Recettes, Calendrier
-et Paramètres sont présents ; Calendrier et Promos sont des emplacements
-pour la suite. Aucune fonction IA n’est intégrée.
+Les cinq onglets sont présents : Accueil, Promos, Recettes, Calendrier et
+Paramètres. Promos permet de consulter les offres, les circulaires et les
+recettes associées aux ingrédients en promotion. Calendrier reste à développer.
+Les parcours comptes, recettes, photos et Promos sont confirmés sur iOS et
+Android au 27 octobre 2026. Aucune fonction IA n’est intégrée.
 
 ## 1. Installer
 
@@ -148,6 +150,29 @@ suppression. Les confirmations de suppression utilisent le dialogue natif.
 Le calcul du coût, le filtre Petit budget et les parcours IA restent à développer.
 Leur accès affiche « Disponible prochainement ».
 
+### Parcours Promos et circulaires
+
+Depuis Promos, rechercher un produit, filtrer par magasin et ouvrir le détail
+pour consulter le prix, le format, les dates et le lien marchand. La liste
+charge les 100 premières offres actives ; recherche et filtre sont appliqués
+ensuite dans le mobile. « Ajouter à la liste » reste en attente.
+
+« Cuisiner avec les promos » rapproche les recettes accessibles et les offres
+par `ingredient_id`, puis classe les recettes par nombre d’ingrédients en
+promotion. Le prix affiché le plus bas est retenu pour chaque ingrédient,
+sans comparaison des formats ni calcul du coût complet de la recette.
+Ce parcours fonctionne sans IA ; Petit budget reste à développer.
+
+Dans Circulaires, choisir un magasin pour lire les pages. Toucher une page
+ouvre son image ; une circulaire terminée est signalée. Les PDF doivent être
+importés côté serveur : voir le [guide backend](../backend/README.md#promos-et-circulaires-de-la-semaine).
+Les offres sont lues depuis JSON par défaut ou PostgreSQL avec
+`OFFERS_SOURCE=database` côté backend ; le mobile utilise les mêmes routes.
+
+Vérifier recherche, filtres, détail, ouverture d’une recette, lecture des
+circulaires, ainsi que les états vide, chargement et erreur. Le fonctionnement
+des parcours intégrés a été confirmé sur iOS et Android le 27 octobre.
+
 ### Parcours Recettes et maquette
 
 Les éléments retenus de la maquette sont repris dans la liste (en-tête,
@@ -180,7 +205,9 @@ Pour les vérifications détaillées sur téléphone : les quatre filtres, les
 messages d’attente, le retour entre les choix, le clavier dans le formulaire,
 l’ajout avec photo/difficulté/étiquettes, puis la modification et la reconnexion.
 La confirmation générale ne valide pas séparément tous ces scénarios ;
-les essais d’erreur et le parcours Android restent à compléter.
+les essais d’erreur et d’affichage sur différentes tailles restent à compléter.
+Le fonctionnement du parcours Recettes sur iOS et Android a été confirmé
+par Hamza le 27 octobre ; son coéquipier l’a aussi vérifié sur Android.
 
 ```bash
 npm test
@@ -230,9 +257,10 @@ npm run test:images
 
 Les 7 tests du service utilisent des doubles de galerie et de Storage.
 Le 21 octobre 2026, Hamza a confirmé que l’ajout d’une photo depuis la galerie
-fonctionne sur téléphone après recompilation. Les essais complémentaires
-ci-dessus et le parcours Android restent à confirmer. Les tests complètent
-les essais sur téléphone, sans les remplacer. Le lint n’est pas configuré.
+fonctionne sur téléphone après recompilation. Le 27 octobre, Hamza a
+également confirmé le parcours des photos sur iOS et Android, avec un essai
+Android par son coéquipier. Les essais d’erreur réseau restent à compléter.
+Les tests complètent les essais sur téléphone, sans les remplacer. Le lint n’est pas configuré.
 
 ### Organisation
 
@@ -254,7 +282,8 @@ dans l’application ; elles ne dépendent pas de Supabase.
 
 - `context/AuthContext.tsx` : session, événements Auth, liens de confirmation et premier plan.
 - `services/supabase.ts` : client Auth public ; `services/api.ts` : client FastAPI avec jeton et délai.
-- `app/` : compte, profil, liste, détail et formulaire manuel.
+- `app/` : comptes, profil, recettes, promotions et circulaires.
+- `components/promos.ts` : chargement des offres et circulaires, prix et dates.
 - `types/` : contrats consommés et paramètres de navigation.
 
 ```bash
@@ -267,8 +296,10 @@ Les bundles des deux plateformes et TypeScript ont été vérifiés. Le
 de confirmation, le profil, la restauration de session, la liste et le détail,
 la recherche, Rapides, le CRUD manuel et les favoris. Les recettes initiales
 n’affichent pas d’actions d’édition/suppression ; les données de deux comptes
-restent séparées. Les essais interactifs Android et les scénarios d’erreur
-complémentaires restent à effectuer. Voir le [suivi](../docs/suivi.md).
+restent séparées. Le 27 octobre, Hamza a confirmé les parcours comptes,
+recettes, photos et Promos sur iOS et Android ; son coéquipier les a également
+essayés sur Android. Les scénarios d’erreur complémentaires restent à
+effectuer. Voir les [résultats actuels](../README.md#tests).
 AsyncStorage est utilisé pour ce socle, conformément au guide de démarrage
 Supabase ; le stockage sécurisé des jetons peut être renforcé avant livraison.
 `npm audit` signale actuellement des alertes transitives dans l’outillage
@@ -278,3 +309,5 @@ Expo suggérée par `--force` sans vérifier sa compatibilité.
 
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native)
 et [React Navigation](https://reactnavigation.org/docs/getting-started/).
+
+*Dernière mise à jour : 27 octobre 2026*
