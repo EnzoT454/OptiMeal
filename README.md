@@ -14,7 +14,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 - **Mobile :**  React Native · TypeScript · Expo , pour iOS et Android
 - **Backend :** Python · FastAPI
-- **Données :** PostgreSQL et Supabase Storage pour les images de recettes
+- **Données :** PostgreSQL et Supabase Storage pour les photos de recettes et les circulaires
 - **Documentation :** Zensical · GitHub Pages
 
 ## Statut actuel
@@ -24,11 +24,13 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 - Site de suivi et documentation du projet.
 - API FastAPI permettant de consulter le catalogue.
 - Contrats communs Recettes et Promos, avec API de lecture du catalogue partagé et des 10 recettes initiales.
-- Connexion PostgreSQL/Supabase optionnelle, contrôle `/health/db`, migrations des ingrédients et recettes, imports rejouables des 31 ingrédients et 10 recettes ; les recettes HTTP lisent PostgreSQL, les ingrédients et offres restent sur JSON.
+- Connexion PostgreSQL/Supabase, contrôle `/health/db` et migrations des ingrédients, recettes, profils, favoris, catégories, offres et circulaires. Imports rejouables des 31 ingrédients, 10 recettes initiales et offres ; les ingrédients HTTP restent sur JSON et les offres peuvent être lues en base avec `OFFERS_SOURCE=database`.
 - Supabase Auth, profil minimal et recettes personnelles : création manuelle, édition, suppression et favoris avec contrôles de propriétaire.
-- Socle mobile : inscription avec confirmation du courriel, connexion, session persistante, profil et parcours Recettes, essayés sur iPhone avec deux comptes.
-- Images des dix recettes initiales hébergées dans Supabase Storage ; ajout d’une photo depuis la galerie pour les recettes personnelles, confirmé sur téléphone. Les photos sont publiques dans ce prototype, avec des droits d’écriture limités au dossier du propriétaire.
+- Parcours comptes et Recettes confirmés sur iOS et Android : inscription avec confirmation du courriel, connexion, session persistante, profil, recherche, recettes personnelles et favoris. La séparation des données entre deux comptes a aussi été vérifiée sur iPhone.
+- Images des dix recettes initiales hébergées dans Supabase Storage ; parcours des photos personnelles confirmé sur iOS et Android. Les photos sont publiques dans ce prototype, avec des droits d’écriture limités au dossier du propriétaire.
 - Parcours Recettes adapté aux éléments retenus de Figma, avec fonctionnement confirmé : en-tête, filtres, collection, choix d’ajout et formulaire ; difficulté facultative et étiquettes enregistrées en base. Petit budget et les choix IA affichent « Disponible prochainement ».
+- Onglet Promos confirmé sur iOS et Android : recherche, filtre par magasin, détail des offres, consultation des circulaires et recettes associées aux ingrédients en promotion. Le classement de ces recettes ne calcule pas encore leur coût complet.
+- Import des catégories et offres dans PostgreSQL ; conversion des circulaires PDF en images dans Supabase Storage, avec leurs informations conservées en base.
 - Collecte des produits et promotions Maxi avec Apify, avec vérification des données.
 - Échantillons de produits Metro et Super C disponibles au format JSON.
 - Extraction locale des reçus et vérification des prix sur un échantillon Maxi et Metro.
@@ -38,10 +40,10 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 - Valider les échantillons Metro et Super C et développer leur collecte automatisée.
 - Compléter la validation de l’extraction des reçus, notamment sur Windows et pour Super C.
-- Compléter les tables produits/offres et les préférences de compte au-delà du profil minimal.
-- Reproduire les parcours sur Android, compléter les essais d’erreur et d’affichage sur différentes tailles d’écran, poursuivre l’adaptation des autres écrans à Figma, puis développer la planification et les listes d’épicerie.
+- Développer l’historique des prix et les préférences de compte au-delà du profil minimal.
+- Compléter les essais d’erreur et d’affichage sur différentes tailles d’écran, poursuivre l’adaptation des autres écrans à Figma, puis développer la planification et les listes d’épicerie.
 - Intégrer les estimations de prix et la confirmation des reçus dans l’application.
-- Compléter les essais de remplacement, retrait et erreur réseau des photos, puis prévoir le nettoyage des fichiers Storage inutilisés.
+- Prévoir le nettoyage des fichiers Storage inutilisés et compléter les essais d’erreur réseau des photos.
 
 ## Installation
 
@@ -95,34 +97,37 @@ $env:CATALOG_IMPORT_PATH = "data/catalog/maxi/<collecte>/catalog.json"
 
 Sans collecte configurée, `/health` fonctionne et les routes historiques
 `/catalog` et `/catalog/offers` renvoient une erreur 503. Les nouvelles routes
-`/api/v1/ingredients` et `/api/v1/offers` chargent le catalogue JSON commun.
+`/api/v1/ingredients` charge le catalogue JSON commun. `/api/v1/offers` et son
+détail lisent ce JSON par défaut, ou PostgreSQL avec `OFFERS_SOURCE=database`
+dans `backend/.env`, sans repli sur JSON si la base est indisponible.
 `/api/v1/recipes` et son détail lisent PostgreSQL : configurer la connexion,
 appliquer les migrations et lancer les imports avant de les consulter.
 Le [guide des contrats](backend/docs/CONTRACTS.md) décrit leurs formats,
-filtres et limites pour développer les deux onglets.
+filtres et limites utilisés par les deux onglets.
 
 Le [guide des migrations](backend/docs/MIGRATIONS.md) décrit la création du
 référentiel d’ingrédients, les tables des recettes et leurs imports rejouables.
 Le [guide PostgreSQL/Supabase](backend/docs/SUPABASE.md) explique la connexion
 optionnelle configurée dans `backend/.env`. `/health/db` vérifie la base par
-une lecture simple ; les tables communes et des recettes ainsi que leurs
-imports sont disponibles. Les autres tables et le raccordement des offres
-restent à développer.
+une lecture simple. Les tables des catégories et offres et leur import sont
+également disponibles. `/api/v1/circulars` lit les informations en base et
+renvoie les liens publics des pages hébergées dans Storage. Le
+[guide backend](backend/README.md#promos-et-circulaires-de-la-semaine)
+explique la mise à jour des offres et l’import des circulaires PDF.
 
 Le [guide du backend](backend/README.md) détaille les routes disponibles et les limites des données. Une [collection Postman](backend/postman/OptiMeal.postman_collection.json) permet aussi d’essayer les requêtes.
 
 ## Tests
 
 Le [guide mobile](mobile/README.md) décrit l’installation sur téléphone et les
-scénarios de vérification. Les essais manuels sur iPhone ont confirmé le
-compte, le profil, la restauration de session et les recettes sans IA, y
-compris leur séparation entre deux comptes. Les bundles iOS/Android ont été
-générés ; le parcours interactif Android reste à vérifier. L’ajout d’une
-photo personnelle depuis la galerie a aussi été confirmé sur téléphone le
-21 octobre. Les essais complémentaires de retrait, remplacement et erreur
-réseau restent à réaliser. Le fonctionnement des ajustements du parcours
-Recettes inspirés de Figma a également été confirmé le 21 octobre ;
-cette confirmation ne remplace pas les scénarios détaillés du guide mobile.
+scénarios de vérification. Le 27 octobre, nous avons confirmé le fonctionnement
+des parcours actuellement intégrés sur iOS et Android : comptes, profil,
+session persistante, recettes, favoris, photos et onglet Promos, y compris
+les circulaires et les recettes associées aux promotions. Les essais Android
+ont été réalisés par notre coéquipier sur son téléphone. La séparation des recettes et
+favoris entre deux comptes avait également été vérifiée sur iPhone.
+Les essais d’erreur réseau et d’affichage sur différentes tailles d’écran
+restent à compléter.
 
 Les tests ordinaires utilisent des réponses enregistrées et ne contactent pas Supabase ni les fournisseurs externes. Les tests PostgreSQL demandent une base locale jetable ; la CI en fournit une automatiquement. Voir le [guide des migrations](backend/docs/MIGRATIONS.md#tests). Avec l’environnement virtuel activé, la commande est identique sur macOS, Linux et Windows (PowerShell) :
 
@@ -137,7 +142,7 @@ npm run typecheck
 npm test
 ```
 
-La dernière vérification complète a donné 300 tests backend réussis avec
+La vérification automatisée documentée le 21 octobre avait donné 300 tests backend réussis avec
 PostgreSQL local, 10 tests mobiles (photos et règles du formulaire) et des bundles iOS/Android générés.
 Le lint mobile n’est pas encore configuré. Le [guide des photos](backend/docs/RECIPE_IMAGES.md)
 explique la configuration du bucket, ses droits et les limites du prototype.
@@ -187,8 +192,8 @@ OptiMeal/
 │   │   │   ├── models.py             # Futures tables des listes
 │   │   │   └── service.py            # Futurs calculs, remplacements et recalculs
 │   │   ├── common/                   # Contrats et routes communs ; calculs à développer
-│   │   │   ├── public_router.py      # Lectures JSON des ingrédients et offres
-│   │   │   ├── public_data.py        # Charge le catalogue JSON commun pour l’API
+│   │   │   ├── public_router.py      # Routes ingrédients, offres et circulaires
+│   │   │   ├── public_data.py        # Prépare le catalogue JSON et les offres PostgreSQL
 │   │   │   ├── contracts.py          # Pagination, erreurs et conventions partagées
 │   │   │   ├── prices.py             # Futurs calculs de prix et de fourchettes
 │   │   │   └── units.py              # Futures conversions de quantités
@@ -198,7 +203,9 @@ OptiMeal/
 │   │   │   ├── common_catalog.py     # Assemble les catalogues des trois enseignes
 │   │   │   ├── common_schemas.py     # Contrats du catalogue commun, ingrédients et offres
 │   │   │   ├── ingredient_import.py  # Import transactionnel et rejouable des ingrédients
-│   │   │   ├── models.py             # Modèle Ingredient ; produits et magasins à développer
+│   │   │   ├── models.py             # Tables Ingredient, Category, ProductOffer et Circular
+│   │   │   ├── offer_import.py       # Import des catégories et offres
+│   │   │   ├── circulars.py          # Conversion des PDF et accès aux images Storage
 │   │   │   ├── service.py            # Futures règles du catalogue en base
 │   │   │   ├── formats.py            # Interprète les formats et vérifie les codes-barres
 │   │   │   ├── matching.py           # Propose des liens entre ingrédients et produits
@@ -226,6 +233,8 @@ OptiMeal/
 │   │   ├── export_shared_contracts.py # Exporte les schémas et exemples v1
 │   │   ├── import_ingredients.py     # Importe le référentiel dans PostgreSQL
 │   │   ├── import_recipes.py         # Importe les recettes sans doublons
+│   │   ├── import_offers.py          # Insère ou actualise les catégories et offres
+│   │   ├── import_circulars.py       # Envoie les pages et enregistre la circulaire
 │   │   ├── configure_recipe_images.py # Configure les limites et droits Storage
 │   │   ├── ingest_catalog.py         # Collecte ou rejoue les données Apify
 │   │   ├── match_maxi_receipts.py    # Prépare et actualise les liens reçus–produits Maxi
@@ -247,11 +256,13 @@ OptiMeal/
 │   ├── contracts/v1/                 # OpenAPI, JSON Schema et exemples partagés
 │   ├── alembic/                      # Chaîne unique des migrations PostgreSQL
 │   │   ├── env.py                    # Connexion et métadonnées applicatives
-│   │   └── versions/                 # Ingrédients, recettes et liens quantifiés
+│   │   └── versions/                 # Migrations des tables applicatives
 │   │       ├── 0001_create_ingredient.py # Référentiel partagé
 │   │       ├── 0002_create_recipes.py # Recettes et liens quantifiés
 │   │       ├── 0003_accounts_and_ownership.py # Profils, propriété et favoris
-│   │       └── 0004_recipe_metadata.py # Difficulté et étiquettes facultatives
+│   │       ├── 0004_recipe_metadata.py # Difficulté et étiquettes facultatives
+│   │       ├── 0005_catalog_offers.py # Catégories et offres des magasins
+│   │       └── 0006_circulars.py      # Informations des circulaires
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express
@@ -270,6 +281,7 @@ OptiMeal/
 │   │   └── OptiMeal.postman_collection.json # Collection à importer dans Postman
 │   └── tests/                        # Tests actuels et emplacements des tests futurs
 │       ├── test_catalog.py           # Vérifie les formats et correspondances
+│       ├── test_circulars.py         # Conversion, dates et lecture des circulaires
 │       ├── test_apify_catalog.py     # Vérifie la collecte Apify et les routes API
 │       ├── test_receipts.py          # Vérifie l’extraction et les montants des reçus
 │       ├── conftest.py               # Emplacement réservé aux fixtures partagées
@@ -288,16 +300,17 @@ OptiMeal/
 │       ├── test_maxi_web_matching.py # Correspondances entre reçus Maxi et fiches web
 │       ├── test_planning.py          # Futurs tests des plans
 │       └── test_shopping_lists.py    # Futurs tests des listes
-├── mobile/                           # Expo, Supabase Auth et recettes manuelles
+├── mobile/                           # Expo, comptes, recettes et promotions
 │   ├── README.md                     # Lancement et essai sur appareil
 │   ├── App.tsx                       # Navigation et barrière de connexion
-│   ├── app/                          # Écrans compte et recettes
+│   ├── app/                          # Écrans comptes, recettes, promos et circulaires
 │   ├── context/AuthContext.tsx       # État du compte et gestion de la session
 │   ├── types/                        # Types TypeScript de l’API et de la navigation
 │   ├── components/                   # Composants réutilisables du mobile
 │   │   ├── RecipeImage.tsx           # Affichage des URL d’images et repli local
 │   │   ├── IngredientPicker.tsx      # Recherche et sélection des ingrédients communs
-│   │   └── recipes.tsx               # Composants partagés du parcours Recettes
+│   │   ├── recipes.tsx               # Composants partagés du parcours Recettes
+│   │   └── promos.ts                 # Chargement des offres/circulaires et présentation
 │   ├── services/                     # Auth, client FastAPI et sélection/envoi des photos
 │   │   └── recipeForm.ts             # Règles de quantités et badges des recettes
 │   ├── tests/                        # Tests des services mobiles
@@ -319,6 +332,7 @@ OptiMeal/
 │   │   └── images/                   # Illustrations initiales conservées localement
 │   ├── catalog/superc/
 │   │   └── produits.json             # Les 31 ingrédients et produits Super C fournis
+│   ├── circulars/                    # PDF locaux des circulaires, ignorés par Git
 │   ├── receipts/                     # Images, extractions et diagnostics des reçus
 │   │   ├── images/                   # Photos originales
 │   │   ├── extractions/              # Articles et montants extraits en JSON
@@ -382,4 +396,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 22 octobre 2026*
+*Dernière mise à jour : 27 octobre 2026*

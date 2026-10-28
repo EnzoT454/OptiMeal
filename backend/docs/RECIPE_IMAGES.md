@@ -57,6 +57,9 @@ Les 291 tests backend sur PostgreSQL local, les 7 tests du service photo,
 TypeScript et les bundles iOS/Android ont été vérifiés le 21 octobre 2026.
 Les politiques et limites du bucket ont été appliquées puis relues sur
 Supabase. Hamza a confirmé l’ajout d’une photo depuis la galerie sur téléphone
-après recompilation. Les essais complémentaires de remplacement, retrait,
-annulation, erreur réseau et le parcours Android restent à confirmer selon
-le [guide mobile](../../mobile/README.md).
+après recompilation. Le 27 octobre 2026, il a confirmé le fonctionnement du
+parcours des photos sur iOS et Android ; son coéquipier l’a également essayé
+sur Android. Les essais d’erreur réseau restent à compléter selon le
+[guide mobile](../../mobile/README.md).
+
+*Dernière mise à jour : 27 octobre 2026*

@@ -1,8 +1,10 @@
 # Contrats communs — Recettes et Promos v1
 
 Les contrats HTTP `1.0` couvrent les lectures et les écritures manuelles de recettes sous `/api/v1`. Ils
-permettent de développer les deux onglets. Les recettes sont lues dans
-PostgreSQL/Supabase ; les ingrédients et les offres restent sur JSON.
+sont utilisés par les deux onglets. Les recettes sont lues dans
+PostgreSQL/Supabase ; les ingrédients restent sur JSON. Les offres sont lues
+sur JSON par défaut ou dans PostgreSQL avec `OFFERS_SOURCE=database`. Les
+circulaires utilisent PostgreSQL pour les informations et Storage pour les pages.
 Les routes historiques `/catalog` et
 `/catalog/offers` conservent leur comportement et leur format.
 
@@ -15,6 +17,7 @@ python -m backend.cli.build_common_catalog
 python -m alembic -c backend/alembic.ini upgrade head
 python -m backend.cli.import_ingredients
 python -m backend.cli.import_recipes
+python -m backend.cli.import_offers
 python -m backend.cli.export_shared_contracts --check
 python -m uvicorn backend.app.main:app --reload --port 8001
 ```
@@ -26,10 +29,12 @@ une liste vide ; une base inaccessible ou des tables absentes renvoient 503.
 Aucun repli sur le JSON ne masque une panne. Le serveur ne lance ni collecte,
 ni appel IA, ni migration ou import automatique.
 
-Les ingrédients et les offres utilisent toujours le fichier
+Les ingrédients et les offres en mode JSON utilisent le fichier
 `data/catalog/baseCommune/ingredients.json`, configurable avec
 `COMMON_CATALOG_PATH` et chargé au démarrage. Un catalogue local invalide
-bloque ces lectures, mais pas les recettes en base. `RECIPE_SEED_PATH` sert
+bloque ces lectures et la liste des offres en base, qui vérifie aussi le
+référentiel d’ingrédients. Les recettes et les circulaires n’en dépendent pas.
+`RECIPE_SEED_PATH` sert
 à la commande d’import, sans modifier les recettes exposées tant que cet
 import n’a pas eu lieu. La commande d’export valide les fichiers de départ
 hors réseau. `/health` reste disponible sans base ni catalogue.
@@ -46,14 +51,15 @@ HTTP sont inchangés ; les droits et limites Storage sont décrits dans
 | Méthode et route | Réponse | Filtres |
 | --- | --- | --- |
 | `GET /api/v1/ingredients` | Liste du référentiel commun | `q`, `limit`, `offset` |
-| `GET /api/v1/recipes` | Liste résumée des recettes initiales | `q`, `quick`, `favorites`, `limit`, `offset` |
+| `GET /api/v1/recipes` | Recettes initiales et personnelles accessibles | `q`, `quick`, `favorites`, `limit`, `offset` |
 | `GET /api/v1/recipes/{id}` | Recette complète accessible, avec ingrédients et étapes | — |
 | `POST /api/v1/recipes` | Créer une recette personnelle, propriétaire issu du jeton | Connexion requise |
 | `PUT /api/v1/recipes/{id}` | Remplacer sa propre recette | Connexion requise |
 | `DELETE /api/v1/recipes/{id}` | Supprimer sa propre recette | Connexion requise |
 | `PUT / DELETE /api/v1/recipes/{id}/favorite` | Ajouter/retirer son favori | Connexion requise |
-| `GET /api/v1/offers` | Prix relevés avec produit, format et contexte | `ingredient_id`, `retailer`, `store_id`, `promotion_only`, `on_date`, `limit`, `offset` |
+| `GET /api/v1/offers` | Prix relevés avec produit, format et contexte | `ingredient_id`, `retailer`, `store_id`, `category_id`, `promotion_only`, `on_date`, `limit`, `offset` |
 | `GET /api/v1/offers/{id}` | Détail d’un prix relevé | `on_date` |
+| `GET /api/v1/circulars` | Circulaires disponibles, dates et liens des pages | Aucun |
 
 Exemples :
 
@@ -65,7 +71,9 @@ Exemples :
 /api/v1/offers?promotion_only=true&on_date=2026-10-06
 ```
 
-La dernière URL interroge explicitement une période historique. Sans
+La dernière URL évalue la capture actuellement chargée à une date passée.
+Elle ne recherche pas une ancienne version des prix : aucun historique de
+prix n’est encore conservé par `product_offer`. Sans
 `on_date`, la date d’évaluation est le jour courant dans `America/Toronto`.
 Les dates ne prouvent pas le stock ni l’exactitude actuelle d’une capture.
 La dépendance `tzdata` est ajoutée pour Windows, qui ne fournit généralement
@@ -134,14 +142,17 @@ Toutes les listes suivent la même enveloppe :
 ```
 
 `total` compte les résultats après filtres et avant pagination. `limit`
-vaut 20 par défaut et accepte 1 à 100 ; `offset` est positif ou nul. Un
+vaut 20 par défaut et accepte 1 à 100 ; `offset` est positif ou nul.
+`/api/v1/circulars` utilise une enveloppe fixe
+avec `limit: 100`, `offset: 0`, sans paramètres de pagination. Un
 décalage au-delà de la fin retourne `items: []`. Les recettes sont ordonnées
 par identifiant ; les ingrédients et les offres suivent le jeu source.
 Un détail utilise
 `{"item": …, "meta": …}`. Les recettes initiales portent
 `dataset_kind: demo` et un avertissement indiquant leur statut de propositions.
-Leur métadonnée `data_source` vaut `postgresql` ; elle reste `local_json`
-pour les ingrédients et les offres. `review_required` d’une recette reprend
+La métadonnée `data_source` vaut `postgresql` pour les recettes et les
+circulaires, `local_json` pour les ingrédients, et dépend de `OFFERS_SOURCE`
+pour les offres. `review_required` d’une recette reprend
 le booléen stocké ; la métadonnée de ce jeu de démonstration reste prudente
 et indique toujours qu’une revue du jeu est nécessaire.
 
@@ -158,7 +169,9 @@ Les erreurs v1 ont la forme suivante :
 ```
 
 404 : ressource ou ingrédient absent ; 422 : paramètres invalides ; 503 :
-fichier de catalogue absent/invalide ou base de recettes indisponible.
+fichier de catalogue absent/invalide ou service de données indisponible.
+Les offres PostgreSQL et les circulaires utilisent `DATABASE_UNAVAILABLE`
+si leur base est inaccessible ; les circulaires exigent aussi `SUPABASE_URL`.
 Les erreurs de connexion, tables absentes et données de recette invalides
 utilisent `RECIPES_UNAVAILABLE`, sans détails SQL ni identifiants serveur.
 Pour une erreur 422, `details` contient les
@@ -203,7 +216,11 @@ sont pas déduits de ces fichiers.
 
 ## Promotions
 
-Une offre est un relevé de prix, même hors promotion. `promotion.declared`
+Une offre est un relevé de prix, même hors promotion. `price.amount` contient
+le prix de base ; `promo_price` contient un objet monétaire si un prix promo
+est renseigné, sinon `null`. `retrieved_at` conserve la date de récupération
+et `category_id` identifie le rayon lorsqu’il est connu. Le mobile affiche
+le prix promo lorsqu’il existe, sinon le prix de base. `promotion.declared`
 reprend le booléen source ; les dates d’origine restent nulles si inconnues.
 Le statut calculé distingue :
 
@@ -216,6 +233,19 @@ Le statut calculé distingue :
 `promotion_only=true` conserve uniquement `active`. Une liste vide ne prouve
 donc pas qu’aucune promotion n’existe en magasin ; elle décrit les données
 de la capture. Une période inversée est refusée au chargement.
+
+## Circulaires
+
+`GET /api/v1/circulars` renvoie une ligne par magasin importé : `retailer`,
+`valid_from`, `valid_to`, `page_count`, `pages` et `imported_at`. `pages`
+contient les URL publiques des images JPEG dans l’ordre de lecture.
+Les métadonnées restent celles du catalogue source, avec les avertissements
+communs ; elles ne certifient pas l’actualité des prix.
+
+Le serveur ne retire pas automatiquement les circulaires expirées. Le mobile
+les signale et affiche un emplacement sans circulaire pour un magasin absent.
+L’import se lance en ligne de commande et ne publie aucun prix dans les offres.
+Voir le [guide backend](../README.md#promos-et-circulaires-de-la-semaine).
 
 ## Répartition et évolution
 
@@ -254,3 +284,5 @@ résumés/détails ajoutent `is_owned` et `is_favorite`. Les métadonnées
 `dataset_kind` distinguent `demo`, `user_content` et `mixed` ; les recettes
 manuelles confirmées n’exigent pas la revue des recettes de démonstration.
 Voir [AUTH.md](AUTH.md) pour les corps, droits et codes de réponse.
+
+*Dernière mise à jour : 27 octobre 2026*

@@ -72,7 +72,7 @@ appartenant à un autre compte renvoie 404, même pour une mutation. Les recette
 initiales ne sont pas modifiables par ces routes.
 
 Le corps de création/modification est `RecipeWrite` : nom, description,
-portions, durées, image nullable, ingrédients et étapes. Il n’accepte aucun
+portions, durées, image nullable, ingrédients, étapes, difficulté et étiquettes. Il n’accepte aucun
 `owner_id`, `user_id`, `seed_key` ou identifiant choisi par le client.
 Les identifiants `recipe_…` sont créés par le serveur. Les unités restent
 `g`, `ml` et `unit`, avec des quantités décimales en chaînes et des étapes 1..N.
@@ -92,8 +92,8 @@ redirection et les vérifications sur téléphone. La session est persistée
 par AsyncStorage et renouvelée automatiquement au premier plan ; les accès
 métier utilisent FastAPI, avec un accès direct à Storage pour les photos
 de recettes sous les politiques du propriétaire. React Navigation conserve les cinq
-onglets prévus ; seuls le socle Recettes et le compte sont implémentés.
-Les écrans ne prétendent pas reproduire la maquette Figma à ce stade.
+onglets prévus. Les comptes, Recettes et Promos sont intégrés ; le calendrier
+reste à développer. Les éléments retenus de Figma sont repris progressivement.
 
 ## 5. Vérifications réalisées et limites
 
@@ -112,19 +112,23 @@ Le passage entre deux comptes a confirmé la séparation des recettes privées
 et des favoris ; les recettes initiales ne proposent pas de mutation dans
 l’interface. La redirection native `optimeal://auth/callback` est autorisée.
 
-Ces essais mobiles complètent les tests d’autorisation côté API. Les essais
-interactifs Android et les scénarios d’erreur complémentaires restent à
-effectuer. L’expiration réelle d’une session et son renouvellement ne sont
+Le 27 octobre 2026, Hamza a confirmé les parcours comptes, recettes, photos
+et Promos sur iOS et Android, avec des essais Android par son coéquipier.
+Ces essais mobiles complètent les tests d’autorisation côté API. Les scénarios
+d’erreur complémentaires restent à effectuer. L’expiration réelle d’une session et son renouvellement ne sont
 pas établis par le seul essai de fermeture/réouverture de l’application.
 
 Le 21 octobre, l’ajout d’une photo de galerie à une recette personnelle a
 également été confirmé sur téléphone. Les politiques Storage ont été testées
 avec deux identités dans PostgreSQL local et appliquées au bucket existant.
 La lecture publique des photos est un choix du prototype, distinct de la
-visibilité privée des recettes dans FastAPI. Les autres scénarios photo
-restent à confirmer ; voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
+visibilité privée des recettes dans FastAPI. Le parcours photo est également confirmé sur les deux plateformes au
+27 octobre ; les essais d’erreur réseau restent à compléter. Voir
+[RECIPE_IMAGES.md](RECIPE_IMAGES.md).
 
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native),
 [validation des JWT](https://supabase.com/docs/guides/auth/jwts),
 [profils utilisateur](https://supabase.com/docs/guides/auth/managing-user-data),
 [liens mobiles](https://supabase.com/docs/guides/auth/native-mobile-deep-linking).
+
+*Dernière mise à jour : 27 octobre 2026*

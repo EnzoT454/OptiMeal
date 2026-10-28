@@ -1,6 +1,6 @@
 # Données locales
 
-Le dossier `data/` contient les fichiers utilisés pour les essais : captures Apify, images de reçus et résultats OCR. Il n’est pas ignoré par Git : les fichiers ajoutés et commités seront disponibles dans une nouvelle copie du dépôt. Vérifier et masquer les informations privées des reçus et du texte OCR avant publication.
+Le dossier `data/` contient les captures Apify, les données du catalogue, les images de reçus et les résultats OCR. Il n’est pas globalement ignoré par Git : les fichiers ajoutés et commités seront disponibles dans une nouvelle copie du dépôt. Le sous-dossier `data/circulars/` est toutefois ignoré et contient les PDF locaux à importer. Vérifier et masquer les informations privées des reçus et du texte OCR avant publication.
 
 La configuration des collectes et le code restent dans `backend/`. Les anciennes pistes sont regroupées dans `archives/`. Les chemins s’utilisent depuis la racine du projet.
 
@@ -33,6 +33,7 @@ data/
 ├── recipes/
 │   ├── initial_recipes.json     # 10 recettes avec URL Supabase Storage pour l’import
 │   └── images/                 # Dix illustrations sources et secours du mobile
+├── circulars/                      # PDF locaux Maxi, Metro et Super C, ignorés par Git
 ├── receipts/
 │   ├── images/                     # Photos originales des sept reçus
 │   ├── extractions/                # Articles et montants structurés en JSON
@@ -52,14 +53,27 @@ produits. `catalog/baseCommune/ingredients.json` les rassemble avec des clés
 stables `ing_…` : 31 ingrédients et 93 fiches produits. Voir son
 [guide](../../data/catalog/baseCommune/README.md). Les recettes de départ
 sont décrites dans [data/recipes/](../../data/recipes/README.md).
-Les imports PostgreSQL des ingrédients et recettes sont disponibles ; les
-recettes HTTP lisent la base. Les ingrédients et offres HTTP restent sur le
-catalogue JSON commun. La collecte web IA Metro/Super C n’est pas intégrée.
+Les imports PostgreSQL des ingrédients, recettes, catégories et offres sont
+disponibles. Les recettes HTTP lisent la base ; les ingrédients restent sur
+JSON. Les offres lisent JSON par défaut ou PostgreSQL avec
+`OFFERS_SOURCE=database`. La collecte web IA Metro/Super C n’est pas intégrée.
 
 Les illustrations initiales sont aussi hébergées dans le bucket public
 `recipes-images`. Leurs URL dans le JSON d’import correspondent à celles de
 PostgreSQL. Les photos personnelles sont envoyées depuis la galerie vers
 Storage, sans être ajoutées au dépôt ; voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
+
+## Circulaires et mise à jour des offres
+
+Les PDF de `data/circulars/` sont convertis en JPEG et envoyés dans le bucket
+public `circulars` par `python -m backend.cli.import_circulars --retailer maxi`
+(ou `metro`, `superc`). La table `circular` conserve les dates et les références
+des pages pour `/api/v1/circulars`. L’import remplace la circulaire du magasin.
+
+Les images ne mettent pas à jour les prix. Après vérification des produits et
+formats, reporter les prix dans les `produits.json`, reconstruire le catalogue
+avec `python -m backend.cli.build_common_catalog`, puis importer les offres.
+La procédure complète figure dans le [guide backend](../README.md#promos-et-circulaires-de-la-semaine).
 
 ## Données Super C
 
@@ -69,7 +83,7 @@ Ce fichier est une mise en forme des données fournies, pas une vérification de
 
 ## Fichiers d’une collecte Maxi
 
-Pour consulter les données regroupées, utiliser `data/catalog/maxi/data_final/produits.json` (31 références) et `promos.json` (196 offres). Les deux fichiers utilisent exactement les attributs de Super C, avec une liste de produits dans `Produits`. Les prix sont conservés ; les dates et quantités inconnues restent nulles. La validation humaine de Hamza du 4 octobre 2026 et tous les détails du format précédent sont conservés dans `data/catalog/maxi/archives/data_final-before-common-format/`. Le [guide du format commun](../../data/catalog/maxi/data_final/README.md) détaille les correspondances. Les routes historiques FastAPI chargent les exports sources `catalog-pilot-1.0`. Les routes v1 d’ingrédients et offres chargent le regroupement `baseCommune`, pas directement ces tableaux simplifiés.
+Pour consulter les données regroupées, utiliser `data/catalog/maxi/data_final/produits.json` (31 références) et `promos.json` (196 offres). Les deux fichiers utilisent exactement les attributs de Super C, avec une liste de produits dans `Produits`. Les prix sont conservés ; les dates et quantités inconnues restent nulles. La validation humaine de Hamza du 4 octobre 2026 et tous les détails du format précédent sont conservés dans `data/catalog/maxi/archives/data_final-before-common-format/`. Le [guide du format commun](../../data/catalog/maxi/data_final/README.md) détaille les correspondances. Les routes historiques FastAPI chargent les exports sources `catalog-pilot-1.0`. Les routes v1 d’ingrédients et d’offres JSON chargent le regroupement `baseCommune`, pas directement ces tableaux simplifiés. Pour les offres PostgreSQL, reconstruire ce regroupement puis lancer `python -m backend.cli.import_offers`.
 
 Chaque dossier correspond à une exécution ou à un rejeu. Commencer par `report.md` pour comprendre le résultat.
 
@@ -142,8 +156,10 @@ Les reçus et blocs OCR sont privés : ils peuvent contenir des renseignements p
 
 ## Archives et nouveaux fichiers
 
-Les circulaires PDF et l’exploration épiceries.ca témoignent des essais précédents. Ces sources sont abandonnées ; leurs résultats ne doivent pas être chargés comme catalogue courant. Les données extraites des circulaires ont déjà été retirées ; seuls les PDF sources sont conservés ici.
+Les anciens essais d’extraction automatique des prix depuis les PDF et l’exploration épiceries.ca sont archivés. Leurs résultats ne doivent pas être chargés comme catalogue courant. Les PDF actuels utilisés pour la consultation dans le mobile sont placés séparément dans `data/circulars/`. Les données extraites des circulaires ont déjà été retirées ; seuls les PDF sources sont conservés ici.
 
 Créer un nouveau dossier par collecte, plutôt que remplacer une capture existante. Pour les nouveaux reçus, utiliser le nom de l’image et le moteur dans les sorties, par exemple `recu_maxi.vision.json` ou `recu_maxi.tesseract.json`.
 
 La réorganisation conserve le contenu des fichiers. Des notes historiques et métadonnées peuvent encore mentionner les anciens chemins ; l’arborescence de ce guide fait référence pour leur emplacement actuel.
+
+*Dernière mise à jour : 27 octobre 2026*

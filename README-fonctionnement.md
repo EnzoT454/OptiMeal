@@ -1,8 +1,8 @@
 # Comprendre le fonctionnement d’OptiMeal
 
-Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il part de l’ouverture de l’application pour suivre des actions concrètes : se connecter, consulter les recettes et enregistrer une recette avec une photo.
+Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il suit des actions concrètes : se connecter, enregistrer une recette avec une photo, consulter les promotions et ouvrir une circulaire.
 
-Il décrit le code présent au **22 octobre 2026**. Les fonctions encore prévues sont présentées séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
+Il décrit le code présent au **27 octobre 2026**. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
 ## 1. Les grandes parties de l’application
 
@@ -14,7 +14,7 @@ Supabase fournit trois services utilisés par OptiMeal : **Auth** pour les compt
 flowchart LR
     U[Utilisateur] --> M[Application mobile]
     M <-->|HTTP et JSON avec jeton| B[Backend FastAPI]
-    J[Fichiers JSON locaux] -->|Ingrédients et offres| B
+    J[Fichiers JSON locaux] -->|Ingrédients et offres selon configuration| B
     subgraph S[Supabase]
         A[Auth : identité et sessions]
         D[(PostgreSQL : données)]
@@ -23,7 +23,7 @@ flowchart LR
     M <-->|Inscription et connexion| A
     B -->|Vérification du jeton| A
     B <-->|Requêtes SQL| D
-    M <-->|Envoi et lecture des photos| I
+    M <-->|Photos de recettes et lecture des circulaires| I
 ```
 
 | Partie | Question à laquelle elle répond | Exemple |
@@ -32,7 +32,7 @@ flowchart LR
 | Supabase Auth | Qui est connecté ? | Fournir une session après connexion |
 | FastAPI | La demande est-elle valide et autorisée ? | Vérifier que la recette appartient au compte |
 | PostgreSQL | Quelles données conserver ou retrouver ? | Enregistrer la recette et ses ingrédients |
-| Supabase Storage | Où conserver les fichiers images ? | Héberger la photo d’un plat |
+| Supabase Storage | Où conserver les fichiers images ? | Héberger les photos de plats et les pages des circulaires |
 | JSON locaux | Quelles captures préparées sont disponibles ? | Fournir le catalogue commun des offres |
 
 Le mobile contacte directement Auth et Storage. Pour les tables métier, comme les recettes et les profils, il passe par FastAPI. Les identifiants PostgreSQL restent côté serveur.
@@ -88,6 +88,8 @@ flowchart TD
 ```
 
 À l’inscription, l’utilisateur doit confirmer son courriel. Le retour dans l’application utilise le lien `optimeal://auth/callback` et un échange de code pour obtenir la session.
+
+Une fois connecté, l’utilisateur retrouve cinq onglets. Accueil affiche un message de bienvenue ; Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier annonce la future planification ; Paramètres donne accès au profil et à la déconnexion. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
 
 Le client [services/supabase.ts](mobile/services/supabase.ts) configure Supabase et conserve la session avec AsyncStorage. `AuthContext.tsx` écoute aussi les changements de connexion et gère le retour du lien de confirmation. La session locale permet d’ouvrir l’interface ; chaque demande protégée reste vérifiée par le serveur.
 
@@ -238,6 +240,17 @@ Les étapes sont conservées dans un champ JSON de `recipe`. Le lien `image_url`
 
 Pour les recettes initiales, `owner_id` est nul et `seed_key` identifie la recette importée. Pour une recette personnelle, `owner_id` référence le profil du propriétaire.
 
+Le catalogue et les circulaires disposent aussi de tables :
+
+```mermaid
+flowchart LR
+    I[ingredient : besoin de cuisine] -->|ingredient_id| O[product_offer : produit, magasin, format et prix]
+    C[category : rayon alimentaire] -->|category_id| O
+    F[circular : magasin, dates et nombre de pages] -.->|storage_prefix| S[Pages JPEG dans Storage]
+```
+
+`product_offer` conserve le prix de base, le prix promotionnel éventuel, les dates et la source. Un nouvel import actualise le produit de même identifiant ; cette table ne conserve pas encore l’historique des prix. `circular` garde une seule circulaire par magasin et les informations nécessaires pour retrouver ses images dans le bucket public `circulars`.
+
 ### Ingrédient et produit commercial : quelle différence ?
 
 Un ingrédient décrit un besoin de cuisine, par exemple une tomate fraîche. Un produit décrit ce qu’un magasin vend, avec son format, sa source et son prix relevé.
@@ -267,15 +280,52 @@ Le raccordement à PostgreSQL avance par étapes. Le référentiel des ingrédie
 | `/api/v1/recipes` et détail | PostgreSQL, relu à chaque requête |
 | Profil et favoris | PostgreSQL |
 | `/api/v1/ingredients` | Catalogue JSON commun chargé au démarrage |
-| `/api/v1/offers` et détail | Offres construites à partir des fiches du catalogue JSON commun |
+| `/api/v1/offers` et détail | JSON par défaut, ou PostgreSQL avec `OFFERS_SOURCE=database` |
+| `/api/v1/circulars` | PostgreSQL pour les informations ; Storage pour les images des pages |
 | `/catalog` et `/catalog/offers` | Ancien export choisi avec `CATALOG_IMPORT_PATH` |
 | Fichiers images | Supabase Storage |
 
-[common/public_data.py](backend/app/common/public_data.py) charge le catalogue commun et prépare les données exposées. [common/public_router.py](backend/app/common/public_router.py) fournit les routes des ingrédients et des offres.
+[common/public_data.py](backend/app/common/public_data.py) prépare les données exposées depuis le JSON ou les offres en base. [common/public_router.py](backend/app/common/public_router.py) fournit les routes des ingrédients, des offres et des circulaires.
+
+```mermaid
+flowchart TD
+    M[Mobile : demander les offres] --> A[FastAPI]
+    A --> C{OFFERS_SOURCE vaut database ?}
+    C -->|Oui| D[(PostgreSQL : product_offer)]
+    C -->|Non| J[Catalogue JSON chargé au démarrage]
+    D --> R[Réponse au même format JSON]
+    J --> R
+    R --> M
+```
+
+Le choix de source se fait au démarrage du serveur. Le mobile utilise la même route dans les deux cas. Les offres sont évaluées à la date du jour à Toronto, ou à la date fournie avec `on_date`. `promotion_only=true` conserve uniquement les promotions déclarées dont les dates permettent de confirmer qu’elles sont actives.
 
 Le fichier commun par défaut est [data/catalog/baseCommune/ingredients.json](data/catalog/baseCommune/ingredients.json). Modifier ce fichier demande un redémarrage du serveur pour ses lectures HTTP. Modifier le JSON des recettes initiales ne change pas directement les recettes déjà en base : celles-ci passent par une commande d’import explicite.
 
-Une panne PostgreSQL produit une erreur sur les routes de recettes ; elles ne basculent pas silencieusement sur une copie JSON. `/health` indique que le serveur répond ; `/health/db` vérifie la connexion par `SELECT 1`, sans garantir la présence de toutes les tables.
+Une panne PostgreSQL produit une erreur sur les routes qui en dépendent : recettes, profils, circulaires et offres lorsque la source choisie est la base. Elles ne basculent pas silencieusement sur une copie JSON. Le catalogue commun reste nécessaire, notamment pour vérifier les identifiants d’ingrédients dans la liste des offres. `/health` indique que le serveur répond ; `/health/db` vérifie la connexion par `SELECT 1`, sans garantir la présence de toutes les tables.
+
+### Consulter les promotions
+
+[PromotionsScreen.tsx](mobile/app/PromotionsScreen.tsx) demande les offres actives avec `GET /api/v1/offers?promotion_only=true&limit=100`. La recherche par nom et le filtre Maxi, Metro ou Super C sont ensuite appliqués dans le mobile. Les cartes sont triées par pourcentage de rabais décroissant et ouvrent le détail de l’offre.
+
+Le détail présente le prix, le format, le prix par unité lorsque le format est reconnu, les dates et le lien vers le site du magasin. « Ajouter à la liste » affiche encore un message d’attente. Le chargement actuel porte sur les 100 premières offres ; les pages suivantes ne sont pas récupérées par cet écran.
+
+### Trouver une recette avec les promos
+
+[CookWithPromosScreen.tsx](mobile/app/CookWithPromosScreen.tsx) réutilise les promotions et charge les recettes accessibles au compte, puis leur détail pour connaître les ingrédients.
+
+```mermaid
+flowchart TD
+    P[Promotions actives chargées] --> O[Retenir une offre par ingrédient]
+    R[Recettes initiales et personnelles accessibles] --> D[Lire leurs ingrédients]
+    O --> C[Relier les offres aux recettes par ingredient_id]
+    D --> C
+    C --> T[Garder les recettes avec au moins un ingrédient en promo]
+    T --> L[Classer par nombre d’ingrédients en promo]
+    L --> V[Afficher les recettes et ouvrir leur détail]
+```
+
+Pour chaque ingrédient, le code retient l’offre au prix affiché le plus bas parmi celles chargées. Cette comparaison porte sur le prix du produit, sans ajustement aux formats ou aux quantités de la recette. Le classement ne calcule donc ni un coût total ni le panier le moins cher. Il fonctionne sans IA et reste distinct du filtre « Petit budget », encore à développer.
 
 ## 9. Migrations et imports : deux opérations différentes
 
@@ -285,7 +335,7 @@ Une panne PostgreSQL produit une erreur sur les routes de recettes ; elles ne ba
 flowchart LR
     A[Fichiers backend/alembic/versions] --> B[Commande Alembic]
     B -->|Créer ou modifier les tables| D[(PostgreSQL)]
-    J[JSON des ingrédients et recettes initiales] --> C[Commandes d’import]
+    J[JSON des ingrédients, recettes et offres] --> C[Commandes d’import]
     C -->|Insérer les données selon les règles de rejeu| D
     F[FastAPI et SQLAlchemy] <-->|Lire et modifier les données métier| D
 ```
@@ -296,6 +346,8 @@ flowchart LR
 | `0002_create_recipes.py` | Tables `recipe` et `recipe_ingredient` |
 | `0003_accounts_and_ownership.py` | Profils, propriété et favoris |
 | `0004_recipe_metadata.py` | Difficulté et étiquettes |
+| `0005_catalog_offers.py` | Tables `category` et `product_offer` |
+| `0006_circulars.py` | Table `circular` |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -303,11 +355,14 @@ Les commandes se lancent depuis la racine, après configuration du serveur :
 python -m alembic -c backend/alembic.ini upgrade head
 python -m backend.cli.import_ingredients
 python -m backend.cli.import_recipes
+python -m backend.cli.import_offers
 ```
 
 L’import des ingrédients peut actualiser le référentiel sans supprimer les éléments absents du fichier. L’import des recettes conserve les recettes identiques et annule sa transaction en cas de contenu différent, afin de préserver les corrections existantes. Les dix recettes initiales constituent un jeu de départ ; la base peut accueillir d’autres recettes.
 
-FastAPI ne lance automatiquement ni ces migrations, ni ces imports. Le guide [MIGRATIONS.md](backend/docs/MIGRATIONS.md) décrit leur utilisation détaillée.
+L’import des offres valide le catalogue, puis insère ou actualise les catégories et les produits dans une transaction. Il exige que les ingrédients existent déjà en base et ne supprime pas les offres absentes du fichier. Modifier les fichiers de prix demande donc de reconstruire le catalogue commun et de relancer cet import pour les lectures PostgreSQL.
+
+FastAPI ne lance automatiquement ni ces migrations, ni ces imports. Le guide [MIGRATIONS.md](backend/docs/MIGRATIONS.md) détaille les migrations et les imports initiaux ; le [guide backend](backend/README.md#promos-et-circulaires-de-la-semaine) décrit la mise à jour des offres et des circulaires.
 
 ## 10. D’où viennent les prix et les reçus ?
 
@@ -327,7 +382,10 @@ flowchart TD
     B --> K[Catalogue commun dans data/catalog/baseCommune]
     K --> P[FastAPI : routes ingrédients et offres]
     K --> I[import_ingredients.py]
-    I --> D[(PostgreSQL : référentiel ingredient)]
+    I --> D[(PostgreSQL : ingrédients, catégories et offres)]
+    K --> O[import_offers.py]
+    O --> D
+    D -->|Offres si OFFERS_SOURCE vaut database| P
 ```
 
 Les flèches résument le parcours des données ; certaines préparations sont des étapes distinctes, à lancer ou à vérifier séparément.
@@ -343,7 +401,35 @@ Les flèches résument le parcours des données ; certaines préparations sont d
 | [backend/config/catalog/](backend/config/catalog/) | Ingrédients recherchés, requêtes, lots et succursale |
 | [data/catalog/](data/catalog/) | Captures, fichiers regroupés et catalogue commun |
 
-Apify est retenu pour Maxi. Metro et Super C ont des échantillons JSON ; leur collecte web avec un modèle IA reste à développer et à évaluer. Les captures ne garantissent pas le prix ni le stock actuels en magasin. Les anciennes pistes épiceries.ca et circulaires PDF sont archivées et abandonnées comme sources actuelles.
+Apify est retenu pour la collecte Maxi. Metro et Super C ont des échantillons JSON ; leur collecte web avec un modèle IA reste à développer et à évaluer. Pour actualiser les promotions, la procédure actuelle prévoit aussi de vérifier les produits dans les circulaires et de reporter les prix dans les fichiers `produits.json`, en respectant le même produit et le même format. Le catalogue commun est ensuite reconstruit avec `python -m backend.cli.build_common_catalog`, puis importé avec `python -m backend.cli.import_offers`.
+
+Les captures ne garantissent pas le prix ni le stock actuels en magasin. Épiceries.ca et l’extraction automatique des prix depuis les PDF restent des pistes abandonnées. L’affichage des circulaires PDF dans l’application est un parcours distinct, décrit ci-dessous.
+
+### Préparer et consulter les circulaires
+
+Les PDF sont téléchargés manuellement dans `data/circulars/`. La commande [import_circulars.py](backend/cli/import_circulars.py) prépare leur affichage : elle convertit chaque page en JPEG, envoie les images dans Storage, puis enregistre les informations de la circulaire dans PostgreSQL.
+
+```mermaid
+flowchart TD
+    P[PDF téléchargé pour un magasin] --> C[import_circulars.py : convertir les pages en JPEG]
+    C --> S[Storage : bucket public circulars]
+    C --> D[(PostgreSQL : table circular)]
+    M[Mobile : ouvrir Circulaires] --> A[GET /api/v1/circulars]
+    D --> A
+    A --> L[Dates et liens des pages]
+    L --> V[Afficher la circulaire du magasin]
+    S -->|Images téléchargées directement| V
+```
+
+Après création du bucket public `circulars` et configuration de `SUPABASE_SECRET_KEY` côté serveur, un import se lance ainsi :
+
+```bash
+python -m backend.cli.import_circulars --retailer maxi --from 2026-10-22 --to 2026-10-28
+```
+
+Le fichier attendu ici est `data/circulars/maxi.pdf`. Les mêmes options existent pour `metro` et `superc`. Sans dates explicites, le script prend la semaine du jeudi au mercredi en cours. Il remplace la ligne du magasin et supprime les anciennes images après l’enregistrement de la nouvelle circulaire. Ce parcours conserve la circulaire courante, pas un historique.
+
+Dans le mobile, [CircularsScreen.tsx](mobile/app/CircularsScreen.tsx) présente les magasins, les couvertures et les dates. [CircularScreen.tsx](mobile/app/CircularScreen.tsx) affiche les pages et ouvre l’image d’une page lorsqu’on la touche. Une circulaire terminée est signalée ; elle n’est pas automatiquement masquée. **L’import des images n’extrait aucun prix et ne met pas à jour les offres.**
 
 ### Lecture locale des reçus et pilote PC Express
 
@@ -371,7 +457,7 @@ Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/
 
 | Fichier ou dossier | Utilité et lien avec les autres |
 | --- | --- |
-| [App.tsx](mobile/App.tsx) | Assemble AuthProvider, les cinq onglets et la pile de navigation Recettes |
+| [App.tsx](mobile/App.tsx) | Assemble AuthProvider, les cinq onglets et les navigations Recettes et Promos |
 | [app/AuthScreen.tsx](mobile/app/AuthScreen.tsx) | Inscription et connexion via le client Supabase |
 | [app/ProfileScreen.tsx](mobile/app/ProfileScreen.tsx) | Profil minimal via FastAPI et déconnexion via Auth |
 | [app/RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) | Recherche, filtres, pagination et cartes |
@@ -379,6 +465,11 @@ Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/
 | [app/AddRecipeScreen.tsx](mobile/app/AddRecipeScreen.tsx) | Choix entre les trois modes d’ajout |
 | [app/ManualEntryScreen.tsx](mobile/app/ManualEntryScreen.tsx) | Choix formulaire ou texte ; le texte IA reste prévu |
 | [app/RecipeEditorScreen.tsx](mobile/app/RecipeEditorScreen.tsx) | Création et modification manuelles avec photo facultative |
+| [app/PromotionsScreen.tsx](mobile/app/PromotionsScreen.tsx) | Promotions actives, recherche et filtre par magasin |
+| [app/PromoDetailScreen.tsx](mobile/app/PromoDetailScreen.tsx) | Prix, format, dates et lien vers le produit |
+| [app/CookWithPromosScreen.tsx](mobile/app/CookWithPromosScreen.tsx) | Recettes classées par nombre d’ingrédients en promotion |
+| [app/CircularsScreen.tsx](mobile/app/CircularsScreen.tsx) et [app/CircularScreen.tsx](mobile/app/CircularScreen.tsx) | Choix du magasin et lecture des pages de la circulaire |
+| [components/promos.ts](mobile/components/promos.ts) | Chargement des promos et circulaires, affichage des prix, formats et dates |
 | [components/](mobile/components/) | Champs, boutons, sélecteur d’ingrédients et affichage des images réutilisés par les écrans |
 | [services/api.ts](mobile/services/api.ts) | Requêtes FastAPI, jeton, délai réseau et gestion des erreurs |
 | [services/recipeImages.ts](mobile/services/recipeImages.ts) | Galerie, préparation du JPEG et envoi à Storage |
@@ -398,6 +489,10 @@ Les types TypeScript aident le développeur à utiliser les données correctemen
 | [backend/docs/](backend/docs/) | Guides des contrats, de la base, de l’authentification, des images, des prix et des reçus |
 | [backend/contracts/v1/](backend/contracts/v1/) | Exports OpenAPI, JSON Schema et exemples pour coordonner backend et mobile |
 | [backend/cli/](backend/cli/) | Commandes d’import, de collecte, d’OCR et d’export des contrats |
+| [backend/app/catalog/models.py](backend/app/catalog/models.py) | Tables des ingrédients, catégories, offres et circulaires |
+| [backend/app/catalog/offer_import.py](backend/app/catalog/offer_import.py) | Validation et import des catégories et offres |
+| [backend/app/catalog/circulars.py](backend/app/catalog/circulars.py) | Conversion PDF en images, accès Storage et préparation des liens des pages |
+| [backend/cli/import_offers.py](backend/cli/import_offers.py) et [backend/cli/import_circulars.py](backend/cli/import_circulars.py) | Mise à jour des offres et des circulaires depuis le terminal |
 | [backend/config/storage/recipe_images.sql](backend/config/storage/recipe_images.sql) | Politiques du bucket d’images, appliquées par la commande dédiée ; séparées des migrations applicatives |
 | [backend/tests/](backend/tests/) | Tests des règles, routes, imports, autorisations et traitements de données |
 | [mobile/tests/](mobile/tests/) | Tests du service photo et des règles du formulaire |
@@ -420,6 +515,8 @@ Les fichiers `__init__.py` identifient les packages Python. Un fichier présent 
 | `mobile/.env` : `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Clé publique du client Supabase |
 | `backend/.env` : `DATABASE_URL` | Connexion PostgreSQL réservée au serveur |
 | `backend/.env` : `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` | Vérification des jetons auprès de Supabase Auth |
+| `backend/.env` : `SUPABASE_SECRET_KEY` | Envoi et suppression des images par la commande d’import des circulaires ; clé réservée au serveur |
+| `backend/.env` : `OFFERS_SOURCE` | `database` pour lire les offres en base ; JSON par défaut |
 | `COMMON_CATALOG_PATH` | Autre chemin éventuel pour le catalogue JSON commun |
 | `CATALOG_IMPORT_PATH` | Export utilisé par les anciennes routes `/catalog` |
 
@@ -443,17 +540,22 @@ Le [guide mobile](mobile/README.md) détaille la première compilation, la confi
 
 ## 13. Ce qui fonctionne et le parcours encore à construire
 
-| État au 22 octobre 2026 | Parcours |
+| État au 27 octobre 2026 | Parcours |
 | --- | --- |
-| Intégré, essayé sur iPhone | Inscription, confirmation du courriel, connexion, session persistante et profil minimal |
-| Intégré, essayé sur iPhone | Consultation, recherche, Rapides, recettes manuelles et favoris, avec séparation de deux comptes |
-| Ajout confirmé sur téléphone, essais complémentaires à faire | Photo de galerie, hébergement Storage et URL enregistrée dans la recette |
+| Confirmé sur iOS et Android | Inscription, confirmation du courriel, connexion, session persistante et profil minimal |
+| Confirmé sur iOS et Android | Consultation, recherche, Rapides, recettes manuelles et favoris ; séparation de deux comptes aussi vérifiée sur iPhone |
+| Confirmé sur iOS et Android | Photo de galerie, hébergement Storage et URL enregistrée dans la recette |
 | Outils locaux disponibles | Collecte Maxi, catalogue commun, OCR et pilote PC Express |
-| À développer | Collecte web IA Metro/Super C et tables persistantes produits/offres |
+| Implémenté dans le code | Tables et import des catégories/offres ; choix de lecture JSON ou PostgreSQL |
+| Confirmé sur iOS et Android | Consultation des promos, détail et recettes associées aux ingrédients en promotion |
+| Import disponible, lecture confirmée sur iOS et Android | Circulaires en images dans Storage et consultation dans le mobile |
+| À développer | Collecte web IA Metro/Super C |
 | À développer | Modes IA des recettes, Petit budget et calcul des coûts |
 | À développer | Calendrier sauvegardé, historique et listes modifiables par magasin |
 | À développer | Confirmation des reçus dans le mobile, contributions et estimations de prix |
-| À vérifier | Parcours interactifs Android et scénarios d’erreur complémentaires |
+| À compléter | Scénarios d’erreur réseau et essais sur différentes tailles d’écran |
+
+Le 27 octobre, Hamza a confirmé le fonctionnement des parcours comptes, recettes, photos et Promos sur iOS et Android. Son coéquipier a également vérifié ces parcours sur son téléphone Android. Les fonctionnalités encore prévues ci-dessous restent à développer.
 
 ### Parcours cible : de la semaine de repas aux achats
 
@@ -489,8 +591,11 @@ Pour suivre un parcours sans lire tout le dépôt à la fois :
 5. Suivre l’opération dans [recipes/service.py](backend/app/recipes/service.py), avec [security.py](backend/app/security.py) pour l’identité.
 6. Lire [recipes/models.py](backend/app/recipes/models.py) et [database.py](backend/app/database.py) pour comprendre la persistance.
 7. Refaire le trajet avec [RecipeEditorScreen.tsx](mobile/app/RecipeEditorScreen.tsx) pour comprendre une écriture et l’envoi de photo.
-8. Examiner ensuite les outils spécialisés de catalogue et de reçus selon le besoin.
+8. Suivre [PromotionsScreen.tsx](mobile/app/PromotionsScreen.tsx) et [components/promos.ts](mobile/components/promos.ts) vers [common/public_router.py](backend/app/common/public_router.py) pour comprendre la lecture des offres.
+9. Lire [CookWithPromosScreen.tsx](mobile/app/CookWithPromosScreen.tsx) pour retrouver le rapprochement entre recettes et promotions.
+10. Suivre [import_circulars.py](backend/cli/import_circulars.py), puis les écrans Circulaires, pour comprendre le trajet des PDF jusqu’au téléphone.
+11. Examiner ensuite les autres outils de catalogue et de reçus selon le besoin.
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 22 octobre 2026*
+*Dernière mise à jour : 27 octobre 2026*
