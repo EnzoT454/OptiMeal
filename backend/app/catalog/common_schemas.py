@@ -133,5 +133,8 @@ class OfferRead(ContractModel):
     promo_price: Price | None = None
     category_id: int | None = Field(default=None, strict=True)
     retrieved_at: date | None = None
+    # Ajout page Promos : photo du produit (null si aucune)
+    image_url: str | None = None
+    image_source: str | None = None
     promotion: Promotion
     source: OfferSource

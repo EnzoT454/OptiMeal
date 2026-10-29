@@ -47,7 +47,10 @@ def promotion(product: SourceProduct, on_date: date) -> Promotion:
 
 def offer(ingredient_id: str, product: SourceProduct, on_date: date,
           category_id: int | None = None) -> OfferRead:
-    fingerprint = hashlib.sha256((ingredient_id + '\n' + product.model_dump_json()).encode()).hexdigest()[:24]
+    # La photo ne fait pas partie de l'identité de l'offre : ajouter ou changer
+    # une photo ne change pas l'id (mêmes id qu'avant l'ajout des photos).
+    identity = product.model_dump_json(exclude={'image_url', 'image_source'})
+    fingerprint = hashlib.sha256((ingredient_id + '\n' + identity).encode()).hexdigest()[:24]
     return OfferRead(
         id='offer_' + fingerprint, product_id=product.id, ingredient_id=ingredient_id,
         product_name=product.name, retailer=product.retailer,
@@ -59,6 +62,7 @@ def offer(ingredient_id: str, product: SourceProduct, on_date: date,
         promo_price=(None if product.promo_price is None
                      else {'kind': 'commercial', 'amount': product.promo_price}),
         category_id=category_id, retrieved_at=product.retrieved_at,
+        image_url=product.image_url, image_source=product.image_source,
         promotion=promotion(product, on_date),
         source={'kind': product.source, 'url': product.url},
     )
@@ -90,6 +94,7 @@ def offers_from_database(db: Session, on_date: date) -> list[OfferRead]:
             currency=row.currency, unit=row.unit, quantity=text_or_none(row.quantity),
             valid_from=row.valid_from, valid_to=row.valid_to, retrieved_at=row.retrieved_at,
             is_promotion=row.is_promotion, source=row.source, url=row.url,
+            image_url=row.image_url, image_source=row.image_source,
         )
         result.append(offer(row.ingredient_id, product, on_date, row.category_id))
     return result

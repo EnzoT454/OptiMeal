@@ -90,7 +90,7 @@ def test_offline_migration_and_single_head_need_no_database(monkeypatch):
     assert 'ck_ingredient_ck_' not in sql
     assert sql.count('CREATE TABLE') == 2  # ingredient et suivi Alembic uniquement
     assert 'auth.' not in sql and 'storage.' not in sql
-    assert ScriptDirectory.from_config(config).get_heads() == ['0006_circulars']
+    assert ScriptDirectory.from_config(config).get_heads() == ['0007_product_images']
 
 
 @pytest.fixture

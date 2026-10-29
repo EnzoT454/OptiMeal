@@ -173,7 +173,7 @@
   "offers-page": {
     "items": [
       {
-        "id": "offer_e993180d430c3c6440a506ad",
+        "id": "offer_7d8e84965e5fdaa75626742e",
         "product_id": "superc:605:819377009987",
         "ingredient_id": "ing_ail_frais",
         "product_name": "Ail",
@@ -197,6 +197,8 @@
         "promo_price": null,
         "category_id": 1,
         "retrieved_at": "2026-10-04",
+        "image_url": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",
+        "image_source": "superc",
         "promotion": {
           "declared": false,
           "valid_from": "2026-10-04",
@@ -211,7 +213,7 @@
         }
       },
       {
-        "id": "offer_1fbae4f424481b629dd24735",
+        "id": "offer_fd3daaf673db6494425c3251",
         "product_id": "metro:178:819377009987",
         "ingredient_id": "ing_ail_frais",
         "product_name": "Ail",
@@ -235,6 +237,8 @@
         "promo_price": null,
         "category_id": 1,
         "retrieved_at": "2026-10-06",
+        "image_url": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",
+        "image_source": "metro",
         "promotion": {
           "declared": false,
           "valid_from": "2026-10-06",
@@ -266,7 +270,7 @@
   },
   "offer-detail": {
     "item": {
-      "id": "offer_e993180d430c3c6440a506ad",
+      "id": "offer_7d8e84965e5fdaa75626742e",
       "product_id": "superc:605:819377009987",
       "ingredient_id": "ing_ail_frais",
       "product_name": "Ail",
@@ -290,6 +294,8 @@
       "promo_price": null,
       "category_id": 1,
       "retrieved_at": "2026-10-04",
+      "image_url": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",
+      "image_source": "superc",
       "promotion": {
         "declared": false,
         "valid_from": "2026-10-04",

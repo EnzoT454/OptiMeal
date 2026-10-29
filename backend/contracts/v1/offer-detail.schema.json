@@ -97,6 +97,30 @@
           "default": null,
           "title": "Retrieved At"
         },
+        "image_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image Url"
+        },
+        "image_source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image Source"
+        },
         "promotion": {
           "$ref": "#/$defs/Promotion"
         },
