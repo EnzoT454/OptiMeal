@@ -25,15 +25,15 @@
     },
     {
       "path": "data/catalog/superc/produits.json",
-      "sha256": "d9a32d0bde1ca8203b9ca73b510ac70de63ebd8cb3d6a70f6c0ce97d463d48ec"
+      "sha256": "86edb8baba3babe9885593b8a9af2b067e569e586322de7a6b0bb9ffe3e826ca"
     },
     {
       "path": "data/catalog/metro/produits.json",
-      "sha256": "358d6984ce2b5623a6cf6d2f411775249d68cc0436055ab0f3bce181874b69fd"
+      "sha256": "10dfb2fe68a6a14c5fa0c776d7b4d7552dd9acc7666d51552af9f34162eaf8eb"
     },
     {
       "path": "data/catalog/maxi/data_final/produits.json",
-      "sha256": "bde7f6ea4eb08a3b457e120cf262221cb6c426299c9fe65f7937992ba41bf00c"
+      "sha256": "c633f1fa72e339d28eca22f74bd42fc5d10788c17f029405376a3031426fbe33"
     }
   ],
   "ingredient_count": 31,
@@ -123,7 +123,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987",
+          "image_url": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:819377009987",
@@ -141,7 +143,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987",
+          "image_url": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:21004355001_EA",
@@ -159,7 +163,9 @@
           "retrieved_at": "2026-09-29",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/garlic-bulbs-3-count/p/21004355001_EA"
+          "url": "https://www.maxi.ca/en/garlic-bulbs-3-count/p/21004355001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/21004355001_EA/en/1/21004355001_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -216,7 +222,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133",
+          "image_url": "https://product-images.metro.ca/images/hed/h1a/8858982580254.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749900133",
@@ -234,7 +242,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133",
+          "image_url": "https://product-images.metro.ca/images/hed/h1a/8858982580254.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20811994001_EA",
@@ -252,7 +262,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/yellow-onions-3-lb-bag/p/20811994001_EA"
+          "url": "https://www.maxi.ca/en/yellow-onions-3-lb-bag/p/20811994001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20811994001_EA/en/1/20811994001_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -306,7 +318,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368",
+          "image_url": "https://product-images.metro.ca/images/h5a/he8/12934192791582.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749854368",
@@ -324,7 +338,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368",
+          "image_url": "https://product-images.metro.ca/images/h5a/he8/12934192791582.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20600927001_EA",
@@ -342,7 +358,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/carrots-3-lb-bag/p/20600927001_EA"
+          "url": "https://www.maxi.ca/en/carrots-3-lb-bag/p/20600927001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20600927001_EA/en/1/20600927001_en_front_v1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -396,7 +414,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800",
+          "image_url": "https://product-images.metro.ca/images/h72/hb9/8836978540574.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:4800",
@@ -414,7 +434,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800",
+          "image_url": "https://product-images.metro.ca/images/h72/hb9/8836978540574.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:21367888001_EA",
@@ -432,7 +454,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/grape-tomatoes/p/21367888001_EA"
+          "url": "https://www.maxi.ca/en/grape-tomatoes/p/21367888001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/21367888001_EA/en/1/21367888001_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -488,7 +512,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303",
+          "image_url": "https://product-images.metro.ca/images/h49/hf6/17459430850590.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749868303",
@@ -506,7 +532,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303",
+          "image_url": "https://product-images.metro.ca/images/h49/hf6/17459430850590.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20601017001_EA",
@@ -524,7 +552,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/yellow-potato-10-lb-bag/p/20601017001_EA"
+          "url": "https://www.maxi.ca/en/yellow-potato-10-lb-bag/p/20601017001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20601017001_EA/en/1/20601017001_en_front_v1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -581,7 +611,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065",
+          "image_url": "https://product-images.metro.ca/images/h3c/h8e/9246490886174.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:4065",
@@ -599,7 +631,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065",
+          "image_url": "https://product-images.metro.ca/images/h3c/h8e/9246490886174.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20921434001_EA",
@@ -617,7 +651,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/naturally-imperfect-mixed-sweet-peppers-2-5lb-bag/p/20921434001_EA"
+          "url": "https://www.maxi.ca/en/naturally-imperfect-mixed-sweet-peppers-2-5lb-bag/p/20921434001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20921434001_EA/en/1/20921434001_en_front_v1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -670,7 +706,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271",
+          "image_url": "https://product-images.metro.ca/images/h52/h2d/8894072389662.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:796631161271",
@@ -688,7 +726,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271",
+          "image_url": "https://product-images.metro.ca/images/h52/h2d/8894072389662.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:21121560001_EA",
@@ -706,7 +746,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/broccoli-crown/p/21121560001_EA"
+          "url": "https://www.maxi.ca/en/broccoli-crown/p/21121560001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/21121560001_EA/en/1/21121560001_enfr_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -760,7 +802,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067",
+          "image_url": "https://product-images.metro.ca/images/hf1/h3c/8832902168606.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:4067",
@@ -778,7 +822,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067",
+          "image_url": "https://product-images.metro.ca/images/hf1/h3c/8832902168606.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20426596001_KG",
@@ -796,7 +842,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/zucchini/p/20426596001_KG"
+          "url": "https://www.maxi.ca/en/zucchini/p/20426596001_KG",
+          "image_url": "https://digital.loblaws.ca/PCX/20426596001_KG/en/1/20426596001_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -850,7 +898,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011",
+          "image_url": "https://product-images.metro.ca/images/h75/h46/11860665171998.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:4011",
@@ -868,7 +918,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011",
+          "image_url": "https://product-images.metro.ca/images/h75/h46/11860665171998.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20139509001_KG",
@@ -886,7 +938,9 @@
           "retrieved_at": "2026-09-29",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/organic-bananas-bunch/p/20139509001_KG"
+          "url": "https://www.maxi.ca/en/organic-bananas-bunch/p/20139509001_KG",
+          "image_url": "https://digital.loblaws.ca/PCX/20139509001_KG/en/1/20139509001_enfr_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -940,7 +994,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173",
+          "image_url": "https://product-images.metro.ca/images/hec/hb5/8874267082782.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:4173",
@@ -958,7 +1014,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173",
+          "image_url": "https://product-images.metro.ca/images/hec/hb5/8874267082782.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20713211001_EA",
@@ -976,7 +1034,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/mcintosh-apples-4-lb-bag/p/20713211001_EA"
+          "url": "https://www.maxi.ca/en/mcintosh-apples-4-lb-bag/p/20713211001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20713211001_EA/en/1/20713211001_en_front_v1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1030,7 +1090,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053"
+          "url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053",
+          "image_url": "https://product-images.metro.ca/images/hfe/hb5/11521107853342.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:4053",
@@ -1048,7 +1110,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053",
+          "image_url": "https://product-images.metro.ca/images/hfe/hb5/11521107853342.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20028593001_EA",
@@ -1066,7 +1130,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/lemon/p/20028593001_EA"
+          "url": "https://www.maxi.ca/en/lemon/p/20028593001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20028593001_EA/en/1/20028593001_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1123,7 +1189,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/viandes-et-volailles/poulet-et-dinde/poitrines/poitrines-de-poulet-desossees-sans-peau/p/201918"
+          "url": "https://www.superc.ca/allees/viandes-et-volailles/poulet-et-dinde/poitrines/poitrines-de-poulet-desossees-sans-peau/p/201918",
+          "image_url": "https://product-images.metro.ca/images/h0f/h24/15067452571678.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:213217",
@@ -1141,7 +1209,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/format-economique/marche-frais/viande-charcuterie-et-poisson/poitrines-de-poulet-parees-et-desossees/p/213217"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/format-economique/marche-frais/viande-charcuterie-et-poisson/poitrines-de-poulet-parees-et-desossees/p/213217",
+          "image_url": "https://product-images.metro.ca/images/h55/h38/14430327570462.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20028450_KG",
@@ -1159,7 +1229,9 @@
           "retrieved_at": "2026-09-29",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/chicken-breast-boneless-skinless-club-pack/p/20028450_KG"
+          "url": "https://www.maxi.ca/en/chicken-breast-boneless-skinless-club-pack/p/20028450_KG",
+          "image_url": "https://digital.loblaws.ca/PCX/20028450_KG/en/1/20028450_enfr_front_v1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1216,7 +1288,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020"
+          "url": "https://www.superc.ca/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020",
+          "image_url": "https://product-images.metro.ca/images/hcc/hdd/14889072918558.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:201020",
@@ -1234,7 +1308,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020",
+          "image_url": "https://product-images.metro.ca/images/hcc/hdd/14889072918558.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:21604443_EA",
@@ -1252,7 +1328,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/lean-ground-beef/p/21604443_EA"
+          "url": "https://www.maxi.ca/en/lean-ground-beef/p/21604443_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/21604443_EA/en/1/21604443_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1305,7 +1383,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filets-de-saumon-atlantique-frais/p/222357"
+          "url": "https://www.superc.ca/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filets-de-saumon-atlantique-frais/p/222357",
+          "image_url": "https://product-images.metro.ca/images/hcb/h9c/14947640967198.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:230119",
@@ -1323,7 +1403,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filet-de-saumon-atlantique-frais-du-canada/p/230119"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filet-de-saumon-atlantique-frais-du-canada/p/230119",
+          "image_url": "https://product-images.metro.ca/images/h8c/h8d/15266364489758.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:21634491_EA",
@@ -1341,7 +1423,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/atlantic-salmon-fillet/p/21634491_EA"
+          "url": "https://www.maxi.ca/en/atlantic-salmon-fillet/p/21634491_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/21634491_EA/en/1/21634491_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1395,7 +1479,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922"
+          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922",
+          "image_url": "https://product-images.metro.ca/images/hef/hc4/10029196378142.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749931922",
@@ -1413,7 +1499,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922",
+          "image_url": "https://product-images.metro.ca/images/hef/hc4/10029196378142.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20521648_EA",
@@ -1431,7 +1519,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/flaked-light-tuna-packed-in-water/p/20521648_EA"
+          "url": "https://www.maxi.ca/en/flaked-light-tuna-packed-in-water/p/20521648_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20521648_EA/en/1/20521648_en_front_v1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1487,7 +1577,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035"
+          "url": "https://www.superc.ca/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035",
+          "image_url": "https://product-images.metro.ca/images/h61/he2/15129785204766.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059072052035",
@@ -1505,7 +1597,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035",
+          "image_url": "https://product-images.metro.ca/images/h61/he2/15129785204766.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20789931_EA",
@@ -1523,7 +1617,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/peeled-raw-pacific-white-shrimp/p/20789931_EA"
+          "url": "https://www.maxi.ca/en/peeled-raw-pacific-white-shrimp/p/20789931_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20789931_EA/en/1/20789931_en_front_v1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1576,7 +1672,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/055872025019"
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/055872025019",
+          "image_url": "https://product-images.metro.ca/images/hec/h85/14983790952478.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:068200550916",
@@ -1594,7 +1692,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/068200550916"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/068200550916",
+          "image_url": "https://product-images.metro.ca/images/h42/h51/15338286022686.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20020563_EA",
@@ -1612,7 +1712,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/purfiltre-partially-skimmed-milk-2/p/20020563_EA"
+          "url": "https://www.maxi.ca/en/purfiltre-partially-skimmed-milk-2/p/20020563_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20020563_EA/en/1/20020563_en_1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1665,7 +1767,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362"
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362",
+          "image_url": "https://product-images.metro.ca/images/hed/hd6/14350055538718.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:068200005362",
@@ -1683,7 +1787,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362",
+          "image_url": "https://product-images.metro.ca/images/hed/hd6/14350055538718.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20975873_EA",
@@ -1701,7 +1807,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/old-cheddar-cheese/p/20975873_EA"
+          "url": "https://www.maxi.ca/en/old-cheddar-cheese/p/20975873_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20975873_EA/en/1/20975873_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1757,7 +1865,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023"
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023",
+          "image_url": "https://product-images.metro.ca/images/h83/hae/16266859216926.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:057825750023",
@@ -1775,7 +1885,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023",
+          "image_url": "https://product-images.metro.ca/images/h83/hae/16266859216926.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20165226001_EA",
@@ -1793,7 +1905,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/original-balkan-style-plain-yogurt-6/p/20165226001_EA"
+          "url": "https://www.maxi.ca/en/original-balkan-style-plain-yogurt-6/p/20165226001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20165226001_EA/en/1/20165226001_en_1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1845,7 +1959,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784"
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784",
+          "image_url": "https://product-images.metro.ca/images/h89/h83/13653324759070.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749894784",
@@ -1863,7 +1979,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784",
+          "image_url": "https://product-images.metro.ca/images/h89/h83/13653324759070.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20325029_EA",
@@ -1881,7 +1999,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/salted-butter/p/20325029_EA"
+          "url": "https://www.maxi.ca/en/salted-butter/p/20325029_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20325029_EA/en/1/20325029_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -1937,7 +2057,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054"
+          "url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054",
+          "image_url": "https://product-images.metro.ca/images/h9a/h6c/14056251031582.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749896054",
@@ -1955,7 +2077,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054",
+          "image_url": "https://product-images.metro.ca/images/h9a/h6c/14056251031582.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:21435777001_EA",
@@ -1973,7 +2097,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/large-size-eggs/p/21435777001_EA"
+          "url": "https://www.maxi.ca/en/large-size-eggs/p/21435777001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/21435777001_EA/en/1/21435777001_enfr_front_v1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2027,7 +2153,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/riz-basmati/p/059749902441"
+          "url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/riz-basmati/p/059749902441",
+          "image_url": "https://product-images.metro.ca/images/hec/hb7/9421384056862.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749902441",
@@ -2045,7 +2173,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/riz/riz-basmati/p/059749902441"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/riz/riz-basmati/p/059749902441",
+          "image_url": "https://product-images.metro.ca/images/hec/hb7/9421384056862.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20065191_EA",
@@ -2063,7 +2193,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/pure-original-basmati-rice/p/20065191_EA"
+          "url": "https://www.maxi.ca/en/pure-original-basmati-rice/p/20065191_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20065191_EA/en/1/72529903024_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2124,7 +2256,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152"
+          "url": "https://www.superc.ca/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152",
+          "image_url": "https://product-images.metro.ca/images/hff/h0b/13653432041502.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749893152",
@@ -2142,7 +2276,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152",
+          "image_url": "https://product-images.metro.ca/images/hff/h0b/13653432041502.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20315613006_EA",
@@ -2160,7 +2296,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/penne-rigate-pasta/p/20315613006_EA"
+          "url": "https://www.maxi.ca/en/penne-rigate-pasta/p/20315613006_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20315613006_EA/en/1/20315613006_en_front_v3_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2213,7 +2351,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000"
+          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000",
+          "image_url": "https://product-images.metro.ca/images/h13/hd6/14056326004766.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749930000",
@@ -2231,7 +2371,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000",
+          "image_url": "https://product-images.metro.ca/images/h13/hd6/14056326004766.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20325921001_EA",
@@ -2249,7 +2391,9 @@
           "retrieved_at": "2026-09-29",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/chickpeas/p/20325921001_EA"
+          "url": "https://www.maxi.ca/en/chickpeas/p/20325921001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20325921001_EA/en/1/20325921001_en_front_v1_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2303,7 +2447,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981"
+          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981",
+          "image_url": "https://product-images.metro.ca/images/h72/hf8/10365178970142.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749929981",
@@ -2321,7 +2467,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981",
+          "image_url": "https://product-images.metro.ca/images/h72/hf8/10365178970142.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20554593_EA",
@@ -2339,7 +2487,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/dark-red-kidney-beans/p/20554593_EA"
+          "url": "https://www.maxi.ca/en/dark-red-kidney-beans/p/20554593_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20554593_EA/en/1/20554593_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2395,7 +2545,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581"
+          "url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581",
+          "image_url": "https://product-images.metro.ca/images/hd0/ha6/16432551690270.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059072050581",
@@ -2413,7 +2565,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581",
+          "image_url": "https://product-images.metro.ca/images/hd0/ha6/16432551690270.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20314629001_EA",
@@ -2431,7 +2585,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/diced-tomatoes/p/20314629001_EA"
+          "url": "https://www.maxi.ca/en/diced-tomatoes/p/20314629001_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20314629001_EA/en/1/20314629001_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2485,7 +2641,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547"
+          "url": "https://www.superc.ca/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547",
+          "image_url": "https://product-images.metro.ca/images/h53/h13/10498098528286.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749888547",
@@ -2503,7 +2661,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547",
+          "image_url": "https://product-images.metro.ca/images/h53/h13/10498098528286.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20105368_EA",
@@ -2521,7 +2681,9 @@
           "retrieved_at": "2026-10-27",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/extra-virgin-olive-oil/p/20105368_EA"
+          "url": "https://www.maxi.ca/en/extra-virgin-olive-oil/p/20105368_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20105368_EA/en/1/6780000206_enfr_front_centre_marketing_A_1_GS1_Ecommerce_v2_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2574,7 +2736,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582"
+          "url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582",
+          "image_url": "https://product-images.metro.ca/images/h88/h1f/9906470486046.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059749892582",
@@ -2592,7 +2756,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582",
+          "image_url": "https://product-images.metro.ca/images/h88/h1f/9906470486046.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20013256_EA",
@@ -2610,7 +2776,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": true,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/all-purpose-flour/p/20013256_EA"
+          "url": "https://www.maxi.ca/en/all-purpose-flour/p/20013256_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20013256_EA/en/1/6038301375_en_front_centre_marketing_GS1_Ecommerce_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2664,7 +2832,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233"
+          "url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233",
+          "image_url": "https://product-images.metro.ca/images/hd9/hd4/10715263139870.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:062847210233",
@@ -2682,7 +2852,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233",
+          "image_url": "https://product-images.metro.ca/images/hd9/hd4/10715263139870.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20145033_EA",
@@ -2700,7 +2872,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/granulated-sugar/p/20145033_EA"
+          "url": "https://www.maxi.ca/en/granulated-sugar/p/20145033_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20145033_EA/en/1/5889125222_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2753,7 +2927,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table-iode/p/066010001055"
+          "url": "https://www.superc.ca/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table-iode/p/066010001055",
+          "image_url": "https://product-images.metro.ca/images/h4c/hc5/16655606972446.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:067568110909",
@@ -2771,7 +2947,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table/p/067568110909"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table/p/067568110909",
+          "image_url": "https://product-images.metro.ca/images/h3b/h3f/13466266337310.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20126203_EA",
@@ -2789,7 +2967,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/iodized-table-salt/p/20126203_EA"
+          "url": "https://www.maxi.ca/en/iodized-table-salt/p/20126203_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20126203_EA/en/1/20126203_en_front_1200.png",
+          "image_source": "maxi"
         }
       ]
     },
@@ -2843,7 +3023,9 @@
           "retrieved_at": "2026-10-04",
           "is_promotion": false,
           "source": "scrap",
-          "url": "https://www.superc.ca/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267"
+          "url": "https://www.superc.ca/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267",
+          "image_url": "https://product-images.metro.ca/images/hd7/hcd/14046690082846.jpg",
+          "image_source": "superc"
         },
         {
           "id": "metro:178:059072051267",
@@ -2861,7 +3043,9 @@
           "retrieved_at": "2026-10-06",
           "is_promotion": true,
           "source": "scrap",
-          "url": "https://www.metro.ca/epicerie-en-ligne/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267"
+          "url": "https://www.metro.ca/epicerie-en-ligne/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267",
+          "image_url": "https://product-images.metro.ca/images/hd7/hcd/14046690082846.jpg",
+          "image_source": "metro"
         },
         {
           "id": "maxi:8661:20038335_EA",
@@ -2879,7 +3063,9 @@
           "retrieved_at": "2026-09-30",
           "is_promotion": false,
           "source": "apify",
-          "url": "https://www.maxi.ca/en/thick-slice-original-white-bread/p/20038335_EA"
+          "url": "https://www.maxi.ca/en/thick-slice-original-white-bread/p/20038335_EA",
+          "image_url": "https://digital.loblaws.ca/PCX/20038335_EA/en/1/20038335_en_1_v2_1200.png",
+          "image_source": "maxi"
         }
       ]
     }

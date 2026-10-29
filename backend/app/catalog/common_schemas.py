@@ -41,6 +41,9 @@ class SourceProduct(ContractModel):
     is_promotion: StrictBool | None
     source: str
     url: str | None
+    # Ajout page Promos : lien de la photo du produit et sa provenance (null sinon)
+    image_url: str | None = None
+    image_source: str | None = None
 
     @model_validator(mode='after')
     def coherent_dates(self):

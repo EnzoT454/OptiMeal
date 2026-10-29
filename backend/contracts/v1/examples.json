@@ -173,7 +173,7 @@
   "offers-page": {
     "items": [
       {
-        "id": "offer_7d8e84965e5fdaa75626742e",
+        "id": "offer_e993180d430c3c6440a506ad",
         "product_id": "superc:605:819377009987",
         "ingredient_id": "ing_ail_frais",
         "product_name": "Ail",
@@ -211,7 +211,7 @@
         }
       },
       {
-        "id": "offer_fd3daaf673db6494425c3251",
+        "id": "offer_1fbae4f424481b629dd24735",
         "product_id": "metro:178:819377009987",
         "ingredient_id": "ing_ail_frais",
         "product_name": "Ail",
@@ -266,7 +266,7 @@
   },
   "offer-detail": {
     "item": {
-      "id": "offer_7d8e84965e5fdaa75626742e",
+      "id": "offer_e993180d430c3c6440a506ad",
       "product_id": "superc:605:819377009987",
       "ingredient_id": "ing_ail_frais",
       "product_name": "Ail",
