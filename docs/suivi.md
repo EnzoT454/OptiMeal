@@ -193,7 +193,7 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 ---
 
-## Semaine 6 (5–11 octobre — en cours)
+## Semaine 6 (5 octobre - 11 octobre )
 
 ### Objectifs de la période
 
@@ -221,3 +221,80 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 - Recueillir l’avis du professeur sur la piste PC Express
 - Valider les échantillons Metro et Super C et poursuivre l’étude de leur collecte
 - Mettre en place PostgreSQL et commencer la connexion entre le mobile et le serveur
+
+
+---
+
+## Semaine 7 (12 octobre - 18 octobre)
+
+### Objectifs de la période
+
+- Mettre en place PostgreSQL et la connexion entre le serveur et la base
+- Développer la page Recettes : serveur et application mobile
+- Permettre aux utilisateurs de créer un compte et de gérer leurs propres recettes
+
+### Travail réalisé
+
+- **Base de données**
+    - Mise en place de PostgreSQL sur Supabase
+    - Gestion du schéma avec Alembic : chaque modification de la base est une migration versionnée dans Git
+    - Première table `ingredient` (31 ingrédients) et import rejouable sans doublons
+- **Serveur**
+    - Tables des recettes (`recipe`, `recipe_ingredient`, favoris, difficulté et étiquettes)
+    - Routes `/api/v1/recipes` : liste avec recherche, détail, création, modification, suppression et favoris
+    - Import des recettes initiales
+    - Comptes utilisateurs avec Supabase Auth et profil
+    - Photos des recettes dans Supabase Storage
+- **Application mobile**
+    - Liste des recettes avec recherche et filtres (Toutes, Favoris, Rapides)
+    - Détail d'une recette : ingrédients, étapes, temps et portions
+    - Ajout et modification d'une recette en saisie manuelle
+    - Connexion, création de compte et page de profil
+
+### Décisions et ajustements
+
+- Toute modification de la base passe par une migration Alembic, et non par l'interface de Supabase
+- L'application ne lit jamais directement la base : elle passe par l'API du serveur
+- Les ingrédients des recettes utilisent les mêmes identifiants que le catalogue des produits, pour relier ensuite recettes et promotions
+- Chaque utilisateur ne peut modifier que ses propres recettes et photos
+
+### Difficultés rencontrées
+
+- Validation des recettes : quantités et unités cohérentes (g, ml, unité) et ingrédients existants dans le catalogue
+- Import des recettes rejouable sans créer de doublons ni écraser les modifications
+---
+
+## Semaine 8 (19 octobre - 25 octobre)
+
+### Objectifs de la période
+
+- Appliquer les remarques du professeur sur le format des données de prix
+- Développer la page Promos : serveur et application mobile
+- Ajouter les promotions dans la base de données
+
+### Travail réalisé
+
+- **Données des trois magasins**
+    - Ajout du prix en promotion (`PrixPromo`), de la date de récupération (`DateRecuperation`) et d'un numéro de catégorie (8 catégories communes)
+    - Regroupement dans un catalogue commun de 31 ingrédients et 93 produits
+- **Serveur**
+    - Route `/api/v1/offers` : filtres par magasin, ingrédient, catégorie et date
+    - Migration Alembic (tables `category` et `product_offer`) et import rejouable sans doublons
+    - Lecture des offres dans PostgreSQL
+- **Application mobile**
+    - Écran Promos selon la maquette Figma : recherche, filtre par magasin, rabais en pourcentage
+    - Détail d'une promotion : prix promo, prix régulier, prix au kilo, dates de validité, lien vers le magasin
+    - Écran « Cuisiner avec les promos » : recettes dont des ingrédients sont en promotion
+
+### Décisions et ajustements
+
+- Séparer le prix de base (`Prix`) et le prix en promotion (`PrixPromo`), sans estimer de prix régulier
+- Développer d'abord la page Promos avec les fichiers JSON, puis la brancher sur PostgreSQL
+- Créer des tables séparées pour les promotions, reliées aux ingrédients existants sans modifier les tables des recettes
+- Relier les recettes et les promotions par l'ingrédient, pour proposer « Cuisiner avec les promos »
+- Afficher seulement les promotions en cours à la date du jour
+
+### Difficultés rencontrées
+
+- Connexion du téléphone au serveur en Wi-Fi (pare-feu Windows, adresse IP qui change selon le réseau) ; solution de secours par câble USB
+- Données de test anciennes : la plupart des promotions étaient déjà terminées
