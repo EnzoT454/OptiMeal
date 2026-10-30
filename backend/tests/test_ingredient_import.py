@@ -126,7 +126,7 @@ def test_postgres_migration_matches_model_and_keeps_rls(postgres):
     assert {c['name'] for c in columns} == {'id', 'name', 'category', 'aliases'}
     assert all(not c['nullable'] for c in columns)
     assert postgres.scalar(text("SELECT relrowsecurity FROM pg_class WHERE oid='public.ingredient'::regclass")) is True
-    assert postgres.scalar(text('SELECT version_num FROM public.alembic_version')) == '0006_circulars'
+    assert postgres.scalar(text('SELECT version_num FROM public.alembic_version')) == '0007_product_images'
     command.check(alembic_config(postgres))
 
 
