@@ -7,6 +7,7 @@ import {
   RecipeButton, RecipeChip, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles,
 } from '../components/recipes';
 import { ON_DATE, RETAILERS, currentPrice, discount, fetchPromos, formatText, longDate, money, storeName } from '../components/promos';
+import { ProductImage } from '../components/ProductImage';
 import type { Offer, Retailer } from '../types/api';
 import { PromoStackParams } from '../types/navigation';
 
@@ -95,6 +96,7 @@ function PromoCard({ offer, onPress }: { offer: Offer; onPress: () => void }) {
   const end = longDate(offer.promotion.valid_to);
   const details = [formatText(offer), end && `jusqu’au ${end}`].filter(Boolean).join(' · ');
   return <Pressable accessibilityRole="button" accessibilityHint="Affiche le détail de la promo" onPress={onPress} style={styles.card}>
+    <ProductImage uri={offer.image_url} size={64} style={styles.photo} />
     <View style={styles.info}>
       <View style={styles.storeRow}>
         <Text style={styles.store}>{storeName(offer.retailer).toUpperCase()}</Text>
@@ -109,6 +111,7 @@ function PromoCard({ offer, onPress }: { offer: Offer; onPress: () => void }) {
 
 const styles = StyleSheet.create({
   card: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: 'white', borderRadius: 16, padding: 16 },
+  photo: { backgroundColor: recipeColors.light },
   info: { flex: 1, gap: 4 },
   storeRow: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 28 },
   store: { fontFamily: 'DMSans_700Bold', fontSize: 12, lineHeight: 16, color: recipeColors.green, letterSpacing: 0.5 },
