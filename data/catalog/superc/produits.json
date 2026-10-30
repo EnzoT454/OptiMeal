@@ -23,7 +23,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987",
+        "ImageUrl": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -43,15 +45,17 @@
         "Description": "Oignons jaunes",
         "Id_magasin": "605",
         "Prix": 2.49,
-        "PrixPromo": 1.66,
+        "PrixPromo": null,
         "Unité": "lb",
         "Quantité": 2,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133",
+        "ImageUrl": "https://product-images.metro.ca/images/hed/h1a/8858982580254.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -70,15 +74,17 @@
         "Description": "Sac de carottes",
         "Id_magasin": "605",
         "Prix": 1.99,
-        "PrixPromo": 1.66,
+        "PrixPromo": null,
         "Unité": "lb",
         "Quantité": 2,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368",
+        "ImageUrl": "https://product-images.metro.ca/images/h5a/he8/12934192791582.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -105,7 +111,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800",
+        "ImageUrl": "https://product-images.metro.ca/images/h72/hb9/8836978540574.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -126,15 +134,17 @@
         "Description": "Pommes de terre à chair jaune",
         "Id_magasin": "605",
         "Prix": 6.99,
-        "PrixPromo": 3.99,
+        "PrixPromo": null,
         "Unité": "lb",
         "Quantité": 10,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303",
+        "ImageUrl": "https://product-images.metro.ca/images/h49/hf6/17459430850590.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -162,7 +172,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065",
+        "ImageUrl": "https://product-images.metro.ca/images/h3c/h8e/9246490886174.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -180,16 +192,18 @@
         "Id": "796631161271",
         "Description": "Couronne de brocoli enveloppée",
         "Id_magasin": "605",
-        "Prix": 2.99,
-        "PrixPromo": 2.49,
+        "Prix": 2.79,
+        "PrixPromo": 1.99,
         "Unité": "un",
         "Quantité": 1,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
-        "DateRecuperation": "2026-10-04",
+        "DateDebut": "2026-10-29",
+        "DateFin": "2026-11-04",
+        "DateRecuperation": "2026-10-30",
         "IsPromotion": true,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271",
+        "ImageUrl": "https://product-images.metro.ca/images/h52/h2d/8894072389662.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -208,15 +222,17 @@
         "Description": "Courgette",
         "Id_magasin": "605",
         "Prix": 6.59,
-        "PrixPromo": 5.49,
+        "PrixPromo": null,
         "Unité": "kg",
         "Quantité": 1,
-        "DateDebut": "2026-10-22",
-        "DateFin": "2026-10-28",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-27",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067",
+        "ImageUrl": "https://product-images.metro.ca/images/hf1/h3c/8832902168606.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -235,15 +251,17 @@
         "Description": "Banane",
         "Id_magasin": "605",
         "Prix": 2.18,
-        "PrixPromo": 1.74,
+        "PrixPromo": null,
         "Unité": "kg",
         "Quantité": 1,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011",
+        "ImageUrl": "https://product-images.metro.ca/images/h75/h46/11860665171998.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -270,7 +288,9 @@
         "DateRecuperation": "2026-10-27",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173",
+        "ImageUrl": "https://product-images.metro.ca/images/hec/hb5/8874267082782.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -289,15 +309,17 @@
         "Description": "Citron",
         "Id_magasin": "605",
         "Prix": 1.29,
-        "PrixPromo": 0.79,
+        "PrixPromo": null,
         "Unité": "un",
         "Quantité": 1,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053"
+        "Url": "https://www.superc.ca/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053",
+        "ImageUrl": "https://product-images.metro.ca/images/hfe/hb5/11521107853342.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -318,15 +340,17 @@
         "Description": "Poitrines de poulet désossées sans peau, Format économique",
         "Id_magasin": "605",
         "Prix": 14.39,
-        "PrixPromo": 10.74,
+        "PrixPromo": null,
         "Unité": "kg",
         "Quantité": 1,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/viandes-et-volailles/poulet-et-dinde/poitrines/poitrines-de-poulet-desossees-sans-peau/p/201918"
+        "Url": "https://www.superc.ca/allees/viandes-et-volailles/poulet-et-dinde/poitrines/poitrines-de-poulet-desossees-sans-peau/p/201918",
+        "ImageUrl": "https://product-images.metro.ca/images/h0f/h24/15067452571678.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -355,7 +379,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020"
+        "Url": "https://www.superc.ca/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020",
+        "ImageUrl": "https://product-images.metro.ca/images/hcc/hdd/14889072918558.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -374,15 +400,17 @@
         "Description": "Filets de saumon Atlantique frais, Format économique",
         "Id_magasin": "605",
         "Prix": 41.19,
-        "PrixPromo": 30.84,
+        "PrixPromo": null,
         "Unité": "kg",
         "Quantité": 1,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filets-de-saumon-atlantique-frais/p/222357"
+        "Url": "https://www.superc.ca/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filets-de-saumon-atlantique-frais/p/222357",
+        "ImageUrl": "https://product-images.metro.ca/images/hcb/h9c/14947640967198.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -410,7 +438,9 @@
         "DateRecuperation": "2026-10-27",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922"
+        "Url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922",
+        "ImageUrl": "https://product-images.metro.ca/images/hef/hc4/10029196378142.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -429,15 +459,17 @@
         "Description": "Crevettes sauvages d'Argentine crues surgelées - Irrésistible",
         "Id_magasin": "605",
         "Prix": 11.99,
-        "PrixPromo": 5.99,
+        "PrixPromo": null,
         "Unité": "g",
         "Quantité": 300,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035"
+        "Url": "https://www.superc.ca/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035",
+        "ImageUrl": "https://product-images.metro.ca/images/h61/he2/15129785204766.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -464,7 +496,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/055872025019"
+        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/055872025019",
+        "ImageUrl": "https://product-images.metro.ca/images/hec/h85/14983790952478.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -484,15 +518,17 @@
         "Description": "Fromage cheddar marbré - P'tit Québec",
         "Id_magasin": "605",
         "Prix": 7.99,
-        "PrixPromo": 4.97,
+        "PrixPromo": null,
         "Unité": "g",
         "Quantité": 400,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362"
+        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362",
+        "ImageUrl": "https://product-images.metro.ca/images/hed/hd6/14350055538718.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -512,15 +548,17 @@
         "Description": "Yogourt nature style Balkan 2 %, Original - Astro",
         "Id_magasin": "605",
         "Prix": 4.69,
-        "PrixPromo": 3.33,
+        "PrixPromo": null,
         "Unité": "g",
         "Quantité": 750,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-28",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023"
+        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023",
+        "ImageUrl": "https://product-images.metro.ca/images/h83/hae/16266859216926.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -538,16 +576,18 @@
         "Id": "059749894784",
         "Description": "Beurre salé - Selection",
         "Id_magasin": "605",
-        "Prix": 6.49,
-        "PrixPromo": 4.88,
+        "Prix": 6.19,
+        "PrixPromo": 4.75,
         "Unité": "g",
         "Quantité": 454,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
-        "DateRecuperation": "2026-10-04",
+        "DateDebut": "2026-10-29",
+        "DateFin": "2026-11-04",
+        "DateRecuperation": "2026-10-30",
         "IsPromotion": true,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784"
+        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784",
+        "ImageUrl": "https://product-images.metro.ca/images/h89/h83/13653324759070.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -569,15 +609,17 @@
         "Description": "Gros œufs - Selection",
         "Id_magasin": "605",
         "Prix": 4.17,
-        "PrixPromo": 2.99,
+        "PrixPromo": null,
         "Unité": "un",
         "Quantité": 12,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-14",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-04",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054"
+        "Url": "https://www.superc.ca/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054",
+        "ImageUrl": "https://product-images.metro.ca/images/h9a/h6c/14056251031582.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -604,7 +646,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/riz-basmati/p/059749902441"
+        "Url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/riz-basmati/p/059749902441",
+        "ImageUrl": "https://product-images.metro.ca/images/hec/hb7/9421384056862.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -633,7 +677,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152"
+        "Url": "https://www.superc.ca/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152",
+        "ImageUrl": "https://product-images.metro.ca/images/hff/h0b/13653432041502.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -660,7 +706,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000"
+        "Url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000",
+        "ImageUrl": "https://product-images.metro.ca/images/h13/hd6/14056326004766.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -687,7 +735,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981"
+        "Url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981",
+        "ImageUrl": "https://product-images.metro.ca/images/h72/hf8/10365178970142.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -714,7 +764,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581"
+        "Url": "https://www.superc.ca/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581",
+        "ImageUrl": "https://product-images.metro.ca/images/hd0/ha6/16432551690270.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -741,7 +793,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547"
+        "Url": "https://www.superc.ca/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547",
+        "ImageUrl": "https://product-images.metro.ca/images/h53/h13/10498098528286.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -768,7 +822,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582"
+        "Url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582",
+        "ImageUrl": "https://product-images.metro.ca/images/h88/h1f/9906470486046.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -796,7 +852,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": true,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233"
+        "Url": "https://www.superc.ca/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233",
+        "ImageUrl": "https://product-images.metro.ca/images/hd9/hd4/10715263139870.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -823,7 +881,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table-iode/p/066010001055"
+        "Url": "https://www.superc.ca/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table-iode/p/066010001055",
+        "ImageUrl": "https://product-images.metro.ca/images/h4c/hc5/16655606972446.jpg",
+        "ImageSource": "superc"
       }
     ]
   },
@@ -851,7 +911,9 @@
         "DateRecuperation": "2026-10-04",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.superc.ca/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267"
+        "Url": "https://www.superc.ca/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267",
+        "ImageUrl": "https://product-images.metro.ca/images/hd7/hcd/14046690082846.jpg",
+        "ImageSource": "superc"
       }
     ]
   }

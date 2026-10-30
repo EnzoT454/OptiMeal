@@ -51,6 +51,7 @@ class ProductOffer(Base):
         CheckConstraint('quantity IS NULL OR quantity > 0', name='quantity_positive'),
         CheckConstraint('valid_to IS NULL OR valid_from IS NULL OR valid_to >= valid_from', name='validity_ordered'),
         CheckConstraint('position > 0', name='position_positive'),
+        CheckConstraint("image_url IS NULL OR image_url LIKE 'https://%'", name='image_url_https'),
     )
 
     id: Mapped[str] = mapped_column(Text, primary_key=True)
@@ -72,6 +73,9 @@ class ProductOffer(Base):
     is_promotion: Mapped[bool | None] = mapped_column(Boolean)
     source: Mapped[str] = mapped_column(Text, nullable=False)
     url: Mapped[str | None] = mapped_column(Text)
+    # Photo du produit (lien direct vers le site du magasin) et sa provenance
+    image_url: Mapped[str | None] = mapped_column(Text)
+    image_source: Mapped[str | None] = mapped_column(Text)
 
 
 class Circular(Base):

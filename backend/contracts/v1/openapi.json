@@ -2021,6 +2021,28 @@
             ],
             "title": "Retrieved At"
           },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url"
+          },
+          "image_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Source"
+          },
           "promotion": {
             "$ref": "#/components/schemas/Promotion"
           },

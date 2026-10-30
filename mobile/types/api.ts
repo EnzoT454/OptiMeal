@@ -35,13 +35,14 @@ export interface Offer {
   promo_price: Price | null; // prix en promotion
   category_id: number | null;
   retrieved_at: string | null;
+  image_url: string | null;    // lien de la photo du produit (null si aucune)
+  image_source: string | null; // provenance de la photo (ex. « superc »)
   promotion: {
     declared: boolean | null; valid_from: string | null; valid_to: string | null;
     status: 'active' | 'expired' | 'upcoming' | 'unverifiable' | 'not_promotion' | 'unknown';
     evaluated_on: string;
   };
   source: { kind: string; url: string | null };
-
 }
 // Circulaire de la semaine d'un magasin : GET /api/v1/circulars (pages = liens des images, dans l'ordre).
 export interface Circular {

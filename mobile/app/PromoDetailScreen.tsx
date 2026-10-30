@@ -3,6 +3,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles, showRecipeComingSoon } from '../components/recipes';
 import { currentPrice, discount, formatText, longDate, money, storeName, unitPrice } from '../components/promos';
+import { ProductImage } from '../components/ProductImage';
 import { PromoStackParams } from '../types/navigation';
 
 export default function PromoDetailScreen({ navigation, route }: NativeStackScreenProps<PromoStackParams, 'Detail'>) {
@@ -17,6 +18,8 @@ export default function PromoDetailScreen({ navigation, route }: NativeStackScre
 
   return <RecipeScreen>
     <RecipeTitle onBack={() => navigation.goBack()}>La bonne affaire</RecipeTitle>
+
+    <ProductImage uri={offer.image_url} size={220} style={styles.photo} />
 
     <View style={recipeStyles.chips}>
       <View style={styles.storeChip}><Text style={styles.storeChipText}>{store.toUpperCase()}</Text></View>
@@ -50,11 +53,14 @@ export default function PromoDetailScreen({ navigation, route }: NativeStackScre
     </Pressable>}
 
     <RecipeButton title="Ajouter à la liste" onPress={() => showRecipeComingSoon('Liste d’achats')} />
-    <Text style={recipeStyles.note}>Prix relevé en ligne : il peut varier en magasin.</Text>
+    <Text style={recipeStyles.note}>
+      Prix relevé en ligne : il peut varier en magasin.{offer.image_url ? ` Photo : ${store}.` : ''}
+    </Text>
   </RecipeScreen>;
 }
 
 const styles = StyleSheet.create({
+  photo: { alignSelf: 'center', width: '100%', borderRadius: 16 },
   storeChip: { backgroundColor: recipeColors.green, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 8 },
   storeChipText: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: 'white' },
   badge: { backgroundColor: recipeColors.light, borderRadius: 10, paddingHorizontal: 14, paddingVertical: 8 },

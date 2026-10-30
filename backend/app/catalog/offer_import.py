@@ -12,7 +12,7 @@ from .models import Category, Ingredient, ProductOffer
 OFFER_FIELDS = (
     'ingredient_id', 'category_id', 'position', 'retailer', 'store_id', 'external_product_id', 'name',
     'price', 'promo_price', 'currency', 'unit', 'quantity', 'valid_from', 'valid_to', 'retrieved_at',
-    'is_promotion', 'source', 'url',
+    'is_promotion', 'source', 'url', 'image_url', 'image_source',
 )
 
 
@@ -47,6 +47,7 @@ def read_offers(path: Path) -> tuple[list[dict], list[dict]]:
                 'valid_from': product.valid_from, 'valid_to': product.valid_to,
                 'retrieved_at': product.retrieved_at, 'is_promotion': product.is_promotion,
                 'source': product.source, 'url': product.url,
+                'image_url': product.image_url, 'image_source': product.image_source,
             })
     if not offers:
         raise ValueError('Aucune offre dans le catalogue.')

@@ -15,6 +15,17 @@ PRODUCT_FIELDS = {
 # Champs ajoutés pour la page Promos (demandes du prof) : tous présents ou tous absents.
 # Prix = prix de base ; PrixPromo = prix en promotion (null sinon).
 PROMO_FIELDS = {'PrixPromo', 'DateRecuperation'}
+# Champs facultatifs pour la photo du produit : ImageUrl (lien de la photo) et
+# ImageSource (d'où vient la photo, ex. « superc »). ImageSource exige ImageUrl.
+IMAGE_FIELDS = {'ImageUrl', 'ImageSource'}
+
+
+def image_url(value: object) -> str | None:
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.startswith('https://'):
+        raise ValueError('Le lien de la photo doit être un texte qui commence par https://.')
+    return value
 
 
 def decimal_text(value: object) -> str | None:
@@ -98,7 +109,9 @@ def build_common_catalog(root: Path, mapping_path: Path) -> dict:
             sources.append({'retailer': retailer, 'path': mapping['sources'][retailer],
                             'ingredient_id': row['Id'], 'name': row['NomProduit']})
             for product in row['Produits']:
-                if set(product) not in (PRODUCT_FIELDS, PRODUCT_FIELDS | PROMO_FIELDS):
+                image_fields = set(product) & IMAGE_FIELDS
+                if set(product) - image_fields not in (PRODUCT_FIELDS, PRODUCT_FIELDS | PROMO_FIELDS) \
+                        or image_fields == {'ImageSource'}:
                     raise ValueError(f'Champs produit modifiés dans {retailer}/{row["Id"]}.')
                 if not isinstance(product['Id'], str) or not product['Id']:
                     raise ValueError('Un identifiant marchand doit être un texte non vide.')
@@ -121,6 +134,8 @@ def build_common_catalog(root: Path, mapping_path: Path) -> dict:
                     'retrieved_at': product.get('DateRecuperation'),
                     'is_promotion': product['IsPromotion'],
                     'source': product['Source'], 'url': product['Url'],
+                    'image_url': image_url(product.get('ImageUrl')),
+                    'image_source': product.get('ImageSource'),
                 })
         if len(categories) != 1:
             raise ValueError(f'Catégories incohérentes pour {key}.')

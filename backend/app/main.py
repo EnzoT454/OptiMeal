@@ -1,6 +1,7 @@
 from pathlib import Path
 from contextlib import asynccontextmanager
 from typing import Literal
+from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
@@ -72,6 +73,13 @@ def create_app(*, settings: Settings | None = None, env_file: Path | None = ENV_
         lifespan=lifespan,
     )
 
+    # Version web de l'app (Expo web sur le port 8081) : le navigateur exige cette autorisation.
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=['http://localhost:8081', 'http://127.0.0.1:8081'],
+        allow_methods=['*'],
+        allow_headers=['*'],
+    )
     app.include_router(catalog_router)
     app.include_router(public_router)
     app.include_router(recipes_router)

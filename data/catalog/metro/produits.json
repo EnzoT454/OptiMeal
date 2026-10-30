@@ -23,7 +23,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/gingembre-ail-et-echalotes/ail/p/819377009987",
+        "ImageUrl": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -42,16 +44,18 @@
         "Id": "059749900133",
         "Description": "Oignons jaunes",
         "Id_magasin": "178",
-        "Prix": 2.49,
-        "PrixPromo": 1.69,
+        "Prix": 1.99,
+        "PrixPromo": 0.99,
         "Unité": "lb",
         "Quantité": 2,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
-        "DateRecuperation": "2026-10-06",
+        "DateDebut": "2026-10-29",
+        "DateFin": "2026-11-04",
+        "DateRecuperation": "2026-10-30",
         "IsPromotion": true,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/oignons-et-poireaux/oignons-jaunes/p/059749900133",
+        "ImageUrl": "https://product-images.metro.ca/images/hed/h1a/8858982580254.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -70,15 +74,17 @@
         "Description": "Sac de carottes",
         "Id_magasin": "178",
         "Prix": 1.99,
-        "PrixPromo": null,
+        "PrixPromo": 0.99,
         "Unité": "lb",
         "Quantité": 2,
-        "DateDebut": "2026-10-06",
-        "DateFin": null,
-        "DateRecuperation": "2026-10-06",
-        "IsPromotion": false,
+        "DateDebut": "2026-10-29",
+        "DateFin": "2026-11-04",
+        "DateRecuperation": "2026-10-30",
+        "IsPromotion": true,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/sac-de-carottes/p/059749854368",
+        "ImageUrl": "https://product-images.metro.ca/images/h5a/he8/12934192791582.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -105,7 +111,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/tomates-et-concombres/tomate/p/4800",
+        "ImageUrl": "https://product-images.metro.ca/images/h72/hb9/8836978540574.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -134,7 +142,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/pommes-de-terre-carottes-et-celeris/pommes-de-terre-a-chair-jaune/p/059749868303",
+        "ImageUrl": "https://product-images.metro.ca/images/h49/hf6/17459430850590.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -154,15 +164,17 @@
         "Description": "Poivron vert",
         "Id_magasin": "178",
         "Prix": 6.59,
-        "PrixPromo": 5.74,
+        "PrixPromo": 5.47,
         "Unité": "kg",
         "Quantité": 1,
-        "DateDebut": "2026-10-22",
-        "DateFin": "2026-10-28",
-        "DateRecuperation": "2026-10-27",
+        "DateDebut": "2026-10-29",
+        "DateFin": "2026-11-04",
+        "DateRecuperation": "2026-10-30",
         "IsPromotion": true,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/poivron-vert/p/4065",
+        "ImageUrl": "https://product-images.metro.ca/images/h3c/h8e/9246490886174.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -181,15 +193,17 @@
         "Description": "Couronne de brocoli enveloppée",
         "Id_magasin": "178",
         "Prix": 2.99,
-        "PrixPromo": 2.69,
+        "PrixPromo": null,
         "Unité": "un",
         "Quantité": 1,
-        "DateDebut": "2026-10-22",
-        "DateFin": "2026-10-28",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-27",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/brocolis-choux-et-choux-fleurs/couronne-de-brocoli-enveloppee/p/796631161271",
+        "ImageUrl": "https://product-images.metro.ca/images/h52/h2d/8894072389662.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -208,15 +222,17 @@
         "Description": "Courgette",
         "Id_magasin": "178",
         "Prix": 8.8,
-        "PrixPromo": 7.69,
+        "PrixPromo": null,
         "Unité": "kg",
         "Quantité": 1,
-        "DateDebut": "2026-10-22",
-        "DateFin": "2026-10-28",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-27",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/legumes/poivrons-zucchini-et-aubergines/courgette/p/4067",
+        "ImageUrl": "https://product-images.metro.ca/images/hf1/h3c/8832902168606.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -243,7 +259,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/bananes-et-plantains/banane/p/4011",
+        "ImageUrl": "https://product-images.metro.ca/images/h75/h46/11860665171998.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -270,7 +288,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/pommes-et-poires/pomme/p/4173",
+        "ImageUrl": "https://product-images.metro.ca/images/hec/hb5/8874267082782.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -289,15 +309,17 @@
         "Description": "Citron",
         "Id_magasin": "178",
         "Prix": 1.25,
-        "PrixPromo": 0.99,
+        "PrixPromo": null,
         "Unité": "un",
         "Quantité": 1,
-        "DateDebut": "2026-10-22",
-        "DateFin": "2026-10-28",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-27",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/fruits-et-legumes/fruits/agrumes/citron/p/4053",
+        "ImageUrl": "https://product-images.metro.ca/images/hfe/hb5/11521107853342.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -326,7 +348,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/format-economique/marche-frais/viande-charcuterie-et-poisson/poitrines-de-poulet-parees-et-desossees/p/213217"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/format-economique/marche-frais/viande-charcuterie-et-poisson/poitrines-de-poulet-parees-et-desossees/p/213217",
+        "ImageUrl": "https://product-images.metro.ca/images/h55/h38/14430327570462.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -355,7 +379,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/viandes-et-volailles/boeuf-et-veau/viandes-hachees/boeuf-hache-maigre/p/201020",
+        "ImageUrl": "https://product-images.metro.ca/images/hcc/hdd/14889072918558.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -374,15 +400,17 @@
         "Description": "Filet de saumon Atlantique frais du Canada, Format économique",
         "Id_magasin": "178",
         "Prix": 39.66,
-        "PrixPromo": null,
+        "PrixPromo": 22.02,
         "Unité": "kg",
         "Quantité": 1,
-        "DateDebut": "2026-10-06",
-        "DateFin": null,
-        "DateRecuperation": "2026-10-06",
-        "IsPromotion": false,
+        "DateDebut": "2026-10-29",
+        "DateFin": "2026-11-04",
+        "DateRecuperation": "2026-10-30",
+        "IsPromotion": true,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filet-de-saumon-atlantique-frais-du-canada/p/230119"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/poissons-et-fruits-de-mer/poissons-frais/saumons-truites-et-thons/filet-de-saumon-atlantique-frais-du-canada/p/230119",
+        "ImageUrl": "https://product-images.metro.ca/images/h8c/h8d/15266364489758.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -410,7 +438,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/poissons-et-fruits-de-mer/thon-pale-en-morceaux-dans-l-eau/p/059749931922",
+        "ImageUrl": "https://product-images.metro.ca/images/hef/hc4/10029196378142.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -429,15 +459,17 @@
         "Description": "Crevettes sauvages d'Argentine crues surgelées - Irrésistible",
         "Id_magasin": "178",
         "Prix": 11.99,
-        "PrixPromo": 8.99,
+        "PrixPromo": null,
         "Unité": "g",
         "Quantité": 300,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-21",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-06",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-surgeles/poissons-et-fruits-de-mer/crevettes-et-fruits-de-mer/crevettes-sauvages-d-argentine-crues-surgelees/p/059072052035",
+        "ImageUrl": "https://product-images.metro.ca/images/h61/he2/15129785204766.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -464,7 +496,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/068200550916"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/laits-entiers-et-2/lait-2/p/068200550916",
+        "ImageUrl": "https://product-images.metro.ca/images/h42/h51/15338286022686.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -492,7 +526,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/fromages-emballes/fromages-en-bloc/fromage-cheddar-marbre/p/068200005362",
+        "ImageUrl": "https://product-images.metro.ca/images/hed/hd6/14350055538718.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -520,7 +556,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/yogourts/yogourts-en-pot/yogourt-nature-style-balkan-2/p/057825750023",
+        "ImageUrl": "https://product-images.metro.ca/images/h83/hae/16266859216926.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -539,15 +577,17 @@
         "Description": "Beurre salé - Selection",
         "Id_magasin": "178",
         "Prix": 6.49,
-        "PrixPromo": 4.88,
+        "PrixPromo": null,
         "Unité": "g",
         "Quantité": 454,
-        "DateDebut": "2026-10-22",
-        "DateFin": "2026-10-28",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-27",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/laits-cremes-et-beurres/beurres-et-margarines/beurre-sale/p/059749894784",
+        "ImageUrl": "https://product-images.metro.ca/images/h89/h83/13653324759070.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -577,7 +617,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/produits-laitiers-et-oeufs/oeufs/oeufs-entiers/gros-oeufs/p/059749896054",
+        "ImageUrl": "https://product-images.metro.ca/images/h9a/h6c/14056251031582.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -596,15 +638,17 @@
         "Description": "Riz basmati - Selection",
         "Id_magasin": "178",
         "Prix": 5.49,
-        "PrixPromo": 3.99,
+        "PrixPromo": null,
         "Unité": "g",
         "Quantité": 900,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-06",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/riz/riz-basmati/p/059749902441"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/riz/riz-basmati/p/059749902441",
+        "ImageUrl": "https://product-images.metro.ca/images/hec/hb7/9421384056862.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -625,15 +669,17 @@
         "Description": "Pâtes fusilli - Selection",
         "Id_magasin": "178",
         "Prix": 2.99,
-        "PrixPromo": 1.44,
+        "PrixPromo": null,
         "Unité": "g",
         "Quantité": 900,
-        "DateDebut": "2026-10-22",
-        "DateFin": "2026-10-28",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-27",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/pates-riz-et-feves/pates/pates-fusilli/p/059749893152",
+        "ImageUrl": "https://product-images.metro.ca/images/hff/h0b/13653432041502.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -652,15 +698,17 @@
         "Description": "Pois chiches - Selection",
         "Id_magasin": "178",
         "Prix": 1.99,
-        "PrixPromo": 1.5,
+        "PrixPromo": null,
         "Unité": "mL",
         "Quantité": 540,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-06",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/pois-chiches/p/059749930000",
+        "ImageUrl": "https://product-images.metro.ca/images/h13/hd6/14056326004766.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -679,15 +727,17 @@
         "Description": "Haricots rouge foncé - Selection",
         "Id_magasin": "178",
         "Prix": 1.99,
-        "PrixPromo": 1.5,
+        "PrixPromo": null,
         "Unité": "mL",
         "Quantité": 540,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-06",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/haricots-et-legumineuses/haricots-rouge-fonce/p/059749929981",
+        "ImageUrl": "https://product-images.metro.ca/images/h72/hf8/10365178970142.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -706,15 +756,17 @@
         "Description": "Tomates italiennes en dés - Selection",
         "Id_magasin": "178",
         "Prix": 2.79,
-        "PrixPromo": 1.44,
+        "PrixPromo": null,
         "Unité": "mL",
         "Quantité": 796,
-        "DateDebut": "2026-10-22",
-        "DateFin": "2026-10-28",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-27",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/aliments-en-conserve-et-en-pot/tomates-et-pates-de-tomates/tomates-italiennes-en-des/p/059072050581",
+        "ImageUrl": "https://product-images.metro.ca/images/hd0/ha6/16432551690270.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -741,7 +793,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/huiles-et-vinaigres/huiles-d-olive/huile-d-olive/p/059749888547",
+        "ImageUrl": "https://product-images.metro.ca/images/h53/h13/10498098528286.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -768,7 +822,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/farines-et-essentiels-de-cuisson/farine-tout-usage/p/059749892582",
+        "ImageUrl": "https://product-images.metro.ca/images/h88/h1f/9906470486046.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -788,15 +844,17 @@
         "Description": "Sucre granulé spécial fin - Redpath",
         "Id_magasin": "178",
         "Prix": 3.99,
-        "PrixPromo": 2.99,
+        "PrixPromo": null,
         "Unité": "kg",
         "Quantité": 2,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-06",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/ingredients-pour-cuisson-et-preparation/sucres-et-edulcorants/sucre-granule-special-fin/p/062847210233",
+        "ImageUrl": "https://product-images.metro.ca/images/hd9/hd4/10715263139870.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -823,7 +881,9 @@
         "DateRecuperation": "2026-10-06",
         "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table/p/067568110909"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/garde-manger/fines-herbes-epices-et-sauces/sels-et-poivres/sel-de-table/p/067568110909",
+        "ImageUrl": "https://product-images.metro.ca/images/h3b/h3f/13466266337310.jpg",
+        "ImageSource": "metro"
       }
     ]
   },
@@ -843,15 +903,17 @@
         "Description": "Pain de blé entier tranché - Selection",
         "Id_magasin": "178",
         "Prix": 3.79,
-        "PrixPromo": 2.99,
+        "PrixPromo": null,
         "Unité": "g",
         "Quantité": 720,
-        "DateDebut": "2026-10-01",
-        "DateFin": "2026-10-07",
+        "DateDebut": null,
+        "DateFin": null,
         "DateRecuperation": "2026-10-06",
-        "IsPromotion": true,
+        "IsPromotion": false,
         "Source": "scrap",
-        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267"
+        "Url": "https://www.metro.ca/epicerie-en-ligne/allees/pains-et-patisseries/pains-emballes/ble-entier-et-cereales/pain-de-ble-entier-tranche/p/059072051267",
+        "ImageUrl": "https://product-images.metro.ca/images/hd7/hcd/14046690082846.jpg",
+        "ImageSource": "metro"
       }
     ]
   }
