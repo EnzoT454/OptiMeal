@@ -21,40 +21,23 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 Éléments réalisés :
 
-- Calendrier : une recette supprimée ou devenue inaccessible affiche « Recette indisponible », avec portions, déplacement et retrait conservés. Le sélecteur propose les recettes publiques et celles du compte. Migration `0010_preserve_meals` appliquée sur Supabase le 1er novembre ; essais sur téléphone à effectuer.
-- Onglet Recettes organisé en Découvrir (recettes publiques), Mes recettes (créations du compte) et Favoris, avec recherche et filtres dans la section active, pagination et messages adaptés aux listes vides. Vérifié par 66 tests mobiles et TypeScript ; les trois scénarios manuels de partage sont confirmés par Hamza le 1er novembre, sans plateforme précisée.
-- Backend du partage de recettes : migration `0009_recipe_visibility`, recettes privées par défaut, publication/retrait par le propriétaire et sections API Découvrir/Mes recettes/Favoris. Les favoris et le calendrier masquent les recettes devenues privées pour les autres comptes. Vérifié sur PostgreSQL local ; migration `0009` appliquée et schéma contrôlé sur Supabase le 1er novembre. Le même bucket public de photos est conservé pour le prototype ; sa séparation privé/public est reportée après le prototype. Les sections mobiles Découvrir, Mes recettes et Favoris sont intégrées ; le formulaire propose le partage, privé par défaut, et le détail permet de publier ou rendre privée sa propre recette après confirmation. Les trois scénarios manuels de partage sont confirmés le 1er novembre ; les validations distinctes iOS et Android restent à consigner.
-- Formulaire Recettes : nom obligatoire pour activer l’enregistrement, quantité séparée de l’unité et choix fixe parmi g, ml et unité. Fonctionnement confirmé par Hamza sur iOS le 1er novembre ; essais Android à effectuer.
-- Consultation sans compte d’Accueil, Promos, Recettes et Paramètres ; connexion à la demande pour les recettes personnelles, favoris, calendrier et profil. Le mode visiteur et la connexion à la demande sont confirmés sur iOS le 1er novembre ; les nouveaux parcours restent à reproduire sur Android.
+- Comptes, profil et mode visiteur.
+- Recettes personnelles, partage public/privé et favoris.
+- Calendrier hebdomadaire des repas.
+- Promotions et consultation des circulaires.
+- Catalogue commun des produits et ingrédients.
+- Collecte Maxi et lecture locale des reçus.
+- Documentation et site de suivi.
 
-- Photo obligatoire à la création des recettes personnelles, avec blocage dans le formulaire et validation API ; parcours confirmé sur iOS le 1er novembre.
-- Suppression du compte depuis Paramètres avec confirmation, nettoyage du dossier photo et retour au mode visiteur ; parcours confirmé sur iOS le 1er novembre.
-- Calendrier hebdomadaire intégré depuis `main` le 1er novembre : repas par recette ou note, portions, déplacement, duplication et restes. Hamza a confirmé la migration `0008_meal_plan` sur Supabase et le calendrier sur iOS le 1er novembre. Les essais Android et l’historique par instantanés restent à compléter.
-- Site de suivi et documentation du projet.
-- API FastAPI permettant de consulter le catalogue.
-- Contrats communs Recettes et Promos, avec API de lecture du catalogue partagé et des 10 recettes initiales.
-- Connexion PostgreSQL/Supabase, contrôle `/health/db` et migrations des ingrédients, recettes, profils, favoris, catégories, offres et circulaires. Imports rejouables des 31 ingrédients, 10 recettes initiales et offres ; les ingrédients HTTP restent sur JSON et les offres peuvent être lues en base avec `OFFERS_SOURCE=database`.
-- Supabase Auth, profil minimal et recettes personnelles : création manuelle, édition, suppression et favoris avec contrôles de propriétaire.
-- Parcours comptes et Recettes confirmés sur iOS et Android : inscription avec confirmation du courriel, connexion, session persistante, profil, recherche, recettes personnelles et favoris. La séparation des données entre deux comptes a aussi été vérifiée sur iPhone.
-- Images des dix recettes initiales hébergées dans Supabase Storage ; parcours des photos personnelles confirmé sur iOS et Android. Les photos sont publiques dans ce prototype, avec des droits d’écriture limités au dossier du propriétaire.
-- Parcours Recettes adapté aux éléments retenus de Figma, avec fonctionnement confirmé : en-tête, filtres, collection, choix d’ajout et formulaire ; difficulté facultative et étiquettes enregistrées en base. Petit budget et les choix IA affichent « Disponible prochainement ».
-- Onglet Promos confirmé sur iOS et Android : recherche, filtre par magasin, détail des offres, consultation des circulaires et recettes associées aux ingrédients en promotion. Le classement de ces recettes ne calcule pas encore leur coût complet.
-- Photos des produits intégrées aux données, aux contrats API et aux écrans Promos depuis les 29–30 octobre ; liens directs vers les images des magasins et icône de remplacement en cas d’échec. La migration `0007_product_images` ajoute les champs de photo ; l’affichage des photos de produits est confirmé sur iOS le 1er novembre.
-- Dix promotions actualisées le 30 octobre pour la période du 29 octobre au 4 novembre ; les autres relevés conservent leurs propres dates.
-- Import des catégories et offres dans PostgreSQL ; conversion des circulaires PDF en images dans Supabase Storage, avec leurs informations conservées en base.
-- Collecte des produits et promotions Maxi avec Apify, avec vérification des données.
-- Échantillons de produits Metro et Super C disponibles au format JSON.
-- Extraction locale des reçus et vérification des prix sur un échantillon Maxi et Metro.
-- Pipeline de correspondance entre reçus Maxi et fiches web PC Express, testé sur cinq produits.
+À développer ou à compléter :
 
-À faire :
-
-- Valider les échantillons Metro et Super C et développer leur collecte automatisée.
-- Compléter la validation de l’extraction des reçus, notamment sur Windows et pour Super C.
-- Développer l’historique des prix et les préférences de compte au-delà du profil minimal.
-- Compléter les essais d’erreur et d’affichage sur différentes tailles d’écran, poursuivre l’adaptation des autres écrans à Figma, puis compléter l’historique stable des plans et développer les listes d’épicerie.
-- Intégrer les estimations de prix et la confirmation des reçus dans l’application.
-- Prévoir le nettoyage des fichiers Storage inutilisés et compléter les essais d’erreur réseau des photos.
+- Modes IA pour les recettes.
+- Listes d’épicerie par magasin et gestion du budget.
+- Historique stable des plans et des prix.
+- Estimations de prix et contribution par reçu dans l’application.
+- Collecte automatisée Metro et Super C.
+- Préférences de compte et recommandations économiques.
+- Validation complète sur iOS et Android.
 
 ## Installation
 
@@ -128,60 +111,67 @@ explique la mise à jour des offres et l’import des circulaires PDF.
 
 Le [guide du backend](backend/README.md) détaille les routes disponibles et les limites des données. Une [collection Postman](backend/postman/OptiMeal.postman_collection.json) permet aussi d’essayer les requêtes.
 
+## Lancer le frontend (Mobile)
+
+Installer **Node.js 22.13+ et npm**, puis, depuis la racine du projet :
+
+```bash
+cd mobile
+npm ci
+```
+
+Copier `mobile/.env.example` vers `mobile/.env` et renseigner l’adresse de
+l’API ainsi que les deux valeurs publiques Supabase. Sur un téléphone,
+`EXPO_PUBLIC_API_URL` doit utiliser l’adresse IP locale de l’ordinateur,
+par exemple `http://192.168.1.10:8001`. Le téléphone et l’ordinateur doivent
+être sur le même réseau. Démarrer le backend dans un autre terminal, depuis
+la racine avec l’environnement Python activé :
+
+```text
+python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8001
+```
+
+Pour installer l’application de développement sur un téléphone connecté en
+USB, lancer depuis `mobile/` la commande correspondant à la plateforme :
+
+```bash
+# iOS (macOS avec Xcode)
+npm run ios -- --device
+
+# Android (avec Android Studio et son SDK)
+npm run android -- --device
+```
+
+Ces commandes compilent l’application et lancent Expo. Aux lancements
+suivants, depuis `mobile/` :
+
+```bash
+npm start -- --dev-client
+```
+
+Scanner le QR code pour ouvrir l’application installée. Le [guide mobile](mobile/README.md)
+détaille la configuration, les prérequis sur téléphone et le lancement sur simulateur.
+
 ## Tests
 
-Le 1er novembre 2026, Hamza a confirmé les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
-
-Le [guide mobile](mobile/README.md) décrit l’installation sur téléphone et les
-scénarios de vérification. Le 27 octobre, nous avons confirmé le fonctionnement
-des parcours actuellement intégrés sur iOS et Android : comptes, profil,
-session persistante, recettes, favoris, photos et onglet Promos, y compris
-les circulaires et les recettes associées aux promotions. Les essais Android
-ont été réalisés par notre coéquipier sur son téléphone. La séparation des recettes et
-favoris entre deux comptes avait également été vérifiée sur iPhone.
-Les essais d’erreur réseau et d’affichage sur différentes tailles d’écran
-restent à compléter.
-
-Le 1er novembre 2026, On a confirmé le fonctionnement sur iOS du mode visiteur, de la connexion à la demande, de la photo obligatoire à la création, des photos de produits dans Promos et de la suppression du compte. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android.
-
-Les tests ordinaires utilisent des réponses enregistrées et ne contactent pas Supabase ni les fournisseurs externes. Les tests PostgreSQL demandent une base locale jetable ; la CI en fournit une automatiquement. Voir le [guide des migrations](backend/docs/MIGRATIONS.md#tests). Avec l’environnement virtuel activé, la commande est identique sur macOS, Linux et Windows (PowerShell) :
+Backend, depuis la racine avec l’environnement virtuel activé :
 
 ```text
 python -m pytest backend/tests -q
 ```
 
-La vérification complète du 1er novembre, avec PostgreSQL local jetable et
-PyMuPDF installé, donne **372 tests backend réussis, aucun ignoré**,
-**66 tests mobiles réussis, aucun ignoré**, TypeScript valide et
-10 exports de contrats cohérents. Le schéma compte 10 migrations, jusqu’à
-`0010_preserve_meals`, appliquée sur Supabase. Les résultats des étapes
-antérieures ci-dessous sont conservés comme historique.
+Les tests PostgreSQL nécessitent une base locale jetable configurée avec
+`OPTIMEAL_TEST_DATABASE_URL` ; ils sont ignorés si elle n’est pas définie.
+Voir le [guide des tests PostgreSQL](backend/docs/MIGRATIONS.md#tests).
 
-Le test PDF était auparavant ignoré parce que PyMuPDF, pourtant déclaré dans
-`requirements.txt`, manquait dans l’environnement virtuel. La dépendance est
-installée et son absence provoque désormais un échec du test. Sans
-`OPTIMEAL_TEST_DATABASE_URL`, les tests PostgreSQL restent volontairement
-ignorés ; la vérification complète ci-dessus utilisait une base locale dédiée.
-
-Pour le mobile, depuis `mobile/` :
+Mobile, depuis `mobile/` :
 
 ```bash
 npm run typecheck
 npm test
 ```
 
-Lors du premier audit du 1er novembre, après intégration du calendrier, nous avions obtenu
-299 tests backend réussis et 58 ignorés, notamment les tests PostgreSQL sans
-base locale de test configurée. Les 32 tests mobiles, TypeScript, les 10 exports
-de contrats et la reconstruction du catalogue avaient été vérifiés. Les bundles
-iOS/Android avaient également été générés ; cela ne remplace pas les essais sur téléphone.
-Le lint mobile n’est pas encore configuré. Le [guide des photos](backend/docs/RECIPE_IMAGES.md)
-explique la configuration du bucket, ses droits et les limites du prototype.
-
-Après l’ajout du backend de publication, la suite avec PostgreSQL local jetable
-avait donné 365 tests réussis et 1 ignoré, avec 38 tests mobiles et TypeScript
-valides. Les exports des contrats avaient été actualisés. Ces résultats ne constituent pas un
-essai sur appareil du partage ni une application de la migration sur Supabase.
+Le [guide mobile](mobile/README.md) décrit les essais sur téléphone.
 
 ## Structure du projet
 
