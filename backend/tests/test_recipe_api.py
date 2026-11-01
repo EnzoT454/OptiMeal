@@ -98,6 +98,7 @@ def test_database_changes_are_visible_and_json_files_are_not_required(postgres, 
 
 
 def test_missing_table_returns_sanitized_503_and_other_routes_work(postgres):
+    postgres.execute(text('DROP TABLE public.meal_plan_entry'))
     postgres.execute(text('DROP TABLE public.favorite'))
     postgres.execute(text('DROP TABLE public.recipe_ingredient'))
     postgres.execute(text('DROP TABLE public.recipe'))
