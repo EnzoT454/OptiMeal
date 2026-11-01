@@ -56,6 +56,13 @@ def test_update_needs_valid_servings():
         MealPlanEntryUpdate(servings=51)
 
 
+def test_update_can_move_a_meal_but_needs_something():
+    move = MealPlanEntryUpdate(date=DAY, meal='diner')
+    assert move.model_dump(exclude_none=True) == {'date': dt.date(2026, 11, 4), 'meal': 'diner'}
+    with pytest.raises(ValidationError):
+        MealPlanEntryUpdate()
+
+
 def test_planning_routes_are_registered():
     paths = app.openapi()['paths']
     assert set(paths['/api/v1/plans']) == {'get'}

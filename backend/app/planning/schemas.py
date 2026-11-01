@@ -39,8 +39,16 @@ class MealPlanEntryWrite(ContractModel):
 
 
 class MealPlanEntryUpdate(ContractModel):
-    """Pour l'instant on ne change que les portions."""
-    servings: int = Field(ge=1, le=50)
+    """Changer les portions et/ou déplacer le repas (autre jour, autre moment). Au moins un champ."""
+    servings: int | None = Field(default=None, ge=1, le=50)
+    date: dt.date | None = None
+    meal: MealType | None = None
+
+    @model_validator(mode='after')
+    def something_to_change(self):
+        if self.servings is None and self.date is None and self.meal is None:
+            raise ValueError('Rien à modifier.')
+        return self
 
 
 class MealPlanEntryRead(ContractModel):
@@ -49,6 +57,7 @@ class MealPlanEntryRead(ContractModel):
     meal: MealType
     recipe_id: str | None
     recipe_name: str | None
+    recipe_image_url: str | None
     free_text: str | None
     servings: int
     is_leftover: bool

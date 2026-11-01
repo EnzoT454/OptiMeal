@@ -59,6 +59,7 @@ export type MealPlanEntry = {
   meal: MealType;
   recipe_id: RecipeSummary["id"] | null;
   recipe_name: string | null;
+  recipe_image_url: string | null;
   free_text: string | null;   // …ou un texte libre : « Restes », « Resto »
   servings: number;
   is_leftover: boolean;       // vrai = restes d'une recette déjà cuisinée

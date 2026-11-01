@@ -23,16 +23,17 @@ def monday_of(day: dt.date) -> dt.date:
 
 
 def entries_of(user_id: UUID):
-    """Les repas de l'utilisateur + le nom de la recette (vide pour un texte libre)."""
-    return (select(MealPlanEntry, Recipe.name.label('recipe_name'))
+    """Les repas de l'utilisateur + le nom et la photo de la recette (vides pour un texte libre)."""
+    return (select(MealPlanEntry, Recipe.name.label('recipe_name'), Recipe.image_url.label('recipe_image_url'))
             .outerjoin(Recipe, Recipe.id == MealPlanEntry.recipe_id)
             .where(MealPlanEntry.user_id == user_id))
 
 
-def to_read(entry: MealPlanEntry, recipe_name: str | None) -> MealPlanEntryRead:
+def to_read(row) -> MealPlanEntryRead:
+    entry = row.MealPlanEntry
     return MealPlanEntryRead(id=entry.id, date=entry.date, meal=entry.meal, recipe_id=entry.recipe_id,
-                             recipe_name=recipe_name, free_text=entry.free_text, servings=entry.servings,
-                             is_leftover=entry.is_leftover)
+                             recipe_name=row.recipe_name, recipe_image_url=row.recipe_image_url,
+                             free_text=entry.free_text, servings=entry.servings, is_leftover=entry.is_leftover)
 
 
 def get_plan(db: Session, user: CurrentUser, day: dt.date) -> MealPlanRead:
@@ -40,7 +41,7 @@ def get_plan(db: Session, user: CurrentUser, day: dt.date) -> MealPlanRead:
     rows = db.execute(entries_of(user.id).where(
         MealPlanEntry.date >= start, MealPlanEntry.date < start + dt.timedelta(days=7),
     )).all()
-    entries = sorted((to_read(row.MealPlanEntry, row.recipe_name) for row in rows),
+    entries = sorted((to_read(row) for row in rows),
                      key=lambda e: (e.date, MEAL_ORDER[e.meal]))
     return MealPlanRead(week_start=start, entries=entries)
 
@@ -49,7 +50,7 @@ def get_entry(db: Session, entry_id: UUID, user_id: UUID) -> MealPlanEntryRead:
     row = db.execute(entries_of(user_id).where(MealPlanEntry.id == entry_id)).one_or_none()
     if row is None:
         fail(404, 'MEAL_NOT_FOUND', 'Repas introuvable dans ton calendrier.')
-    return to_read(row.MealPlanEntry, row.recipe_name)
+    return to_read(row)
 
 
 def add_entry(db: Session, body: MealPlanEntryWrite, user: CurrentUser) -> MealPlanEntryRead:
@@ -69,7 +70,7 @@ def update_entry(db: Session, entry_id: UUID, body: MealPlanEntryUpdate, user: C
     # « AND user_id = moi » : impossible de modifier le repas de quelqu'un d'autre.
     changed = db.execute(update(MealPlanEntry)
                          .where(MealPlanEntry.id == entry_id, MealPlanEntry.user_id == user.id)
-                         .values(servings=body.servings).returning(MealPlanEntry.id)).first()
+                         .values(**body.model_dump(exclude_none=True)).returning(MealPlanEntry.id)).first()
     if changed is None:
         fail(404, 'MEAL_NOT_FOUND', 'Repas introuvable dans ton calendrier.')
     result = get_entry(db, entry_id, user.id)

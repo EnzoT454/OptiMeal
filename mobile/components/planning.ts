@@ -54,6 +54,13 @@ export function dayName(d: Date): string {
   return DAY_NAMES[d.getDay()];
 }
 
+const DAY_FULL = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+
+// "Mardi 3 novembre"
+export function dayFullName(d: Date): string {
+  return `${DAY_FULL[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+}
+
 // "2 – 8 novembre" ou "30 novembre – 6 décembre"
 export function weekLabel(lundi: Date): string {
   const dimanche = addDays(lundi, 6);
@@ -73,7 +80,11 @@ export async function getPlan(weekStart: string): Promise<MealPlan> {
 }
 
 // is_leftover est facultatif : si l'écran ne le donne pas, c'est un repas normal.
-type NouveauRepas = Omit<MealPlanEntry, "id" | "is_leftover"> & { is_leftover?: boolean };
+// recipe_name et recipe_image_url sont ignorés : c'est le backend qui les retrouve.
+type NouveauRepas = Omit<MealPlanEntry, "id" | "is_leftover" | "recipe_image_url"> & {
+  is_leftover?: boolean;
+  recipe_image_url?: string | null;
+};
 
 export async function addEntry(entry: NouveauRepas): Promise<MealPlanEntry> {
   // On n'envoie PAS recipe_name : c'est le backend qui retrouve le nom de la recette.
@@ -92,10 +103,13 @@ export async function addEntry(entry: NouveauRepas): Promise<MealPlanEntry> {
   return res.item;
 }
 
-export async function updateEntry(id: string, servings: number): Promise<MealPlanEntry> {
+// On envoie seulement ce qui change : { servings: 4 } ou { date: "2026-11-05", meal: "diner" }
+export type Changements = { servings?: number; date?: string; meal?: MealType };
+
+export async function updateEntry(id: string, changements: Changements): Promise<MealPlanEntry> {
   const res = await api<Reponse<MealPlanEntry>>(`/api/v1/plans/entries/${id}`, {
     method: "PATCH",
-    body: JSON.stringify({ servings }),
+    body: JSON.stringify(changements),
   });
   return res.item;
 }

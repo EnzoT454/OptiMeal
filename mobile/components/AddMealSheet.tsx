@@ -9,7 +9,9 @@ import { MEALS, MEAL_COLORS, MEAL_LABELS, dayName } from "./planning";
 
 const VERT = "#25603c";
 
-type Mode = "recette" | "texte";
+type Mode = "recette" | "favoris" | "texte";
+
+const MODE_LABELS: Record<Mode, string> = { recette: "Recettes", favoris: "Favoris", texte: "Note" };
 
 type Props = {
   jour: Date | null;   // null = panneau fermé
@@ -45,12 +47,13 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
   // Chercher les recettes (même API que l'onglet Recettes).
   // On attend 300 ms après la dernière lettre pour ne pas appeler l'API à chaque touche.
   useEffect(() => {
-    if (jour === null || mode !== "recette") return;
+    if (jour === null || mode === "texte") return;
     let actif = true;
     const minuteur = setTimeout(() => {
       setChargement(true);
       setErreurRecettes(null);
       const params = new URLSearchParams({ q: recherche, limit: "10", offset: "0" });
+      if (mode === "favoris") params.set("favorites", "true"); // seulement mes coups de cœur
       api<Page<RecipeSummary>>("/api/v1/recipes?" + params)
         .then((res) => { if (actif) setRecettes(res.items); })
         .catch((e) => { if (actif) setErreurRecettes(e?.message ?? "Impossible de charger les recettes."); })
@@ -66,7 +69,7 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
   }
 
   function valider() {
-    if (mode === "recette") {
+    if (mode !== "texte") {
       if (recette === null) { setErreur("Choisis une recette."); return; }
       onAdd(meal, recette, "", portions);
     } else {
@@ -104,20 +107,20 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
 
             {/* ---- Recette ou texte libre ---- */}
             <View style={styles.onglets}>
-              {(["recette", "texte"] as Mode[]).map((m) => (
+              {(["recette", "favoris", "texte"] as Mode[]).map((m) => (
                 <Pressable
                   key={m}
                   onPress={() => { setMode(m); setErreur(null); }}
                   style={[styles.onglet, mode === m && styles.ongletActif]}
                 >
                   <Text style={[styles.ongletTexte, mode === m && styles.ongletTexteActif]}>
-                    {m === "recette" ? "Recette" : "Texte libre"}
+                    {MODE_LABELS[m]}
                   </Text>
                 </Pressable>
               ))}
             </View>
 
-            {mode === "recette" ? (
+            {mode !== "texte" ? (
               <>
                 <TextInput
                   value={recherche}
@@ -129,7 +132,9 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
                 {erreurRecettes !== null && <Text style={styles.erreur}>{erreurRecettes}</Text>}
                 {!chargement && erreurRecettes === null && recettes.length === 0 && (
                   <Text style={styles.vide}>
-                    Aucune recette trouvée. Ajoute-en dans l'onglet Recettes, ou utilise « Texte libre ».
+                    {mode === "favoris"
+                      ? "Aucun favori. Touche le cœur d'une recette dans l'onglet Recettes."
+                      : "Aucune recette trouvée. Ajoute-en dans l'onglet Recettes, ou écris une note."}
                   </Text>
                 )}
                 {!chargement && recettes.map((r) => (
@@ -147,7 +152,7 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
               <TextInput
                 value={texte}
                 onChangeText={(t) => { setTexte(t); setErreur(null); }}
-                placeholder="Restes de curry"
+                placeholder="Resto, pizza commandée…"
                 style={styles.champ}
                 returnKeyType="done"
                 onSubmitEditing={valider}

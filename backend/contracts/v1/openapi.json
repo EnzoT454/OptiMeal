@@ -2324,6 +2324,17 @@
             ],
             "title": "Recipe Name"
           },
+          "recipe_image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recipe Image Url"
+          },
           "free_text": {
             "anyOf": [
               {
@@ -2352,6 +2363,7 @@
           "meal",
           "recipe_id",
           "recipe_name",
+          "recipe_image_url",
           "free_text",
           "servings",
           "is_leftover"
@@ -2361,19 +2373,52 @@
       "MealPlanEntryUpdate": {
         "properties": {
           "servings": {
-            "type": "integer",
-            "maximum": 50.0,
-            "minimum": 1.0,
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Servings"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "meal": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "dejeuner",
+                  "diner",
+                  "souper",
+                  "collation"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meal"
           }
         },
         "additionalProperties": false,
         "type": "object",
-        "required": [
-          "servings"
-        ],
         "title": "MealPlanEntryUpdate",
-        "description": "Pour l'instant on ne change que les portions."
+        "description": "Changer les portions et/ou déplacer le repas (autre jour, autre moment). Au moins un champ."
       },
       "MealPlanEntryWrite": {
         "properties": {
