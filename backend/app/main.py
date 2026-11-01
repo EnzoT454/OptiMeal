@@ -1,4 +1,5 @@
 from pathlib import Path
+from backend.app.planning.router import router as planning_router
 from contextlib import asynccontextmanager
 from typing import Literal
 from fastapi.middleware.cors import CORSMiddleware
@@ -83,6 +84,7 @@ def create_app(*, settings: Settings | None = None, env_file: Path | None = ENV_
     app.include_router(catalog_router)
     app.include_router(public_router)
     app.include_router(recipes_router)
+    app.include_router(planning_router)
     app.include_router(accounts_router)
     install_error_handlers(app)
 

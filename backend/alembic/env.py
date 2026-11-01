@@ -9,6 +9,7 @@ from backend.app.database import Base, Database
 from backend.app.catalog import models  # noqa: F401
 from backend.app.recipes import models as recipe_models  # noqa: F401
 from backend.app.accounts import models as account_models  # noqa: F401
+from backend.app.planning import models as planning_models  # noqa: F401
 
 config = context.config
 target_metadata = Base.metadata
