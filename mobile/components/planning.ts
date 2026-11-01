@@ -1,3 +1,4 @@
+import { api } from "../services/api";
 import type { MealPlan, MealPlanEntry, MealType } from "../types/api";
 
 // ---- Les 4 repas ----
@@ -62,31 +63,43 @@ export function weekLabel(lundi: Date): string {
   return `${lundi.getDate()} ${MONTHS[lundi.getMonth()]} – ${dimanche.getDate()} ${MONTHS[dimanche.getMonth()]}`;
 }
 
-// ---- FAUSSES DONNÉES (à remplacer par l'API plus tard) ----
-let fakeEntries: MealPlanEntry[] = [
-  { id: "e1", date: "2026-10-26", meal: "dejeuner", recipe_id: null, recipe_name: null, free_text: "Gruau aux fruits", servings: 2 },
-  { id: "e2", date: "2026-10-26", meal: "souper", recipe_id: "null", recipe_name: "Curry de poulet", free_text: null, servings: 2 },
-  { id: "e3", date: "2026-10-27", meal: "diner", recipe_id: null, recipe_name: null, free_text: "Restes de curry", servings: 1 },
-  { id: "e4", date: "2026-10-27", meal: "souper", recipe_id: "null", recipe_name: "Pâtes au pesto", free_text: null, servings: 2 },
-  { id: "e5", date: "2026-10-29", meal: "souper", recipe_id: "null", recipe_name: "Tacos", free_text: null, servings: 2 },
-  { id: "e6", date: "2026-11-03", meal: "souper", recipe_id: "null", recipe_name: "Salade croquante", free_text: null, servings: 2 },
-];
-let nextId = 100;
+// ---- Appels au backend (/api/v1/plans) ----
+// Le backend répond toujours { item: ..., meta: ... } : on ne garde que "item".
+type Reponse<T> = { item: T };
 
-// Les fonctions sont "async" : quand on branchera l'API, on mettra
-// un fetch à l'intérieur, et l'écran n'aura pas à changer.
 export async function getPlan(weekStart: string): Promise<MealPlan> {
-  const fin = toISODate(addDays(fromISODate(weekStart), 6));
-  const entries = fakeEntries.filter((e) => e.date >= weekStart && e.date <= fin);
-  return { week_start: weekStart, entries };
+  const res = await api<Reponse<MealPlan>>(`/api/v1/plans?week=${weekStart}`);
+  return res.item;
 }
 
-export async function addEntry(entry: Omit<MealPlanEntry, "id">): Promise<MealPlanEntry> {
-  const nouveau = { ...entry, id: `e${nextId++}` };
-  fakeEntries = [...fakeEntries, nouveau];
-  return nouveau;
+// is_leftover est facultatif : si l'écran ne le donne pas, c'est un repas normal.
+type NouveauRepas = Omit<MealPlanEntry, "id" | "is_leftover"> & { is_leftover?: boolean };
+
+export async function addEntry(entry: NouveauRepas): Promise<MealPlanEntry> {
+  // On n'envoie PAS recipe_name : c'est le backend qui retrouve le nom de la recette.
+  const corps = {
+    date: entry.date,
+    meal: entry.meal,
+    recipe_id: entry.recipe_id,
+    free_text: entry.free_text,
+    servings: entry.servings,
+    is_leftover: entry.is_leftover ?? false,
+  };
+  const res = await api<Reponse<MealPlanEntry>>("/api/v1/plans/entries", {
+    method: "POST",
+    body: JSON.stringify(corps),
+  });
+  return res.item;
+}
+
+export async function updateEntry(id: string, servings: number): Promise<MealPlanEntry> {
+  const res = await api<Reponse<MealPlanEntry>>(`/api/v1/plans/entries/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ servings }),
+  });
+  return res.item;
 }
 
 export async function removeEntry(id: string): Promise<void> {
-  fakeEntries = fakeEntries.filter((e) => e.id !== id);
+  await api<void>(`/api/v1/plans/entries/${id}`, { method: "DELETE" });
 }

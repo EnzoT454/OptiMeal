@@ -2338,6 +2338,10 @@
           "servings": {
             "type": "integer",
             "title": "Servings"
+          },
+          "is_leftover": {
+            "type": "boolean",
+            "title": "Is Leftover"
           }
         },
         "additionalProperties": false,
@@ -2349,7 +2353,8 @@
           "recipe_id",
           "recipe_name",
           "free_text",
-          "servings"
+          "servings",
+          "is_leftover"
         ],
         "title": "MealPlanEntryRead"
       },
@@ -2417,6 +2422,11 @@
             "minimum": 1.0,
             "title": "Servings",
             "default": 2
+          },
+          "is_leftover": {
+            "type": "boolean",
+            "title": "Is Leftover",
+            "default": false
           }
         },
         "additionalProperties": false,

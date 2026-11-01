@@ -31,7 +31,8 @@ def entries_of(user_id: UUID):
 
 def to_read(entry: MealPlanEntry, recipe_name: str | None) -> MealPlanEntryRead:
     return MealPlanEntryRead(id=entry.id, date=entry.date, meal=entry.meal, recipe_id=entry.recipe_id,
-                             recipe_name=recipe_name, free_text=entry.free_text, servings=entry.servings)
+                             recipe_name=recipe_name, free_text=entry.free_text, servings=entry.servings,
+                             is_leftover=entry.is_leftover)
 
 
 def get_plan(db: Session, user: CurrentUser, day: dt.date) -> MealPlanRead:

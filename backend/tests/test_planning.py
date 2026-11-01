@@ -19,7 +19,13 @@ def test_monday_of_returns_monday_of_the_week():
 
 def test_entry_with_recipe_is_valid_and_defaults_to_two_servings():
     entry = MealPlanEntryWrite(date=DAY, meal='souper', recipe_id='recipe_pates_tomate')
-    assert entry.servings == 2 and entry.free_text is None
+    assert entry.servings == 2 and entry.free_text is None and entry.is_leftover is False
+
+
+def test_leftover_needs_a_recipe():
+    assert MealPlanEntryWrite(date=DAY, meal='diner', recipe_id='recipe_curry', is_leftover=True).is_leftover
+    with pytest.raises(ValidationError):
+        MealPlanEntryWrite(date=DAY, meal='diner', free_text='Resto', is_leftover=True)
 
 
 def test_free_text_is_trimmed():

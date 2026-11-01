@@ -61,6 +61,7 @@ export type MealPlanEntry = {
   recipe_name: string | null;
   free_text: string | null;   // …ou un texte libre : « Restes », « Resto »
   servings: number;
+  is_leftover: boolean;       // vrai = restes d'une recette déjà cuisinée
 };
 
 export type MealPlan = {

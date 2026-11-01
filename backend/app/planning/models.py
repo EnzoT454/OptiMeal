@@ -2,7 +2,7 @@
 import datetime as dt
 from uuid import UUID, uuid4
 
-from sqlalchemy import CheckConstraint, Date, ForeignKey, Index, Integer, Text, Uuid
+from sqlalchemy import Boolean, CheckConstraint, Date, ForeignKey, Index, Integer, Text, Uuid, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.database import Base
@@ -22,6 +22,8 @@ class MealPlanEntry(Base):
             name='recipe_or_free_text',
         ),
         CheckConstraint('char_length(free_text) <= 80', name='free_text_length'),
+        # Des restes viennent toujours d'une recette (pas de « restes de Resto »).
+        CheckConstraint('NOT is_leftover OR recipe_id IS NOT NULL', name='leftover_needs_recipe'),
         # Lire une semaine = chercher par utilisateur puis par date : cet index rend ça rapide.
         Index('ix_meal_plan_entry_user_id_date', 'user_id', 'date'),
     )
@@ -37,3 +39,5 @@ class MealPlanEntry(Base):
     )
     free_text: Mapped[str | None] = mapped_column(Text, nullable=True)
     servings: Mapped[int] = mapped_column(Integer, nullable=False)
+    # Vrai = on mange les restes d'une recette déjà cuisinée : rien à acheter, coût 0 $.
+    is_leftover: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text('false'))
