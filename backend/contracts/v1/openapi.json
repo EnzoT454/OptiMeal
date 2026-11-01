@@ -624,7 +624,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RecipeWrite"
+                "$ref": "#/components/schemas/RecipeCreate"
               }
             }
           }
@@ -1420,6 +1420,49 @@
           }
         ]
       },
+      "delete": {
+        "tags": [
+          "Comptes"
+        ],
+        "summary": "Delete Account",
+        "operationId": "delete_account_api_v1_me_delete",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountDelete"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "401": {
+            "description": "Connexion requise"
+          },
+          "503": {
+            "description": "Suppression indisponible ou interrompue"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
       "patch": {
         "tags": [
           "Comptes"
@@ -1511,6 +1554,21 @@
   },
   "components": {
     "schemas": {
+      "AccountDelete": {
+        "properties": {
+          "confirmation": {
+            "type": "string",
+            "const": "SUPPRIMER",
+            "title": "Confirmation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "confirmation"
+        ],
+        "title": "AccountDelete"
+      },
       "ApiError": {
         "properties": {
           "code": {
@@ -3117,6 +3175,102 @@
           "evaluated_on"
         ],
         "title": "Promotion"
+      },
+      "RecipeCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Description"
+          },
+          "servings": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Servings"
+          },
+          "prep_time_minutes": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Prep Time Minutes"
+          },
+          "cook_time_minutes": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Cook Time Minutes"
+          },
+          "total_time_minutes": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total Time Minutes"
+          },
+          "image_url": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Image Url"
+          },
+          "difficulty": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "easy",
+                  "medium",
+                  "hard"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Difficulty"
+          },
+          "tags": {
+            "items": {
+              "type": "string",
+              "maxLength": 40,
+              "minLength": 1
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Tags"
+          },
+          "ingredients": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeIngredient"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Ingredients"
+          },
+          "instructions": {
+            "items": {
+              "$ref": "#/components/schemas/RecipeStep"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Instructions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "servings",
+          "prep_time_minutes",
+          "cook_time_minutes",
+          "total_time_minutes",
+          "image_url",
+          "ingredients",
+          "instructions"
+        ],
+        "title": "RecipeCreate",
+        "description": "La création personnelle exige une photo ; lecture, édition et imports restent compatibles."
       },
       "RecipeIngredient": {
         "properties": {

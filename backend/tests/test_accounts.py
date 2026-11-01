@@ -112,3 +112,41 @@ def test_invalid_recipe_never_writes_partial_data_or_accepts_owner(accounts):
     assert response.status_code==422
     assert response.json()['error']['code']=='UNKNOWN_INGREDIENT'
     assert client.get('/api/v1/recipes').json()['total']==10
+
+
+def test_account_deletion_cascades_without_touching_other_users_or_shared_recipes(accounts, postgres):
+    """L'API Auth est simulée ; sa suppression de auth.users utilise le PostgreSQL de test."""
+    import httpx
+    from backend.app.accounts.deletion import AccountDeletion
+
+    client, app = accounts
+    personal = {}
+    for user in (ALICE, BOB):
+        login(app, user)
+        personal[user.id] = client.post('/api/v1/recipes', json=body()).json()['item']['id']
+        assert client.put('/api/v1/recipes/' + personal[user.id] + '/favorite').status_code == 204
+        assert client.post('/api/v1/plans/entries', json={
+            'date': '2026-11-02', 'meal': 'souper', 'recipe_id': personal[user.id],
+        }).status_code == 201
+
+    def provider(request):
+        if request.method == 'POST':
+            return httpx.Response(200, json=[])
+        assert request.url.path == f'/auth/v1/admin/users/{ALICE.id}'
+        postgres.execute(text('DELETE FROM auth.users WHERE id=:id'), {'id': ALICE.id})
+        return httpx.Response(200, json={})
+
+    app.state.account_deletion.close()
+    app.state.account_deletion = AccountDeletion('https://test.supabase.co', 'sb_secret_TEST')
+    app.state.account_deletion.client.close()
+    app.state.account_deletion.client = httpx.Client(transport=httpx.MockTransport(provider))
+    login(app, ALICE)
+    assert client.request('DELETE', '/api/v1/me', json={'confirmation': 'SUPPRIMER'}).status_code == 204
+    for table, column in [('profile', 'id'), ('recipe', 'owner_id'), ('favorite', 'user_id'), ('meal_plan_entry', 'user_id')]:
+        assert postgres.scalar(text(f'SELECT count(*) FROM public.{table} WHERE {column}=:id'), {'id': ALICE.id}) == 0
+    assert postgres.scalar(text('SELECT count(*) FROM public.recipe WHERE owner_id IS NULL')) == 10
+    login(app, BOB)
+    assert client.get('/api/v1/recipes/' + personal[BOB.id]).status_code == 200
+    assert client.get('/api/v1/recipes?favorites=true').json()['total'] == 1
+    assert client.get('/api/v1/recipes/' + personal[ALICE.id]).status_code == 404
+    assert len(client.get('/api/v1/plans?week=2026-11-02').json()['item']['entries']) == 1

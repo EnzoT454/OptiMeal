@@ -3,7 +3,7 @@ from decimal import Decimal
 from datetime import date
 from typing import Annotated, Literal
 
-from pydantic import Field, StringConstraints, field_validator, model_validator
+from pydantic import Field, HttpUrl, StringConstraints, field_validator, model_validator
 import unicodedata
 
 from backend.app.common.contracts import ContractModel, IngredientId, Quantity, RecipeUnit
@@ -68,6 +68,19 @@ class RecipeWrite(ContractModel):
         if len(ids) != len(set(ids)):
             raise ValueError('Un ingrédient apparaît plusieurs fois dans la recette.')
         return self
+
+
+class RecipeCreate(RecipeWrite):
+    """La création personnelle exige une photo ; lecture, édition et imports restent compatibles."""
+
+    image_url: NonEmpty
+
+    @field_validator('image_url')
+    @classmethod
+    def require_photo_url(cls, value: str) -> str:
+        if HttpUrl(value).scheme != 'https':
+            raise ValueError('La photo de la recette doit avoir une URL HTTPS valide.')
+        return value
 
 
 class RecipeSeed(RecipeWrite):

@@ -2,12 +2,85 @@
 
 Socle Expo/TypeScript avec React Navigation : inscription, confirmation de
 courriel, connexion, restauration et renouvellement de session, déconnexion,
-profil minimal et recettes manuelles avec photo facultative depuis la galerie.
+profil minimal et recettes manuelles avec photo obligatoire à la création, choisie dans la galerie.
 Les cinq onglets sont présents : Accueil, Promos, Recettes, Calendrier et
 Paramètres. Promos permet de consulter les offres, les circulaires et les
-recettes associées aux ingrédients en promotion. Calendrier reste à développer.
+recettes associées aux ingrédients en promotion. Calendrier permet de conserver
+et modifier les repas d’une semaine ; les essais sur appareil et les
+instantanés historiques restent à compléter.
 Les parcours comptes, recettes, photos et Promos sont confirmés sur iOS et
 Android au 27 octobre 2026. Aucune fonction IA n’est intégrée.
+
+## Consultation sans compte
+
+L’application s’ouvre sur l’accueil sans imposer de connexion. Les visiteurs
+peuvent consulter Accueil, Promos, les circulaires, les recettes partagées
+et Paramètres. Les recherches, détails et recettes associées aux promotions
+restent accessibles.
+
+La connexion est proposée pour ajouter une recette, utiliser les favoris,
+accéder au calendrier ou modifier le profil. Le calendrier est désormais
+accessible aux comptes connectés, avec des repas sauvegardés. Les paramètres visiteurs présentent un accès
+à la connexion sans appeler la route privée du profil.
+
+La fenêtre de connexion propose « Continuer sans compte » ; le retour Android
+permet aussi de la fermer. Une connexion ou déconnexion réinitialise la
+navigation vers l’accueil ; après connexion, relancer l’action souhaitée.
+La déconnexion conserve l’accès public et retire les écrans du compte précédent.
+Les autorisations backend restent nécessaires pour toutes les données privées.
+
+Essais à reproduire sur iOS et Android pour ce nouveau parcours :
+
+1. Sans session, ouvrir les onglets publics, consulter une recette, une promo et une circulaire.
+2. Appuyer sur Ajouter, Favoris et Ajouter aux favoris : vérifier la demande de connexion, puis l’annuler et poursuivre la consultation.
+3. Ouvrir Calendrier et Paramètres : vérifier la demande de connexion et l’absence de formulaire de profil visiteur.
+4. Créer un compte ou se connecter depuis la fenêtre, puis ajouter une recette et modifier son profil.
+5. Se déconnecter : vérifier le retour à l’accueil visiteur et l’absence des recettes personnelles et favoris du compte précédent.
+6. Refaire avec deux comptes ; fermer la fenêtre par le retour Android, puis vérifier la confirmation du courriel par lien.
+
+Le mode visiteur et la connexion à la demande ont été confirmés par Hamza
+sur iOS le 1er novembre. Leur reproduction sur Android et les scénarios
+d’erreur détaillés restent à compléter.
+
+## Calendrier connecté
+
+Le calendrier intégré depuis `main` le 1er novembre propose une semaine,
+l’ajout de recettes ou de notes, les favoris, les portions et un menu pour
+déplacer, dupliquer, retirer un repas ou prévoir des restes. Les données sont
+enregistrées via `/api/v1/plans`. Appliquer `0008_meal_plan` côté serveur avant
+les essais ; aucune migration distante n’est exécutée par le mobile.
+
+Le calendrier reste protégé en mode visiteur. Les recettes sont liées à leur
+version courante : leur suppression retire aussi les repas associés. Les
+instantanés historiques et les listes d’épicerie restent à développer. Voir
+le [guide du calendrier](../backend/docs/PLANNING.md) pour les routes, les
+limites et les scénarios détaillés. Hamza a confirmé le 1er novembre
+l’application de `0008_meal_plan` sur Supabase et le fonctionnement du
+calendrier sur iOS. Les essais Android et les scénarios d’erreur détaillés
+restent à compléter ; l’historique par instantanés reste à développer.
+
+## Supprimer son compte
+
+Dans **Paramètres**, connecté à son compte, choisir **Supprimer mon compte**,
+saisir `SUPPRIMER`, puis **Confirmer la suppression**. Annuler ne modifie rien.
+La suppression est définitive : compte, profil, recettes personnelles,
+favoris, repas planifiés et photos du dossier utilisateur sont retirés. Après succès, la session
+locale est effacée et l’application revient à l’accueil visiteur.
+
+Le backend doit disposer de `SUPABASE_SECRET_KEY`, uniquement dans
+`backend/.env`, puis être redémarré après configuration. Le traitement passe
+par `DELETE /api/v1/me` ; aucune clé privilégiée n’est distribuée au mobile.
+Une interruption peut survenir après la suppression de certaines photos :
+le message d’échec invite à réessayer sans annoncer une réussite. Voir les
+[limites détaillées](../backend/docs/AUTH.md#suppression-définitive-du-compte).
+
+Pour l’essai réel, utiliser un compte de test dédié avec une recette, un
+favori et une photo. Vérifier l’annulation, le refus d’une confirmation
+incorrecte, le retour au mode visiteur après suppression et l’impossibilité
+de se reconnecter avec ce compte. Vérifier aussi qu’un autre compte et les
+recettes partagées sont conservés. La suppression du compte est confirmée par Hamza sur iOS le 1er novembre ;
+les essais Android et les scénarios détaillés d’interruption restent à compléter.
+Les tests automatisés utilisent des fournisseurs simulés.
 
 ## 1. Installer
 
@@ -45,7 +118,7 @@ L’adresse FastAPI dépend de l’appareil :
 | --- | --- |
 | Simulateur iOS sur ce Mac | `http://localhost:8001` |
 | Émulateur Android standard | `http://10.0.2.2:8001` |
-| Téléphone sur le même Wi-Fi | `http://IP_LOCALE_DU_MAC:8001` |
+| Téléphone sur le même réseau local | `http://IP_LOCALE_DU_MAC:8001` |
 
 Depuis la racine, dans un autre terminal avec Python activé :
 
@@ -59,9 +132,19 @@ Une réponse 401 provoque au maximum une tentative de renouvellement avant
 retour d’une erreur ; une panne réseau garde les données non enregistrées
 dans le formulaire pour permettre une nouvelle tentative.
 
-Pour un téléphone, connecter les deux appareils au même Wi-Fi et utiliser
-l’IP locale du Mac, obtenue avec `ipconfig getifaddr en0` ou dans les réglages
-Wi-Fi. Ouvrir `http://IP_LOCALE_DU_MAC:8001/health` dans le navigateur du
+Pour un téléphone, utiliser un réseau permettant la communication avec le
+Mac. Le Mac peut être en Ethernet et le téléphone en Wi-Fi sur le même
+routeur ; un réseau invité peut isoler les appareils. Utiliser l’IP de
+l’interface active du Mac. `ipconfig getifaddr en0` ne renvoie rien si cette
+interface n’a pas d’adresse IPv4. Dans ce cas :
+
+```bash
+networksetup -listallhardwareports
+```
+
+Repérer le nom `Device` de Wi-Fi ou Ethernet, puis lancer par exemple
+`ipconfig getifaddr en5` si l’interface active est `en5`. On peut aussi lire
+l’adresse dans les détails TCP/IP du réseau dans Réglages Système. Ouvrir `http://IP_LOCALE_DU_MAC:8001/health` dans le navigateur du
 téléphone : la réponse attendue est `{"status":"ok"}`. `localhost` sur le
 téléphone désigne le téléphone, pas le Mac. L’IP peut changer entre deux réseaux.
 
@@ -127,7 +210,7 @@ Si le port 8081 est occupé, accepter 8082 et scanner le nouveau QR code.
 Ces ports servent Expo ; `EXPO_PUBLIC_API_URL` garde le port **8001** de
 FastAPI. Les modifications natives nécessitent une nouvelle compilation.
 
-1. Créer un compte avec votre adresse et confirmer le courriel reçu.
+1. Depuis Paramètres, ouvrir la connexion, créer un compte avec votre adresse et confirmer le courriel reçu.
 2. Se connecter ; vérifier Paramètres et enregistrer un nom affiché.
 3. Fermer puis rouvrir l’application : la session doit être restaurée.
 4. Ouvrir Recettes, rechercher, filtrer Rapides, puis consulter un détail.
@@ -149,6 +232,68 @@ Les recettes initiales sont partagées et ne proposent pas d’édition ni de
 suppression. Les confirmations de suppression utilisent le dialogue natif.
 Le calcul du coût, le filtre Petit budget et les parcours IA restent à développer.
 Leur accès affiche « Disponible prochainement ».
+
+### iPhone : renouveler la signature du compte Apple gratuit
+
+Avec une **Personal Team** gratuite, le profil permettant d’installer
+l’application expire **7 jours après sa création**. Il faut alors renouveler
+la signature et réinstaller l’application pour poursuivre les essais. Cette
+durée ne peut pas être prolongée par un réglage du projet.
+Voir les [limites du compte gratuit chez Apple](https://developer.apple.com/help/account/basics/about-your-developer-account).
+
+Si iOS affiche « L’app n’est plus disponible », l’expiration est une cause
+possible, à distinguer d’un serveur Expo ou FastAPI arrêté. Brancher et
+déverrouiller l’iPhone, puis essayer depuis `mobile/` :
+
+```bash
+npx expo run:ios --device --port 8082
+```
+
+Si la compilation échoue avec **No profiles for 'com.anonymous.optimeal'
+were found** et demande `-allowProvisioningUpdates`, autoriser Xcode à
+générer le profil. La commande suivante a permis de résoudre ce problème
+lors des essais sur l’iPhone 12. Remplacer `IDENTIFIANT_IPHONE` par
+l’identifiant affiché par Expo après le choix de l’appareil :
+
+```bash
+xcodebuild \
+  -workspace ios/OptiMeal.xcworkspace \
+  -scheme OptiMeal \
+  -configuration Debug \
+  -destination 'id=IDENTIFIANT_IPHONE' \
+  -allowProvisioningUpdates \
+  build
+```
+
+Cette commande compile et permet la mise à jour du profil ; elle ne réinstalle
+pas à elle seule l’application. Après sa réussite, relancer :
+
+```bash
+npx expo run:ios --device --port 8082
+```
+
+Le compte Apple doit être connecté dans **Xcode → Settings → Apple Accounts**.
+Si nécessaire, ouvrir `ios/OptiMeal.xcworkspace`, sélectionner la cible
+**OptiMeal → Signing & Capabilities**, vérifier **Automatically manage signing**
+et la **Personal Team**, puis sélectionner l’iPhone et lancer **Run**.
+Voir le [fonctionnement de la signature dans Xcode](https://help.apple.com/xcode/mac/current/en.lproj/dev60b6fbbc7.html).
+
+Conserver le même Bundle Identifier (`com.anonymous.optimeal`) et la même
+équipe de signature. Ne pas supprimer l’application avant cette opération :
+la réinstallation par-dessus peut préserver ses données locales.
+
+Expo démarre normalement Metro pendant la réinstallation ; éviter de lancer
+un second serveur sur le même port. Pour les sessions suivantes, depuis
+`mobile/` :
+
+```bash
+npx expo start --dev-client --port 8082 --lan
+```
+
+FastAPI doit aussi fonctionner, sur le port **8001**. Le port **8082** est
+celui d’Expo et ne remplace pas le port de `EXPO_PUBLIC_API_URL`.
+L’avertissement du script « Strip Local Network Keys for Release » est
+distinct de l’erreur de profil de signature.
 
 ### Parcours Promos et circulaires
 
@@ -213,13 +358,16 @@ par Hamza le 27 octobre ; son coéquipier l’a aussi vérifié sur Android.
 npm test
 ```
 
-Les 10 tests couvrent les photos, la lecture des quantités et les badges.
+Les 32 tests couvrent les photos et leur obligation à la création, les quantités,
+les badges, les accès visiteurs, la confirmation de suppression du compte et
+le nettoyage de la session locale et la protection du nouveau calendrier.
+Les appels externes sont simulés.
 
 ## Structure et vérification
 
 ### Photos des recettes personnelles
 
-Le formulaire propose une photo facultative depuis la galerie, avec aperçu,
+Le formulaire exige une photo à la création, choisie depuis la galerie, avec aperçu,
 remplacement et retrait. Le sélecteur système donne accès à l’image choisie ;
 une annulation conserve la sélection précédente. `expo-image-picker` ouvre
 la galerie, `expo-image-manipulator` réduit le côté le plus long à 1 200 pixels
@@ -242,14 +390,15 @@ seulement après validation du formulaire, à l’enregistrement. L’URL publiq
 est enregistrée dans `recipe.image_url` par FastAPI. Un refus Storage ou une
 erreur réseau conserve le formulaire et permet de réessayer. Si l’envoi réussit
 mais que FastAPI échoue, l’URL reste dans le formulaire pour éviter un second
-envoi. Une recette peut toujours être enregistrée sans photo.
+envoi. Sans photo choisie ou URL déjà obtenue, le bouton d’enregistrement est désactivé et la création est refusée. Un échec d’envoi de la photo empêche aussi la création. Les anciennes recettes sans photo restent modifiables.
 
 Vérifier sur téléphone : créer avec une photo, relancer l’application,
-remplacer la photo, annuler le sélecteur, retirer la photo puis sauvegarder,
-enregistrer sans photo, et essayer un envoi sans connexion. Les photos sont
+remplacer la photo, annuler le sélecteur, retirer la sélection avant création et vérifier le blocage,
+vérifier que la création sans photo est bloquée, et essayer un envoi sans connexion. Les photos sont
 publiques dans ce prototype même si les recettes sont personnelles ; le
 formulaire le précise. Retirer la photo enlève son lien à la recette ; le
-nettoyage des fichiers Storage inutilisés reste à développer.
+nettoyage courant des fichiers Storage inutilisés après remplacement ou retrait
+reste à développer. La suppression du compte nettoie déjà tout son dossier photo.
 
 ```bash
 npm run test:images
@@ -307,7 +456,9 @@ Expo/Metro. La correction compatible a été tentée ; une correction complète
 reste à évaluer avant livraison. Ne pas appliquer la rétrogradation majeure
 Expo suggérée par `--force` sans vérifier sa compatibilité.
 
+Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visiteur, de la connexion à la demande, de la photo obligatoire à la création, des photos de produits dans Promos et de la suppression du compte. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android.
+
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native)
 et [React Navigation](https://reactnavigation.org/docs/getting-started/).
 
-*Dernière mise à jour : 27 octobre 2026*
+*Dernière mise à jour : 1er novembre 2026*

@@ -10,7 +10,7 @@ from backend.app.common.public_data import search_text
 from backend.app.common.public_router import fail
 from backend.app.security import CurrentUser
 from .models import Favorite, Recipe, RecipeIngredient
-from .schemas import RecipeRead, RecipeSummary, RecipeWrite
+from .schemas import RecipeCreate, RecipeRead, RecipeSummary, RecipeWrite
 
 
 def visible(user_id: UUID | None):
@@ -73,7 +73,7 @@ def ingredient_rows(db: Session, body: RecipeWrite, recipe_id: str) -> list[dict
                  **i.model_dump(exclude={'quantity'})) for position, i in enumerate(body.ingredients, 1)]
 
 
-def create_recipe(db: Session, body: RecipeWrite, user: CurrentUser) -> RecipeRead:
+def create_recipe(db: Session, body: RecipeCreate, user: CurrentUser) -> RecipeRead:
     recipe_id = 'recipe_' + uuid4().hex
     rows = ingredient_rows(db, body, recipe_id)
     ensure_profile(db, user)

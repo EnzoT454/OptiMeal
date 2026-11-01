@@ -8,8 +8,10 @@ import { api } from '../services/api';
 import { Page, RecipeSummary } from '../types/api';
 import { RecipeStackParams } from '../types/navigation';
 import RecipeImage from '../components/RecipeImage';
+import { useAuth } from '../context/AuthContext';
 
 export default function RecipeListScreen({ navigation }: NativeStackScreenProps<RecipeStackParams, 'List'>) {
+  const { session, requestSignIn } = useAuth();
   const [query, setQuery] = useState(''); const [filter, setFilter] = useState('Toutes');
   const [items, setItems] = useState<RecipeSummary[]>([]); const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0); const [busy, setBusy] = useState(false);
@@ -30,8 +32,14 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
     <RecipeTitle>Recettes</RecipeTitle><Text style={recipeStyles.subtitle}>Vos idées, toujours à portée de main.</Text>
     <RecipeField label="Rechercher" placeholder="Rechercher une recette" value={query} onChangeText={value => { setOffset(0); setQuery(value); }} />
     <View style={recipeStyles.chips}>{['Toutes', 'Favoris', 'Rapides', 'Petit budget'].map(value =>
-      <RecipeChip key={value} label={value} selected={filter === value} onPress={() => { setOffset(0); setFilter(value); }} />)}</View>
-    <RecipeButton title="+  Ajouter une recette" onPress={() => navigation.navigate('Add')} />
+      <RecipeChip key={value} label={value} selected={filter === value} onPress={() => {
+        if (value === 'Favoris' && !session) { requestSignIn('Connecte-toi pour retrouver tes recettes favorites.'); return; }
+        setOffset(0); setFilter(value);
+      }} />)}</View>
+    <RecipeButton title="+  Ajouter une recette" onPress={() => {
+      if (!session) { requestSignIn('Connecte-toi pour ajouter tes propres recettes.'); return; }
+      navigation.navigate('Add');
+    }} />
     {filter === 'Petit budget' ? <View style={recipeStyles.notice}>
       <Text style={recipeStyles.sectionTitle}>Petit budget</Text><Text style={recipeStyles.body}>Disponible prochainement.</Text>
     </View> : <>

@@ -24,6 +24,7 @@ from backend.app.common.public_router import (
 )
 from backend.app.recipes.router import router as recipes_router
 from backend.app.accounts.router import router as accounts_router
+from backend.app.accounts.deletion import AccountDeletion
 from backend.app.security import SupabaseAuth
 
 
@@ -39,12 +40,14 @@ def create_app(*, settings: Settings | None = None, env_file: Path | None = ENV_
         database = Database(config.database_url)
         app.state.database = database
         app.state.auth = SupabaseAuth(config.supabase_url, config.supabase_publishable_key)
+        app.state.account_deletion = AccountDeletion(config.supabase_url, config.supabase_secret_key)
         try:
             load_local_data(app, config)
             yield
         finally:
             database.dispose()
             app.state.auth.close()
+            app.state.account_deletion.close()
 
     def load_local_data(app: FastAPI, config: Settings) -> None:
         catalog_path = config.catalog_import_path

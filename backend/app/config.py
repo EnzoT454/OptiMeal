@@ -16,7 +16,7 @@ class Settings:
     jwt_secret: str | None = field(default=None, repr=False)
     supabase_url: str | None = None
     supabase_publishable_key: str | None = field(default=None, repr=False)
-    # Clé secrète Supabase : seulement pour les scripts serveur (import des circulaires), jamais dans l'app.
+    # Clé secrète Supabase : import des circulaires et suppression de compte côté serveur, jamais dans l'app.
     supabase_secret_key: str | None = field(default=None, repr=False)
     catalog_import_path: str | None = None
     common_catalog_path: str | None = None

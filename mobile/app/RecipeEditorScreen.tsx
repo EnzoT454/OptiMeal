@@ -60,6 +60,9 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
     if (busy || picking) return;
     let body: RecipeWrite;
     try {
+      if (!id && !(localImage?.trim() || image?.trim())) {
+        throw new Error('Ajoute une photo pour créer la recette.');
+      }
       const integer = (value: string) => /^\d+$/.test(value) && Number.isSafeInteger(Number(value));
       if (!name.trim() || !integer(servings) || Number(servings) < 1 || !integer(prep) || !integer(cook) ||
           !ingredients.length || ingredients.some(i => !i.ingredient_id) || !steps.length || steps.some(step => !step.trim())) {
@@ -95,7 +98,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
           <View style={{ gap: 8 }}>
             <Pressable accessibilityRole="button" onPress={() => void pickImage()} disabled={busy || picking} style={recipeStyles.notice}>
               <Text style={[recipeStyles.sectionTitle, { fontSize: 16, lineHeight: 22, color: recipeColors.green }]}>{picking ? 'Préparation de la photo…' : localImage || image ? 'Changer la photo' : '+ Ajouter une photo'}</Text>
-              <Text style={recipeStyles.note}>Facultatif</Text>
+              <Text style={recipeStyles.note}>{id ? 'Photo de la recette' : 'Obligatoire pour créer la recette'}</Text>
             </Pressable>
             {(localImage || image) && <Pressable accessibilityRole="button" onPress={() => { setLocalImage(null); setImage(null); }}><Text style={recipeStyles.remove}>Retirer la photo</Text></Pressable>}
             <Text style={recipeStyles.note}>Les photos sont publiques dans ce prototype.</Text>
@@ -142,7 +145,8 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
             <RecipeField label="Cuisson (minutes)" keyboardType="number-pad" value={cook} onChangeText={setCook} />
           </>}
           {Number(cook) > 0 && <Text style={recipeStyles.note}>Durée totale : {Number(prep) + Number(cook)} min, dont {cook} min de cuisson.</Text>}
-          <RecipeButton title={busy ? 'Enregistrement…' : 'Enregistrer la recette'} disabled={busy || picking} onPress={() => void save()} />
+          {!id && !localImage && !image && <Text style={recipeStyles.note}>Ajoute une photo pour pouvoir enregistrer la recette.</Text>}
+          <RecipeButton title={busy ? 'Enregistrement…' : 'Enregistrer la recette'} disabled={busy || picking || (!id && !localImage && !image)} onPress={() => void save()} />
         </View>}
       <IngredientPicker visible={pickerIndex !== null} ingredients={catalog.filter(i => !ingredients.some((item, p) => p !== pickerIndex && item.ingredient_id === i.id))}
         onClose={() => setPickerIndex(null)} onSelect={ingredient_id => { if (pickerIndex !== null) change(pickerIndex, { ingredient_id }); setPickerIndex(null); }} />
