@@ -24,7 +24,7 @@ La proposition étendue nécessite surtout six ajustements avant son implémenta
 | Composant | Disponible aujourd’hui | Conséquence pour la conception |
 | --- | --- | --- |
 | `app/database.py` et configuration | Moteur SQLAlchemy/Psycopg, sessions par requête et contrôle `/health/db` | Voir le [guide Supabase](SUPABASE.md) ; les recettes lisent PostgreSQL ; ingrédients sur JSON, offres sur JSON ou PostgreSQL selon `OFFERS_SOURCE` |
-| Modèles et `alembic/env.py` | Dix migrations : ingrédients, recettes, profils, favoris, catégories, offres, circulaires, photos de produits, calendrier, visibilité et conservation des repas ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous à développer |
+| Modèles et `alembic/env.py` | Dix migrations (tête `0010_preserve_meals`) : ingrédients, recettes, profils, favoris, catégories, offres, circulaires, photos de produits, calendrier, visibilité et conservation des repas ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous à développer |
 | `app/catalog/apify_ingestion.py` et `apify_batch.py` | Normalisation des captures Apify, produits, formats, prix et avertissements | Prévoir l’insertion des données vérifiées ; Metro/Super C web IA restent à développer |
 | `app/receipts/schemas.py` | Contrat `receipt-1.1`, OCR local, articles, ajustements et contrôles | Stocker d’abord une extraction privée à vérifier |
 | Comptes | Supabase Auth, profil minimal et droits sur recettes/favoris | Voir [AUTH.md](AUTH.md) ; préférences détaillées à développer |

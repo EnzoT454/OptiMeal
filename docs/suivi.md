@@ -395,3 +395,17 @@ uniquement les recettes publiques et personnelles, ou les favoris accessibles.
 Les vérifications donnent 371 tests backend réussis et 1 ignoré (PyMuPDF absent),
 66 tests mobiles et TypeScript valides. Les essais iOS et Android de cette
 correction restent à effectuer.
+
+### Vérification complète sans test ignoré — 1er novembre
+
+Le test de conversion des circulaires PDF était ignoré parce que PyMuPDF
+manquait dans l’environnement virtuel, malgré sa présence dans requirements.txt.
+La version prévue, 1.28.2, est maintenant installée. Ce test signale désormais
+une erreur si la dépendance obligatoire manque, au lieu d’être ignoré.
+
+La suite complète a été relancée avec une base PostgreSQL locale jetable :
+372 tests backend réussis, aucun ignoré. Les 66 tests mobiles passent également
+sans test ignoré, TypeScript est valide et les 10 exports de contrats sont
+cohérents. Sans configuration de base de test, les tests PostgreSQL restent
+volontairement ignorés pour éviter tout accès à Supabase. Les avertissements
+de dépréciation des dépendances ne constituent pas des échecs de test.

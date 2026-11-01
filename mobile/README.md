@@ -383,7 +383,7 @@ des parcours intégrés a été confirmé sur iOS et Android le 27 octobre.
 ### Parcours Recettes et maquette
 
 Les éléments retenus de la maquette sont repris dans la liste (en-tête,
-recherche, quatre filtres, bouton d’ajout et collection), les deux écrans de
+sections Découvrir/Mes recettes/Favoris, recherche, filtres Toutes/Rapides/Petit budget, bouton d’ajout et collection), les deux écrans de
 choix et le formulaire. Les grandes cartes avec photos restent présentes.
 La police DM Sans et les quatre pictogrammes des parcours sont inclus localement.
 `expo-image` affiche ces SVG ; recompiler l’application après installation
@@ -393,7 +393,8 @@ Le chemin fonctionnel est **Ajouter une recette → Entrer manuellement →
 Remplir un formulaire**. Trouver une idée, Cuisiner avec ce qu’on a et
 Structurer une idée affichent un message d’attente.
 Le formulaire présente le nom, la photo, les portions, la préparation,
-les ingrédients avec quantité/unité, les étapes, la difficulté et les étiquettes.
+les ingrédients avec quantité séparée du choix d’unité, les étapes, la difficulté,
+les étiquettes et le réglage de partage.
 Le choix d’un ingrédient ouvre une liste consultable avec recherche.
 Les unités acceptées sont `g`, `ml` et `unit` (pièces entières).
 Description et cuisson restent accessibles dans « Autres informations » ;
@@ -408,7 +409,8 @@ fonctionnent dans l’application. La prévisualisation à 320 et 390 pixels a
 aussi été contrôlée sans débordement des champs et boutons ; elle utilise
 React Native Web avec des services simulés et ne remplace pas un essai natif.
 
-Pour les vérifications détaillées sur téléphone : les quatre filtres, les
+Pour les vérifications détaillées sur téléphone : les trois sections, les
+filtres Toutes/Rapides/Petit budget, les
 messages d’attente, le retour entre les choix, le clavier dans le formulaire,
 l’ajout avec photo/difficulté/étiquettes, puis la modification et la reconnexion.
 La confirmation générale ne valide pas séparément tous ces scénarios ;

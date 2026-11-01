@@ -150,6 +150,19 @@ Les tests ordinaires utilisent des réponses enregistrées et ne contactent pas 
 python -m pytest backend/tests -q
 ```
 
+La vérification complète du 1er novembre, avec PostgreSQL local jetable et
+PyMuPDF installé, donne **372 tests backend réussis, aucun ignoré**,
+**66 tests mobiles réussis, aucun ignoré**, TypeScript valide et
+10 exports de contrats cohérents. Le schéma compte 10 migrations, jusqu’à
+`0010_preserve_meals`, appliquée sur Supabase. Les résultats des étapes
+antérieures ci-dessous sont conservés comme historique.
+
+Le test PDF était auparavant ignoré parce que PyMuPDF, pourtant déclaré dans
+`requirements.txt`, manquait dans l’environnement virtuel. La dépendance est
+installée et son absence provoque désormais un échec du test. Sans
+`OPTIMEAL_TEST_DATABASE_URL`, les tests PostgreSQL restent volontairement
+ignorés ; la vérification complète ci-dessus utilisait une base locale dédiée.
+
 Pour le mobile, depuis `mobile/` :
 
 ```bash
@@ -157,17 +170,17 @@ npm run typecheck
 npm test
 ```
 
-L’audit local du 1er novembre, après intégration du calendrier, donne
+Lors du premier audit du 1er novembre, après intégration du calendrier, nous avions obtenu
 299 tests backend réussis et 58 ignorés, notamment les tests PostgreSQL sans
 base locale de test configurée. Les 32 tests mobiles, TypeScript, les 10 exports
-de contrats et la reconstruction du catalogue sont vérifiés. Les bundles
-iOS/Android sont également générés ; cela ne remplace pas les essais sur téléphone.
+de contrats et la reconstruction du catalogue avaient été vérifiés. Les bundles
+iOS/Android avaient également été générés ; cela ne remplace pas les essais sur téléphone.
 Le lint mobile n’est pas encore configuré. Le [guide des photos](backend/docs/RECIPE_IMAGES.md)
 explique la configuration du bucket, ses droits et les limites du prototype.
 
 Après l’ajout du backend de publication, la suite avec PostgreSQL local jetable
-donne 365 tests réussis et 1 ignoré. Les 38 tests mobiles et TypeScript passent.
-Les exports des contrats sont actualisés. Ces résultats ne constituent pas un
+avait donné 365 tests réussis et 1 ignoré, avec 38 tests mobiles et TypeScript
+valides. Les exports des contrats avaient été actualisés. Ces résultats ne constituent pas un
 essai sur appareil du partage ni une application de la migration sur Supabase.
 
 ## Structure du projet

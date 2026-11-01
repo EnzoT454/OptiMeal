@@ -295,4 +295,18 @@ initiales avec les tables. Leurs insertions restent dans la base de test.
 Les tests de l’import vérifient également le rejeu complet, les ingrédients
 manquants, les conflits après modifications et l’annulation des ajouts partiels.
 
+Le test de conversion PDF exige PyMuPDF, déjà déclaré dans `requirements.txt`.
+Une installation incomplète fait désormais échouer ce test au lieu de l’ignorer.
+Pour réinstaller les dépendances dans l’environnement virtuel actif :
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Pour une vérification complète sans test ignoré, installer ces dépendances et
+définir `OPTIMEAL_TEST_DATABASE_URL` vers la base locale jetable avant pytest.
+Sans cette variable, les tests PostgreSQL restent volontairement ignorés :
+ils ne doivent jamais utiliser automatiquement la base Supabase du projet.
+L’option `-rs` affiche la raison de chaque test ignoré.
+
 *Dernière mise à jour : 1er novembre 2026*
