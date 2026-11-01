@@ -49,3 +49,23 @@ export interface Circular {
   retailer: Retailer; valid_from: string; valid_to: string;
   page_count: number; pages: string[]; imported_at: string;
 }
+
+// ---- Calendrier (planification des repas) ----
+export type MealType = "dejeuner" | "diner" | "souper" | "collation";
+
+export type MealPlanEntry = {
+  id: string;
+  date: string;               // "AAAA-MM-JJ"
+  meal: MealType;
+  recipe_id: RecipeSummary["id"] | null;
+  recipe_name: string | null;
+  recipe_image_url: string | null;
+  free_text: string | null;   // …ou un texte libre : « Restes », « Resto »
+  servings: number;
+  is_leftover: boolean;       // vrai = restes d'une recette déjà cuisinée
+};
+
+export type MealPlan = {
+  week_start: string;         // le lundi, "AAAA-MM-JJ"
+  entries: MealPlanEntry[];
+};

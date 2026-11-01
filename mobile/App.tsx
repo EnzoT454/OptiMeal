@@ -24,6 +24,7 @@ import PromoDetailScreen from './app/PromoDetailScreen';
 import CircularsScreen from './app/CircularsScreen';
 import CircularScreen from './app/CircularScreen';
 import CookWithPromosScreen from './app/CookWithPromosScreen';
+import CalendarScreen from './app/CalendarScreen';
 import { MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
 
 const Tabs = createBottomTabNavigator<MainTabParams>();
@@ -56,7 +57,6 @@ function PromoNavigator() {
   </Promos.Navigator>;
 }
 function Home() { return <Screen><Heading>Bienvenue dans OptiMeal</Heading><Text>Retrouve tes recettes et crée tes propres plats dans l’onglet Recettes.</Text></Screen>; }
-function Calendar() { return <Screen><Heading>Calendrier</Heading><Text>La planification des repas sera disponible prochainement.</Text></Screen>; }
 function Content() {
   const { session, loading } = useAuth();
   if (loading) return <Screen><Heading>OptiMeal</Heading><Text>Ouverture de ta session…</Text></Screen>;
@@ -70,7 +70,7 @@ function Content() {
     <Tabs.Screen name="Accueil" component={Home} />
     <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Recettes" component={RecipeNavigator} options={{ headerShown: false }} />
-    <Tabs.Screen name="Calendrier" component={Calendar} />
+    <Tabs.Screen name="Calendrier" component={CalendarScreen} options={{ headerShown: false }} />
     <Tabs.Screen name="Paramètres" component={ProfileScreen} />
   </Tabs.Navigator></NavigationContainer>;
 }
