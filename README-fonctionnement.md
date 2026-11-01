@@ -758,9 +758,9 @@ Cette configuration permet les appels API depuis ces deux origines locales. Un a
 
 ## 13. Ce qui fonctionne et le parcours encore à construire
 
-Le 1er novembre 2026, Hamza a confirmé les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
+Les trois scénarios manuels de partage ont été validés le 1er novembre 2026 : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. 
 
-Le 1er novembre 2026, Hamza a confirmé sur iOS le nom obligatoire pour activer l’enregistrement et la saisie de quantité séparée du choix de l’unité parmi g, ml et unité. Les essais Android de ces ajustements restent à effectuer.
+Le nom obligatoire et la quantité séparée du choix de l’unité (g, ml ou unité) ont été validés sur iOS le 1er novembre 2026. Les essais Android de ces ajustements restent à effectuer.
 
 | État au 1er novembre 2026 | Parcours |
 | --- | --- |
@@ -778,14 +778,14 @@ Le 1er novembre 2026, Hamza a confirmé sur iOS le nom obligatoire pour activer 
 | Configuré dans le backend | CORS pour les deux origines locales Expo Web sur le port 8081 |
 | À développer | Collecte web IA Metro/Super C |
 | À développer | Modes IA des recettes, Petit budget et calcul des coûts |
-| Confirmé sur Supabase et iOS le 1er novembre ; Android à vérifier | Calendrier privé et repas sauvegardés ; migration 0008 appliquée sur le projet Supabase selon la confirmation de Hamza |
+| Confirmé sur Supabase et iOS le 1er novembre ; Android à vérifier | Calendrier privé et repas sauvegardés ; migration 0008 appliquée sur Supabase |
 | À développer | Historique stable par instantanés et listes modifiables par magasin |
 | À développer | Confirmation des reçus dans le mobile, contributions et estimations de prix |
 | À compléter | Scénarios d’erreur réseau et essais sur différentes tailles d’écran |
 
-Le 27 octobre, Hamza a confirmé le fonctionnement des parcours comptes, recettes, photos et Promos sur iOS et Android. Son coéquipier a également vérifié ces parcours sur son téléphone Android. Les fonctionnalités encore prévues ci-dessous restent à développer.
+Les parcours comptes, recettes, photos et Promos ont été validés sur iOS et Android le 27 octobre. Les fonctionnalités encore prévues ci-dessous restent à développer.
 
-Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visiteur, de la connexion à la demande, de la photo obligatoire à la création, des photos de produits dans Promos et de la suppression du compte. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android. La configuration CORS pour Expo Web n’est pas validée par ces essais iOS.
+Le mode visiteur, la connexion à la demande, la photo obligatoire à la création, les photos de produits dans Promos et la suppression du compte ont été validés sur iOS le 1er novembre 2026. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android. La configuration CORS pour Expo Web n’est pas validée par ces essais iOS.
 
 ### Parcours cible : de la semaine de repas aux achats
 
