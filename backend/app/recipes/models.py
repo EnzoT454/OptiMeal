@@ -1,8 +1,9 @@
 """Stockage du catalogue initial de recettes et de ses ingrédients quantifiés."""
 from decimal import Decimal
+from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import Boolean, CheckConstraint, ForeignKey, Integer, Numeric, Text, UniqueConstraint, Uuid, text
+from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Integer, Numeric, Text, UniqueConstraint, Uuid, text
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -12,6 +13,11 @@ from backend.app.database import Base
 class Recipe(Base):
     __tablename__ = 'recipe'
     __table_args__ = (
+        CheckConstraint("visibility IN ('private', 'public')", name='visibility_supported'),
+        CheckConstraint("owner_id IS NOT NULL OR visibility = 'public'", name='public_seed'),
+        CheckConstraint("(visibility = 'private' AND published_at IS NULL) OR "
+                        "(visibility = 'public' AND (owner_id IS NULL OR published_at IS NOT NULL))",
+                        name='publication_consistent'),
         CheckConstraint("id ~ '^recipe_[a-z0-9_]+$'", name='id_format'),
         CheckConstraint("seed_key ~ '^[a-z0-9_]+$'", name='seed_key_format'),
         CheckConstraint('(owner_id IS NULL AND seed_key IS NOT NULL) OR (owner_id IS NOT NULL AND seed_key IS NULL)',
@@ -31,6 +37,8 @@ class Recipe(Base):
     seed_key: Mapped[str | None] = mapped_column(Text, nullable=True, unique=True)
     owner_id: Mapped[UUID | None] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), nullable=True, index=True)
     name: Mapped[str] = mapped_column(Text, nullable=False)
+    visibility: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'private'"), index=True)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     servings: Mapped[int] = mapped_column(Integer, nullable=False)
     prep_time_minutes: Mapped[int] = mapped_column(Integer, nullable=False)

@@ -7,6 +7,23 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
+La tête courante est `0009_recipe_visibility`. Elle ajoute à `recipe` les
+champs `visibility` (privée par défaut) et `published_at` (avec fuseau), les
+contraintes de publication et un index sur la visibilité. Les recettes
+initiales existantes deviennent publiques ; les recettes personnelles
+existantes restent privées, sans publication automatique. Aucune recette,
+aucun favori ni repas n’est supprimé par cette migration. Le rejeu de l’import
+initial reste compatible. Le retour à `0008` retire uniquement ces champs
+et leurs contraintes/index ; il perd les choix de publication.
+
+Les contrôles de liste, détail, favoris et calendrier exigent `0009` :
+appliquer les migrations avant de redémarrer le backend mis à jour. Les tests
+locaux ne prouvent pas son application sur Supabase. Le 1er novembre 2026,
+`0009` a également été appliquée sur le projet Supabase configuré : révision
+contrôlée, schéma conforme aux modèles et comptages identiques avant/après
+pour les neuf tables applicatives. Les 10 recettes initiales sont publiques ;
+aucune recette personnelle n’était présente lors de cette application.
+
 Depuis la racine, avec l’environnement Python activé et `DATABASE_URL`
 configurée dans `backend/.env` ou dans l’environnement serveur :
 

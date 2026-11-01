@@ -21,6 +21,8 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 Éléments réalisés :
 
+- Onglet Recettes organisé en Découvrir (recettes publiques), Mes recettes (créations du compte) et Favoris, avec recherche et filtres dans la section active, pagination et messages adaptés aux listes vides. Vérifié par 60 tests mobiles et TypeScript ; les trois scénarios manuels de partage sont confirmés par Hamza le 1er novembre, sans plateforme précisée.
+- Backend du partage de recettes : migration `0009_recipe_visibility`, recettes privées par défaut, publication/retrait par le propriétaire et sections API Découvrir/Mes recettes/Favoris. Les favoris et le calendrier masquent les recettes devenues privées pour les autres comptes. Vérifié sur PostgreSQL local ; migration `0009` appliquée et schéma contrôlé sur Supabase le 1er novembre. Le même bucket public de photos est conservé pour le prototype ; sa séparation privé/public est reportée après le prototype. Les sections mobiles Découvrir, Mes recettes et Favoris sont intégrées ; le formulaire propose le partage, privé par défaut, et le détail permet de publier ou rendre privée sa propre recette après confirmation. Les trois scénarios manuels de partage sont confirmés le 1er novembre ; les validations distinctes iOS et Android restent à consigner.
 - Formulaire Recettes : nom obligatoire pour activer l’enregistrement, quantité séparée de l’unité et choix fixe parmi g, ml et unité. Fonctionnement confirmé par Hamza sur iOS le 1er novembre ; essais Android à effectuer.
 - Consultation sans compte d’Accueil, Promos, Recettes et Paramètres ; connexion à la demande pour les recettes personnelles, favoris, calendrier et profil. Le mode visiteur et la connexion à la demande sont confirmés sur iOS le 1er novembre ; les nouveaux parcours restent à reproduire sur Android.
 
@@ -127,6 +129,8 @@ Le [guide du backend](backend/README.md) détaille les routes disponibles et les
 
 ## Tests
 
+Le 1er novembre 2026, Hamza a confirmé les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
+
 Le [guide mobile](mobile/README.md) décrit l’installation sur téléphone et les
 scénarios de vérification. Le 27 octobre, nous avons confirmé le fonctionnement
 des parcours actuellement intégrés sur iOS et Android : comptes, profil,
@@ -159,6 +163,11 @@ de contrats et la reconstruction du catalogue sont vérifiés. Les bundles
 iOS/Android sont également générés ; cela ne remplace pas les essais sur téléphone.
 Le lint mobile n’est pas encore configuré. Le [guide des photos](backend/docs/RECIPE_IMAGES.md)
 explique la configuration du bucket, ses droits et les limites du prototype.
+
+Après l’ajout du backend de publication, la suite avec PostgreSQL local jetable
+donne 365 tests réussis et 1 ignoré. Les 38 tests mobiles et TypeScript passent.
+Les exports des contrats sont actualisés. Ces résultats ne constituent pas un
+essai sur appareil du partage ni une application de la migration sur Supabase.
 
 ## Structure du projet
 
@@ -278,7 +287,8 @@ OptiMeal/
 │   │       ├── 0005_catalog_offers.py # Catégories et offres des magasins
 │   │       ├── 0006_circulars.py      # Informations des circulaires
 │   │       ├── 0007_product_images.py # URL et provenance des photos de produits
-│   │       └── 0008_meal_plan.py     # Repas planifiés par compte
+│   │       ├── 0008_meal_plan.py     # Repas planifiés par compte
+│   │       └── 0009_recipe_visibility.py # Visibilité privée/publique des recettes
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express

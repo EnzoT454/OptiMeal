@@ -14,13 +14,16 @@ depuis la racine :
 python -m alembic -c backend/alembic.ini upgrade head
 ```
 
-La dernière révision est désormais `0008_meal_plan`, après
-`0007_product_images`. Elle crée `public.meal_plan_entry`, ses contraintes,
+La révision `0008_meal_plan`, après `0007_product_images`, crée
+`public.meal_plan_entry`, ses contraintes,
 les clés étrangères et les index. Le démarrage FastAPI n’applique pas les
 migrations. Sans cette table, les accès au calendrier renvoient une erreur
 503. Hamza a confirmé le 1er novembre 2026 l’application de `0008_meal_plan`
 sur Supabase et le fonctionnement du calendrier sur iOS. Pour une nouvelle
 installation, appliquer les migrations reste nécessaire.
+
+La révision courante `0009_recipe_visibility` ajoute la visibilité des recettes.
+Elle est nécessaire aux contrôles d’accès utilisés par le calendrier actuel.
 
 ## Parcours mobile
 
@@ -91,6 +94,16 @@ Sans connexion : 401 ; recette inaccessible ou entrée d’autrui : 404 ;
 corps invalide : 422 ; base ou schéma indisponible : 503.
 
 ## Conservation et limites
+
+Une recette publique peut être ajoutée au calendrier d’un autre compte.
+Si son auteur la rend privée, le repas reste présent, mais `recipe_name`
+et `recipe_image_url` deviennent nuls pour ce compte. `recipe_id` est conservé
+comme référence déjà connue ; le détail renvoie 404 et aucun nouveau repas
+ne peut être créé avec cette recette. Les portions et le déplacement du repas
+existant restent modifiables, et son retrait reste possible. Une republication
+restaure le nom et la photo courants. Les notes libres et les recettes du
+propriétaire ne sont pas affectées. Le libellé mobile « Recette indisponible »
+reste à intégrer lors de l’adaptation de l’interface.
 
 Les entrées sont privées par compte, avec RLS activée et accès métier via
 FastAPI. La suppression du compte entraîne celle des repas par cascade,

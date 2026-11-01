@@ -114,7 +114,8 @@ def test_invalid_recipe_never_writes_partial_data_or_accepts_owner(accounts):
     assert client.get('/api/v1/recipes').json()['total']==10
 
 
-def test_account_deletion_cascades_without_touching_other_users_or_shared_recipes(accounts, postgres):
+@pytest.mark.parametrize('visibility', ['private', 'public'])
+def test_account_deletion_cascades_without_touching_other_users_or_shared_recipes(accounts, postgres, visibility):
     """L'API Auth est simulée ; sa suppression de auth.users utilise le PostgreSQL de test."""
     import httpx
     from backend.app.accounts.deletion import AccountDeletion
@@ -123,7 +124,7 @@ def test_account_deletion_cascades_without_touching_other_users_or_shared_recipe
     personal = {}
     for user in (ALICE, BOB):
         login(app, user)
-        personal[user.id] = client.post('/api/v1/recipes', json=body()).json()['item']['id']
+        personal[user.id] = client.post('/api/v1/recipes', json={**body(), 'visibility': visibility}).json()['item']['id']
         assert client.put('/api/v1/recipes/' + personal[user.id] + '/favorite').status_code == 204
         assert client.post('/api/v1/plans/entries', json={
             'date': '2026-11-02', 'meal': 'souper', 'recipe_id': personal[user.id],

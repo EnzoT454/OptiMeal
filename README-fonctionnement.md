@@ -171,15 +171,33 @@ Le fichier [RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) demande la li
 
 | Action | Requête correspondante |
 | --- | --- |
-| Lire les recettes | `GET /api/v1/recipes` |
-| Chercher « poulet » | `GET /api/v1/recipes?q=poulet` |
-| Voir les recettes rapides | `GET /api/v1/recipes?quick=true` |
-| Voir ses favoris | `GET /api/v1/recipes?favorites=true` |
+| Découvrir | `GET /api/v1/recipes?scope=discover` |
+| Mes recettes | `GET /api/v1/recipes?scope=mine` |
+| Chercher « poulet » dans Découvrir | `GET /api/v1/recipes?scope=discover&q=poulet` |
+| Voir ses recettes rapides | `GET /api/v1/recipes?scope=mine&quick=true` |
+| Voir ses favoris | `GET /api/v1/recipes?scope=favorites` |
 | Lire une recette complète | `GET /api/v1/recipes/{id}` |
 
 Rapides signifie **30 minutes au maximum, préparation et cuisson comprises**. Petit budget affiche encore « Disponible prochainement ».
 
-Sans jeton, l’API permet de lire les recettes initiales. Avec une identité valide, elle ajoute les recettes personnelles de ce compte. Le mobile permet également cette consultation sans compte. Ajouter une recette, consulter ou modifier ses favoris et accéder au profil demande une connexion.
+Sans jeton, l’API permet de lire les recettes initiales et les recettes publiées par les utilisateurs. Avec une identité valide, elle ajoute les recettes privées de ce compte. Le mobile permet également cette consultation sans compte. Ajouter une recette, consulter ou modifier ses favoris et accéder au profil demande une connexion.
+
+Le mobile propose trois sections : Découvrir (`scope=discover`, recettes
+publiques), Mes recettes (`scope=mine`, créations du compte) et Favoris
+(`scope=favorites`, favoris accessibles). Découvrir est sélectionnée au départ.
+Les deux autres sections demandent une connexion. Recherche et filtres Toutes,
+Rapides et Petit budget restent dans la section active ; changer de section
+réinitialise la pagination. Les cartes indiquent Par vous, Par OptiMeal ou
+Par la communauté. Mes recettes affiche aussi le statut Privée/Publique.
+Une section vide propose une action adaptée : créer sa première recette,
+découvrir des recettes ou effacer la recherche et les filtres. Sans paramètre
+de section, le backend conserve la collection accessible pour les autres consommateurs. La création
+accepte `visibility`, privée par défaut ; le propriétaire peut ensuite envoyer
+`PATCH /api/v1/recipes/{id}/visibility` avec `public` ou `private`. Une ancienne
+modification de contenu ne change pas la visibilité. Le formulaire propose un interrupteur de partage, désactivé par défaut à la création, et charge le statut courant en édition. Le détail permet au propriétaire de publier ou rendre privée sa recette après confirmation. Le même bucket public de photos
+est conservé pendant le prototype ; sa séparation privé/public est reportée après
+le prototype. Publier ou rendre privée une recette conserve le fichier et son URL.
+Les règles détaillées sont dans les [contrats](backend/docs/CONTRACTS.md).
 
 ## 5. Créer une recette et enregistrer sa photo
 
@@ -217,6 +235,26 @@ Les responsabilités se répartissent ainsi :
 
 Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les politiques Storage limitent les écritures à `users/<identifiant du compte>/`. En édition, retirer une photo enregistre `image_url: null` ; le fichier n’est pas automatiquement supprimé. Cette politique publique concerne les photos de recettes ; le futur parcours des reçus prévoit un stockage privé.
 
+### Choisir la visibilité et changer la publication
+
+Le réglage « Partager avec la communauté » prépare le choix sans envoyer de
+requête. Le bouton Enregistrer valide d’abord les champs, puis demande une
+confirmation si la recette doit être publiée ou changer de visibilité. Annuler
+n’envoie ni photo ni recette. À la création, le statut choisi fait partie du
+POST ; il reste privé par défaut.
+
+En édition, le contenu passe toujours par PUT et le changement de statut par
+PATCH. Pour rendre privée une recette publique, le retrait est confirmé par
+le serveur avant l’envoi des modifications de contenu. Pour publier une recette
+privée, le contenu est enregistré avant publication. Ces deux requêtes ne sont
+pas une transaction commune : si une seule réussit, le formulaire indique
+l’opération confirmée et celle à réessayer, sans quitter l’écran.
+
+Dans le détail, seules les recettes du propriétaire affichent « Publier la
+recette » ou « Rendre privée », avec une confirmation et le statut courant.
+Les actions sont bloquées pendant la requête et le statut est mis à jour à
+partir de la réponse du serveur. Une erreur conserve le dernier statut confirmé.
+
 ### Modifier, supprimer et mettre en favori
 
 | Demande | Route | Règle principale |
@@ -224,6 +262,7 @@ Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les poli
 | Créer | `POST /api/v1/recipes` | Associer au compte authentifié |
 | Modifier | `PUT /api/v1/recipes/{id}` | Vérifier le propriétaire |
 | Supprimer | `DELETE /api/v1/recipes/{id}` | Vérifier le propriétaire |
+| Publier ou rendre privée | `PATCH /api/v1/recipes/{id}/visibility` | Vérifier le propriétaire ; recettes initiales exclues |
 | Ajouter un favori | `PUT /api/v1/recipes/{id}/favorite` | La recette doit être accessible au compte |
 | Retirer un favori | `DELETE /api/v1/recipes/{id}/favorite` | Retirer seulement le favori de ce compte |
 
@@ -428,6 +467,11 @@ instantanés prévu pour les anciennes semaines. Les listes et le calcul
 économique restent à développer. Voir le [guide du calendrier](backend/docs/PLANNING.md)
 pour l’installation, les routes, les limites et les essais sur appareil.
 
+Si une recette publique ajoutée par un autre compte redevient privée, le backend
+conserve son repas mais renvoie un nom et une photo nuls. Il masque aussi cette
+recette dans les favoris du lecteur. L’affichage mobile du libellé « Recette
+indisponible » reste à ajouter avec la nouvelle interface.
+
 ## 9. Migrations et imports : deux opérations différentes
 
 **Une migration modifie la structure des tables. Un import remplit les tables avec des données.** Alembic est la seule chaîne de migrations applicatives retenue.
@@ -451,6 +495,7 @@ flowchart LR
 | `0006_circulars.py` | Table `circular` |
 | `0007_product_images.py` | URL et provenance des photos dans `product_offer`, avec contrainte HTTPS |
 | `0008_meal_plan.py` | Repas privés dans `meal_plan_entry`, liés à une recette ou une note |
+| `0009_recipe_visibility.py` | Recettes privées par défaut, publication volontaire et contraintes de visibilité |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -707,6 +752,8 @@ sequenceDiagram
 Cette configuration permet les appels API depuis ces deux origines locales. Un autre port, une adresse IP du réseau ou un futur domaine web demande une adaptation de la liste. CORS ne remplace ni la connexion ni les contrôles de propriétaire et ne règle pas un problème de pare-feu ou d’URL inaccessible. Les applications natives iOS et Android ne sont pas soumises à cette restriction du navigateur. Cet ajout ne constitue pas une validation complète de l’application dans sa version web.
 
 ## 13. Ce qui fonctionne et le parcours encore à construire
+
+Le 1er novembre 2026, Hamza a confirmé les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
 
 Le 1er novembre 2026, Hamza a confirmé sur iOS le nom obligatoire pour activer l’enregistrement et la saisie de quantité séparée du choix de l’unité parmi g, ml et unité. Les essais Android de ces ajustements restent à effectuer.
 

@@ -1,5 +1,7 @@
 export type RecipeUnit = 'g' | 'ml' | 'unit';
 export type RecipeDifficulty = 'easy' | 'medium' | 'hard';
+export type RecipeVisibility = 'private' | 'public';
+export type RecipeScope = 'accessible' | 'discover' | 'mine' | 'favorites';
 export interface RecipeIngredient {
   ingredient_id: string; quantity: string; unit: RecipeUnit; preparation: string | null;
 }
@@ -10,7 +12,10 @@ export interface RecipeWrite {
   difficulty: RecipeDifficulty | null; tags: string[];
   instructions: { position: number; text: string }[];
 }
+export type RecipeCreate = RecipeWrite & { image_url: string; visibility?: RecipeVisibility };
+export interface RecipeVisibilityUpdate { visibility: RecipeVisibility; }
 export interface RecipeSummary {
+  visibility: RecipeVisibility; published_at: string | null;
   id: string; name: string; description: string; servings: number; total_time_minutes: number;
   image_url: string | null; review_required: boolean; is_owned: boolean; is_favorite: boolean;
   difficulty: RecipeDifficulty | null; tags: string[];

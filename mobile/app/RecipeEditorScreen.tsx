@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, Pressable, Text, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, Pressable, Switch, Text, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Message } from '../components/ui';
 import { RecipeButton, RecipeChip, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
@@ -8,7 +8,7 @@ import RecipeImage from '../components/RecipeImage';
 import { api } from '../services/api';
 import { chooseRecipeImage, uploadRecipeImage } from '../services/recipeImages';
 import { difficultyLabels, parseIngredientQuantity, recipeUnits } from '../services/recipeForm';
-import { Detail, Ingredient, Page, Recipe, RecipeDifficulty, RecipeUnit, RecipeWrite } from '../types/api';
+import { Detail, Ingredient, Page, Recipe, RecipeDifficulty, RecipeUnit, RecipeVisibility, RecipeWrite } from '../types/api';
 import { RecipeStackParams } from '../types/navigation';
 
 type IngredientDraft = { ingredient_id: string; quantity: string; unit: RecipeUnit | null; preparation: string | null };
@@ -26,6 +26,8 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
   const [pickerIndex, setPickerIndex] = useState<number | null>(null);
   const [busy, setBusy] = useState(false); const [picking, setPicking] = useState(false);
   const [loading, setLoading] = useState(true); const [error, setError] = useState(''); const [retry, setRetry] = useState(0);
+  const [visibility, setVisibility] = useState<RecipeVisibility>('private');
+  const [initialVisibility, setInitialVisibility] = useState<RecipeVisibility>('private');
   useEffect(() => {
     let active = true;
     setLoading(true); setError('');
@@ -40,6 +42,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
           setDifficulty(r.difficulty ?? null); setTags((r.tags ?? []).join(', '));
           setIngredients(r.ingredients.map(i => ({ ingredient_id: i.ingredient_id, quantity: i.quantity, unit: i.unit, preparation: i.preparation })));
           setSteps(r.instructions.map(step => step.text));
+          setVisibility(r.visibility); setInitialVisibility(r.visibility);
         }
         setCatalog(data.items);
       }).catch(e => { if (active) setError(e.message); }).finally(() => { if (active) setLoading(false); });
@@ -56,7 +59,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
       if (uri) setLocalImage(uri);
     } catch (e) { setError((e as Error).message); } finally { setPicking(false); }
   }
-  async function save() {
+  async function save(confirmed = false) {
     if (busy || picking) return;
     let body: RecipeWrite;
     try {
@@ -79,16 +82,41 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
         ingredients: ingredients.map(i => ({ ingredient_id: i.ingredient_id, ...parseIngredientQuantity(i.quantity, i.unit), preparation: i.preparation?.trim() || null })),
         instructions: steps.map((text, index) => ({ position: index + 1, text: text.trim() })) };
     } catch (e) { setError((e as Error).message); Alert.alert('Vérifie la recette', (e as Error).message); return; }
+    if (!confirmed && (id ? visibility !== initialVisibility : visibility === 'public')) {
+      Alert.alert(visibility === 'public' ? 'Publier cette recette ?' : 'Rendre cette recette privée ?',
+        visibility === 'public' ? 'La recette enregistrée sera visible par tous dans Découvrir, même sans compte.' :
+          'La recette sera retirée de Découvrir et ne sera plus accessible aux autres comptes. Elle restera dans Mes recettes. Sa photo restera accessible par son lien dans ce prototype.', [
+          { text: 'Annuler', style: 'cancel' },
+          { text: visibility === 'public' ? 'Enregistrer et publier' : 'Rendre privée et enregistrer', onPress: () => void save(true) },
+        ]);
+      return;
+    }
     setBusy(true); setError('');
+    let madePrivate = false; let contentSaved = false;
     try {
+      if (id && visibility === 'private' && initialVisibility === 'public') {
+        await api<Detail<Recipe>>('/api/v1/recipes/' + id + '/visibility', { method: 'PATCH', body: JSON.stringify({ visibility }) });
+        setInitialVisibility('private'); madePrivate = true;
+      }
       if (localImage) {
         const url = await uploadRecipeImage(localImage);
         body.image_url = url;
         setImage(url); setLocalImage(null);
       }
-      const result = await api<Detail<Recipe>>(id ? '/api/v1/recipes/' + id : '/api/v1/recipes', { method: id ? 'PUT' : 'POST', body: JSON.stringify(body) });
+      let result = await api<Detail<Recipe>>(id ? '/api/v1/recipes/' + id : '/api/v1/recipes', {
+        method: id ? 'PUT' : 'POST', body: JSON.stringify(id ? body : { ...body, visibility }),
+      });
+      contentSaved = true;
+      if (id && result.item.visibility !== visibility) {
+        result = await api<Detail<Recipe>>('/api/v1/recipes/' + id + '/visibility', { method: 'PATCH', body: JSON.stringify({ visibility }) });
+      }
+      setInitialVisibility(result.item.visibility);
       navigation.reset({ index: 1, routes: [{ name: 'List' }, { name: 'Detail', params: { id: result.item.id } }] });
-    } catch (e) { setError((e as Error).message); Alert.alert('Enregistrement impossible', (e as Error).message); } finally { setBusy(false); }
+    } catch (e) {
+      const message = contentSaved ? 'Les modifications sont enregistrées, mais le changement de visibilité n’a pas été confirmé. Réessaie pour vérifier et appliquer le statut choisi.' :
+        madePrivate ? 'La recette est privée, mais l’enregistrement des modifications du contenu n’a pas été confirmé. Réessaie.' : (e as Error).message;
+      setError(message); Alert.alert(contentSaved || madePrivate ? 'Enregistrement incomplet' : 'Enregistrement impossible', message);
+    } finally { setBusy(false); }
   }
   return <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
     <RecipeScreen>
@@ -104,7 +132,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
               <Text style={recipeStyles.note}>{id ? 'Photo de la recette' : 'Obligatoire pour créer la recette'}</Text>
             </Pressable>
             {(localImage || image) && <Pressable accessibilityRole="button" onPress={() => { setLocalImage(null); setImage(null); }}><Text style={recipeStyles.remove}>Retirer la photo</Text></Pressable>}
-            <Text style={recipeStyles.note}>Les photos sont publiques dans ce prototype.</Text>
+            <Text style={recipeStyles.note}>Dans ce prototype, la photo reste accessible par son lien, même si la recette est privée.</Text>
           </View>
           <RecipeField label="Portions" keyboardType="number-pad" value={servings} onChangeText={setServings} />
           <RecipeField label="Préparation (minutes)" keyboardType="number-pad" value={prep} onChangeText={setPrep} />
@@ -165,6 +193,15 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
             <RecipeField label="Cuisson (minutes)" keyboardType="number-pad" value={cook} onChangeText={setCook} />
           </>}
           {Number(cook) > 0 && <Text style={recipeStyles.note}>Durée totale : {Number(prep) + Number(cook)} min, dont {cook} min de cuisson.</Text>}
+          <View style={recipeStyles.notice}>
+            <View style={[recipeStyles.row, { justifyContent: 'space-between' }]}>
+              <Text style={[recipeStyles.sectionTitle, { flex: 1 }]}>Partager avec la communauté</Text>
+              <Switch accessibilityLabel="Partager avec la communauté" value={visibility === 'public'} disabled={busy || picking}
+                trackColor={{ true: recipeColors.green }} onValueChange={enabled => setVisibility(enabled ? 'public' : 'private')} />
+            </View>
+            <Text style={recipeStyles.body}>{visibility === 'public' ? 'Publique — consultable par tous dans Découvrir.' : 'Privée — la recette est accessible uniquement dans ton compte.'}</Text>
+            <Text style={recipeStyles.note}>Ce choix sera appliqué à l’enregistrement. La photo reste accessible par son lien, même pour une recette privée.</Text>
+          </View>
           {!name.trim() && <Text style={recipeStyles.note}>Ajoute un nom pour pouvoir enregistrer la recette.</Text>}
           {!id && !(localImage?.trim() || image?.trim()) && <Text style={recipeStyles.note}>Ajoute une photo pour pouvoir enregistrer la recette.</Text>}
           <RecipeButton title={busy ? 'Enregistrement…' : 'Enregistrer la recette'} disabled={busy || picking || !name.trim() || (!id && !(localImage?.trim() || image?.trim()))} onPress={() => void save()} />

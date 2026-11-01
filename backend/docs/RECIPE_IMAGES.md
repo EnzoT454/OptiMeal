@@ -6,6 +6,28 @@ présent, conserve l’URL publique. Les recettes restent accessibles selon les
 droits FastAPI ; une photo est lisible par toute personne qui possède son URL.
 Les reçus ne doivent pas être ajoutés à ce bucket.
 
+## Visibilité des recettes et photos du prototype
+
+Pour le prototype, le même bucket public `recipes-images` est conservé pour
+les recettes privées et publiques, conformément au choix du 1er novembre 2026.
+La séparation du stockage privé/public est reportée après la fin du prototype.
+Aucune migration de fichiers ou de colonnes d’image n’est nécessaire pour
+cette étape : les dix illustrations restent à leur emplacement et les photos
+personnelles restent sous `users/<identifiant du compte>/`.
+
+Publier ou rendre privée une recette modifie uniquement ses droits de lecture
+FastAPI et sa date de publication. Cela ne copie, ne déplace ni ne supprime sa
+photo et ne change pas son URL. Une recette privée reste inaccessible aux autres
+comptes par l’API, mais sa photo reste consultable par une personne qui possède
+déjà son URL. Le formulaire explique cette distinction avant l’enregistrement.
+
+Les écritures et suppressions Storage restent limitées au propriétaire, même
+pour une recette publiée. Le statut public ne donne aucun droit de modification
+aux autres utilisateurs. La suppression de compte nettoie le dossier personnel
+quel que soit le statut des recettes ; les illustrations initiales et les
+photos des autres comptes sont conservées. Le nettoyage des photos détachées
+après remplacement ou suppression d’une recette reste à développer.
+
 ## Configuration
 
 Le bucket public doit exister. Depuis la racine, avec la connexion serveur
@@ -60,6 +82,13 @@ après envoi peuvent laisser des fichiers inutilisés. Leur nettoyage reste
 réseau dont le résultat d’enregistrement est incertain.
 
 ## Vérification
+
+Le 1er novembre, l’adaptation au partage avec stockage public conservé a été
+vérifiée par 35 tests backend ciblés sur PostgreSQL local jetable : conservation
+de l’URL à la publication et au retrait, droits Storage et suppression des
+comptes avec recettes privées ou publiques. Les 38 tests mobiles et TypeScript
+passent. Ces essais ne déplacent aucun fichier sur Supabase et ne constituent
+pas une nouvelle validation sur téléphone.
 
 `backend/tests/test_recipe_image_storage.py` teste les politiques avec deux
 identités sur des tables Storage simulées dans PostgreSQL local jetable :

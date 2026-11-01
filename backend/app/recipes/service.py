@@ -1,5 +1,6 @@
 """Recettes partagées et personnelles ; autorisations vérifiées avant toute lecture ou mutation."""
 from uuid import UUID, uuid4
+from datetime import datetime, timezone
 
 from sqlalchemy import delete, exists, func, or_, select, update
 from sqlalchemy.dialects.postgresql import insert
@@ -10,11 +11,13 @@ from backend.app.common.public_data import search_text
 from backend.app.common.public_router import fail
 from backend.app.security import CurrentUser
 from .models import Favorite, Recipe, RecipeIngredient
-from .schemas import RecipeCreate, RecipeRead, RecipeSummary, RecipeWrite
+from .schemas import RecipeCreate, RecipeRead, RecipeScope, RecipeSummary, RecipeVisibilityUpdate, RecipeWrite
 
 
 def visible(user_id: UUID | None):
-    return Recipe.owner_id.is_(None) if user_id is None else or_(Recipe.owner_id.is_(None), Recipe.owner_id == user_id)
+    if user_id is None:
+        return Recipe.visibility == 'public'
+    return or_(Recipe.visibility == 'public', Recipe.owner_id == user_id)
 
 
 def favorite_for(user_id: UUID | None):
@@ -22,11 +25,16 @@ def favorite_for(user_id: UUID | None):
 
 
 def list_recipes(db: Session, *, q: str, quick: bool, limit: int, offset: int,
-                 user_id: UUID | None = None, favorites: bool = False) -> tuple[list[RecipeSummary], int]:
+                 user_id: UUID | None = None, favorites: bool = False,
+                 scope: RecipeScope = 'accessible') -> tuple[list[RecipeSummary], int]:
     conditions = [visible(user_id)]
+    if scope == 'discover':
+        conditions.append(Recipe.visibility == 'public')
+    elif scope == 'mine':
+        conditions.append(Recipe.owner_id == user_id)
     if quick:
         conditions.append(Recipe.total_time_minutes <= 30)
-    if favorites:
+    if favorites or scope == 'favorites':
         conditions.append(favorite_for(user_id))
     query = search_text(q.strip())
     if query:
@@ -58,6 +66,7 @@ def get_recipe(db: Session, recipe_id: str, user_id: UUID | None = None) -> Reci
     validated = RecipeWrite.model_validate(fields)
     favorite = bool(db.scalar(select(favorite_for(user_id)).select_from(Recipe).where(Recipe.id == recipe_id)))
     return RecipeRead(id=recipe_id, review_required=recipe['review_required'],
+                      visibility=recipe['visibility'], published_at=recipe['published_at'],
                       is_owned=user_id is not None and recipe['owner_id'] == user_id,
                       is_favorite=favorite, **validated.model_dump())
 
@@ -78,6 +87,7 @@ def create_recipe(db: Session, body: RecipeCreate, user: CurrentUser) -> RecipeR
     rows = ingredient_rows(db, body, recipe_id)
     ensure_profile(db, user)
     db.execute(insert(Recipe).values(id=recipe_id, seed_key=None, owner_id=user.id,
+               published_at=datetime.now(timezone.utc) if body.visibility == 'public' else None,
                review_required=False, **body.model_dump(exclude={'ingredients'})))
     db.execute(insert(RecipeIngredient), rows)
     result = get_recipe(db, recipe_id, user.id)
@@ -108,12 +118,28 @@ def delete_recipe(db: Session, recipe_id: str, user: CurrentUser) -> None:
     db.commit()
 
 
+def set_visibility(db: Session, recipe_id: str, body: RecipeVisibilityUpdate, user: CurrentUser) -> RecipeRead:
+    owned_recipe(db, recipe_id, user)
+    # Le verrou de propriété sérialise publication, retrait et suppression.
+    recipe = db.execute(select(Recipe.visibility, Recipe.published_at).where(Recipe.id == recipe_id)).one()
+    if recipe.visibility != body.visibility:
+        db.execute(update(Recipe).where(Recipe.id == recipe_id, Recipe.owner_id == user.id).values(
+            visibility=body.visibility,
+            published_at=datetime.now(timezone.utc) if body.visibility == 'public' else None,
+        ))
+    result = get_recipe(db, recipe_id, user.id)
+    db.commit()
+    return result
+
+
 def set_favorite(db: Session, recipe_id: str, user: CurrentUser, enabled: bool) -> None:
+    if not enabled:
+        # Retrait idempotent possible même après la dépublication par l'auteur.
+        db.execute(delete(Favorite).where(Favorite.user_id == user.id, Favorite.recipe_id == recipe_id))
+        db.commit()
+        return
     if db.scalar(select(Recipe.id).where(Recipe.id == recipe_id, visible(user.id)).with_for_update()) is None:
         fail(404, 'RECIPE_NOT_FOUND', 'Recette introuvable.')
     ensure_profile(db, user)
-    if enabled:
-        db.execute(insert(Favorite).values(user_id=user.id, recipe_id=recipe_id).on_conflict_do_nothing())
-    else:
-        db.execute(delete(Favorite).where(Favorite.user_id == user.id, Favorite.recipe_id == recipe_id))
+    db.execute(insert(Favorite).values(user_id=user.id, recipe_id=recipe_id).on_conflict_do_nothing())
     db.commit()

@@ -17,7 +17,7 @@ from backend.tests.test_ingredient_import import alembic_config, postgres  # noq
 
 def recipe_values():
     return dict(
-        id='recipe_test', seed_key='test', name='Recette de test', description='Description',
+        id='recipe_test', seed_key='test', visibility='public', name='Recette de test', description='Description',
         servings=2, prep_time_minutes=5, cook_time_minutes=10, total_time_minutes=15,
         image_url=None, instructions=[{'position': 1, 'text': 'Préparer.'}],
     )
@@ -108,7 +108,7 @@ def test_all_initial_recipes_fit_schema_without_loss(postgres):
     upsert_ingredients(postgres, read_ingredients(DEFAULT_CATALOG))
     document = RecipeSeedDocument.model_validate_json((ROOT / 'data/recipes/initial_recipes.json').read_text())
     for recipe in document.recipes:
-        values = recipe.model_dump(exclude={'ingredients'})
+        values = {**recipe.model_dump(exclude={'ingredients'}), 'visibility': 'public'}
         recipe_id = 'recipe_' + recipe.seed_key
         postgres.execute(Recipe.__table__.insert().values(id=recipe_id, **values))
         for position, ingredient in enumerate(recipe.ingredients, start=1):

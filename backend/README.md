@@ -2,6 +2,15 @@
 
 Le backend contient l’API FastAPI, la collecte Apify pour Maxi et l’extraction locale des reçus. Le code est organisé par fonction, avec des commandes et des guides séparés.
 
+Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
+privées par défaut, publication volontaire et retrait par le propriétaire.
+Appliquer `0009_recipe_visibility` avant de démarrer cette version. Les
+[contrats](docs/CONTRACTS.md#visibilité-et-sections-de-recettes--étape-backend)
+décrivent `scope` et `PATCH /api/v1/recipes/{id}/visibility`, ainsi que le
+masquage des favoris et du calendrier après retrait. Les sections mobiles et le choix de publication dans le formulaire et le
+détail sont intégrés ; leurs nouveaux parcours restent à vérifier sur appareil. Le bucket public `recipes-images` est conservé pendant le
+prototype ; sa séparation privé/public est reportée après le prototype.
+
 ## Structure
 
 ```text
