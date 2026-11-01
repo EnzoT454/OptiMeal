@@ -13,9 +13,9 @@ backend/
 │   ├── config.py                # Configuration par application, .env et environnement
 │   ├── database.py              # Moteur PostgreSQL et sessions par requête
 │   ├── security.py              # Validation distante Supabase Auth
-│   ├── accounts/                # Identité Auth et profil minimal
+│   ├── accounts/                # Identité, profil et suppression de compte (Auth/Storage)
 │   ├── recipes/                 # Modèles, autorisations, CRUD manuel et favoris
-│   ├── planning/                # Base des plans hebdomadaires et de leur historique
+│   ├── planning/                # Calendrier privé et repas planifiés ; instantanés à développer
 │   ├── shopping_lists/          # Base des listes, modifications et recalcul
 │   ├── common/                  # Contrats et routes communs ; calculs à développer
 │   ├── catalog/
@@ -67,7 +67,7 @@ backend/
 ├── alembic.ini                  # Configuration sans identifiants
 ├── alembic/                     # Chaîne unique des migrations PostgreSQL
 │   ├── env.py                   # Métadonnées applicatives et connexion serveur
-│   └── versions/                # Six migrations : comptes, recettes, catalogue et circulaires
+│   └── versions/                # Huit migrations : comptes, recettes, catalogue, circulaires, photos et calendrier
 ├── tests/
 │   ├── conftest.py              # Base des futures fixtures partagées
 │   ├── test_accounts.py         # Profils et isolation des comptes
@@ -83,8 +83,8 @@ backend/
 ```
 
 Les fichiers `__init__.py` identifient les packages Python. Les comptes,
-recettes et contrôles de sécurité sont fonctionnels ; planning et listes
-restent des squelettes. Dans chaque domaine, `router.py` traite les requêtes
+recettes, calendrier et contrôles de sécurité sont fonctionnels ; les listes
+restent des squelettes et les instantanés historiques sont à développer. Dans chaque domaine, `router.py` traite les requêtes
 HTTP, `schemas.py` définit les contrats, `models.py` les modèles persistants
 et `service.py` les règles métier, selon l’état d’avancement du domaine.
 
@@ -116,11 +116,38 @@ des identifiants partagés et des prix décimaux en chaînes.
 Le [guide des contrats](docs/CONTRACTS.md) détaille les filtres, dates et limites.
 Les [schémas et exemples](contracts/v1/README.md) peuvent être régénérés avec
 `python -m backend.cli.export_shared_contracts`. La connexion PostgreSQL/Supabase
-est disponible avec six migrations couvrant ingrédients, recettes, profils,
-favoris, catégories, offres et circulaires. Les imports des ingrédients,
-recettes et offres sont rejouables. Planning et listes restent à développer.
+est disponible avec huit migrations couvrant ingrédients, recettes, profils,
+favoris, catégories, offres, circulaires, photos de produits et repas planifiés. La révision
+`0007_product_images` ajoute les champs facultatifs `image_url` et
+`image_source` dans `product_offer`. Appliquer `upgrade head`, reconstruire
+le catalogue commun et relancer `import_offers` pour remplir ces champs.
+La liste et le détail des offres les exposent avec les deux sources de lecture.
+Les images sont téléchargées directement depuis les serveurs des magasins ;
+elles ne sont pas hébergées dans Storage. Voir les [contrats](docs/CONTRACTS.md#photos-des-produits)
+et les [migrations](docs/MIGRATIONS.md#photos-des-produits). Les imports des ingrédients,
+recettes et offres sont rejouables. Le calendrier est disponible ; les listes
+et l’historique stable par instantanés restent à développer.
 Supabase Auth, les profils et les recettes personnelles sont disponibles ;
 voir le [guide Auth](docs/AUTH.md) et le [mobile](../mobile/README.md).
+
+## Calendrier des repas
+
+Le calendrier expose `/api/v1/plans` et ses entrées de repas, avec connexion
+requise et contrôle du propriétaire. Appliquer `0008_meal_plan` avant de
+l’utiliser. Le mobile propose la navigation par semaine, ajout par recette
+ou note, portions, déplacement, duplication et restes. Voir le
+[guide du calendrier](docs/PLANNING.md) pour les formats et les limites : les
+recettes sont encore lues dans leur version courante, sans instantanés.
+
+## Suppression du compte utilisateur
+
+`DELETE /api/v1/me`, avec une session valide et
+`{"confirmation":"SUPPRIMER"}`, supprime le compte connecté. Configurer
+`SUPABASE_SECRET_KEY` uniquement côté serveur ; les photos du dossier personnel
+sont retirées avant la suppression Auth et les cascades des données métier.
+Le mobile expose ce parcours dans Paramètres. Voir le
+[guide Auth](docs/AUTH.md#suppression-définitive-du-compte) pour les erreurs,
+les limites en cas d’interruption et les essais sur compte de test.
 
 ## Connexion PostgreSQL / Supabase
 
@@ -222,12 +249,17 @@ python -m pytest backend/tests -q
 
 Les tests couvrent les modules existants sans collecte externe ni appel payant. Ils ne prouvent pas l’exactitude des prix en magasin.
 
+Le 1er novembre, Hamza a aussi confirmé sur iOS le mode visiteur, la connexion
+à la demande, la photo obligatoire à la création, les photos des produits et
+la suppression du compte. Ces ajouts restent à reproduire sur Android ; les
+scénarios d’erreur détaillés restent à compléter.
+
 Les parcours comptes, recettes, photos et Promos ont été confirmés sur iOS
 et Android par Hamza le 27 octobre 2026, avec des essais Android par son
 coéquipier. Pour la suite, développer les connecteurs web IA Metro/Super C
-dans `app/price_sources/`, les modes IA des recettes, le planning, les listes,
+dans `app/price_sources/`, les modes IA des recettes, les instantanés du calendrier, les listes,
 l’historique des prix et les contributions par reçus. Compléter les fichiers déjà préparés dans les domaines concernés et leurs tests. Garder les routes HTTP courtes et les traitements réutilisables hors des commandes.
 
 Le [guide des données](docs/DATA.md) décrit les fichiers locaux. Le [guide de la base](docs/DATABASE.md) distingue les tables actuelles du modèle étendu proposé pour l’historique, les reçus et les estimations.
 
-*Dernière mise à jour : 27 octobre 2026*
+*Dernière mise à jour : 1er novembre 2026*

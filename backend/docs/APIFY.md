@@ -87,7 +87,7 @@ Pour Apify, `observed_at` et `retrieved_at` représentent l’instant local du d
 
 Hamza confirme que les données Maxi récupérées par Apify ont été vérifiées et sont correctes pour les produits, les prix et la succursale Maxi Côte-des-Neiges (`8661`). La validation est consignée le 4 octobre 2026 et couvre les données retenues, dont les 31 produits et les promotions regroupés dans `data/catalog/maxi/data_final/`.
 
-Les captures historiques restent conservées. Les fichiers de `data_final/` utilisent maintenant le même format simplifié que Super C, sans attribut supplémentaire de validation. Les versions précédentes, leur statut `reviewed_and_verified` et leur section `human_validation` sont conservés dans `data/catalog/maxi/archives/data_final-before-common-format/`. La confirmation de Hamza reste valable pour les données retenues. Les dates et conditions inconnues ne sont pas inventées ; l’intégration applicative et en base reste à développer.
+Les captures historiques restent conservées. Les fichiers de `data_final/` utilisent maintenant le même format simplifié que Super C, sans attribut supplémentaire de validation. Les versions précédentes, leur statut `reviewed_and_verified` et leur section `human_validation` sont conservés dans `data/catalog/maxi/archives/data_final-before-common-format/`. La confirmation de Hamza reste valable pour les données retenues. Les dates et conditions inconnues ne sont pas inventées. Le catalogue commun et son import dans PostgreSQL sont maintenant disponibles ; les captures Apify doivent être vérifiées et préparées avant leur intégration. La validation du 4 octobre ne garantit pas les collectes ou les prix ultérieurs.
 
 ## Sources et validation
 

@@ -42,7 +42,10 @@ hors réseau. `/health` reste disponible sans base ni catalogue.
 Les recettes utilisent le champ nullable `image_url` pour leurs images
 Supabase Storage. Les dix URL initiales sont synchronisées avec le fichier
 d’import ; les photos personnelles sont envoyées par le mobile avant
-POST/PUT de la recette. Le retrait envoie `image_url: null`. Les contrats
+POST/PUT de la recette. À la création, `RecipeCreate` exige une chaîne
+`image_url` non vide contenant une URL HTTPS valide ; une omission, `null`,
+une chaîne vide ou une URL invalide produit 422 avant création. L’édition
+conserve le contrat `RecipeWrite` nullable : le retrait envoie `image_url: null`. Les contrats
 HTTP sont inchangés ; les droits et limites Storage sont décrits dans
 [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
 
@@ -91,6 +94,30 @@ Sans jeton, seules les recettes initiales sont visibles ; avec un jeton
 valide, les recettes personnelles du compte s’ajoutent. `favorites=true`
 exige une session. Les droits et routes sont décrits dans [AUTH.md](AUTH.md).
 
+## Calendrier
+
+Les routes `/api/v1/plans`, `/api/v1/plans/entries` et
+`/api/v1/plans/entries/{id}` sont intégrées et décrites dans l’export OpenAPI.
+Elles exigent une connexion et utilisent la table de la migration `0008`.
+Le [guide du calendrier](PLANNING.md) détaille lecture par semaine, création,
+modification, suppression, repas libres et restes. Le modèle actuel utilise
+les recettes courantes ; il ne réalise pas encore l’historique par instantanés.
+
+## Suppression du compte
+
+`DELETE /api/v1/me` exige un jeton valide et le corps
+`{"confirmation":"SUPPRIMER"}`. Aucun identifiant de compte n’est accepté :
+seul le compte authentifié est supprimé. La réponse est 204 sans corps ; 401
+si la session manque, 422 si la confirmation est invalide ou un champ interdit
+est fourni, et 503 en cas de panne ou de configuration serveur manquante.
+
+Le nettoyage des photos précède la suppression Auth et les cascades métier.
+Ces opérations ne sont pas atomiques : une erreur peut survenir après le retrait
+de photos. Voir le [guide Auth](AUTH.md#suppression-définitive-du-compte) pour
+la configuration, les données supprimées et les limites. L’export OpenAPI
+inclut cette route et son schéma `AccountDelete` ; le mobile retire sa session
+locale seulement après une réponse de succès.
+
 ## Difficulté et étiquettes des recettes
 
 Les résumés, détails et écritures acceptent les champs additionnels
@@ -105,6 +132,39 @@ cuisson comprise. Économique est une indication de l’auteur, pas un coût cal
 Les recettes initiales conservent une difficulté non précisée et aucune
 étiquette personnelle. La migration requise est `0004_recipe_metadata`.
 
+## Photos des produits
+
+La liste `GET /api/v1/offers` et le détail `GET /api/v1/offers/{id}`
+exposent les mêmes champs additionnels, en lecture JSON et PostgreSQL :
+
+| Champ | Type | Rôle |
+| --- | --- | --- |
+| `image_url` | chaîne ou `null` | Lien direct de la photo du produit |
+| `image_source` | chaîne ou `null` | Provenance de la photo, par exemple `superc` |
+
+Dans les modèles Pydantic, leur omission donne `null`, ce qui permet de lire
+les anciens catalogues sans photo. Les réponses sérialisées et le type
+TypeScript `Offer` incluent les deux champs. Les exports JSON Schema,
+OpenAPI et exemples dans `backend/contracts/v1/` les décrivent également.
+
+L’assembleur du catalogue transforme `ImageUrl` et `ImageSource` des fichiers
+marchands en ces noms communs. Il exige un préfixe HTTPS pour un lien
+renseigné et refuse le champ `ImageSource` seul sans champ `ImageUrl`.
+Les schémas Pydantic déclarent des chaînes nullables, sans validation HTTPS
+supplémentaire ; PostgreSQL impose le préfixe HTTPS via la migration `0007`.
+Ces contrôles ne prouvent ni la disponibilité du lien ni l’exactitude de la photo.
+
+L’API transmet une URL, sans télécharger ou héberger le fichier. Le mobile
+charge l’image directement et affiche une icône de panier en cas d’absence
+ou d’erreur. Les champs de photo sont exclus de l’empreinte de l’offre :
+modifier uniquement sa photo ou sa provenance conserve l’identifiant public.
+Les autres données de la fiche continuent à participer à cette empreinte.
+
+Pour les lectures PostgreSQL, appliquer `0007_product_images` puis importer
+le catalogue enrichi ; voir le [guide des migrations](MIGRATIONS.md#photos-des-produits).
+Ces photos de produits sont distinctes de `recipe.image_url`, qui référence
+les photos de recettes dans Supabase Storage.
+
 ## Identifiants partagés
 
 | Identifiant | Convention |
@@ -114,7 +174,7 @@ Les recettes initiales conservent une difficulté non précisée et aucune
 | Produit | Identifiant de fiche qualifié du catalogue commun, par exemple `maxi:8661:21004355001_EA` |
 | Enseigne | `maxi`, `metro`, `superc` |
 | Succursale API | Identifiant qualifié, par exemple `metro:178` ; le code marchand seul reste dans `external_store_id` |
-| Offre | `offer_…`, empreinte de l’ingrédient et de la fiche source ; stable à données identiques, renouvelée si la fiche change |
+| Offre | `offer_…`, empreinte de l’ingrédient et de la fiche source ; stable à données identiques ; les champs de photo sont exclus de l’empreinte |
 
 Le mobile traite les identifiants comme des chaînes opaques. Il n’en extrait
 pas des codes par découpage. Les `Id` numériques propres aux trois fichiers
@@ -285,4 +345,4 @@ résumés/détails ajoutent `is_owned` et `is_favorite`. Les métadonnées
 manuelles confirmées n’exigent pas la revue des recettes de démonstration.
 Voir [AUTH.md](AUTH.md) pour les corps, droits et codes de réponse.
 
-*Dernière mise à jour : 27 octobre 2026*
+*Dernière mise à jour : 1er novembre 2026*

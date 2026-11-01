@@ -1,6 +1,6 @@
 """Identité validée et profil minimal, sans champs de mot de passe."""
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Literal
 from uuid import UUID
 
 from pydantic import StringConstraints
@@ -19,3 +19,7 @@ class ProfilePatch(ContractModel):
 class ProfileRead(Identity):
     display_name: str | None
     created_at: datetime
+
+
+class AccountDelete(ContractModel):
+    confirmation: Literal['SUPPRIMER']

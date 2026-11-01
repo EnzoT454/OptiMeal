@@ -136,6 +136,52 @@ mobile. FastAPI les lit avec sa connexion serveur. Les retours en arrière de
 `0005` et `0006` suppriment leurs tables et leurs données ; ils ne constituent
 pas une procédure de conservation de l’historique.
 
+## Photos des produits
+
+`0007_product_images`, après `0006_circulars`, ajoute deux colonnes à
+`public.product_offer` :
+
+| Colonne | Type et règle |
+| --- | --- |
+| `image_url` | `TEXT NULL`, URL de la photo ; contrainte SQL imposant le préfixe `https://` lorsqu’elle est renseignée |
+| `image_source` | `TEXT NULL`, provenance de la photo, par exemple `maxi`, `metro` ou `superc` |
+
+Les lignes existantes sont conservées avec ces champs à `NULL`. La migration
+ne télécharge aucune image et ne remplit pas les URL. Depuis la racine,
+après configuration du serveur et import initial des ingrédients :
+
+```bash
+python -m alembic -c backend/alembic.ini upgrade head
+python -m backend.cli.build_common_catalog
+python -m backend.cli.import_offers
+```
+
+L’assembleur reprend `ImageUrl` et `ImageSource` des fichiers `produits.json`
+des trois enseignes et les transforme en `image_url` et `image_source` dans
+le catalogue commun. L’import insère ou actualise ces champs ; un rejeu
+identique ne modifie aucune ligne. Un catalogue sans photo fournit `NULL` :
+son import peut donc aussi retirer un lien précédemment enregistré.
+
+Appliquer `0007` avant les lectures PostgreSQL du code actuel. En lecture
+JSON, redémarrer FastAPI après reconstruction du catalogue. Les photos
+restent sur les serveurs des magasins, indépendamment des buckets Storage
+des recettes et circulaires. Le retour en arrière supprime les deux colonnes
+et leurs valeurs, sans supprimer les produits ni leurs prix. Voir les
+[contrats des photos de produits](CONTRACTS.md#photos-des-produits).
+
+## Repas planifiés
+
+`0008_meal_plan`, après `0007_product_images`, crée `meal_plan_entry` : UUID,
+propriétaire, date, moment du repas, recette ou note, portions et marquage de
+restes. Les clés étrangères suppriment les entrées lors de la suppression du
+compte ou de la recette référencée. RLS est activée ; le mobile passe par
+FastAPI. L’historique par instantanés n’est pas encore implémenté.
+
+Appliquer `python -m alembic -c backend/alembic.ini upgrade head` avant les
+requêtes Calendrier. Le retour en arrière supprime la table et ses entrées.
+L’audit local n’applique aucune migration au projet Supabase distant. Voir le
+[guide du calendrier](PLANNING.md) pour les routes, contraintes et limites.
+
 ## Importer les recettes et rejouer la commande
 
 ```bash
@@ -215,4 +261,4 @@ initiales avec les tables. Leurs insertions restent dans la base de test.
 Les tests de l’import vérifient également le rejeu complet, les ingrédients
 manquants, les conflits après modifications et l’annulation des ajouts partiels.
 
-*Dernière mise à jour : 27 octobre 2026*
+*Dernière mise à jour : 1er novembre 2026*

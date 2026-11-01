@@ -1,6 +1,6 @@
 # Catalogue et prix — évaluation et modèle de données proposé
 
-**Conception initiale : 28 septembre 2026. Mise à jour : 27 octobre 2026. Statut : ingrédients, recettes, profils, favoris, catégories, offres et circulaires implémentés ; historique des prix, reçus et estimations proposés.**
+**Conception initiale : 28 septembre 2026. Mise à jour : 1er novembre 2026. Statut : ingrédients, recettes, profils, favoris, catégories, offres et circulaires implémentés ; historique des prix, reçus et estimations proposés.**
 
 Ce document évalue la structure transmise par l’équipe : un ingrédient canonique contient des produits commerciaux, chacun contenant ses offres. Il couvre le catalogue, les sources de prix et l’intégration des reçus. Les comptes, recettes, plans et listes sont décrits uniquement aux endroits où ils touchent ces données.
 
@@ -24,7 +24,7 @@ La proposition étendue nécessite surtout six ajustements avant son implémenta
 | Composant | Disponible aujourd’hui | Conséquence pour la conception |
 | --- | --- | --- |
 | `app/database.py` et configuration | Moteur SQLAlchemy/Psycopg, sessions par requête et contrôle `/health/db` | Voir le [guide Supabase](SUPABASE.md) ; les recettes lisent PostgreSQL ; ingrédients sur JSON, offres sur JSON ou PostgreSQL selon `OFFERS_SOURCE` |
-| Modèles et `alembic/env.py` | Six migrations : ingrédients, recettes, profils, favoris, catégories, offres et circulaires ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous à développer |
+| Modèles et `alembic/env.py` | Huit migrations : ingrédients, recettes, profils, favoris, catégories, offres, circulaires, photos de produits et calendrier ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous à développer |
 | `app/catalog/apify_ingestion.py` et `apify_batch.py` | Normalisation des captures Apify, produits, formats, prix et avertissements | Prévoir l’insertion des données vérifiées ; Metro/Super C web IA restent à développer |
 | `app/receipts/schemas.py` | Contrat `receipt-1.1`, OCR local, articles, ajustements et contrôles | Stocker d’abord une extraction privée à vérifier |
 | Comptes | Supabase Auth, profil minimal et droits sur recettes/favoris | Voir [AUTH.md](AUTH.md) ; préférences détaillées à développer |
@@ -36,8 +36,24 @@ migrations applicatives. `0001_ingredients` crée le référentiel commun,
 `0002_recipes` les recettes et leurs ingrédients, puis `0003_accounts` les
 profils, favoris et liens de propriété. `0004_recipe_metadata` ajoute difficulté
 facultative et étiquettes aux recettes. `0005_catalog_offers` crée `category`
-et `product_offer` ; `0006_circulars` crée `circular`. Les migrations sont
+et `product_offer` ; `0006_circulars` crée `circular`.
+`0007_product_images` ajoute l’URL et la provenance des photos de produits ;
+`0008_meal_plan` crée les repas privés dans `meal_plan_entry`. Les migrations sont
 la référence exécutable du schéma ; ce document ne les remplace pas.
+
+La suppression du compte est maintenant exposée par `DELETE /api/v1/me`.
+Après nettoyage du dossier photo, l’API administrative Supabase supprime le
+compte Auth ; les cascades de `0003_accounts` retirent profil, recettes
+personnelles et favoris. La nouvelle obligation de photo à la création est
+validée par `RecipeCreate`, sans modifier les colonnes nullables existantes.
+Voir le [guide Auth](AUTH.md#suppression-définitive-du-compte) et les
+[contrats](CONTRACTS.md).
+
+Le calendrier conserve des entrées par utilisateur, date et moment, liées à
+une recette courante ou à une note. La suppression d’un compte ou d’une recette
+supprime les entrées concernées par cascade. Les instantanés immuables et les
+prix historiques décrits plus loin restent une conception cible ; voir le
+[calendrier actuel](PLANNING.md#conservation-et-limites).
 
 ### Schéma utilisé aujourd’hui
 
@@ -46,6 +62,27 @@ dans une ligne liée à `ingredient` et éventuellement `category`. L’import
 actualise cette ligne sans conserver les anciens prix. Ce schéma simple
 alimente l’onglet Promos ; il ne réalise pas encore la séparation complète
 produit, magasin, assertion de prix et historique proposée ci-dessous.
+
+Depuis `0007`, `product_offer.image_url` et `image_source` sont des colonnes
+`TEXT` nullables. La première conserve un lien HTTPS vers la photo du magasin,
+la seconde sa provenance. La migration laisse les anciennes lignes à `NULL` ;
+l’import du catalogue enrichi remplit les liens et actualise ceux qui changent.
+L’image n’est pas stockée en base ni copiée dans Supabase Storage.
+
+```mermaid
+flowchart LR
+    J[Catalogue commun : URL et provenance] --> I[Import des offres]
+    I --> D[(product_offer : image_url et image_source)]
+    D --> A[API : liste et détail des offres]
+    A --> M[Mobile : ProductImage]
+    S[Serveurs images des magasins] -->|Fichier image| M
+```
+
+Ce lien est une métadonnée du produit courant, sans historique propre. Il
+ne prouve ni la correspondance visuelle ni la disponibilité du produit.
+Les champs de photo sont exclus du calcul de l’identifiant public `offer_…`.
+Voir les [migrations](MIGRATIONS.md#photos-des-produits) et les
+[contrats](CONTRACTS.md#photos-des-produits) pour les règles exactes.
 
 `circular` conserve une circulaire par enseigne et les références vers ses
 pages JPEG dans Storage. L’import remplace la circulaire précédente ; ses

@@ -37,11 +37,23 @@ Le mobile utilise la clé publique et le jeton de session pour envoyer les
 octets à l’API Storage ; aucune clé administrative n’est distribuée. L’envoi
 est limité à 30 secondes. Il n’a lieu qu’après validation du formulaire.
 FastAPI enregistre ensuite l’URL avec les autres champs de la recette.
-Les formats HTTP et le schéma PostgreSQL des recettes restent identiques.
+À la création, `POST /api/v1/recipes` utilise le contrat `RecipeCreate` :
+`image_url` doit être une chaîne non vide contenant une URL HTTPS valide.
+Une photo manquante, nulle ou invalide produit 422 avant toute création.
+Le mobile désactive l’enregistrement sans photo et n’envoie la recette
+qu’après la réussite de l’envoi Storage. Il peut réutiliser une URL obtenue
+lors d’une tentative précédente dont seule la sauvegarde API a échoué.
+
+Le schéma PostgreSQL reste inchangé et nullable, pour conserver les recettes
+existantes et les imports. La lecture et `PUT` utilisent toujours leurs
+contrats compatibles avec `image_url: null`. Cette obligation porte sur les
+nouvelles créations personnelles ; elle ne modifie pas les anciennes recettes.
+Le backend valide le format de l’URL, sans télécharger la photo pour vérifier
+son contenu ou sa disponibilité.
 
 Le formulaire conserve la photo locale en cas d’échec de l’envoi. Si seule
 la sauvegarde FastAPI échoue, il conserve l’URL déjà obtenue pour réessayer.
-Le retrait d’une photo met `image_url` à `null` ; il ne supprime pas le fichier
+En édition, le retrait d’une photo met `image_url` à `null` ; il ne supprime pas le fichier
 Storage. Les remplacements, suppressions de recettes et formulaires abandonnés
 après envoi peuvent laisser des fichiers inutilisés. Leur nettoyage reste
 à développer ; aucun fichier n’est supprimé automatiquement après une erreur
@@ -62,4 +74,8 @@ parcours des photos sur iOS et Android ; son coéquipier l’a également essay�
 sur Android. Les essais d’erreur réseau restent à compléter selon le
 [guide mobile](../../mobile/README.md).
 
-*Dernière mise à jour : 27 octobre 2026*
+Le 1er novembre 2026, Hamza a confirmé sur iOS le parcours de création
+avec photo obligatoire. Cette nouvelle règle reste à vérifier sur Android ;
+les scénarios d’erreur réseau détaillés restent à compléter.
+
+*Dernière mise à jour : 1er novembre 2026*

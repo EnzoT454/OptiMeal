@@ -10,7 +10,7 @@ from backend.app.common.public_router import Limit, Offset, Search, fail
 from backend.app.database import get_db
 from backend.app.security import CurrentUser, current_user, optional_user, auth_error
 from . import service
-from .schemas import RecipeRead, RecipeSummary, RecipeWrite
+from .schemas import RecipeCreate, RecipeRead, RecipeSummary, RecipeWrite
 
 router = APIRouter(prefix='/api/v1/recipes', tags=['Recettes v1'], responses={
     401: {'model': ErrorResponse}, 404: {'model': ErrorResponse},
@@ -56,7 +56,7 @@ def get_recipe(recipe_id: str, user: CurrentUser | None = Depends(optional_user)
 
 
 @router.post('', response_model=Detail[RecipeRead], status_code=201)
-def create_recipe(body: RecipeWrite, user: CurrentUser = Depends(current_user), db: Session = Depends(recipe_db)):
+def create_recipe(body: RecipeCreate, user: CurrentUser = Depends(current_user), db: Session = Depends(recipe_db)):
     return {'item': service.create_recipe(db, body, user), 'meta': recipe_meta('user_content')}
 
 
