@@ -5,10 +5,10 @@ const path = require('node:path');
 const vm = require('node:vm');
 const ts = require('typescript');
 
-function editor({ localPhoto = null, savedPhoto = null, uploadFails = false, id } = {}) {
+function editor({ localPhoto = null, savedPhoto = null, uploadFails = false, name = 'Recette test', id } = {}) {
   const calls = [], uploads = [], navigation = [];
-  const states = { 0: [{ id: 'ing_test', name: 'Ingrédient' }], 1: 'Recette test',
-    8: savedPhoto, 9: localPhoto, 10: [{ ingredient_id: 'ing_test', amount: '100 g', preparation: null }],
+  const states = { 0: [{ id: 'ing_test', name: 'Ingrédient' }], 1: name,
+    8: savedPhoto, 9: localPhoto, 10: [{ ingredient_id: 'ing_test', quantity: '100', unit: 'g', preparation: null }],
     11: ['Préparer.'], 16: false };
   let cursor = 0;
   const exports = {};
@@ -43,9 +43,9 @@ function editor({ localPhoto = null, savedPhoto = null, uploadFails = false, id 
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(__dirname, '../app/RecipeEditorScreen.tsx'), 'utf8'),
     { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText,
     { exports, require: requireMock });
-  const tree = exports.default({ route: { params: id ? { id } : undefined },
-    navigation: { reset: value => navigation.push(value) } });
-  return { tree, calls, uploads, navigation, states };
+  const render = () => { cursor = 0; return exports.default({ route: { params: id ? { id } : undefined },
+    navigation: { reset: value => navigation.push(value) } }); };
+  return { tree: render(), render, calls, uploads, navigation, states };
 }
 function nodes(tree) {
   if (!tree || typeof tree !== 'object') return [];
@@ -54,6 +54,22 @@ function nodes(tree) {
 }
 const saveButton = tree => nodes(tree).find(n => n.props?.title === 'Enregistrer la recette');
 const flush = () => new Promise(setImmediate);
+
+for (const name of ['', '   ']) {
+  for (const id of [undefined, 'recipe_existing']) {
+    test(`nom ${JSON.stringify(name)}, ${id ? 'édition' : 'création'} : bloquer même avec une photo`, async () => {
+      const e = editor({ name, id, localPhoto: 'file:///photo.jpg' });
+      const save = saveButton(e.tree);
+      assert.equal(save.props.disabled, true);
+      save.props.onPress();
+      await flush();
+      assert.equal(e.calls.length, 0);
+      assert.equal(e.uploads.length, 0);
+      assert.equal(e.navigation.length, 0);
+      assert.match(e.states[17], /Ajoute un nom/);
+    });
+  }
+}
 
 test('nouvelle recette sans photo : bouton désactivé et aucun envoi même en appel direct', async () => {
   const e = editor();
@@ -103,4 +119,31 @@ test('une recette existante sans photo reste modifiable', async () => {
   await flush();
   assert.equal(e.calls[0][1].method, 'PUT');
   assert.equal(JSON.parse(e.calls[0][1].body).image_url, null);
+});
+
+test('sélection fixe de l’unité et saisie séparée : envoyer la quantité et l’unité choisies', async () => {
+  const e = editor({ localPhoto: 'file:///photo.jpg' });
+  const options = nodes(e.tree).filter(n => n.props?.accessibilityRole === 'radio');
+  assert.equal(options.length, 3);
+  assert.equal(options.filter(n => n.props.accessibilityState.checked).length, 1);
+  options[1].props.onPress();
+  let tree = e.render();
+  assert.equal(nodes(tree).filter(n => n.props?.accessibilityRole === 'radio')[1].props.accessibilityState.checked, true);
+  nodes(tree).find(n => n.props?.label === 'Quantité').props.onChangeText('12,5');
+  tree = e.render();
+  saveButton(tree).props.onPress();
+  await flush();
+  const ingredient = JSON.parse(e.calls[0][1].body).ingredients[0];
+  assert.equal(ingredient.quantity, '12.5');
+  assert.equal(ingredient.unit, 'ml');
+});
+
+test('aucune unité choisie : bloquer avant tout envoi de photo ou de recette', async () => {
+  const e = editor({ localPhoto: 'file:///photo.jpg' });
+  e.states[10][0].unit = null;
+  saveButton(e.render()).props.onPress();
+  await flush();
+  assert.equal(e.calls.length, 0);
+  assert.equal(e.uploads.length, 0);
+  assert.match(e.states[17], /Choisis une unité/);
 });

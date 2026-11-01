@@ -206,8 +206,8 @@ flowchart TD
 
 Les responsabilités se répartissent ainsi :
 
-1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes, la difficulté et les étiquettes.
-2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. `recipeForm.ts` regroupe des règles de quantités et de badges.
+1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes, la difficulté et les étiquettes. Le nom est obligatoire : le bouton d’enregistrement reste désactivé s’il est vide ou ne contient que des espaces. À la création, une photo est également obligatoire ; les autres champs requis sont vérifiés avant l’enregistrement.
+2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. La quantité se saisit dans un champ numérique séparé ; l’unité se choisit parmi trois boutons visibles : g, ml et unité. Aucune unité n’est présélectionnée pour un nouvel ingrédient. Les quantités doivent être positives et les unités en pièces entières. `recipeForm.ts` regroupe ces validations et les règles des badges.
 3. La photo, obligatoire pour créer une recette, est préparée par `recipeImages.ts` : JPEG, côté maximal de 1 200 pixels et limite de 5 Mo. Son envoi intervient à l’enregistrement.
 4. `api.ts` transmet le formulaire à FastAPI avec le jeton.
 5. Le backend exige une URL de photo HTTPS valide à la création, valide les autres champs et vérifie que les ingrédients existent en base. Il déduit le propriétaire de l’identité authentifiée.
@@ -707,6 +707,8 @@ sequenceDiagram
 Cette configuration permet les appels API depuis ces deux origines locales. Un autre port, une adresse IP du réseau ou un futur domaine web demande une adaptation de la liste. CORS ne remplace ni la connexion ni les contrôles de propriétaire et ne règle pas un problème de pare-feu ou d’URL inaccessible. Les applications natives iOS et Android ne sont pas soumises à cette restriction du navigateur. Cet ajout ne constitue pas une validation complète de l’application dans sa version web.
 
 ## 13. Ce qui fonctionne et le parcours encore à construire
+
+Le 1er novembre 2026, Hamza a confirmé sur iOS le nom obligatoire pour activer l’enregistrement et la saisie de quantité séparée du choix de l’unité parmi g, ml et unité. Les essais Android de ces ajustements restent à effectuer.
 
 | État au 1er novembre 2026 | Parcours |
 | --- | --- |

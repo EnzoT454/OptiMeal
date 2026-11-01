@@ -7,12 +7,12 @@ import IngredientPicker from '../components/IngredientPicker';
 import RecipeImage from '../components/RecipeImage';
 import { api } from '../services/api';
 import { chooseRecipeImage, uploadRecipeImage } from '../services/recipeImages';
-import { difficultyLabels, parseQuantityUnit } from '../services/recipeForm';
-import { Detail, Ingredient, Page, Recipe, RecipeDifficulty, RecipeWrite } from '../types/api';
+import { difficultyLabels, parseIngredientQuantity, recipeUnits } from '../services/recipeForm';
+import { Detail, Ingredient, Page, Recipe, RecipeDifficulty, RecipeUnit, RecipeWrite } from '../types/api';
 import { RecipeStackParams } from '../types/navigation';
 
-type IngredientDraft = { ingredient_id: string; amount: string; preparation: string | null };
-const emptyIngredient = (): IngredientDraft => ({ ingredient_id: '', amount: '', preparation: null });
+type IngredientDraft = { ingredient_id: string; quantity: string; unit: RecipeUnit | null; preparation: string | null };
+const emptyIngredient = (): IngredientDraft => ({ ingredient_id: '', quantity: '', unit: null, preparation: null });
 
 export default function RecipeEditorScreen({ route, navigation }: NativeStackScreenProps<RecipeStackParams, 'Editor'>) {
   const id = route.params?.id;
@@ -38,7 +38,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
           setName(r.name); setDescription(r.description); setServings(String(r.servings));
           setPrep(String(r.prep_time_minutes)); setCook(String(r.cook_time_minutes)); setImage(r.image_url);
           setDifficulty(r.difficulty ?? null); setTags((r.tags ?? []).join(', '));
-          setIngredients(r.ingredients.map(i => ({ ingredient_id: i.ingredient_id, amount: `${i.quantity} ${i.unit}`, preparation: i.preparation })));
+          setIngredients(r.ingredients.map(i => ({ ingredient_id: i.ingredient_id, quantity: i.quantity, unit: i.unit, preparation: i.preparation })));
           setSteps(r.instructions.map(step => step.text));
         }
         setCatalog(data.items);
@@ -60,11 +60,14 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
     if (busy || picking) return;
     let body: RecipeWrite;
     try {
+      if (!name.trim()) {
+        throw new Error('Ajoute un nom pour enregistrer la recette.');
+      }
       if (!id && !(localImage?.trim() || image?.trim())) {
         throw new Error('Ajoute une photo pour créer la recette.');
       }
       const integer = (value: string) => /^\d+$/.test(value) && Number.isSafeInteger(Number(value));
-      if (!name.trim() || !integer(servings) || Number(servings) < 1 || !integer(prep) || !integer(cook) ||
+      if (!integer(servings) || Number(servings) < 1 || !integer(prep) || !integer(cook) ||
           !ingredients.length || ingredients.some(i => !i.ingredient_id) || !steps.length || steps.some(step => !step.trim())) {
         throw new Error('Complète le nom, les portions, les durées, au moins un ingrédient et les étapes.');
       }
@@ -73,7 +76,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
       body = { name: name.trim(), description: description.trim() || name.trim(), servings: Number(servings),
         prep_time_minutes: Number(prep), cook_time_minutes: Number(cook), total_time_minutes: Number(prep) + Number(cook),
         image_url: image, difficulty, tags: labels,
-        ingredients: ingredients.map(i => ({ ingredient_id: i.ingredient_id, ...parseQuantityUnit(i.amount), preparation: i.preparation?.trim() || null })),
+        ingredients: ingredients.map(i => ({ ingredient_id: i.ingredient_id, ...parseIngredientQuantity(i.quantity, i.unit), preparation: i.preparation?.trim() || null })),
         instructions: steps.map((text, index) => ({ position: index + 1, text: text.trim() })) };
     } catch (e) { setError((e as Error).message); Alert.alert('Vérifie la recette', (e as Error).message); return; }
     setBusy(true); setError('');
@@ -93,7 +96,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
       <Message text={error} />
       {loading ? <Text>Chargement…</Text> : catalog.length === 0 ? <RecipeButton title="Réessayer" onPress={() => setRetry(retry + 1)} /> :
         <View style={{ gap: 20 }} pointerEvents={busy || picking ? 'none' : 'auto'}>
-          <RecipeField label="Nom de la recette" placeholder="Ex. : Salade de riz maison" value={name} onChangeText={setName} />
+          <RecipeField label="Nom de la recette (obligatoire)" placeholder="Ex. : Salade de riz maison" value={name} onChangeText={setName} />
           {(localImage || image) && <RecipeImage recipe={{ id: id ?? '', name: name || 'Photo de la recette', image_url: localImage ?? image }} />}
           <View style={{ gap: 8 }}>
             <Pressable accessibilityRole="button" onPress={() => void pickImage()} disabled={busy || picking} style={recipeStyles.notice}>
@@ -114,8 +117,25 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
                   <Text numberOfLines={2} style={[recipeStyles.body, { color: recipeColors.ink }]}>{catalog.find(i => i.id === item.ingredient_id)?.name ?? 'Choisir…'}</Text>
                 </Pressable>
               </View>
-              <RecipeField containerStyle={{ width: '34%' }} label="Qté et unité" placeholder="300 g" value={item.amount} onChangeText={amount => change(index, { amount })} />
             </View>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12, alignItems: 'flex-start' }}>
+              <RecipeField containerStyle={{ flexGrow: 1, flexBasis: 90 }} label="Quantité" accessibilityLabel={`Quantité de l’ingrédient ${index + 1}`} placeholder="Ex. : 300" keyboardType="decimal-pad"
+                value={item.quantity} onChangeText={quantity => change(index, { quantity })} />
+              <View style={{ flexGrow: 1, flexBasis: 190 }}>
+                <Text style={recipeStyles.label}>Unité</Text>
+                <View accessibilityRole="radiogroup" accessibilityLabel={`Unité de l’ingrédient ${index + 1}`} style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                  {recipeUnits.map(option => <Pressable key={option.value} accessibilityRole="radio"
+                    accessibilityLabel={`${option.accessibilityLabel}, ingrédient ${index + 1}`} accessibilityState={{ checked: item.unit === option.value }}
+                    onPress={() => change(index, { unit: option.value })}
+                    style={[recipeStyles.input, { minWidth: 48, minHeight: 48, flexGrow: 1, alignItems: 'center', justifyContent: 'center', borderWidth: 1,
+                      borderColor: item.unit === option.value ? recipeColors.green : recipeColors.border,
+                      backgroundColor: item.unit === option.value ? recipeColors.green : 'white' }]}>
+                    <Text style={[recipeStyles.body, { color: item.unit === option.value ? 'white' : recipeColors.ink }]}>{item.unit === option.value ? '✓ ' : ''}{option.label}</Text>
+                  </Pressable>)}
+                </View>
+              </View>
+            </View>
+            {item.unit === 'unit' && <Text style={recipeStyles.note}>Indique un nombre entier de pièces.</Text>}
             {item.preparation !== null && <RecipeField label="Précision (facultatif)" value={item.preparation} onChangeText={preparation => change(index, { preparation })} />}
             <View style={[recipeStyles.row, { justifyContent: 'space-between' }]}>
               {item.preparation === null && <Pressable accessibilityRole="button" onPress={() => change(index, { preparation: '' })}><Text style={recipeStyles.remove}>Ajouter une précision</Text></Pressable>}
@@ -123,7 +143,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
             </View>
           </View>)}
           <RecipeButton title="+ Ajouter un ingrédient" variant="neutral" onPress={() => setIngredients([...ingredients, emptyIngredient()])} />
-          <Text style={recipeStyles.note}>Unités : g, ml ou unit. Exemple : 300 g, 150 ml, 2 unit.</Text>
+          <Text style={recipeStyles.note}>Saisis la quantité, puis choisis l’unité : grammes (g), millilitres (ml) ou unités.</Text>
           <Text accessibilityRole="header" style={recipeStyles.sectionTitle}>Préparation</Text>
           {steps.map((text, index) => <View key={index} style={{ gap: 6 }}>
             <RecipeField label={`Étape ${index + 1}`} placeholder="Décrivez cette étape…" value={text} multiline onChangeText={value => setSteps(steps.map((step, p) => p === index ? value : step))} />
@@ -145,8 +165,9 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
             <RecipeField label="Cuisson (minutes)" keyboardType="number-pad" value={cook} onChangeText={setCook} />
           </>}
           {Number(cook) > 0 && <Text style={recipeStyles.note}>Durée totale : {Number(prep) + Number(cook)} min, dont {cook} min de cuisson.</Text>}
-          {!id && !localImage && !image && <Text style={recipeStyles.note}>Ajoute une photo pour pouvoir enregistrer la recette.</Text>}
-          <RecipeButton title={busy ? 'Enregistrement…' : 'Enregistrer la recette'} disabled={busy || picking || (!id && !localImage && !image)} onPress={() => void save()} />
+          {!name.trim() && <Text style={recipeStyles.note}>Ajoute un nom pour pouvoir enregistrer la recette.</Text>}
+          {!id && !(localImage?.trim() || image?.trim()) && <Text style={recipeStyles.note}>Ajoute une photo pour pouvoir enregistrer la recette.</Text>}
+          <RecipeButton title={busy ? 'Enregistrement…' : 'Enregistrer la recette'} disabled={busy || picking || !name.trim() || (!id && !(localImage?.trim() || image?.trim()))} onPress={() => void save()} />
         </View>}
       <IngredientPicker visible={pickerIndex !== null} ingredients={catalog.filter(i => !ingredients.some((item, p) => p !== pickerIndex && item.ingredient_id === i.id))}
         onClose={() => setPickerIndex(null)} onSelect={ingredient_id => { if (pickerIndex !== null) change(pickerIndex, { ingredient_id }); setPickerIndex(null); }} />

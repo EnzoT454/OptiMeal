@@ -33,18 +33,18 @@ Le produit le moins cher ne constitue pas toujours le meilleur choix s’il impo
 
 ## Proposition et objectifs
 
-Nous proposons **OptiMeal**, une application sur iOS et Android qui réunira recettes, calendrier de repas et liste d’épicerie modifiable par magasin. L’utilisateur pourra préciser son budget, le nombre maximal de magasins, ses préférences alimentaires et ses contraintes de déplacement.
+Nous proposons **OptiMeal**, une application sur iOS et Android qui réunira recettes, calendrier de repas et liste d’épicerie modifiable par magasin. L’utilisateur pourra préciser son budget, ses préférences alimentaires et les magasins qu’il souhaite visiter.
 
 Les principaux objectifs sont les suivants :
 
-- **Gérer et découvrir des recettes** : permettre la création, la modification, la recherche et les favoris, avec trois modes d’ajout : ajout manuel, suggestion selon une envie et suggestion à partir des ingrédients disponibles. Pour l’ajout manuel, l’utilisateur choisira entre remplir un formulaire et saisir un texte que l’IA transformera dans le même format de recette. Les propositions de l’IA pourront être corrigées avant confirmation et sauvegarde.
-- **Planifier et conserver les repas** : enregistrer une semaine et ses portions dans un compte personnel, puis retrouver les anciennes semaines et leurs listes sans que des modifications ultérieures changent leur contenu historique.
-- **Préparer les achats** : regrouper les quantités nécessaires et produire une liste par magasin tenant compte des formats, des prix et des contraintes choisies. L’utilisateur pourra cocher, supprimer ou remplacer des articles, avec recalcul et conservation de ses choix manuels.
-- **Aider aux choix économiques** : proposer des recettes selon les promotions et un catalogue couvrant aussi les produits hors promotion. Distinguer les prix connus, déclarés après achat, estimés et inconnus ; permettre à l’utilisateur de photographier son reçu à la fin de ses courses pour contribuer, s’il le souhaite, aux prix payés. Il pourra vérifier et corriger les informations extraites avant de les confirmer pour améliorer les estimations.
+- **Gérer et découvrir des recettes** : créer ses recettes, les rechercher et les ajouter aux favoris. Trois modes d’ajout sont prévus : manuel, selon une envie et à partir des ingrédients disponibles. Le mode manuel proposera un formulaire ou un texte à structurer par l’IA, avec vérification avant sauvegarde.
+- **Planifier les repas** : organiser une semaine, ajuster les portions et retrouver ses anciennes semaines dans son compte.
+- **Préparer les achats** : regrouper les ingrédients nécessaires dans une liste par magasin, en tenant compte des prix et des contraintes choisies, puis permettre de cocher, supprimer ou remplacer les articles.
+- **Aider aux choix économiques** : proposer des recettes selon les promotions, signaler les prix incertains et permettre de contribuer aux données de prix par un reçu vérifié, de façon facultative.
 
-L’application cherchera à réduire le coût des achats, sans garantir le meilleur panier possible parmi toutes les combinaisons. Lorsque les données ne permettent pas de donner un prix précis, elle affichera une fourchette estimée min–max à partir des références disponibles. Si certains prix ne peuvent pas être estimés, ils seront signalés : la fourchette portera alors seulement sur la partie calculable de la liste.
+Lorsque les prix précis manquent, l’application affichera une fourchette estimée et signalera les articles dont le coût ne peut pas être estimé.
 
-Le dépôt contient un backend FastAPI, une collecte Maxi avec Apify, des échantillons Metro et Super C et une extraction locale de reçus. Un essai de récupération directe des données Maxi via PC Express a réussi sur cinq produits ; nous attendons l’avis du professeur avant de poursuivre cette piste. Le mobile, les comptes et la persistance restent à développer.
+La consultation est accessible sans compte ; les fonctions personnelles demandent une connexion. Les comptes, les recettes manuelles et la consultation des promotions et circulaires sont déjà intégrés. Le calendrier des repas est désormais intégré ; son historique stable, les listes d’épicerie, les modes IA et les estimations restent à développer. L’avancement est détaillé dans le [suivi de projet](suivi.md).
 
 ## Méthodologie
 
@@ -75,14 +75,21 @@ Les résultats, les limites observées et les fonctionnalités effectivement ré
 
 
 ## Échéancier
- 
-  Le suivi complet est disponible dans la page [Suivi de projet](suivi.md).
+
+Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md), complété par les ajouts de fin octobre. Les statuts correspondent à l’état au 1er novembre ; les essais complémentaires et les fonctionnalités restantes se poursuivront dans les prochaines semaines.
 
 | Activités | Début | Fin | Livrable | Statut |
 | --- | --- | --- | --- | --- |
 | Description du projet et cas d’utilisation | 31 août | 6 sept. | Description du projet et cas d’utilisation | ✅ Terminé |
-| Recherche d’applications similaires et début du prototype sur Figma | 7 sept. | 13 sept. | Recherche comparative et prototype initial sur Figma | ✅ Terminé |
+| Recherche d’applications similaires et début du prototype sur Figma | 7 sept. | 13 sept. | Recherche comparative et prototype initial | ✅ Terminé |
 | Analyse des applications existantes, prototype et modèle C4 | 14 sept. | 20 sept. | Présentation au professeur | ✅ Terminé |
-| Évaluation initiale des sources de données et tests d'extraction (circulaires, reçus) | 21 sept. | 27 sept. | Résultats des tests initiaux et choix d’une méthode | ✅ Terminé |
-| Poursuite de l'extraction et construction de la base de données | 28 sept. | 4 oct. | Collectes Maxi, OCR des reçus et modèle de base proposé ; persistance à réaliser | 🔄 En cours |
-| Exploration de PC Express et ajout de l’échantillon Metro | 5 oct. | 11 oct. | Essai sur cinq produits Maxi et échantillon Metro au format JSON ; avis du professeur à recueillir | 🔄 En cours |
+| Évaluation initiale des sources et essais d’extraction | 21 sept. | 27 sept. | Comparaison des méthodes de collecte et de lecture des reçus | ✅ Terminé |
+| Collecte Maxi, lecture des reçus et préparation du modèle de données | 28 sept. | 4 oct. | Données Maxi avec Apify, essais OCR Maxi/Metro et modèle proposé | ✅ Terminé pour les premiers essais |
+| Exploration de PC Express et ajout de l’échantillon Metro | 5 oct. | 11 oct. | Essai sur cinq produits Maxi et échantillon Metro ; avis du professeur encore attendu sur la poursuite de PC Express | ✅ Essai terminé |
+| Mise en place de la base, des comptes et du parcours Recettes | 12 oct. | 18 oct. | Persistance PostgreSQL, comptes, recettes manuelles et favoris | ✅ Socle intégré |
+| Catalogue commun et développement de l’onglet Promos | 19 oct. | 25 oct. | Catalogue des trois enseignes, offres en base et recettes associées aux promotions | ✅ Socle intégré |
+| Vérifications sur appareils et enrichissement des comptes, recettes et Promos | 26 oct. | 1 nov. | Mode visiteur, connexion à la demande, photo obligatoire, photos des produits et suppression du compte confirmés sur iOS le 1er novembre | ✅ Parcours confirmés sur iOS ; essais Android et erreurs à compléter |
+| Calendrier des repas | 26 oct. | 1 nov. | Repas sauvegardés, portions et actions ; code intégré depuis main le 1er novembre | ✅ Migration Supabase et parcours iOS confirmés ; Android à vérifier |
+| Historique stable, listes, modes IA, estimations et contributions | À planifier | À planifier | Parcours complet des repas aux achats, puis évaluation et synthèse | ⏳ À développer |
+
+*Dernière mise à jour : 1er novembre 2026*

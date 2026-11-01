@@ -298,3 +298,40 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 - Connexion du téléphone au serveur en Wi-Fi (pare-feu Windows, adresse IP qui change selon le réseau) ; solution de secours par câble USB
 - Données de test anciennes : la plupart des promotions étaient déjà terminées
+
+---
+
+## Semaine 9 (26 octobre – 1er novembre)
+
+### Objectifs de la période
+
+- Compléter l’intégration des comptes, des recettes et des promotions
+- Permettre la consultation sans compte et demander la connexion pour les actions personnelles
+- Vérifier les nouveaux parcours sur iOS
+
+### Travail réalisé
+
+- Ajout du mode visiteur pour consulter Accueil, Promos, Recettes et Paramètres
+- Connexion proposée lors des actions personnelles, avec possibilité de poursuivre sans compte
+- Photo obligatoire à la création d’une recette, avec validation dans le mobile et l’API
+- Nom obligatoire pour activer l’enregistrement d’une recette ; quantité séparée de l’unité, choisie parmi les boutons g, ml et unité
+- Ajout des photos de produits dans les cartes et détails des promotions
+- Ajout de la suppression du compte dans Paramètres, avec confirmation explicite, nettoyage des photos et retour au mode visiteur
+- Actualisation des promotions et consultation des circulaires
+- Intégration du calendrier développé par notre coéquipier : navigation par semaine, repas par recette ou note, portions, déplacement, duplication et restes ; la migration 0008 crée les entrées en base
+
+### Vérifications
+
+Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visiteur, de la connexion à la demande, de la photo obligatoire à la création, des photos de produits dans Promos et de la suppression du compte. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android.
+
+Hamza a également confirmé le 1er novembre l’application de `0008_meal_plan`
+sur Supabase et le fonctionnement du calendrier sur iOS. L’historique figé
+par instantanés reste à développer.
+
+Hamza a confirmé sur iOS le 1er novembre le blocage de l’enregistrement sans nom et le fonctionnement de la quantité séparée du choix fixe de l’unité. Ces ajustements restent à vérifier sur Android.
+
+### Prochaines étapes
+
+- Reproduire les nouveaux parcours sur Android, y compris le calendrier
+- Compléter les scénarios d’erreur réseau et les essais sur différentes tailles d’écran
+- Développer les instantanés historiques des plans et les listes d’épicerie
