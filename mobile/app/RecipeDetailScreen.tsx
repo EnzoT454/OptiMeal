@@ -9,8 +9,10 @@ import { RecipeStackParams } from '../types/navigation';
 import RecipeImage from '../components/RecipeImage';
 import { RecipeChip, recipeStyles } from '../components/recipes';
 import { difficultyLabels, recipeBadges } from '../services/recipeForm';
+import { useAuth } from '../context/AuthContext';
 
 export default function RecipeDetailScreen({ route, navigation }: NativeStackScreenProps<RecipeStackParams, 'Detail'>) {
+  const { session, requestSignIn } = useAuth();
   const [recipe, setRecipe] = useState<Recipe | null>(null); const [names, setNames] = useState<Record<string, string>>({});
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false); const [retry, setRetry] = useState(0);
   useFocusEffect(useCallback(() => {
@@ -25,6 +27,7 @@ export default function RecipeDetailScreen({ route, navigation }: NativeStackScr
   }, [route.params.id, retry]));
   async function favorite() {
     if (!recipe || busy) return;
+    if (!session) { requestSignIn('Connecte-toi pour enregistrer tes recettes favorites.'); return; }
     setBusy(true); setError('');
     try {
       await api<void>('/api/v1/recipes/' + recipe.id + '/favorite', { method: recipe.is_favorite ? 'DELETE' : 'PUT' });

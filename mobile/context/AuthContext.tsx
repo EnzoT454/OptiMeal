@@ -2,19 +2,29 @@ import { createContext, PropsWithChildren, useContext, useEffect, useState } fro
 import { AppState, Platform } from 'react-native';
 import * as Linking from 'expo-linking';
 import { Session } from '@supabase/supabase-js';
-import { supabase } from '../services/supabase';
+import { clearDeletedAccountSession, supabase } from '../services/supabase';
 
-const AuthContext = createContext<{ session: Session | null; loading: boolean; error: string }>({ session: null, loading: true, error: '' });
+const AuthContext = createContext<{
+  session: Session | null; loading: boolean; error: string;
+  signInReason: string | null; requestSignIn: (reason: string) => void; dismissSignIn: () => void;
+  forgetDeletedAccount: () => Promise<void>;
+}>({ session: null, loading: true, error: '', signInReason: null, requestSignIn: () => {}, dismissSignIn: () => {},
+  forgetDeletedAccount: async () => {} });
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [signInReason, setSignInReason] = useState<string | null>(null);
+  async function forgetDeletedAccount() {
+    try { await clearDeletedAccountSession(); }
+    finally { setSession(null); setSignInReason(null); setError(''); }
+  }
   useEffect(() => {
     let active = true;
     const { data: listener } = supabase.auth.onAuthStateChange((_event, value) => {
-      if (active) { setSession(value); setLoading(false); }
+      if (active) { setSession(value); setLoading(false); if (value) setSignInReason(null); }
     });
     supabase.auth.getSession().then(({ data, error: failure }) => {
       if (active) { setSession(data.session); setLoading(false); if (failure) setError('Session indisponible. Reconnecte-toi.'); }
@@ -41,5 +51,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
     });
     return () => { active = false; listener.subscription.unsubscribe(); links.remove(); appState.remove(); supabase.auth.stopAutoRefresh(); };
   }, []);
-  return <AuthContext.Provider value={{ session, loading, error }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ session, loading, error, signInReason,
+    requestSignIn: setSignInReason, dismissSignIn: () => setSignInReason(null), forgetDeletedAccount }}>{children}</AuthContext.Provider>;
 }

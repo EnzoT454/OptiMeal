@@ -50,6 +50,7 @@ export interface Circular {
   page_count: number; pages: string[]; imported_at: string;
 }
 
+
 // ---- Calendrier (planification des repas) ----
 export type MealType = "dejeuner" | "diner" | "souper" | "collation";
 

@@ -6,12 +6,12 @@ export class ApiError extends Error {
   constructor(public status: number, message: string) { super(message); }
 }
 
-export async function api<T>(path: string, options: RequestInit = {}, retry = true): Promise<T> {
+export async function api<T>(path: string, options: RequestInit = {}, retry = true, timeoutMs = 15000): Promise<T> {
   if (!baseUrl) throw new Error('Configurer l’adresse du serveur dans mobile/.env.');
   const { data, error } = await supabase.auth.getSession();
   if (error) throw new Error('Session indisponible. Reconnecte-toi.');
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   let response: Response;
   try {
     response = await fetch(baseUrl + path, {
@@ -25,7 +25,7 @@ export async function api<T>(path: string, options: RequestInit = {}, retry = tr
   } finally { clearTimeout(timer); }
   if (response.status === 401 && data.session && retry) {
     const refreshed = await supabase.auth.refreshSession();
-    if (!refreshed.error && refreshed.data.session) return api<T>(path, options, false);
+    if (!refreshed.error && refreshed.data.session) return api<T>(path, options, false, timeoutMs);
   }
   if (!response.ok) {
     const payload = await response.json().catch(() => null);
