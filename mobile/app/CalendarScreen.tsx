@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import type { MealPlanEntry, MealType, RecipeSummary } from "../types/api";
 import AddMealSheet from "../components/AddMealSheet";
 import MealActionsSheet, { type Placement } from "../components/MealActionsSheet";
 import {
   MEALS, MEAL_COLORS, MEAL_LABELS,
-  addDays, addEntry, dayName, getPlan, mondayOf, removeEntry, toISODate, updateEntry, weekLabel,
+  addDays, addEntry, dayName, getPlan, mealName, mondayOf, recipeUnavailable, removeEntry, toISODate, updateEntry, weekLabel,
 } from "../components/planning";
 
 const VERT = "#25603c";
@@ -24,17 +24,19 @@ export default function CalendarScreen() {
   const [jourAjout, setJourAjout] = useState<Date | null>(null);        // panneau « ajouter » (null = fermé)
   const [repasOuvert, setRepasOuvert] = useState<MealPlanEntry | null>(null); // menu du repas (null = fermé)
 
-  // ---- Charger le plan chaque fois que la semaine change ----
-  useEffect(() => {
+  // Recharger aussi au retour d'un autre onglet, après publication ou suppression.
+  useFocusEffect(useCallback(() => {
     let annule = false;
     setChargement(true);
     setErreur(null);
+    setEntries([]);
+    setRepasOuvert(null);
     getPlan(toISODate(lundi))
       .then((plan) => { if (!annule) setEntries(plan.entries); })
       .catch(() => { if (!annule) setErreur("Impossible de charger le calendrier."); })
       .finally(() => { if (!annule) setChargement(false); });
     return () => { annule = true; };
-  }, [lundi]);
+  }, [lundi]));
 
   // Un repas est-il dans la semaine affichée ? (sinon on ne l'affiche pas)
   const debut = toISODate(lundi);
@@ -80,6 +82,7 @@ export default function CalendarScreen() {
   async function placer(action: Placement, date: string, meal: MealType) {
     const r = repasOuvert;
     if (r === null) return;
+    if (action !== 'deplacer' && recipeUnavailable(r)) return;
     try {
       if (action === "deplacer") {
         remplacer(await updateEntry(r.id, { date, meal }));
@@ -114,6 +117,7 @@ export default function CalendarScreen() {
   }
 
   function voirRecette(recipeId: string) {
+    if (!repasOuvert || recipeUnavailable(repasOuvert) || repasOuvert.recipe_id !== recipeId) return;
     setRepasOuvert(null);
     navigation.navigate("Recettes", { screen: "Detail", params: { id: recipeId }, initial: false });
   }
@@ -226,7 +230,7 @@ function CarteRepas({ repas, onPress }: { repas: MealPlanEntry; onPress: () => v
       )}
       <View style={{ flex: 1 }}>
         <Text style={[styles.carteNom, { color: couleur.text }]} numberOfLines={1}>
-          {repas.recipe_name ?? repas.free_text}
+          {mealName(repas)}
         </Text>
         <Text style={[styles.carteMoment, { color: couleur.text }]}>
           {repas.is_leftover ? "♻ Restes · " : ""}{repas.servings} p. · {MEAL_LABELS[repas.meal]}

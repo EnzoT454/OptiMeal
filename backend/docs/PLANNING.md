@@ -22,8 +22,10 @@ migrations. Sans cette table, les accès au calendrier renvoient une erreur
 sur Supabase et le fonctionnement du calendrier sur iOS. Pour une nouvelle
 installation, appliquer les migrations reste nécessaire.
 
-La révision courante `0009_recipe_visibility` ajoute la visibilité des recettes.
-Elle est nécessaire aux contrôles d’accès utilisés par le calendrier actuel.
+La révision `0009_recipe_visibility` ajoute la visibilité des recettes.
+La tête courante `0010_preserve_meals` conserve les repas après suppression
+d’une recette grâce à une référence `ON DELETE SET NULL`. Elle a été appliquée
+et contrôlée sur Supabase le 1er novembre, sans modifier les comptages existants.
 
 ## Parcours mobile
 
@@ -102,8 +104,10 @@ comme référence déjà connue ; le détail renvoie 404 et aucun nouveau repas
 ne peut être créé avec cette recette. Les portions et le déplacement du repas
 existant restent modifiables, et son retrait reste possible. Une republication
 restaure le nom et la photo courants. Les notes libres et les recettes du
-propriétaire ne sont pas affectées. Le libellé mobile « Recette indisponible »
-reste à intégrer lors de l’adaptation de l’interface.
+propriétaire ne sont pas affectées. Le mobile affiche « Recette indisponible » dans la carte et le menu. Il
+conserve les portions, le déplacement et le retrait, mais ne propose plus
+l’ouverture, la duplication ou de nouveaux restes. Le calendrier recharge
+les accès au retour dans l’onglet et à chaque changement de semaine.
 
 Les entrées sont privées par compte, avec RLS activée et accès métier via
 FastAPI. La suppression du compte entraîne celle des repas par cascade,
@@ -111,8 +115,14 @@ en plus du profil, des recettes et des favoris.
 
 Le calendrier utilise les données **courantes** des recettes : modifier le
 nom ou la photo d’une recette change leur affichage dans les semaines déjà
-planifiées. Supprimer une recette supprime aussi les entrées qui la
-référencent. Le modèle actuel ne capture pas les ingrédients, les prix ni
+planifiées. Supprimer une recette conserve les repas qui la référencent :
+`recipe_id`, `recipe_name`, `recipe_image_url` et `free_text` sont alors nuls.
+Les portions, la date, le créneau et le marquage de restes sont conservés.
+Ce cas représente une recette supprimée ; les notes libres restent intactes.
+Le POST refuse toujours une nouvelle entrée sans recette accessible ni note.
+La suppression du compte retire ses propres repas, mais conserve ceux des
+autres comptes qui avaient utilisé ses recettes, désormais indisponibles.
+Les repas effacés avant cette migration ne sont pas restaurés. Le modèle actuel ne capture pas les ingrédients, les prix ni
 les étapes dans des révisions immuables. La consultation d’une ancienne
 semaine n’est donc pas encore l’historique stable demandé dans le cadrage.
 

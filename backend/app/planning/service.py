@@ -56,7 +56,7 @@ def get_entry(db: Session, entry_id: UUID, user_id: UUID) -> MealPlanEntryRead:
 def add_entry(db: Session, body: MealPlanEntryWrite, user: CurrentUser) -> MealPlanEntryRead:
     # Recette publique (app ou communauté), ou recette privée du propriétaire.
     if body.recipe_id is not None and db.scalar(
-            select(Recipe.id).where(Recipe.id == body.recipe_id, visible(user.id))) is None:
+            select(Recipe.id).where(Recipe.id == body.recipe_id, visible(user.id)).with_for_update()) is None:
         fail(404, 'RECIPE_NOT_FOUND', 'Recette introuvable.')
     ensure_profile(db, user)
     entry_id = uuid4()

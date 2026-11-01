@@ -461,16 +461,20 @@ flowchart LR
 ```
 
 Le nom et la photo viennent de la recette courante. La suppression d’une
-recette retire les repas qui la référencent ; la suppression du compte retire
-ses repas. Ce fonctionnement ne fournit pas encore l’historique stable par
+recette conserve les repas qui la référencent, sans nom ni photo et avec une
+référence à NULL depuis `0010_preserve_meals` ; la suppression du compte retire
+ses propres repas. Ce fonctionnement ne fournit pas encore l’historique stable par
 instantanés prévu pour les anciennes semaines. Les listes et le calcul
 économique restent à développer. Voir le [guide du calendrier](backend/docs/PLANNING.md)
 pour l’installation, les routes, les limites et les essais sur appareil.
 
 Si une recette publique ajoutée par un autre compte redevient privée, le backend
 conserve son repas mais renvoie un nom et une photo nuls. Il masque aussi cette
-recette dans les favoris du lecteur. L’affichage mobile du libellé « Recette
-indisponible » reste à ajouter avec la nouvelle interface.
+recette dans les favoris du lecteur. Le mobile affiche « Recette indisponible » dans la carte et le menu.
+Les portions, le déplacement et le retrait restent possibles ; ouverture,
+duplication et nouveaux restes ne sont plus proposés. Le calendrier recharge
+les droits au retour dans l’onglet. Le sélecteur n’utilise que les recettes
+publiques et celles du compte, ou leurs favoris accessibles.
 
 ## 9. Migrations et imports : deux opérations différentes
 
@@ -496,6 +500,7 @@ flowchart LR
 | `0007_product_images.py` | URL et provenance des photos dans `product_offer`, avec contrainte HTTPS |
 | `0008_meal_plan.py` | Repas privés dans `meal_plan_entry`, liés à une recette ou une note |
 | `0009_recipe_visibility.py` | Recettes privées par défaut, publication volontaire et contraintes de visibilité |
+| `0010_preserve_meals.py` | Conservation des repas après suppression d’une recette, sans contenu devenu inaccessible |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 

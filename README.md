@@ -21,7 +21,8 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 Éléments réalisés :
 
-- Onglet Recettes organisé en Découvrir (recettes publiques), Mes recettes (créations du compte) et Favoris, avec recherche et filtres dans la section active, pagination et messages adaptés aux listes vides. Vérifié par 60 tests mobiles et TypeScript ; les trois scénarios manuels de partage sont confirmés par Hamza le 1er novembre, sans plateforme précisée.
+- Calendrier : une recette supprimée ou devenue inaccessible affiche « Recette indisponible », avec portions, déplacement et retrait conservés. Le sélecteur propose les recettes publiques et celles du compte. Migration `0010_preserve_meals` appliquée sur Supabase le 1er novembre ; essais sur téléphone à effectuer.
+- Onglet Recettes organisé en Découvrir (recettes publiques), Mes recettes (créations du compte) et Favoris, avec recherche et filtres dans la section active, pagination et messages adaptés aux listes vides. Vérifié par 66 tests mobiles et TypeScript ; les trois scénarios manuels de partage sont confirmés par Hamza le 1er novembre, sans plateforme précisée.
 - Backend du partage de recettes : migration `0009_recipe_visibility`, recettes privées par défaut, publication/retrait par le propriétaire et sections API Découvrir/Mes recettes/Favoris. Les favoris et le calendrier masquent les recettes devenues privées pour les autres comptes. Vérifié sur PostgreSQL local ; migration `0009` appliquée et schéma contrôlé sur Supabase le 1er novembre. Le même bucket public de photos est conservé pour le prototype ; sa séparation privé/public est reportée après le prototype. Les sections mobiles Découvrir, Mes recettes et Favoris sont intégrées ; le formulaire propose le partage, privé par défaut, et le détail permet de publier ou rendre privée sa propre recette après confirmation. Les trois scénarios manuels de partage sont confirmés le 1er novembre ; les validations distinctes iOS et Android restent à consigner.
 - Formulaire Recettes : nom obligatoire pour activer l’enregistrement, quantité séparée de l’unité et choix fixe parmi g, ml et unité. Fonctionnement confirmé par Hamza sur iOS le 1er novembre ; essais Android à effectuer.
 - Consultation sans compte d’Accueil, Promos, Recettes et Paramètres ; connexion à la demande pour les recettes personnelles, favoris, calendrier et profil. Le mode visiteur et la connexion à la demande sont confirmés sur iOS le 1er novembre ; les nouveaux parcours restent à reproduire sur Android.
@@ -288,7 +289,8 @@ OptiMeal/
 │   │       ├── 0006_circulars.py      # Informations des circulaires
 │   │       ├── 0007_product_images.py # URL et provenance des photos de produits
 │   │       ├── 0008_meal_plan.py     # Repas planifiés par compte
-│   │       └── 0009_recipe_visibility.py # Visibilité privée/publique des recettes
+│   │       ├── 0009_recipe_visibility.py # Visibilité privée/publique des recettes
+│   │       └── 0010_preserve_meals.py  # Conservation des repas après suppression de recette
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express

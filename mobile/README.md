@@ -57,7 +57,7 @@ retour d’un détail. Une connexion ou déconnexion réinitialise la navigation
 Favoris est une section ; les filtres sont désormais Toutes, Rapides et Petit
 budget. Ce dernier conserve son message d’attente. Le formulaire et le détail proposent désormais le choix de publication.
 
-Les 60 tests mobiles et TypeScript passent. Le lint n’est pas configuré.
+Les 66 tests mobiles et TypeScript passent. Le lint n’est pas configuré.
 Essais sur téléphone à effectuer sur iOS et Android :
 
 1. Sans compte, consulter Découvrir puis annuler la connexion demandée par Mes recettes et Favoris ; Découvrir reste sélectionnée.
@@ -109,7 +109,11 @@ enregistrées via `/api/v1/plans`. Appliquer `0008_meal_plan` côté serveur ava
 les essais ; aucune migration distante n’est exécutée par le mobile.
 
 Le calendrier reste protégé en mode visiteur. Les recettes sont liées à leur
-version courante : leur suppression retire aussi les repas associés. Les
+version courante : une suppression ou une perte d’accès conserve le repas
+avec le libellé « Recette indisponible ». Pour ce repas, seules les actions
+Portions, Déplacer et Retirer restent proposées. Le calendrier recharge les
+données à chaque retour dans l’onglet. La migration `0010_preserve_meals` est
+requise côté serveur, appliquée sur Supabase le 1er novembre. Les
 instantanés historiques et les listes d’épicerie restent à développer. Voir
 le [guide du calendrier](../backend/docs/PLANNING.md) pour les routes, les
 limites et les scénarios détaillés. Hamza a confirmé le 1er novembre
@@ -416,9 +420,9 @@ par Hamza le 27 octobre ; son coéquipier l’a aussi vérifié sur Android.
 npm test
 ```
 
-Les 32 tests couvrent les photos et leur obligation à la création, les quantités,
-les badges, les accès visiteurs, la confirmation de suppression du compte et
-le nettoyage de la session locale et la protection du nouveau calendrier.
+Les 66 tests couvrent les photos, les quantités, les badges, les accès visiteurs,
+les sessions, les sections et la publication des recettes, ainsi que les repas
+indisponibles et les actions du calendrier.
 Les appels externes sont simulés.
 
 ## Structure et vérification

@@ -24,7 +24,7 @@ La proposition étendue nécessite surtout six ajustements avant son implémenta
 | Composant | Disponible aujourd’hui | Conséquence pour la conception |
 | --- | --- | --- |
 | `app/database.py` et configuration | Moteur SQLAlchemy/Psycopg, sessions par requête et contrôle `/health/db` | Voir le [guide Supabase](SUPABASE.md) ; les recettes lisent PostgreSQL ; ingrédients sur JSON, offres sur JSON ou PostgreSQL selon `OFFERS_SOURCE` |
-| Modèles et `alembic/env.py` | Huit migrations : ingrédients, recettes, profils, favoris, catégories, offres, circulaires, photos de produits et calendrier ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous à développer |
+| Modèles et `alembic/env.py` | Dix migrations : ingrédients, recettes, profils, favoris, catégories, offres, circulaires, photos de produits, calendrier, visibilité et conservation des repas ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous à développer |
 | `app/catalog/apify_ingestion.py` et `apify_batch.py` | Normalisation des captures Apify, produits, formats, prix et avertissements | Prévoir l’insertion des données vérifiées ; Metro/Super C web IA restent à développer |
 | `app/receipts/schemas.py` | Contrat `receipt-1.1`, OCR local, articles, ajustements et contrôles | Stocker d’abord une extraction privée à vérifier |
 | Comptes | Supabase Auth, profil minimal et droits sur recettes/favoris | Voir [AUTH.md](AUTH.md) ; préférences détaillées à développer |
@@ -38,7 +38,9 @@ profils, favoris et liens de propriété. `0004_recipe_metadata` ajoute difficul
 facultative et étiquettes aux recettes. `0005_catalog_offers` crée `category`
 et `product_offer` ; `0006_circulars` crée `circular`.
 `0007_product_images` ajoute l’URL et la provenance des photos de produits ;
-`0008_meal_plan` crée les repas privés dans `meal_plan_entry`. Les migrations sont
+`0008_meal_plan` crée les repas privés dans `meal_plan_entry` ;
+`0009_recipe_visibility` ajoute la publication volontaire des recettes ;
+`0010_preserve_meals` conserve les repas après suppression de leur recette. Les migrations sont
 la référence exécutable du schéma ; ce document ne les remplace pas.
 
 La suppression du compte est maintenant exposée par `DELETE /api/v1/me`.
@@ -50,8 +52,9 @@ Voir le [guide Auth](AUTH.md#suppression-définitive-du-compte) et les
 [contrats](CONTRACTS.md).
 
 Le calendrier conserve des entrées par utilisateur, date et moment, liées à
-une recette courante ou à une note. La suppression d’un compte ou d’une recette
-supprime les entrées concernées par cascade. Les instantanés immuables et les
+une recette courante ou à une note. La suppression d’un compte supprime ses
+propres entrées par cascade. La suppression d’une recette conserve les repas,
+avec référence à NULL et affichage « Recette indisponible ». Les instantanés immuables et les
 prix historiques décrits plus loin restent une conception cible ; voir le
 [calendrier actuel](PLANNING.md#conservation-et-limites).
 

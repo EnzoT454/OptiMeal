@@ -378,3 +378,20 @@ sauvegardes partielles. Le lint reste non configuré. Les validations distinctes
 photos reste public pendant le prototype.
 
 Le 1er novembre 2026, Hamza a confirmé les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
+
+### Recettes indisponibles dans le calendrier — 1er novembre
+
+La migration `0010_preserve_meals` conserve les repas après suppression d’une
+recette, y compris les restes et les repas d’un autre compte. Elle a été appliquée
+sur Supabase : les comptages des neuf tables restent identiques, avec 10 repas
+conservés. Les repas supprimés avant cette migration ne sont pas restaurés.
+
+Une recette supprimée ou devenue privée pour le lecteur affiche « Recette
+indisponible ». Les portions, le déplacement et le retrait restent disponibles ;
+l’ouverture, la duplication et la création de restes ne sont plus proposées.
+Le calendrier recharge les droits au retour dans l’onglet. Le sélecteur propose
+uniquement les recettes publiques et personnelles, ou les favoris accessibles.
+
+Les vérifications donnent 371 tests backend réussis et 1 ignoré (PyMuPDF absent),
+66 tests mobiles et TypeScript valides. Les essais iOS et Android de cette
+correction restent à effectuer.

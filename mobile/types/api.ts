@@ -63,10 +63,10 @@ export type MealPlanEntry = {
   id: string;
   date: string;               // "AAAA-MM-JJ"
   meal: MealType;
-  recipe_id: RecipeSummary["id"] | null;
-  recipe_name: string | null;
+  recipe_id: RecipeSummary["id"] | null; // null pour une note ou une recette supprimée
+  recipe_name: string | null; // null si la recette est supprimée ou inaccessible
   recipe_image_url: string | null;
-  free_text: string | null;   // …ou un texte libre : « Restes », « Resto »
+  free_text: string | null;   // note libre ; nom et note nuls = recette indisponible
   servings: number;
   is_leftover: boolean;       // vrai = restes d'une recette déjà cuisinée
 };
