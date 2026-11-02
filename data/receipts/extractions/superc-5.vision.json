@@ -1,0 +1,292 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "superc",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "superc",
+  "store_id": null,
+  "purchase_date": "2026-10-27",
+  "date_order": "ymd",
+  "source": {
+    "filename": "superc-5.jpg",
+    "sha256": "a2830e5aba7c554f007c4f6e44fb7447d1adb69e4a7b467e0a66bd713a0e025b",
+    "engine": "vision",
+    "elapsed_seconds": 0.822
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "KRAFTDIN.REP.NOU",
+      "category_raw": "EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.29",
+      "source_lines": [
+        "KRAFTDIN.REP.NOU 2.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "GRENADE",
+      "category_raw": "FRUIT/LEGUME",
+      "format_raw": null,
+      "quantity": "3",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "1.49",
+      "line_total": "4.47",
+      "source_lines": [
+        "(3) GRENADE",
+        "3 0 $1.49 4.47"
+      ],
+      "review_required": true,
+      "warnings": [
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": null,
+      "name": "BANANE PREMIUM",
+      "category_raw": "FRUIT/LEGUME",
+      "format_raw": null,
+      "quantity": "1.280",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "1.74",
+      "line_total": "2.23",
+      "source_lines": [
+        "BANANE PREMIUM",
+        "1.280 kg © $1.74/kg 2.23"
+      ],
+      "review_required": true,
+      "warnings": [
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": null,
+      "name": "AVOCAT HASS",
+      "category_raw": "FRUIT/LEGUME",
+      "format_raw": null,
+      "quantity": "2",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "0.99",
+      "line_total": "1.98",
+      "source_lines": [
+        "(2) AVOCAT HASS",
+        "2 0 $0.99 1.98"
+      ],
+      "review_required": true,
+      "warnings": [
+        "ocr_quantity_separator_requires_review"
+      ]
+    },
+    {
+      "line_id": 5,
+      "product_code": null,
+      "name": "TOMATE ITALIENNE",
+      "category_raw": "FRUIT/LEGUME",
+      "format_raw": null,
+      "quantity": "0.355",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "6.59",
+      "line_total": "2.34",
+      "source_lines": [
+        "TOMATE ITALIENNE",
+        "0.355 kg @ $6.59/kg 2.34"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 6,
+      "product_code": null,
+      "name": "POMMES MCINTOSH",
+      "category_raw": "FRUIT/LEGUME",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.99",
+      "source_lines": [
+        "POMMES MCINTOSH 4.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 7,
+      "product_code": null,
+      "name": "BLEUET 170G",
+      "category_raw": "FRUIT/LEGUME",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.44",
+      "source_lines": [
+        "BLEUET 170G 2.44"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 8,
+      "product_code": null,
+      "name": "IRRS.BOIS.OR.M.S",
+      "category_raw": "PRODUIT LAIT",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.49",
+      "source_lines": [
+        "IRRS.BOIS.OR.M.S 3.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 9,
+      "product_code": null,
+      "name": "OASIS JUS REF.10",
+      "category_raw": "PRODUIT LAIT",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.85",
+      "source_lines": [
+        "OASIS JUS REF.10 3.85"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 10,
+      "product_code": null,
+      "name": "RISTOR.PIZZA SRG",
+      "category_raw": "SURGELE EPIC",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.47",
+      "source_lines": [
+        "RISTOR.PIZZA SRG 3.47"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 11,
+      "product_code": null,
+      "name": "GATEAU FONDANT A",
+      "category_raw": "BOUL COMMERC",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "6.99",
+      "source_lines": [
+        "GATEAU FONDANT A 6.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": "6.00",
+      "effect": "informational",
+      "source_line": "Rabais 6.00",
+      "review_required": true
+    },
+    {
+      "amount": "1.00",
+      "effect": "informational",
+      "source_line": "Rabais 1.00",
+      "review_required": true
+    },
+    {
+      "amount": "2.55",
+      "effect": "informational",
+      "source_line": "Rabais 2.55",
+      "review_required": true
+    },
+    {
+      "amount": "0.10",
+      "effect": "applied",
+      "source_line": "Consigne 0.10",
+      "review_required": true
+    },
+    {
+      "amount": "1.64",
+      "effect": "informational",
+      "source_line": "Rabais 1.64",
+      "review_required": true
+    },
+    {
+      "amount": "0.10",
+      "effect": "applied",
+      "source_line": "Consigne 0.10",
+      "review_required": true
+    },
+    {
+      "amount": "2.52",
+      "effect": "informational",
+      "source_line": "Rabais 2.52",
+      "review_required": true
+    }
+  ],
+  "totals": {
+    "subtotal": "38.74",
+    "total": "38.74",
+    "taxes": null,
+    "items_sum": "38.54",
+    "calculated_subtotal": "38.74",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "superc_ocr_typography_requires_review",
+    "purchase_date_order_requires_review",
+    "receipt_adjustments_require_review"
+  ]
+}

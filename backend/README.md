@@ -262,7 +262,7 @@ python -m backend.cli.extract_receipt data/receipts/images/recu_maxi.jpg \
   --engine tesseract --output data/receipts/extractions/nouveau-recu.json
 ```
 
-Sur Mac, `--engine vision` utilise Apple Vision. Pour Windows, utiliser Tesseract + OpenCV. Le [guide OCR](docs/RECEIPTS.md) explique l’installation, le modèle complémentaire Metro et les résultats. Le chemin Windows reste à tester sur PC.
+Sur Mac, `--engine vision` utilise Apple Vision. Pour Windows, utiliser Tesseract + OpenCV. Le [guide OCR](docs/RECEIPTS.md) explique l’installation, les modèles de relecture des prix et les résultats Maxi/Metro/Super C. Le chemin Windows reste à tester sur PC.
 
 Les reçus restent locaux et privés. La confirmation humaine du 4 octobre porte sur les prix de l’échantillon Maxi/Metro ; les anciennes sorties peuvent conserver des erreurs. Le parcours de correction et confirmation en base reste à développer.
 

@@ -1,0 +1,240 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "maxi",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "maxi",
+  "store_id": "8661",
+  "purchase_date": "2026-10-30",
+  "date_order": "ymd",
+  "source": {
+    "filename": "maxi-2.jpg",
+    "sha256": "4ae8f458ba6e787fa783e8e7c5ed69bdbad479370035acc3ec87bcc8c54e4532",
+    "engine": "vision",
+    "elapsed_seconds": 0.971
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": "06780000049",
+      "name": "UNICO THON DOLIV",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "5.99",
+      "source_lines": [
+        "06780000049 UNICO THON DOLIV MRJ 5.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": "08870201640",
+      "name": "BM CONFITURE",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "5.77",
+      "source_lines": [
+        "08870201640 BM CONFITURE 5.77"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": "607000017",
+      "name": "SAFI SARDINES HU",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": "3",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "1.94",
+      "line_total": "5.82",
+      "source_lines": [
+        "3)607000017 SAFI SARDINES HU MRJ",
+        "3 @ $1.94 5.82"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 4,
+      "product_code": "62902541000",
+      "name": "IOGO YOGOURT",
+      "category_raw": "22-PRODUITS LAITIERS",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "6.50",
+      "source_lines": [
+        "62902541000 IOGO YOGOURT 6.50"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 5,
+      "product_code": "05926303015",
+      "name": "COAT BUCH CRM GL",
+      "category_raw": "23-PRODUITS SURGELES",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "8.49",
+      "source_lines": [
+        "05926303015 COAT BUCH CRM GL MRJ 8.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 6,
+      "product_code": "4053",
+      "name": "CITRONS",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": "2",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "0.97",
+      "line_total": "1.94",
+      "source_lines": [
+        "(2) 4053 CITRONS",
+        "2 @ $0,97 1.94"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 7,
+      "product_code": "4664",
+      "name": "TOMATES",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": "0.960",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "4.41",
+      "line_total": "4.23",
+      "source_lines": [
+        "4664 TOMATES",
+        "0.960 kg @ $4.41/kg 4.23"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 8,
+      "product_code": "94011",
+      "name": "BANANES BIO",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": "1.245",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "2.40",
+      "line_total": "2.99",
+      "source_lines": [
+        "94011 BANANES BIO",
+        "1.245 kg @ $2.40/kg 2.99"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 9,
+      "product_code": "560141918236",
+      "name": "NIGEL SARDINES",
+      "category_raw": "32-PRODUITS DE LA MER",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "8.99",
+      "source_lines": [
+        "560141918236 NIGEL SARDINES 8.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 10,
+      "product_code": "06850530029",
+      "name": "ST METHODE PAIN",
+      "category_raw": "34-BOULANGERIE COMMERCIALE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.50",
+      "source_lines": [
+        "06850530029 ST METHODE PAIN 4.50"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 11,
+      "product_code": "87668101932",
+      "name": "SANTOSH NAAN AIL",
+      "category_raw": "34-BOULANGERIE COMMERCIALE",
+      "format_raw": null,
+      "quantity": "2",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "2.00",
+      "line_total": "4.00",
+      "source_lines": [
+        "(2)87668101932 SANTOSH NAAN AIL MRJ",
+        "2 @ $2.00 4.00"
+      ],
+      "review_required": true,
+      "warnings": []
+    }
+  ],
+  "adjustments": [],
+  "totals": {
+    "subtotal": "59.22",
+    "total": "59.22",
+    "taxes": null,
+    "items_sum": "59.22",
+    "calculated_subtotal": "59.22",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "purchase_date_order_requires_review"
+  ]
+}

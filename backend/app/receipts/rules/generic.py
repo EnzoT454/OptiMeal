@@ -31,17 +31,19 @@ def product(raw: str, line_id: int, category_raw: str | None, following: str = '
     name = match[2] if match else name
     if quantity is not None and quantity <= 0:
         return None
-    if not re.match(r'^[A-Za-zÀ-ÿ]', name) or not name.strip():
+    numeric_name = bool(match and re.match(r'^\d[A-Za-zÀ-ÿ]', name))
+    if (not re.match(r'^[A-Za-zÀ-ÿ]', name) and not numeric_name) or not name.strip():
         return None
     return ReceiptItem(line_id=line_id, name=name.strip(), category_raw=category_raw,
                        quantity=quantity, unit='unit' if quantity else None,
                        quantity_source='explicit' if quantity else 'unknown',
-                       line_total=amount, source_lines=[raw])
+                       line_total=amount, source_lines=[raw],
+                       warnings=['numeric_product_name_requires_review'] if numeric_name else [])
 
 
 def detail_candidate(raw: str) -> bool:
     """Structure quantité/prix ; ne répare aucun chiffre illisible."""
-    return bool(re.match(r'^\s*(?:\d+(?:[.,]\d+)?|[bB])\s*(?:kg|lb)?\s*[@àeEG0(&©]', raw)
+    return bool(re.match(r'^\s*(?:\d+(?:[.,]\d+)?|[bBiIzZà])\s*(?:kg|lb)?\s*[@àeEGO08(&©]', raw)
                 # Les reçus Maxi impriment parfois le total sans second signe $ :
                 # "4 G $1.89 7.56". Deux montants restent requis afin de ne pas
                 # prendre une ligne de quantité seule pour un détail de prix.
@@ -55,7 +57,7 @@ def detail(raw: str):
     # Tolérer un glyphe de séparation mal lu seulement dans une ligne quantité/prix.
     if not detail_candidate(raw):
         return None, []
-    cleaned = re.sub(r'^(\s*\d+(?:[.,]\d+)?\s*(?:kg|lb)?\s*)[eEG0(&©]', r'\1@', raw)
+    cleaned = re.sub(r'^(\s*\d+(?:[.,]\d+)?\s*(?:kg|lb)?\s*)[eEGO08(&©]', r'\1@', raw)
     result = DETAIL.match(cleaned)
     return result, ['ocr_quantity_separator_requires_review'] if result else []
 

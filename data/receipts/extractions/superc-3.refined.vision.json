@@ -1,0 +1,207 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "superc",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "superc",
+  "store_id": null,
+  "purchase_date": "2026-10-27",
+  "date_order": "ymd",
+  "source": {
+    "filename": "superc-3.jpg",
+    "sha256": "e2f7d570dfff71a2df45b2adbe20768785f10aae8cb17f1811f5c1407fc79e83",
+    "engine": "vision-body-normalized-psm6-prices-gray",
+    "elapsed_seconds": 16.125
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "CELEB.BISC.MINI",
+      "category_raw": "EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.49",
+      "source_lines": [
+        "CELEB.BISC.MINI 4.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "CELEB.BISC.MINI",
+      "category_raw": "EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.49",
+      "source_lines": [
+        "CELEB.BISC.MINI 4.49"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": null,
+      "name": "IRRS.REP.SURG.PO",
+      "category_raw": "SURGELE EPIC",
+      "format_raw": null,
+      "quantity": "2",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "2.22",
+      "line_total": "4.44",
+      "source_lines": [
+        "(2)IRRS.REP.SURG.PO",
+        "2 @ $2.22 4.44"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 4,
+      "product_code": null,
+      "name": "IRRS.REP.SURG.PA",
+      "category_raw": "SURGELE EPIC",
+      "format_raw": null,
+      "quantity": "2",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "2.22",
+      "line_total": "4.44",
+      "source_lines": [
+        "(2)IRRS.REP.SURG.PA",
+        "2 @ $2.22 4.44"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 5,
+      "product_code": null,
+      "name": "OSMIO PATE SURG.",
+      "category_raw": "SURGELE EPIC",
+      "format_raw": null,
+      "quantity": "4",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "4.59",
+      "line_total": "18.36",
+      "source_lines": [
+        "(4) OSMIO PATE SURG.",
+        "4 @ $4.59 18.36"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 6,
+      "product_code": null,
+      "name": "SELECTION BEIGNE",
+      "category_raw": "BOUL COMMERC",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.99",
+      "source_lines": [
+        "SELECTION BEIGNE 3.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 7,
+      "product_code": null,
+      "name": "FR-LIG LITIE.AGG",
+      "category_raw": "NON-ALIM. TX",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "9.99",
+      "source_lines": [
+        "FR-LIG LITIE.AGG FP 9.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 8,
+      "product_code": null,
+      "name": "PO SOUS MARIN",
+      "category_raw": "MET CUIS. TX",
+      "format_raw": null,
+      "quantity": "2",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "4.99",
+      "line_total": "9.98",
+      "source_lines": [
+        "(2)PO SOUS MARIN FP",
+        "2 @ $4.99 9.98"
+      ],
+      "review_required": true,
+      "warnings": []
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": "3.14",
+      "effect": "informational",
+      "source_line": "Rabais 3.14",
+      "review_required": true
+    },
+    {
+      "amount": "3.14",
+      "effect": "informational",
+      "source_line": "Rabais 3.14",
+      "review_required": true
+    },
+    {
+      "amount": "4.00",
+      "effect": "informational",
+      "source_line": "Rabais 4.00",
+      "review_required": true
+    }
+  ],
+  "totals": {
+    "subtotal": "60.18",
+    "total": "63.17",
+    "taxes": "2.99",
+    "items_sum": "60.18",
+    "calculated_subtotal": "60.18",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "matches"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "parsing_profile_forced",
+    "ambiguous_tax_lines",
+    "receipt_adjustments_require_review",
+    "purchase_date_from_full_image",
+    "taxes_from_full_image"
+  ]
+}
