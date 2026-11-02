@@ -340,3 +340,35 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 - Développer les instantanés historiques des plans et les listes d’épicerie
 - Développer onglet Accueil
+
+
+---
+
+## Semaine 10 (2 – 8 novembre) — point au 2 novembre 2026
+
+### Objectifs de la période
+
+- Ajouter la notation des recettes et l’intégrer aux parcours existants.
+- Vérifier la persistance, les droits d’accès et le classement des recettes.
+
+### Travail réalisé
+
+- **Notation des recettes**
+    - Évaluation des recettes publiques d’autres auteurs selon trois critères : Goût, Fiabilité et Facilité, chacun noté de 1 à 5.
+    - Formulaire avec une introduction, puis chaque critère, sa question et les étoiles ; modification et suppression de son évaluation.
+    - Affichage de la moyenne réelle et du nombre d’évaluations dans le détail et sur les cartes, y compris dans les recettes associées aux promotions.
+    - Tri « Mieux notées » calculé côté serveur avant pagination, avec ajustement selon le nombre d’avis ; tris alternatifs pour retrouver les nouvelles recettes.
+- **Versions et accès**
+    - Une modification des ingrédients, des étapes, des portions ou des durées ouvre une nouvelle version à évaluer ; les anciens votes sont conservés mais exclus de la moyenne courante.
+    - Les changements de nom, de photo ou de visibilité conservent les évaluations de la version courante.
+    - Refus de l’autoévaluation, connexion requise pour voter et contrôle de l’accès aux recettes privées.
+
+### Décisions et ajustements
+
+- Calculer la note globale avec les poids Goût 40 %, Fiabilité 40 % et Facilité 20 %.
+- Utiliser une moyenne bayésienne pour le tri, avec une référence initiale de 4/5 et un poids de 20 avis.
+- Conserver un formulaire court et ne pas ajouter de commentaires écrits pour cette première intégration.
+
+### Limites et prochaines étapes
+
+- Poursuivre l’historique stable des plans, les listes d’épicerie et l’onglet Accueil ; les modes IA, estimations et contributions restent prévus.

@@ -13,5 +13,3 @@ title: Synthèse
 # Synthèse
 
 Cette page sera finalisée à la fin du projet.
-
-
