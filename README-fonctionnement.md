@@ -127,8 +127,11 @@ flowchart TD
 
 [accounts/deletion.py](backend/app/accounts/deletion.py) appelle Storage et
 Auth avec la clé serveur `SUPABASE_SECRET_KEY`. Les relations existantes
-suppriment les données métier, y compris les repas planifiés, par cascade. Les recettes partagées,
-les autres comptes et les circulaires sont conservés. Les fichiers inutilisés
+suppriment le profil, les favoris, les repas planifiés et toutes les recettes
+du compte, privées comme publiques, par cascade. Les autres comptes, leurs
+recettes, les recettes initiales du catalogue et les circulaires sont conservés.
+Les repas des autres comptes liés à une recette supprimée restent dans leur
+calendrier avec la mention « Recette indisponible ». Les fichiers inutilisés
 du dossier photo sont aussi supprimés. En cas d’échec, des photos peuvent déjà
 avoir disparu : Storage et Auth ne partagent pas de transaction. La suppression
 du compte est confirmée sur iOS le 1er novembre ; les essais Android et les
