@@ -2,12 +2,139 @@
 
 Le [guide des données locales](DATA.md) décrit les images dans `data/receipts/images/`, les résultats dans `extractions/`, les blocs bruts dans `ocr/` et les anciens diagnostics dans `archives/`.
 
-Le script lit une photo de reçu avec détection de format (Maxi, Metro ou générique) et produit un JSON validé par Pydantic. Il ne fait aucun appel HTTP, ne demande aucune clé et ne sauvegarde aucune observation de prix en base. Le résultat reste une **proposition à vérifier**.
+Le script lit une photo de reçu avec détection de format (Maxi, Metro, Super C ou générique) et produit un JSON validé par Pydantic. Il ne fait aucun appel HTTP, ne demande aucune clé et ne sauvegarde aucune observation de prix en base. Le résultat reste une **proposition à vérifier**.
 
 Les prix du jeu de reçus Maxi/Metro fourni ont fait l’objet d’une
 [validation humaine le 4 octobre 2026](#validation-humaine-des-prix--4-octobre-2026).
 Cette validation de l’échantillon ne remplace pas la vérification de chaque
 nouvelle extraction.
+
+## Nouveaux reçus Maxi et Super C — 2 novembre 2026
+
+Les deux images `maxi-1.jpg`, `maxi-2.jpg` et les cinq images `superc-1.jpg`
+à `superc-5.jpg` sont couvertes par des essais sur les deux moteurs. Les
+montants attendus ont été transcrits depuis les photos, ligne par ligne : les
+contrôles ne se limitent pas à faire coïncider les sommes. Les 14 essais
+vérifient aussi le rejeu des captures sans relancer l’OCR.
+
+Le profil `superc` reconnaît les rayons, les économies positives déjà incluses
+dans le prix, les consignes et les corrections de prix signées. Les lignes
+Brut/Tare/Net accompagnent le produit pesé ; elles ne créent pas d’articles.
+Le total conservé est celui avant l’arrondi du paiement en espèces. Une
+quantité illisible ou contradictoire n’empêche plus de conserver le montant
+final explicitement lu, mais reste signalée.
+
+La reconstruction peut rattacher les prix d’une colonne inclinée aux lignes
+de produits dans leur ordre imprimé. Elle exige autant de prix que de lignes
+à tarifer, ainsi qu’une proximité verticale suffisante. Aucun prix manquant
+n’est calculé à partir du total. Les relectures séparent les petits prix des
+gros totaux, puis comparent des recadrages et contrastes. Vision fournit les
+positions des mots et emploie son mode rapide pour les gros chiffres que le
+mode précis omet. Tesseract peut relire les descriptions séparément des prix.
+Le moteur choisi reste utilisé pour toutes ses relectures.
+
+### Modèles locaux pour Tesseract
+
+Les langues installées `fra` et `eng` restent nécessaires pour la lecture
+initiale. Les résultats ci-dessous utilisent aussi deux fichiers anglais
+supplémentaires : le modèle compatible avec le moteur historique pour les
+chiffres matriciels, et `tessdata_best` pour certaines relectures, dont Metro.
+Ils sont installés dans le cache local et ne sont jamais téléchargés par le
+programme. Aucun paquet Python supplémentaire n’est requis.
+
+Depuis la racine sur macOS/Linux :
+
+```bash
+mkdir -p .cache/receipt-tessdata-legacy .cache/receipt-tessdata-best
+curl -fL https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/eng.traineddata \
+  -o .cache/receipt-tessdata-legacy/eng.traineddata
+curl -fL https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/main/eng.traineddata \
+  -o .cache/receipt-tessdata-best/eng.traineddata
+```
+
+PowerShell :
+
+```powershell
+New-Item -ItemType Directory -Force .cache/receipt-tessdata-legacy, .cache/receipt-tessdata-best
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/eng.traineddata' -OutFile '.cache/receipt-tessdata-legacy/eng.traineddata'
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/tesseract-ocr/tessdata_best/main/eng.traineddata' -OutFile '.cache/receipt-tessdata-best/eng.traineddata'
+```
+
+Le moteur historique est appelé avec `--oem 0` uniquement pour les prix.
+Le modèle standard reste disponible lorsque ces fichiers manquent, mais
+la reproduction des résultats des sept nouvelles photos exige les modèles
+ci-dessus. Les avertissements `tesseract_legacy_price_model` et
+`tesseract_best_price_model` indiquent leur emploi ; les captures conservent
+les blocs sélectionnés et ceux de la lecture initiale.
+
+Empreintes SHA-256 des modèles utilisés le 2 novembre :
+
+- `tessdata/eng.traineddata` : `daa0c97d651c19fba3b25e81317cd697e9908c8208090c94c3905381c23fc047`.
+- `tessdata_best/eng.traineddata` : `8280aed0782fe27257a68ea10fe7ef324ca0f8d85bd2fd145d1c2b560bcb66ba`.
+
+### Reproduire les tests et les extractions
+
+Tests synthétiques, sans moteurs OCR ni photos privées :
+
+```bash
+.venv/bin/python -m pytest backend/tests/test_receipts.py backend/tests/test_receipt_layout.py -q
+```
+
+Sur Mac, avec les images locales et les deux modèles installés, tester les
+sept photos avec Vision et Tesseract, chaque prix, les totaux et le rejeu :
+
+```bash
+OPTIMEAL_RECEIPT_OCR_TESTS=1 .venv/bin/python -m pytest backend/tests/test_receipt_samples.py -q
+```
+
+Pour Tesseract seul, ajouter `-k tesseract`. Sous PowerShell, activer
+l’environnement Python, définir `$env:OPTIMEAL_RECEIPT_OCR_TESTS = '1'`, puis
+utiliser `python -m pytest backend/tests/test_receipt_samples.py -q -k tesseract`.
+Ces essais sont désactivés dans la suite ordinaire, car les photos restent
+locales et Vision demande macOS. Les essais ont été exécutés sur macOS avec
+Tesseract 5.5.3 ; Windows reste à vérifier sur PC.
+
+Pour produire des fichiers sans écraser les premières extractions :
+
+```bash
+for moteur in vision tesseract; do
+  for nom in maxi-1 maxi-2 superc-1 superc-2 superc-3 superc-4 superc-5; do
+    .venv/bin/python -m backend.cli.extract_receipt \
+      "data/receipts/images/$nom.jpg" --engine "$moteur" \
+      --output "data/receipts/extractions/$nom.refined.$moteur.json" \
+      --save-ocr "data/receipts/ocr/$nom.refined.$moteur.ocr.json"
+  done
+done
+```
+
+| Photo | Lignes de produits | Somme des articles | Sous-total après ajustements | Total avant arrondi espèces |
+| --- | ---: | ---: | ---: | ---: |
+| `maxi-1.jpg` | 11 | 45,07 | 45,07 | 45,67 |
+| `maxi-2.jpg` | 11 | 59,22 | 59,22 | 59,22 |
+| `superc-1.jpg` | 4 | 40,37 | 40,37 | 40,37 |
+| `superc-2.jpg` | 2 | 7,60 | 7,60 | 7,60 |
+| `superc-3.jpg` | 8 | 60,18 | 60,18 | 63,17 |
+| `superc-4.jpg` | 11 | 57,17 | 55,59 | 55,59 |
+| `superc-5.jpg` | 11 | 38,54 | 38,74 | 38,74 |
+
+Montants en CAD. Les paiements arrondis de Super C 1 et 4 sont respectivement
+40,35 et 55,60 ; ils ne remplacent pas le total des marchandises. Super C 4
+comporte une correction `PRIX -1.58`, et Super C 5 deux consignes de 0,10.
+Le nombre de lignes n’est pas le nombre d’unités achetées : cinq paquets sur
+une ligne restent un article extrait avec une quantité de cinq si elle est lisible.
+
+La comparaison avant/après sur les sept anciennes images (`recu_maxi`,
+`recu-h1`, `recu_maxi3`, `recu_metro`, `recu_2`, `recu-nouh`, `recu-nouh2`)
+a été exécutée avec chaque moteur : les nombres d’articles et les prix de
+chaque ligne sont identiques. Les limites déjà connues restent visibles :
+le rabais Metro est encore erroné avec Vision, et les deux reçus génériques
+peuvent rester partiels selon le moteur. Cette absence de régression ne les
+transforme pas en extractions intégralement validées.
+
+Ces résultats portent sur les montants des photos, pas sur les noms, codes,
+quantités, unités ou dates de tous les champs. Les valeurs et avertissements
+restent à relire. Toutes les extractions conservent `review_required` ; aucun
+prix n’est confirmé ni ajouté à PostgreSQL par ces essais.
 
 ## Lancer sur ce projet
 
@@ -31,7 +158,7 @@ Sans `--output`, le JSON est écrit sur la sortie standard. Le résumé est écr
 
 ## Pourquoi ce choix ?
 
-OpenCV sert au traitement d’image : agrandissement, redressement ou découpage. Un moteur OCR reste nécessaire pour reconnaître le texte. Le chemin Apple Vision reste inchangé ; OpenCV est utilisé pour les variantes Tesseract.
+OpenCV sert au traitement d’image : agrandissement, redressement ou découpage. Un moteur OCR reste nécessaire pour reconnaître le texte. OpenCV prépare les recadrages et contrastes ; le moteur choisi reconnaît ensuite le texte.
 
 Vision est limité à macOS dans ce script. Pour un environnement Linux ou Windows, un adaptateur **Tesseract** est également fourni :
 
@@ -155,8 +282,8 @@ Il n’existe pas encore de parcours applicatif de confirmation persistée
 ni d’écriture d’observations en PostgreSQL.
 
 La priorité reste Maxi, Metro et Super C. Pour la prochaine validation :
-tester Tesseract sur Windows avec les mêmes images, ajouter un reçu Super C
-annoté, puis élargir l’échantillon. Les autres enseignes ne sont pas
+tester Tesseract sur Windows avec les mêmes images, puis élargir l’échantillon.
+Les premiers reçus Super C sont désormais couverts par les essais du 2 novembre. Les autres enseignes ne sont pas
 prioritaires pour l’instant.
 
 ### Vérifications Windows/Tesseract du 4 octobre 2026
@@ -195,9 +322,9 @@ Ces essais Tesseract ont été réalisés sur macOS ; l'installation doit encore
 être vérifiée sur un PC Windows. Une extraction Vision réelle des quatre
 reçus retrouve respectivement 12, 13, 6 et 4 lignes. Ses contrôles sont
 concordants sauf sur `recu_metro.png` : Vision lit encore le rabais −8,99.
-Le chemin Vision n'a pas été modifié. Les cinq anciennes captures Vision
-rejouées conservent les résultats précédents. Il n'y a pas encore de reçu Super C
-annoté ni de profil spécifique Super C. Les sommes concordantes restent des
+À cette date, le chemin Vision n'avait pas été modifié. Les cinq anciennes captures Vision
+rejouées conservent les résultats précédents. Au 4 octobre, il n'y avait pas encore de reçu Super C
+annoté ni de profil spécifique Super C ; voir les ajouts du 2 novembre. Les sommes concordantes restent des
 contrôles arithmétiques et ne confirment pas les noms ni tous les champs.
 
 Les nouvelles captures `--save-ocr` utilisent une enveloppe `receipt-ocr-2`
@@ -221,7 +348,7 @@ Le projet ne possédait pas encore de contrat concret d’extraction de reçu. C
 | Champ | Sens |
 | --- | --- |
 | `schema_version`, `status` | Version du contrat et statut toujours `review_required` |
-| `parsing_profile` | Profil réellement utilisé : `maxi`, `metro` ou `generic` |
+| `parsing_profile` | Profil réellement utilisé : `maxi`, `metro`, `superc` ou `generic` |
 | `adjustments` | Rabais lus : montant signé ou inconnu, effet proposé et texte source |
 | `source_kind`, `currency` | Reçu, CAD ; prototype prévu pour Maxi au Québec |
 | `retailer`, `store_id` | Enseigne reconnue et numéro imprimé du magasin ; pas un identifiant interne de catalogue |
@@ -274,7 +401,7 @@ Cet essai historique du 28 septembre porte sur **un seul reçu**. La validation 
 
 ## Limites connues
 
-- Deux profils spécifiques éprouvés sur les images fournies : Maxi avec rayons numérotés et codes, Metro avec rayons textuels sans codes. Le profil générique produit des candidats à vérifier, sans garantie pour tout reçu. Super C ne possède pas encore de profil spécifique.
+- Trois profils spécifiques sont disponibles : Maxi avec rayons numérotés et codes, Metro avec rayons textuels, et Super C avec rayons, consignes et corrections de prix. Le profil générique produit des candidats à vérifier, sans garantie pour tout reçu.
 - Metro : les lignes positives `Rabais` sont informatives et le `RABAIS MEMBRE` explicitement négatif est une déduction proposée. Les autres rabais, remboursements, consignes et coupons restent à revoir. Les taxes explicites TPS/TVQ/GST/QST/HST sont lues entre sous-total et total ; doublons ou montants illisibles rendent leur somme inconnue. Sans ligne fiscale, les taxes restent `null`, même si sous-total et total sont identiques.
 - Les photos floues, fortement inclinées ou avec texte masqué peuvent nécessiter redressement, découpage ou nouvelle prise de vue. Pas de correction automatique de perspective dans cette version.
 - Les prix sans séparateur décimal ne sont pas transformés automatiquement en cents.
@@ -304,12 +431,13 @@ Les tests utilisent des données synthétiques, sans image privée, réseau ni m
 
 ## Détection des formats et repli générique
 
-La reconnaissance OCR est partagée. `parser.py` orchestre la lecture ; `rules/maxi.py`, `rules/metro.py` et `rules/generic.py` interprètent les formats ; `validation.py` contrôle les calculs.
+La reconnaissance OCR est partagée. `parser.py` orchestre la lecture ; `rules/maxi.py`, `rules/metro.py`, `rules/superc.py` et `rules/generic.py` interprètent les formats ; `validation.py` contrôle les calculs.
 
 La détection automatique associe des indices d’enseigne et de structure :
 
 - **Maxi** : nom dans l’en-tête et rayons numérotés.
 - **Metro** : nom dans l’en-tête ou référence spécifique `METROSONDAGE.CA` / `Rabais metro&moi`, avec rayons textuels. « Programme Moi » seul ne suffit pas.
+- **Super C** : nom dans l’en-tête ou site `SUPERCSONDAGE.CA`, avec ses rayons et ajustements.
 - **Générique** : enseigne inconnue, indices ambigus ou mise en page non reconnue. Un logo Maxi avec une autre structure peut donc utiliser le profil générique.
 
 Le profil générique repère un nom suivi d’un montant, ou une description suivie d’une ligne quantité/prix. Il utilise les rayons connus ; sans rayon, il exige un sous-total ou total comme borne. Les paiements, récompenses, taxes et ajustements reconnus ne deviennent pas des articles. Une description inconnue de la zone d’achat reste dans `unparsed_lines`. Chaque article générique est explicitement marqué comme candidat.

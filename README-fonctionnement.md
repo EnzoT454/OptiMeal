@@ -671,7 +671,7 @@ flowchart LR
     J -.-> F[À développer : confirmation dans le mobile et observations de prix]
 ```
 
-L’OCR utilise Apple Vision sur Mac ou Tesseract + OpenCV. Le chemin Windows et les reçus Super C restent à valider. Des sommes cohérentes ne garantissent pas que tous les articles ont été correctement reconnus.
+L’OCR utilise Apple Vision sur Mac ou Tesseract + OpenCV. Un profil Super C reconnaît désormais les rayons, les rabais informatifs, les consignes et les corrections de prix. Au 2 novembre, les prix de deux nouveaux reçus Maxi et de cinq reçus Super C ont été vérifiés ligne par ligne avec les deux moteurs sur Mac. Les relectures Tesseract utilisent des modèles locaux supplémentaires, décrits dans le guide des reçus. Le chemin Windows reste à vérifier sur PC ; les noms, quantités et autres champs restent à relire.
 
 Le pilote PC Express est un traitement complémentaire testé sur cinq produits Maxi. [match_maxi_receipts.py](backend/cli/match_maxi_receipts.py) prépare les correspondances puis actualise les produits dont le lien est renseigné ; [web_matching.py](backend/app/receipts/web_matching.py) porte les traitements et [pcx_products.py](backend/app/price_sources/pcx_products.py) récupère les fiches. Ce pilote ne fait pas partie du parcours HTTP des recettes.
 

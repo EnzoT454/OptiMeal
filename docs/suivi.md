@@ -363,6 +363,10 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
     - Les changements de nom, de photo ou de visibilité conservent les évaluations de la version courante.
     - Refus de l’autoévaluation, connexion requise pour voter et contrôle de l’accès aux recettes privées.
 
+- **Extraction des reçus**
+    - Ajout du profil Super C : rayons, poids net, consignes et corrections de prix, avec séparation des rabais informatifs.
+    - Amélioration de la lecture des colonnes et des gros totaux avec Vision et Tesseract.
+
 ### Décisions et ajustements
 
 - Calculer la note globale avec les poids Goût 40 %, Fiabilité 40 % et Facilité 20 %.

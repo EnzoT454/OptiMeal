@@ -66,7 +66,7 @@ class ReceiptSource(ReceiptModel):
 
 class ReceiptExtraction(ReceiptModel):
     schema_version: Literal['receipt-1.1'] = 'receipt-1.1'
-    parsing_profile: Literal['maxi', 'metro', 'generic'] = 'generic'
+    parsing_profile: Literal['maxi', 'metro', 'superc', 'generic'] = 'generic'
     status: Literal['review_required'] = 'review_required'
     source_kind: Literal['receipt'] = 'receipt'
     currency: Literal['CAD'] = 'CAD'

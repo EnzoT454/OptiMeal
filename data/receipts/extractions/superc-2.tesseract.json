@@ -1,0 +1,84 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "superc",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "superc",
+  "store_id": null,
+  "purchase_date": "2026-10-27",
+  "date_order": "ymd",
+  "source": {
+    "filename": "superc-2.jpg",
+    "sha256": "090aa9631ba77270f403031691ecc0873536dca0682440c152eb0a84ab92f9f6",
+    "engine": "tesseract-text-column-legacy-gray",
+    "elapsed_seconds": 2.289
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "GERBER GRAD.SOUF",
+      "category_raw": "EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.99",
+      "source_lines": [
+        "GERBER GRAD.SOUF 2.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "BANANE PREMIUM",
+      "category_raw": "FRUIT /LEGUME",
+      "format_raw": null,
+      "quantity": "2.650",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "1.74",
+      "line_total": "4.61",
+      "source_lines": [
+        "BANANE PREMIUM",
+        "2.650 kg @ $1.74/kg 4.61"
+      ],
+      "review_required": true,
+      "warnings": []
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": "2.00",
+      "effect": "informational",
+      "source_line": "Rabais 2.00",
+      "review_required": true
+    }
+  ],
+  "totals": {
+    "subtotal": "7.60",
+    "total": "7.60",
+    "taxes": null,
+    "items_sum": "7.60",
+    "calculated_subtotal": "7.60",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "parsing_profile_forced",
+    "purchase_date_order_requires_review",
+    "receipt_adjustments_require_review",
+    "price_column_alignment_requires_review",
+    "tesseract_legacy_price_model"
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "superc",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "superc",
+  "store_id": null,
+  "purchase_date": null,
+  "date_order": "ymd",
+  "source": {
+    "filename": "superc-1.jpg",
+    "sha256": "b0912a2105c7e7b50e641c8cc1e04b7c7260f24b1de9a090aa29621b7d522e83",
+    "engine": "vision",
+    "elapsed_seconds": 0.796
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "TOMATE ITALIENNE",
+      "category_raw": "FRUIT/LEGUME",
+      "format_raw": null,
+      "quantity": "0.280",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "6.59",
+      "line_total": "1.85",
+      "source_lines": [
+        "TOMATE ITALIENNE",
+        "0.280 kg @ $6.59/kg 1.85"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "SAUC.FUMEE",
+      "category_raw": "VIANDE",
+      "format_raw": null,
+      "quantity": "5",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "2.99",
+      "line_total": "14.95",
+      "source_lines": [
+        "(5) SAUC.FUMEE",
+        "5 @ $2.99 14.95"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 3,
+      "product_code": null,
+      "name": "COTES DOS PORC",
+      "category_raw": "VIANDE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "12.11",
+      "source_lines": [
+        "COTES DOS PORC 12.11"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": null,
+      "name": "COTES DOS PORC",
+      "category_raw": "VIANDE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "11.46",
+      "source_lines": [
+        "COTES DOS PORC 11.46"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": "20.00",
+      "effect": "informational",
+      "source_line": "Rabais 20.00",
+      "review_required": true
+    },
+    {
+      "amount": "9.71",
+      "effect": "informational",
+      "source_line": "Rabais 9.71",
+      "review_required": true
+    },
+    {
+      "amount": "9.19",
+      "effect": "informational",
+      "source_line": "Rabais 9.19",
+      "review_required": true
+    }
+  ],
+  "totals": {
+    "subtotal": "40.37",
+    "total": "40.37",
+    "taxes": null,
+    "items_sum": "40.37",
+    "calculated_subtotal": "40.37",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "superc_ocr_typography_requires_review",
+    "purchase_date_missing",
+    "cash_rounding_not_in_merchandise_total",
+    "receipt_adjustments_require_review"
+  ]
+}

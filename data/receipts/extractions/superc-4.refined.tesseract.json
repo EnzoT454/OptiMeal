@@ -1,0 +1,315 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "superc",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "superc",
+  "store_id": null,
+  "purchase_date": null,
+  "date_order": "ymd",
+  "source": {
+    "filename": "superc-4.jpg",
+    "sha256": "ed79b1fdd69d20e8dc6baa58328e623b3be5915bf108e10a71c4c50123befb20",
+    "engine": "tesseract-text-column-legacy-gray",
+    "elapsed_seconds": 3.897
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": null,
+      "name": "SPECK CER.VAN.AH",
+      "category_raw": "EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "5.99",
+      "source_lines": [
+        "SPECK CER.VAN.AH 5.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": null,
+      "name": "ORENGES",
+      "category_raw": "FRUIT /LEGUNE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.99",
+      "source_lines": [
+        "ORENGES 4.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": null,
+      "name": "CLEHENTINES",
+      "category_raw": "FRUIT /LEGUNE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.99",
+      "source_lines": [
+        "CLEHENTINES 4.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": null,
+      "name": "CHEMPIGNON BLANC",
+      "category_raw": "FRUIT /LEGUNE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "1.99",
+      "source_lines": [
+        "CHEMPIGNON BLANC 1.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 5,
+      "product_code": null,
+      "name": "BANANE FREHIUH",
+      "category_raw": "FRUIT /LEGUNE",
+      "format_raw": null,
+      "quantity": "1.340",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "1.74",
+      "line_total": "2.33",
+      "source_lines": [
+        "BANANE FREHIUH",
+        "1.340 kg @ $1.74/kg 2.33"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 6,
+      "product_code": null,
+      "name": "RAISINS UVERTS LA",
+      "category_raw": "FRUIT /LEGUNE",
+      "format_raw": null,
+      "quantity": "1.080",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "6.59",
+      "line_total": "7.12",
+      "source_lines": [
+        "RAISINS UVERTS LA",
+        "1.090 kg Brut",
+        "-0.010 kg Tare =",
+        "1.080 kg Net @ $6.59/kg 7.12"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 7,
+      "product_code": null,
+      "name": "POIVRON RGE 4UN",
+      "category_raw": "FRUIT /LEGUNE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.99",
+      "source_lines": [
+        "POIVRON RGE 4UN 2.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 8,
+      "product_code": null,
+      "name": "SELECTION FROH.B",
+      "category_raw": "PRODUIT LAIT",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.44",
+      "source_lines": [
+        "SELECTION FROH.B 4.44"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 9,
+      "product_code": null,
+      "name": "NATUR. OEUF GR.PO",
+      "category_raw": "PRODUIT LAIT",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.77",
+      "source_lines": [
+        "NATUR. OEUF GR.PO 3.77"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 10,
+      "product_code": null,
+      "name": "LACT. PURF.LAIT12",
+      "category_raw": "PRODUIT LAIT",
+      "format_raw": null,
+      "quantity": "2",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": null,
+      "line_total": "9.98",
+      "source_lines": [
+        "(2) LACT. PURF.LAIT12",
+        "Z @ $4.99 9.98"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_detail_unreadable"
+      ]
+    },
+    {
+      "line_id": 11,
+      "product_code": null,
+      "name": "POH PAIN TRANCHE",
+      "category_raw": "BOUL COMHERC",
+      "format_raw": null,
+      "quantity": "2",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": null,
+      "line_total": "8.58",
+      "source_lines": [
+        "(2) POH PAIN TRANCHE",
+        "i @ $4.29 8.58"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_detail_unreadable"
+      ]
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": "1.50",
+      "effect": "informational",
+      "source_line": "Rabais 1.50",
+      "review_required": true
+    },
+    {
+      "amount": "1.00",
+      "effect": "informational",
+      "source_line": "Rabais 1.00",
+      "review_required": true
+    },
+    {
+      "amount": "1.00",
+      "effect": "informational",
+      "source_line": "Rabais 1.00",
+      "review_required": true
+    },
+    {
+      "amount": "0.50",
+      "effect": "informational",
+      "source_line": "Rabais 0.50",
+      "review_required": true
+    },
+    {
+      "amount": "2.38",
+      "effect": "informational",
+      "source_line": "Rabais 2.38",
+      "review_required": true
+    },
+    {
+      "amount": "2.00",
+      "effect": "informational",
+      "source_line": "Rabais 2.00",
+      "review_required": true
+    },
+    {
+      "amount": "1.75",
+      "effect": "informational",
+      "source_line": "Rabais 1.75",
+      "review_required": true
+    },
+    {
+      "amount": "2.72",
+      "effect": "informational",
+      "source_line": "Rabais 2.72",
+      "review_required": true
+    },
+    {
+      "amount": "1.00",
+      "effect": "informational",
+      "source_line": "Rabais 1.00",
+      "review_required": true
+    },
+    {
+      "amount": "-1.58",
+      "effect": "applied",
+      "source_line": "PRIX -1.58",
+      "review_required": true
+    }
+  ],
+  "totals": {
+    "subtotal": "55.59",
+    "total": "55.59",
+    "taxes": null,
+    "items_sum": "57.17",
+    "calculated_subtotal": "55.59",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "unverifiable"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "parsing_profile_forced",
+    "superc_ocr_typography_requires_review",
+    "tesseract_ocr_prefix_removed_requires_review",
+    "tesseract_noise_lines_ignored_requires_review",
+    "purchase_date_missing",
+    "cash_rounding_not_in_merchandise_total",
+    "receipt_adjustments_require_review",
+    "tesseract_legacy_price_model"
+  ]
+}

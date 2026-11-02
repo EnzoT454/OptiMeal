@@ -9,7 +9,7 @@ DETAIL = re.compile(
     rf'(?P<price>{AMOUNT})(?:\s*/\s*(?P<basis>kg|lb))?'
     rf'(?:\s+\$?\s*(?P<total>{AMOUNT}))?\s*$', re.I,
 )
-TOTAL = re.compile(r'^(SOUS[ \-–—]*TOTAL|SUBTOTAL|TOTAL)(?:\s|:|$)')
+TOTAL = re.compile(r'^(SOUS[ \-–—]*TOTAL|SUBTOTAL|TOTAL)(?:\s|[.:]|$)')
 STOP = re.compile(r'^(TYPE DE TRANS|COMPTE\s*:|TYPE DE CARTE|(?:C\.\s*)?CREDIT\b|DEBIT\b|'
                   r'VISA\b|MASTERCARD\b|PAIEMENT\b|PAYMENT\b|COMPTANT\b|CASH\b|'
                   r'MONNAIE\b|CHANGE\b|INTERAC\b|NOMBRE D.ARTICLES|\*{3,})')
