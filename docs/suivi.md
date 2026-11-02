@@ -307,105 +307,36 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 - Compléter l’intégration des comptes, des recettes et des promotions
 - Permettre la consultation sans compte et demander la connexion pour les actions personnelles
-- Vérifier les nouveaux parcours sur iOS
+- Intégrer le calendrier des repas et vérifier les nouveaux parcours (flux d'utilisation)
 
 ### Travail réalisé
 
-- Ajout du mode visiteur pour consulter Accueil, Promos, Recettes et Paramètres
-- Connexion proposée lors des actions personnelles, avec possibilité de poursuivre sans compte
-- Photo obligatoire à la création d’une recette, avec validation dans le mobile et l’API
-- Nom obligatoire pour activer l’enregistrement d’une recette ; quantité séparée de l’unité, choisie parmi les boutons g, ml et unité
-- Développement du backend du partage : migration 0009, visibilité privée par défaut, publication et retrait par le propriétaire, sections API Découvrir/Mes recettes/Favoris et contrôle de visibilité dans les favoris et le calendrier. Les sections mobiles Découvrir, Mes recettes et Favoris sont intégrées ; le choix de publication est également intégré dans le formulaire et le détail, avec confirmation. Pour le prototype, nous conservons le même bucket public de photos ; la séparation privé/public du stockage sera réalisée après le prototype.
-- Ajout des photos de produits dans les cartes et détails des promotions
-- Ajout de la suppression du compte dans Paramètres, avec confirmation explicite, nettoyage des photos et retour au mode visiteur
-- Actualisation des promotions et consultation des circulaires
-- Intégration du calendrier développé par notre coéquipier : navigation par semaine, repas par recette ou note, portions, déplacement, duplication et restes ; la migration 0008 crée les entrées en base
+- **Comptes**
+    - Mode visiteur et connexion à la demande pour les actions personnelles
+    - Suppression du compte depuis les paramètres, avec confirmation et nettoyage des photos
+- **Recettes**
+    - Organisation en Découvrir, Mes recettes et Favoris, avec recherche et filtres dans chaque section
+    - Partage public ou privé depuis le formulaire et le détail de la recette
+    - Formulaire avec nom et photo obligatoires, quantité séparée de l’unité
+- **Promotions et circulaires**
+    - Ajout des photos de produits et actualisation des promotions
+    - Consultation des circulaires dans l’application
+- **Calendrier**
+    - Intégration du calendrier hebdomadaire : recettes ou notes, portions, déplacement, duplication et restes
+    - Conservation des repas après suppression d’une recette et affichage « Recette indisponible » lorsque l’accès est perdu
+- **Vérifications**
+    - Essais des nouveaux parcours sur iOS et des scénarios de partage
+    
 
-### Vérifications
+### Décisions et ajustements
 
-Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visiteur, de la connexion à la demande, de la photo obligatoire à la création, des photos de produits dans Promos et de la suppression du compte. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android.
+- Garder les recettes privées par défaut ; seul le propriétaire peut les publier ou les rendre privées
+- Limiter les recettes accessibles dans le calendrier aux recettes publiques et à celles du compte
+- Conserver le bucket public de photos pour le prototype ; reporter la séparation privé/public du stockage à la fin du prototype
 
-Hamza a également confirmé le 1er novembre l’application de `0008_meal_plan`
-sur Supabase et le fonctionnement du calendrier sur iOS. L’historique figé
-par instantanés reste à développer.
-
-Hamza a confirmé sur iOS le 1er novembre le blocage de l’enregistrement sans nom et le fonctionnement de la quantité séparée du choix fixe de l’unité. Ces ajustements restent à vérifier sur Android.
-
-Pour le backend du partage, la suite sur PostgreSQL local jetable donne
-365 tests réussis et 1 ignoré ; les 38 tests mobiles et TypeScript passent.
-La migration et les autorisations ont été vérifiées avec deux comptes, y compris
-le retrait d’une recette publique déjà ajoutée aux favoris et au calendrier.
-La migration `0009_recipe_visibility` a ensuite été appliquée sur Supabase le 1er novembre. Le schéma est conforme aux modèles et les comptages des neuf tables applicatives sont identiques avant et après : les 10 recettes initiales sont publiques et les 10 repas planifiés sont conservés. Aucune recette personnelle n’était présente lors de cette application.
-
-Le maintien des photos dans le bucket public a été vérifié par 35 tests backend
-ciblés sur PostgreSQL local : URL conservée à la publication et au retrait,
-droits d’écriture par propriétaire et suppression des comptes pour les deux
-visibilités. Les 38 tests mobiles et TypeScript passent. Le formulaire précise
-que la photo reste accessible par son lien même pour une recette privée ;
-ce nouveau message reste à vérifier sur téléphone.
+### Difficultés rencontrées
 
 ### Prochaines étapes
 
-- Reproduire les nouveaux parcours sur Android, y compris le calendrier
-- Compléter les scénarios d’erreur réseau et les essais sur différentes tailles d’écran
 - Développer les instantanés historiques des plans et les listes d’épicerie
-
-### Sections Recettes — 1er novembre
-
-Nous avons séparé Découvrir, Mes recettes et Favoris dans l’écran Recettes,
-avec connexion demandée pour les deux sections personnelles. La recherche et
-les filtres s’appliquent à la section active ; la pagination repart à la première
-page lorsqu’on change de section. Les listes vides proposent une action adaptée.
-Les cartes affichent leur source et les créations du compte leur visibilité.
-Les réponses tardives d’une section précédente sont ignorées.
-
-Les 44 tests mobiles et TypeScript passent. Le lint n’est pas configuré. Les
-essais iOS et Android de ces nouvelles sections restent à effectuer.
-
-### Publication depuis le mobile — 1er novembre
-
-Le formulaire permet de garder une recette privée ou de la partager, avec
-statut privé par défaut à la création et reprise du statut courant en édition.
-Le détail propose au propriétaire de publier ou rendre privée sa recette.
-Une confirmation précède ces changements ; le statut confirmé vient du serveur.
-Le retrait du public précède les modifications du contenu, tandis qu’une
-publication suit leur enregistrement. Les échecs entre les deux opérations
-sont signalés pour permettre de réessayer sans annoncer un faux succès.
-
-Les 60 tests mobiles et TypeScript passent. Ils couvrent les confirmations,
-l’annulation, les deux visibilités, l’ordre des requêtes, les erreurs et les
-sauvegardes partielles. Le lint reste non configuré. Les validations distinctes iOS et Android restent à consigner ; le bucket de
-photos reste public pendant le prototype.
-
-Le 1er novembre 2026, Hamza a confirmé les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
-
-### Recettes indisponibles dans le calendrier — 1er novembre
-
-La migration `0010_preserve_meals` conserve les repas après suppression d’une
-recette, y compris les restes et les repas d’un autre compte. Elle a été appliquée
-sur Supabase : les comptages des neuf tables restent identiques, avec 10 repas
-conservés. Les repas supprimés avant cette migration ne sont pas restaurés.
-
-Une recette supprimée ou devenue privée pour le lecteur affiche « Recette
-indisponible ». Les portions, le déplacement et le retrait restent disponibles ;
-l’ouverture, la duplication et la création de restes ne sont plus proposées.
-Le calendrier recharge les droits au retour dans l’onglet. Le sélecteur propose
-uniquement les recettes publiques et personnelles, ou les favoris accessibles.
-
-Les vérifications donnent 371 tests backend réussis et 1 ignoré (PyMuPDF absent),
-66 tests mobiles et TypeScript valides. Les essais iOS et Android de cette
-correction restent à effectuer.
-
-### Vérification complète sans test ignoré — 1er novembre
-
-Le test de conversion des circulaires PDF était ignoré parce que PyMuPDF
-manquait dans l’environnement virtuel, malgré sa présence dans requirements.txt.
-La version prévue, 1.28.2, est maintenant installée. Ce test signale désormais
-une erreur si la dépendance obligatoire manque, au lieu d’être ignoré.
-
-La suite complète a été relancée avec une base PostgreSQL locale jetable :
-372 tests backend réussis, aucun ignoré. Les 66 tests mobiles passent également
-sans test ignoré, TypeScript est valide et les 10 exports de contrats sont
-cohérents. Sans configuration de base de test, les tests PostgreSQL restent
-volontairement ignorés pour éviter tout accès à Supabase. Les avertissements
-de dépréciation des dépendances ne constituent pas des échecs de test.
+- Développer onglet Accueil

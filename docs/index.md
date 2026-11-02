@@ -76,7 +76,7 @@ Les résultats, les limites observées et les fonctionnalités effectivement ré
 
 ## Échéancier
 
-Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md), complété par les ajouts de fin octobre. Les statuts correspondent à l’état au 1er novembre ; les essais complémentaires et les fonctionnalités restantes se poursuivront dans les prochaines semaines.
+Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md). Les statuts correspondent à l’état au 1er novembre. Les prochaines priorités sont l’historique stable des plans, les listes d’épicerie et l’onglet Accueil ; leurs dates restent à planifier.
 
 | Activités | Début | Fin | Livrable | Statut |
 | --- | --- | --- | --- | --- |
@@ -84,12 +84,16 @@ Les périodes ci-dessous reprennent le travail présenté dans le [suivi de proj
 | Recherche d’applications similaires et début du prototype sur Figma | 7 sept. | 13 sept. | Recherche comparative et prototype initial | ✅ Terminé |
 | Analyse des applications existantes, prototype et modèle C4 | 14 sept. | 20 sept. | Présentation au professeur | ✅ Terminé |
 | Évaluation initiale des sources et essais d’extraction | 21 sept. | 27 sept. | Comparaison des méthodes de collecte et de lecture des reçus | ✅ Terminé |
-| Collecte Maxi, lecture des reçus et préparation du modèle de données | 28 sept. | 4 oct. | Données Maxi avec Apify, essais OCR Maxi/Metro et modèle proposé | ✅ Terminé pour les premiers essais |
-| Exploration de PC Express et ajout de l’échantillon Metro | 5 oct. | 11 oct. | Essai sur cinq produits Maxi et échantillon Metro ; avis du professeur encore attendu sur la poursuite de PC Express | ✅ Essai terminé |
-| Mise en place de la base, des comptes et du parcours Recettes | 12 oct. | 18 oct. | Persistance PostgreSQL, comptes, recettes manuelles et favoris | ✅ Socle intégré |
-| Catalogue commun et développement de l’onglet Promos | 19 oct. | 25 oct. | Catalogue des trois enseignes, offres en base et recettes associées aux promotions | ✅ Socle intégré |
-| Vérifications sur appareils et enrichissement des comptes, recettes et Promos | 26 oct. | 1 nov. | Mode visiteur, connexion à la demande, photo obligatoire, photos des produits et suppression du compte confirmés sur iOS le 1er novembre | ✅ Parcours confirmés sur iOS ; essais Android et erreurs à compléter |
-| Calendrier des repas | 26 oct. | 1 nov. | Repas sauvegardés, portions et actions ; code intégré depuis main le 1er novembre | ✅ Migration Supabase et parcours iOS confirmés ; Android à vérifier |
-| Historique stable, listes, modes IA, estimations et contributions | À planifier | À planifier | Parcours complet des repas aux achats, puis évaluation et synthèse | ⏳ À développer |
+| Collecte Maxi, lecture des reçus et préparation du modèle de données | 28 sept. | 4 oct. | Données Maxi avec Apify, essais OCR Maxi/Metro et modèle proposé | ✅ Terminé |
+| Exploration de PC Express et ajout de l’échantillon Metro | 5 oct. | 11 oct. | Essai sur cinq produits Maxi et échantillon Metro ; avis du professeur encore attendu sur la poursuite de PC Express | ✅ Terminé |
+| Mise en place de la base, des comptes et du parcours Recettes | 12 oct. | 18 oct. | Persistance PostgreSQL, comptes, recettes manuelles et favoris | ✅ Terminé |
+| Catalogue commun et développement de l’onglet Promos | 19 oct. | 25 oct. | Catalogue des trois enseignes, offres en base et recettes associées aux promotions | ✅ Terminé |
+| Comptes et partage des recettes | 26 oct. | 1 nov. | Mode visiteur, suppression du compte, sections Découvrir/Mes recettes/Favoris et partage public ou privé | ✅ Terminé |
+| Promotions et circulaires | 26 oct. | 1 nov. | Photos des produits, promotions actualisées et consultation des circulaires | ✅ Terminé |
+| Calendrier des repas | 26 oct. | 1 nov. | Calendrier hebdomadaire avec portions et actions sur les repas ; conservation des repas dont la recette devient indisponible | ✅ Terminé |
+| Essais sur iOS et scénarios de partage | 26 oct. | 1 nov. | Essais réalisés sur les nouveaux parcours ; validation complète sur iOS et Android à poursuivre | ✅ Terminé |
+| Historique stable des plans et listes d’épicerie | À planifier | À planifier | Anciennes semaines conservées et listes d’achats par magasin | ⏳ À développer |
+| Onglet Accueil | À planifier | À planifier | Écran d’accueil de l’application | ⏳ À développer |
+| Modes IA, estimations et contributions | À planifier | À planifier | Aide aux recettes, estimations de prix et contribution par reçu, puis évaluation et synthèse | ⏳ À développer |
 
 *Dernière mise à jour : 1er novembre 2026*
