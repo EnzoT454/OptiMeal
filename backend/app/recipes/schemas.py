@@ -1,6 +1,6 @@
 """Contrats de lecture du catalogue initial de recettes, indépendants du stockage."""
 from decimal import Decimal
-from datetime import date
+from datetime import date, datetime
 from typing import Annotated, Literal
 
 from pydantic import Field, HttpUrl, StringConstraints, field_validator, model_validator
@@ -10,6 +10,13 @@ from backend.app.common.contracts import ContractModel, IngredientId, Quantity, 
 
 NonEmpty = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 Difficulty = Literal['easy', 'medium', 'hard']
+RecipeVisibility = Literal['private', 'public']
+RecipeScope = Literal['accessible', 'discover', 'mine', 'favorites']
+
+
+class RecipeVisibilityUpdate(ContractModel):
+    visibility: RecipeVisibility
+
 Tag = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=40)]
 
 
@@ -74,6 +81,7 @@ class RecipeCreate(RecipeWrite):
     """La création personnelle exige une photo ; lecture, édition et imports restent compatibles."""
 
     image_url: NonEmpty
+    visibility: RecipeVisibility = 'private'
 
     @field_validator('image_url')
     @classmethod
@@ -99,6 +107,8 @@ class RecipeSummary(ContractModel):
     review_required: bool = True
     is_owned: bool = False
     is_favorite: bool = False
+    visibility: RecipeVisibility = 'public'
+    published_at: datetime | None = None
 
 
 class RecipeRead(RecipeSummary):

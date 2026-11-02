@@ -23,6 +23,14 @@ const DAY_NAMES = ["DIM.", "LUN.", "MAR.", "MER.", "JEU.", "VEN.", "SAM."];
 const MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet",
   "août", "septembre", "octobre", "novembre", "décembre"];
 
+export function recipeUnavailable(entry: Pick<MealPlanEntry, 'recipe_name' | 'free_text'>): boolean {
+  return entry.recipe_name === null && entry.free_text === null;
+}
+
+export function mealName(entry: Pick<MealPlanEntry, 'recipe_name' | 'free_text'>): string {
+  return entry.recipe_name ?? entry.free_text ?? 'Recette indisponible';
+}
+
 // Date → "2026-11-02" (en heure locale, pas UTC)
 export function toISODate(d: Date): string {
   const m = String(d.getMonth() + 1).padStart(2, "0");

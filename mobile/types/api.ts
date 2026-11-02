@@ -1,5 +1,7 @@
 export type RecipeUnit = 'g' | 'ml' | 'unit';
 export type RecipeDifficulty = 'easy' | 'medium' | 'hard';
+export type RecipeVisibility = 'private' | 'public';
+export type RecipeScope = 'accessible' | 'discover' | 'mine' | 'favorites';
 export interface RecipeIngredient {
   ingredient_id: string; quantity: string; unit: RecipeUnit; preparation: string | null;
 }
@@ -10,7 +12,10 @@ export interface RecipeWrite {
   difficulty: RecipeDifficulty | null; tags: string[];
   instructions: { position: number; text: string }[];
 }
+export type RecipeCreate = RecipeWrite & { image_url: string; visibility?: RecipeVisibility };
+export interface RecipeVisibilityUpdate { visibility: RecipeVisibility; }
 export interface RecipeSummary {
+  visibility: RecipeVisibility; published_at: string | null;
   id: string; name: string; description: string; servings: number; total_time_minutes: number;
   image_url: string | null; review_required: boolean; is_owned: boolean; is_favorite: boolean;
   difficulty: RecipeDifficulty | null; tags: string[];
@@ -58,10 +63,10 @@ export type MealPlanEntry = {
   id: string;
   date: string;               // "AAAA-MM-JJ"
   meal: MealType;
-  recipe_id: RecipeSummary["id"] | null;
-  recipe_name: string | null;
+  recipe_id: RecipeSummary["id"] | null; // null pour une note ou une recette supprimée
+  recipe_name: string | null; // null si la recette est supprimée ou inaccessible
   recipe_image_url: string | null;
-  free_text: string | null;   // …ou un texte libre : « Restes », « Resto »
+  free_text: string | null;   // note libre ; nom et note nuls = recette indisponible
   servings: number;
   is_leftover: boolean;       // vrai = restes d'une recette déjà cuisinée
 };

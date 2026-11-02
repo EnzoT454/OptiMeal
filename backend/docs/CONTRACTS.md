@@ -54,10 +54,11 @@ HTTP sont inchangés ; les droits et limites Storage sont décrits dans
 | Méthode et route | Réponse | Filtres |
 | --- | --- | --- |
 | `GET /api/v1/ingredients` | Liste du référentiel commun | `q`, `limit`, `offset` |
-| `GET /api/v1/recipes` | Recettes initiales et personnelles accessibles | `q`, `quick`, `favorites`, `limit`, `offset` |
+| `GET /api/v1/recipes` | Recettes publiques et personnelles accessibles | `scope`, `q`, `quick`, `favorites`, `limit`, `offset` |
 | `GET /api/v1/recipes/{id}` | Recette complète accessible, avec ingrédients et étapes | — |
 | `POST /api/v1/recipes` | Créer une recette personnelle, propriétaire issu du jeton | Connexion requise |
 | `PUT /api/v1/recipes/{id}` | Remplacer sa propre recette | Connexion requise |
+| `PATCH /api/v1/recipes/{id}/visibility` | Publier ou rendre privée sa propre recette | Connexion requise |
 | `DELETE /api/v1/recipes/{id}` | Supprimer sa propre recette | Connexion requise |
 | `PUT / DELETE /api/v1/recipes/{id}/favorite` | Ajouter/retirer son favori | Connexion requise |
 | `GET /api/v1/offers` | Prix relevés avec produit, format et contexte | `ingredient_id`, `retailer`, `store_id`, `category_id`, `promotion_only`, `on_date`, `limit`, `offset` |
@@ -90,9 +91,69 @@ préparation comprise. Pour ce petit catalogue, les noms candidats sont
 normalisés en Python ; les filtres de durée, le comptage et la pagination
 sont exécutés dans PostgreSQL. Création manuelle, édition, suppression et
 favoris utilisent Supabase Auth ; les parcours IA restent à implémenter.
-Sans jeton, seules les recettes initiales sont visibles ; avec un jeton
-valide, les recettes personnelles du compte s’ajoutent. `favorites=true`
-exige une session. Les droits et routes sont décrits dans [AUTH.md](AUTH.md).
+Sans jeton, les recettes initiales et les recettes personnelles publiées sont
+visibles ; avec un jeton valide, les recettes privées du compte s’ajoutent.
+`favorites=true` exige une session. Les droits et routes sont décrits dans
+[AUTH.md](AUTH.md).
+
+### Visibilité et sections de recettes — étape backend
+
+La migration `0009_recipe_visibility` est requise. Liste et détail exposent
+`visibility` (`private` ou `public`) et `published_at` (horodatage avec fuseau,
+nullable). Les dix recettes initiales restent publiques, avec une date de
+publication nulle. Les recettes personnelles existantes restent privées.
+
+| `scope` | Résultat |
+| --- | --- |
+| `accessible` (défaut) | Toutes les recettes publiques et les recettes privées du compte ; compatibilité avec le mobile actuel |
+| `discover` | Recettes publiques, y compris celles du compte connecté |
+| `mine` | Recettes du compte uniquement, privées et publiques ; 401 sans connexion |
+| `favorites` | Favoris accessibles du compte ; 401 sans connexion |
+
+Recherche, Rapides et pagination s’appliquent après les règles d’accès et de
+section, y compris pour `total`. L’ancien `favorites=true` reste accepté avec
+`scope=accessible` ou `scope=favorites` ; sa combinaison avec `mine` ou
+`discover` renvoie 422. Une section inconnue renvoie 422.
+
+`POST /api/v1/recipes` accepte `visibility`, privée par défaut. Une création
+publique fixe `published_at` côté serveur. Pour publier ou retirer une recette :
+
+```http
+PATCH /api/v1/recipes/recipe_identifiant/visibility
+Authorization: Bearer <jeton>
+Content-Type: application/json
+
+{"visibility": "public"}
+```
+
+La réponse 200 contient le détail sous `item`. Utiliser `private` pour retirer
+la publication ; la date redevient nulle. Répéter le même état conserve la date
+existante. Une nouvelle publication reçoit une nouvelle date. Les champs
+propriétaire et date de publication ne sont pas acceptés dans les écritures.
+401 sans session, 404 pour une recette absente, initiale ou appartenant à un
+autre compte, 422 pour un état invalide, 503 si la base est indisponible.
+
+Le `PUT` de contenu conserve son contrat actuel et ne change jamais la
+visibilité ; utiliser le `PATCH` dédié. Une recette publique d’un autre auteur
+reste non modifiable et non supprimable par le lecteur.
+
+Après retrait du public, le détail devient inaccessible aux autres comptes
+(404) et leurs favoris masquent la recette. Les associations de favoris sont
+conservées : une republication les réaffiche. Retirer son propre favori reste
+possible et idempotent même si la recette est devenue inaccessible ; cette
+opération ne confirme pas l’existence de la recette. Le calendrier masque
+alors nom et photo sans supprimer le repas ; voir [PLANNING.md](PLANNING.md).
+
+Le mobile utilise ces sections depuis le 1er novembre : Découvrir, Mes recettes
+et Favoris. Le formulaire propose le partage et le détail les actions de publication
+et retrait après confirmation. Le POST transmet la visibilité ; en édition,
+le contenu utilise PUT et le statut PATCH. Pour un retrait, PATCH précède PUT ;
+pour une publication, PUT précède PATCH. Une erreur entre les requêtes est
+signalée comme une sauvegarde partielle par le mobile. Le prototype conserve le
+bucket public `recipes-images`, pour toutes les photos de recettes. Une URL
+déjà connue reste accessible même après retrait de la publication. Le changement
+de visibilité conserve le fichier et son URL. La séparation privé/public du
+stockage est reportée après le prototype ; voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
 
 ## Calendrier
 

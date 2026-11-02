@@ -2,6 +2,17 @@
 
 Le backend contient l’API FastAPI, la collecte Apify pour Maxi et l’extraction locale des reçus. Le code est organisé par fonction, avec des commandes et des guides séparés.
 
+Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
+privées par défaut, publication volontaire et retrait par le propriétaire.
+Appliquer les migrations jusqu’à la tête courante `0010_preserve_meals` avant
+de démarrer cette version : `0009_recipe_visibility` ajoute le partage et
+`0010_preserve_meals` conserve les repas après suppression de leur recette. Les
+[contrats](docs/CONTRACTS.md#visibilité-et-sections-de-recettes--étape-backend)
+décrivent `scope` et `PATCH /api/v1/recipes/{id}/visibility`, ainsi que le
+masquage des favoris et du calendrier après retrait. Les sections mobiles et le choix de publication dans le formulaire et le
+détail sont intégrés ; leurs nouveaux parcours restent à vérifier sur appareil. Le bucket public `recipes-images` est conservé pendant le
+prototype ; sa séparation privé/public est reportée après le prototype.
+
 ## Structure
 
 ```text
@@ -116,8 +127,9 @@ des identifiants partagés et des prix décimaux en chaînes.
 Le [guide des contrats](docs/CONTRACTS.md) détaille les filtres, dates et limites.
 Les [schémas et exemples](contracts/v1/README.md) peuvent être régénérés avec
 `python -m backend.cli.export_shared_contracts`. La connexion PostgreSQL/Supabase
-est disponible avec huit migrations couvrant ingrédients, recettes, profils,
-favoris, catégories, offres, circulaires, photos de produits et repas planifiés. La révision
+est disponible avec dix migrations couvrant ingrédients, recettes, profils,
+favoris, catégories, offres, circulaires, photos de produits, repas planifiés,
+visibilité des recettes et conservation des repas après suppression de leur recette. La révision
 `0007_product_images` ajoute les champs facultatifs `image_url` et
 `image_source` dans `product_offer`. Appliquer `upgrade head`, reconstruire
 le catalogue commun et relancer `import_offers` pour remplir ces champs.

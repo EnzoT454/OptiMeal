@@ -36,7 +36,9 @@ def test_circular_pages_are_public_storage_links():
 
 
 def test_pdf_pages_become_jpeg_images(tmp_path):
-    pymupdf = pytest.importorskip('pymupdf')
+    # Dépendance obligatoire de requirements.txt : son absence doit faire échouer
+    # le test plutôt que masquer une installation incomplète.
+    import pymupdf
     path = tmp_path / 'circulaire.pdf'
     with pymupdf.open() as document:
         for _ in range(3):

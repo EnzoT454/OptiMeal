@@ -32,7 +32,7 @@ function screen(file, { session = null, states = {}, apiFailure = false } = {}) 
     if (name === '@react-navigation/native-stack') return { createNativeStackNavigator: () => navigator };
     if (name === '@react-navigation/bottom-tabs') return { createBottomTabNavigator: () => navigator };
     if (name === 'expo-font') return { useFonts: () => [true, null] };
-    if (name === 'react-native') return { Text: 'Text', View: 'View', Modal: 'Modal', Alert: { alert() {} } };
+    if (name === 'react-native') return { Text: 'Text', View: 'View', Pressable: 'Pressable', Modal: 'Modal', Alert: { alert() {} } };
     if (name === 'react-native-safe-area-context') return { SafeAreaProvider: 'SafeAreaProvider', SafeAreaView: 'SafeAreaView' };
     if (name === 'expo-status-bar') return { StatusBar: 'StatusBar' };
     if (name.includes('components/ui') || name.includes('components/recipes')) return ui;
@@ -82,8 +82,9 @@ test('un visiteur doit se connecter avant ajout ou consultation des favoris', ()
   const list = screen('app/RecipeListScreen.tsx');
   const tree = list.render();
   button(tree, '+  Ajouter une recette').props.onPress();
-  nodes(tree).find(n => n.props.label === 'Favoris').props.onPress();
-  assert.equal(list.requests.length, 2);
+  nodes(tree).find(n => n.props.accessibilityLabel === 'Favoris').props.onPress();
+  nodes(tree).find(n => n.props.accessibilityLabel === 'Mes recettes').props.onPress();
+  assert.equal(list.requests.length, 3);
   assert.equal(list.navigations.length, 0);
   assert.equal(list.calls.length, 0);
 });
@@ -103,6 +104,7 @@ test('un visiteur peut charger et rechercher les recettes partagées sans ouvrir
   assert.equal(list.calls.length, 1);
   const query = new URLSearchParams(list.calls[0][0].split('?')[1]);
   assert.equal(query.get('q'), 'poulet');
+  assert.equal(query.get('scope'), 'discover');
   assert.equal(query.has('favorites'), false);
   assert.equal(list.requests.length, 0);
 });

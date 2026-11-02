@@ -49,11 +49,11 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
   useEffect(() => {
     if (jour === null || mode === "texte") return;
     let actif = true;
+    setRecettes([]); setRecette(null); setChargement(true); setErreurRecettes(null);
     const minuteur = setTimeout(() => {
       setChargement(true);
       setErreurRecettes(null);
-      const params = new URLSearchParams({ q: recherche, limit: "10", offset: "0" });
-      if (mode === "favoris") params.set("favorites", "true"); // seulement mes coups de cœur
+      const params = new URLSearchParams({ scope: mode === 'favoris' ? 'favorites' : 'accessible', q: recherche, limit: "10", offset: "0" });
       api<Page<RecipeSummary>>("/api/v1/recipes?" + params)
         .then((res) => { if (actif) setRecettes(res.items); })
         .catch((e) => { if (actif) setErreurRecettes(e?.message ?? "Impossible de charger les recettes."); })

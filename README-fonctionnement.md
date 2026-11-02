@@ -127,8 +127,11 @@ flowchart TD
 
 [accounts/deletion.py](backend/app/accounts/deletion.py) appelle Storage et
 Auth avec la clé serveur `SUPABASE_SECRET_KEY`. Les relations existantes
-suppriment les données métier, y compris les repas planifiés, par cascade. Les recettes partagées,
-les autres comptes et les circulaires sont conservés. Les fichiers inutilisés
+suppriment le profil, les favoris, les repas planifiés et toutes les recettes
+du compte, privées comme publiques, par cascade. Les autres comptes, leurs
+recettes, les recettes initiales du catalogue et les circulaires sont conservés.
+Les repas des autres comptes liés à une recette supprimée restent dans leur
+calendrier avec la mention « Recette indisponible ». Les fichiers inutilisés
 du dossier photo sont aussi supprimés. En cas d’échec, des photos peuvent déjà
 avoir disparu : Storage et Auth ne partagent pas de transaction. La suppression
 du compte est confirmée sur iOS le 1er novembre ; les essais Android et les
@@ -171,15 +174,33 @@ Le fichier [RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) demande la li
 
 | Action | Requête correspondante |
 | --- | --- |
-| Lire les recettes | `GET /api/v1/recipes` |
-| Chercher « poulet » | `GET /api/v1/recipes?q=poulet` |
-| Voir les recettes rapides | `GET /api/v1/recipes?quick=true` |
-| Voir ses favoris | `GET /api/v1/recipes?favorites=true` |
+| Découvrir | `GET /api/v1/recipes?scope=discover` |
+| Mes recettes | `GET /api/v1/recipes?scope=mine` |
+| Chercher « poulet » dans Découvrir | `GET /api/v1/recipes?scope=discover&q=poulet` |
+| Voir ses recettes rapides | `GET /api/v1/recipes?scope=mine&quick=true` |
+| Voir ses favoris | `GET /api/v1/recipes?scope=favorites` |
 | Lire une recette complète | `GET /api/v1/recipes/{id}` |
 
 Rapides signifie **30 minutes au maximum, préparation et cuisson comprises**. Petit budget affiche encore « Disponible prochainement ».
 
-Sans jeton, l’API permet de lire les recettes initiales. Avec une identité valide, elle ajoute les recettes personnelles de ce compte. Le mobile permet également cette consultation sans compte. Ajouter une recette, consulter ou modifier ses favoris et accéder au profil demande une connexion.
+Sans jeton, l’API permet de lire les recettes initiales et les recettes publiées par les utilisateurs. Avec une identité valide, elle ajoute les recettes privées de ce compte. Le mobile permet également cette consultation sans compte. Ajouter une recette, consulter ou modifier ses favoris et accéder au profil demande une connexion.
+
+Le mobile propose trois sections : Découvrir (`scope=discover`, recettes
+publiques), Mes recettes (`scope=mine`, créations du compte) et Favoris
+(`scope=favorites`, favoris accessibles). Découvrir est sélectionnée au départ.
+Les deux autres sections demandent une connexion. Recherche et filtres Toutes,
+Rapides et Petit budget restent dans la section active ; changer de section
+réinitialise la pagination. Les cartes indiquent Par vous, Par OptiMeal ou
+Par la communauté. Mes recettes affiche aussi le statut Privée/Publique.
+Une section vide propose une action adaptée : créer sa première recette,
+découvrir des recettes ou effacer la recherche et les filtres. Sans paramètre
+de section, le backend conserve la collection accessible pour les autres consommateurs. La création
+accepte `visibility`, privée par défaut ; le propriétaire peut ensuite envoyer
+`PATCH /api/v1/recipes/{id}/visibility` avec `public` ou `private`. Une ancienne
+modification de contenu ne change pas la visibilité. Le formulaire propose un interrupteur de partage, désactivé par défaut à la création, et charge le statut courant en édition. Le détail permet au propriétaire de publier ou rendre privée sa recette après confirmation. Le même bucket public de photos
+est conservé pendant le prototype ; sa séparation privé/public est reportée après
+le prototype. Publier ou rendre privée une recette conserve le fichier et son URL.
+Les règles détaillées sont dans les [contrats](backend/docs/CONTRACTS.md).
 
 ## 5. Créer une recette et enregistrer sa photo
 
@@ -206,8 +227,8 @@ flowchart TD
 
 Les responsabilités se répartissent ainsi :
 
-1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes, la difficulté et les étiquettes.
-2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. `recipeForm.ts` regroupe des règles de quantités et de badges.
+1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes, la difficulté et les étiquettes. Le nom est obligatoire : le bouton d’enregistrement reste désactivé s’il est vide ou ne contient que des espaces. À la création, une photo est également obligatoire ; les autres champs requis sont vérifiés avant l’enregistrement.
+2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. La quantité se saisit dans un champ numérique séparé ; l’unité se choisit parmi trois boutons visibles : g, ml et unité. Aucune unité n’est présélectionnée pour un nouvel ingrédient. Les quantités doivent être positives et les unités en pièces entières. `recipeForm.ts` regroupe ces validations et les règles des badges.
 3. La photo, obligatoire pour créer une recette, est préparée par `recipeImages.ts` : JPEG, côté maximal de 1 200 pixels et limite de 5 Mo. Son envoi intervient à l’enregistrement.
 4. `api.ts` transmet le formulaire à FastAPI avec le jeton.
 5. Le backend exige une URL de photo HTTPS valide à la création, valide les autres champs et vérifie que les ingrédients existent en base. Il déduit le propriétaire de l’identité authentifiée.
@@ -217,6 +238,26 @@ Les responsabilités se répartissent ainsi :
 
 Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les politiques Storage limitent les écritures à `users/<identifiant du compte>/`. En édition, retirer une photo enregistre `image_url: null` ; le fichier n’est pas automatiquement supprimé. Cette politique publique concerne les photos de recettes ; le futur parcours des reçus prévoit un stockage privé.
 
+### Choisir la visibilité et changer la publication
+
+Le réglage « Partager avec la communauté » prépare le choix sans envoyer de
+requête. Le bouton Enregistrer valide d’abord les champs, puis demande une
+confirmation si la recette doit être publiée ou changer de visibilité. Annuler
+n’envoie ni photo ni recette. À la création, le statut choisi fait partie du
+POST ; il reste privé par défaut.
+
+En édition, le contenu passe toujours par PUT et le changement de statut par
+PATCH. Pour rendre privée une recette publique, le retrait est confirmé par
+le serveur avant l’envoi des modifications de contenu. Pour publier une recette
+privée, le contenu est enregistré avant publication. Ces deux requêtes ne sont
+pas une transaction commune : si une seule réussit, le formulaire indique
+l’opération confirmée et celle à réessayer, sans quitter l’écran.
+
+Dans le détail, seules les recettes du propriétaire affichent « Publier la
+recette » ou « Rendre privée », avec une confirmation et le statut courant.
+Les actions sont bloquées pendant la requête et le statut est mis à jour à
+partir de la réponse du serveur. Une erreur conserve le dernier statut confirmé.
+
 ### Modifier, supprimer et mettre en favori
 
 | Demande | Route | Règle principale |
@@ -224,6 +265,7 @@ Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les poli
 | Créer | `POST /api/v1/recipes` | Associer au compte authentifié |
 | Modifier | `PUT /api/v1/recipes/{id}` | Vérifier le propriétaire |
 | Supprimer | `DELETE /api/v1/recipes/{id}` | Vérifier le propriétaire |
+| Publier ou rendre privée | `PATCH /api/v1/recipes/{id}/visibility` | Vérifier le propriétaire ; recettes initiales exclues |
 | Ajouter un favori | `PUT /api/v1/recipes/{id}/favorite` | La recette doit être accessible au compte |
 | Retirer un favori | `DELETE /api/v1/recipes/{id}/favorite` | Retirer seulement le favori de ce compte |
 
@@ -422,11 +464,20 @@ flowchart LR
 ```
 
 Le nom et la photo viennent de la recette courante. La suppression d’une
-recette retire les repas qui la référencent ; la suppression du compte retire
-ses repas. Ce fonctionnement ne fournit pas encore l’historique stable par
+recette conserve les repas qui la référencent, sans nom ni photo et avec une
+référence à NULL depuis `0010_preserve_meals` ; la suppression du compte retire
+ses propres repas. Ce fonctionnement ne fournit pas encore l’historique stable par
 instantanés prévu pour les anciennes semaines. Les listes et le calcul
 économique restent à développer. Voir le [guide du calendrier](backend/docs/PLANNING.md)
 pour l’installation, les routes, les limites et les essais sur appareil.
+
+Si une recette publique ajoutée par un autre compte redevient privée, le backend
+conserve son repas mais renvoie un nom et une photo nuls. Il masque aussi cette
+recette dans les favoris du lecteur. Le mobile affiche « Recette indisponible » dans la carte et le menu.
+Les portions, le déplacement et le retrait restent possibles ; ouverture,
+duplication et nouveaux restes ne sont plus proposés. Le calendrier recharge
+les droits au retour dans l’onglet. Le sélecteur n’utilise que les recettes
+publiques et celles du compte, ou leurs favoris accessibles.
 
 ## 9. Migrations et imports : deux opérations différentes
 
@@ -451,6 +502,8 @@ flowchart LR
 | `0006_circulars.py` | Table `circular` |
 | `0007_product_images.py` | URL et provenance des photos dans `product_offer`, avec contrainte HTTPS |
 | `0008_meal_plan.py` | Repas privés dans `meal_plan_entry`, liés à une recette ou une note |
+| `0009_recipe_visibility.py` | Recettes privées par défaut, publication volontaire et contraintes de visibilité |
+| `0010_preserve_meals.py` | Conservation des repas après suppression d’une recette, sans contenu devenu inaccessible |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -708,6 +761,10 @@ Cette configuration permet les appels API depuis ces deux origines locales. Un a
 
 ## 13. Ce qui fonctionne et le parcours encore à construire
 
+Les trois scénarios manuels de partage ont été validés le 1er novembre 2026 : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. 
+
+Le nom obligatoire et la quantité séparée du choix de l’unité (g, ml ou unité) ont été validés sur iOS le 1er novembre 2026. Les essais Android de ces ajustements restent à effectuer.
+
 | État au 1er novembre 2026 | Parcours |
 | --- | --- |
 | Confirmé sur iOS le 1er novembre ; Android à vérifier | Mode visiteur et connexion à la demande |
@@ -724,14 +781,14 @@ Cette configuration permet les appels API depuis ces deux origines locales. Un a
 | Configuré dans le backend | CORS pour les deux origines locales Expo Web sur le port 8081 |
 | À développer | Collecte web IA Metro/Super C |
 | À développer | Modes IA des recettes, Petit budget et calcul des coûts |
-| Confirmé sur Supabase et iOS le 1er novembre ; Android à vérifier | Calendrier privé et repas sauvegardés ; migration 0008 appliquée sur le projet Supabase selon la confirmation de Hamza |
+| Confirmé sur Supabase et iOS le 1er novembre ; Android à vérifier | Calendrier privé et repas sauvegardés ; migration 0008 appliquée sur Supabase |
 | À développer | Historique stable par instantanés et listes modifiables par magasin |
 | À développer | Confirmation des reçus dans le mobile, contributions et estimations de prix |
 | À compléter | Scénarios d’erreur réseau et essais sur différentes tailles d’écran |
 
-Le 27 octobre, Hamza a confirmé le fonctionnement des parcours comptes, recettes, photos et Promos sur iOS et Android. Son coéquipier a également vérifié ces parcours sur son téléphone Android. Les fonctionnalités encore prévues ci-dessous restent à développer.
+Les parcours comptes, recettes, photos et Promos ont été validés sur iOS et Android le 27 octobre. Les fonctionnalités encore prévues ci-dessous restent à développer.
 
-Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visiteur, de la connexion à la demande, de la photo obligatoire à la création, des photos de produits dans Promos et de la suppression du compte. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android. La configuration CORS pour Expo Web n’est pas validée par ces essais iOS.
+Le mode visiteur, la connexion à la demande, la photo obligatoire à la création, les photos de produits dans Promos et la suppression du compte ont été validés sur iOS le 1er novembre 2026. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android. La configuration CORS pour Expo Web n’est pas validée par ces essais iOS.
 
 ### Parcours cible : de la semaine de repas aux achats
 

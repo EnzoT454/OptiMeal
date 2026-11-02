@@ -30,7 +30,8 @@ def read_recipes(path: Path) -> list[RecipeSeed]:
 def recipe_rows(seed: RecipeSeed) -> tuple[dict, list[dict]]:
     """Conserver les identifiants publics et les quantités sans passage par float."""
     recipe_id = 'recipe_' + seed.seed_key
-    recipe = dict(id=recipe_id, owner_id=None, review_required=True, **seed.model_dump(exclude={'ingredients'}))
+    recipe = dict(id=recipe_id, owner_id=None, review_required=True, visibility='public', published_at=None,
+                  **seed.model_dump(exclude={'ingredients'}))
     ingredients = [
         dict(recipe_id=recipe_id, position=position,
              **ingredient.model_dump(exclude={'quantity'}), quantity=Decimal(ingredient.quantity))

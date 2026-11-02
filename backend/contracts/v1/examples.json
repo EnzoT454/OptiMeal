@@ -59,7 +59,9 @@
         "tags": [],
         "review_required": true,
         "is_owned": false,
-        "is_favorite": false
+        "is_favorite": false,
+        "visibility": "public",
+        "published_at": null
       },
       {
         "id": "recipe_mijote_pois_chiches_haricots",
@@ -72,7 +74,9 @@
         "tags": [],
         "review_required": true,
         "is_owned": false,
-        "is_favorite": false
+        "is_favorite": false,
+        "visibility": "public",
+        "published_at": null
       }
     ],
     "total": 10,
@@ -101,6 +105,8 @@
       "review_required": true,
       "is_owned": false,
       "is_favorite": false,
+      "visibility": "public",
+      "published_at": null,
       "prep_time_minutes": 10,
       "cook_time_minutes": 25,
       "ingredients": [

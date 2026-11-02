@@ -2,7 +2,7 @@
 import datetime as dt
 from uuid import UUID, uuid4
 
-from sqlalchemy import delete, select, update
+from sqlalchemy import and_, delete, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -25,7 +25,7 @@ def monday_of(day: dt.date) -> dt.date:
 def entries_of(user_id: UUID):
     """Les repas de l'utilisateur + le nom et la photo de la recette (vides pour un texte libre)."""
     return (select(MealPlanEntry, Recipe.name.label('recipe_name'), Recipe.image_url.label('recipe_image_url'))
-            .outerjoin(Recipe, Recipe.id == MealPlanEntry.recipe_id)
+            .outerjoin(Recipe, and_(Recipe.id == MealPlanEntry.recipe_id, visible(user_id)))
             .where(MealPlanEntry.user_id == user_id))
 
 
@@ -54,9 +54,9 @@ def get_entry(db: Session, entry_id: UUID, user_id: UUID) -> MealPlanEntryRead:
 
 
 def add_entry(db: Session, body: MealPlanEntryWrite, user: CurrentUser) -> MealPlanEntryRead:
-    # La recette doit exister ET être visible (recette de l'app ou une des miennes).
+    # Recette publique (app ou communauté), ou recette privée du propriétaire.
     if body.recipe_id is not None and db.scalar(
-            select(Recipe.id).where(Recipe.id == body.recipe_id, visible(user.id))) is None:
+            select(Recipe.id).where(Recipe.id == body.recipe_id, visible(user.id)).with_for_update()) is None:
         fail(404, 'RECIPE_NOT_FOUND', 'Recette introuvable.')
     ensure_profile(db, user)
     entry_id = uuid4()

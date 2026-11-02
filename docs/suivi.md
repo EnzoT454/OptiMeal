@@ -298,3 +298,45 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 - Connexion du téléphone au serveur en Wi-Fi (pare-feu Windows, adresse IP qui change selon le réseau) ; solution de secours par câble USB
 - Données de test anciennes : la plupart des promotions étaient déjà terminées
+
+---
+
+## Semaine 9 (26 octobre – 1er novembre)
+
+### Objectifs de la période
+
+- Compléter l’intégration des comptes, des recettes et des promotions
+- Permettre la consultation sans compte et demander la connexion pour les actions personnelles
+- Intégrer le calendrier des repas et vérifier les nouveaux parcours (flux d'utilisation)
+
+### Travail réalisé
+
+- **Comptes**
+    - Mode visiteur et connexion à la demande pour les actions personnelles
+    - Suppression du compte depuis les paramètres, avec confirmation et nettoyage des photos
+- **Recettes**
+    - Organisation en Découvrir, Mes recettes et Favoris, avec recherche et filtres dans chaque section
+    - Partage public ou privé depuis le formulaire et le détail de la recette
+    - Formulaire avec nom et photo obligatoires, quantité séparée de l’unité
+- **Promotions et circulaires**
+    - Ajout des photos de produits et actualisation des promotions
+    - Consultation des circulaires dans l’application
+- **Calendrier**
+    - Intégration du calendrier hebdomadaire : recettes ou notes, portions, déplacement, duplication et restes
+    - Conservation des repas après suppression d’une recette et affichage « Recette indisponible » lorsque l’accès est perdu
+- **Vérifications**
+    - Essais des nouveaux parcours sur iOS et des scénarios de partage
+    
+
+### Décisions et ajustements
+
+- Garder les recettes privées par défaut ; seul le propriétaire peut les publier ou les rendre privées
+- Limiter les recettes accessibles dans le calendrier aux recettes publiques et à celles du compte
+- Conserver le bucket public de photos pour le prototype ; reporter la séparation privé/public du stockage à la fin du prototype
+
+### Difficultés rencontrées
+
+### Prochaines étapes
+
+- Développer les instantanés historiques des plans et les listes d’épicerie
+- Développer onglet Accueil

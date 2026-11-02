@@ -7,6 +7,24 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
+La tête courante est `0010_preserve_meals`. La révision précédente
+`0009_recipe_visibility` ajoute à `recipe` les
+champs `visibility` (privée par défaut) et `published_at` (avec fuseau), les
+contraintes de publication et un index sur la visibilité. Les recettes
+initiales existantes deviennent publiques ; les recettes personnelles
+existantes restent privées, sans publication automatique. Aucune recette,
+aucun favori ni repas n’est supprimé par cette migration. Le rejeu de l’import
+initial reste compatible. Le retour à `0008` retire uniquement ces champs
+et leurs contraintes/index ; il perd les choix de publication.
+
+Les contrôles de liste, détail, favoris et calendrier exigent `0009` :
+appliquer les migrations avant de redémarrer le backend mis à jour. Les tests
+locaux ne prouvent pas son application sur Supabase. Le 1er novembre 2026,
+`0009` a également été appliquée sur le projet Supabase configuré : révision
+contrôlée, schéma conforme aux modèles et comptages identiques avant/après
+pour les neuf tables applicatives. Les 10 recettes initiales sont publiques ;
+aucune recette personnelle n’était présente lors de cette application.
+
 Depuis la racine, avec l’environnement Python activé et `DATABASE_URL`
 configurée dans `backend/.env` ou dans l’environnement serveur :
 
@@ -173,14 +191,30 @@ et leurs valeurs, sans supprimer les produits ni leurs prix. Voir les
 
 `0008_meal_plan`, après `0007_product_images`, crée `meal_plan_entry` : UUID,
 propriétaire, date, moment du repas, recette ou note, portions et marquage de
-restes. Les clés étrangères suppriment les entrées lors de la suppression du
-compte ou de la recette référencée. RLS est activée ; le mobile passe par
+restes. À l’origine, les clés étrangères supprimaient les entrées lors de la
+suppression du compte ou de la recette référencée. Depuis `0010_preserve_meals`,
+la suppression d’une recette conserve le repas et met sa référence à NULL ;
+la suppression du compte retire toujours ses propres entrées. RLS est activée ; le mobile passe par
 FastAPI. L’historique par instantanés n’est pas encore implémenté.
 
 Appliquer `python -m alembic -c backend/alembic.ini upgrade head` avant les
 requêtes Calendrier. Le retour en arrière supprime la table et ses entrées.
 L’audit local n’applique aucune migration au projet Supabase distant. Voir le
 [guide du calendrier](PLANNING.md) pour les routes, contraintes et limites.
+
+### Conservation après suppression — 0010
+
+`0010_preserve_meals` remplace la cascade de `recipe_id` par `ON DELETE SET NULL`
+et adapte les contraintes : une entrée existante sans recette ni note représente
+une recette supprimée, y compris pour les restes. La validation HTTP continue
+à exiger une recette accessible ou une note à la création. Aucun repas ni
+contenu de recette n’est copié ; les droits de lecture sont toujours contrôlés.
+
+La migration a été appliquée sur Supabase le 1er novembre 2026 : schéma conforme
+aux modèles, référence SET NULL vérifiée et comptages des neuf tables inchangés,
+dont 10 repas conservés. Elle ne reconstitue pas les repas supprimés auparavant.
+Un retour à 0009 est refusé tant que des entrées sans recette ni note existent,
+pour éviter leur suppression silencieuse. Le rejeu de la migration est sans effet.
 
 ## Importer les recettes et rejouer la commande
 
@@ -260,5 +294,19 @@ quantité et durée, les suppressions et la compatibilité des 10 recettes
 initiales avec les tables. Leurs insertions restent dans la base de test.
 Les tests de l’import vérifient également le rejeu complet, les ingrédients
 manquants, les conflits après modifications et l’annulation des ajouts partiels.
+
+Le test de conversion PDF exige PyMuPDF, déjà déclaré dans `requirements.txt`.
+Une installation incomplète fait désormais échouer ce test au lieu de l’ignorer.
+Pour réinstaller les dépendances dans l’environnement virtuel actif :
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Pour une vérification complète sans test ignoré, installer ces dépendances et
+définir `OPTIMEAL_TEST_DATABASE_URL` vers la base locale jetable avant pytest.
+Sans cette variable, les tests PostgreSQL restent volontairement ignorés :
+ils ne doivent jamais utiliser automatiquement la base Supabase du projet.
+L’option `-rs` affiche la raison de chaque test ignoré.
 
 *Dernière mise à jour : 1er novembre 2026*

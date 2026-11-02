@@ -3,7 +3,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import Ionicons from "@expo/vector-icons/Ionicons";
 import type { MealPlanEntry, MealType } from "../types/api";
 import {
-  MEALS, MEAL_COLORS, MEAL_LABELS, addDays, dayFullName, dayName, fromISODate, toISODate,
+  MEALS, MEAL_COLORS, MEAL_LABELS, addDays, dayFullName, dayName, fromISODate, mealName, recipeUnavailable, toISODate,
 } from "./planning";
 
 const VERT = "#25603c";
@@ -43,11 +43,13 @@ export default function MealActionsSheet({ repas, onClose, onVoirRecette, onPort
   }
 
   const jourRepas = fromISODate(repas.date);
-  const nom = repas.recipe_name ?? repas.free_text ?? "";
-  const estRecette = repas.recipe_id !== null;
+  const nom = mealName(repas);
+  const indisponible = recipeUnavailable(repas);
+  const estRecette = repas.recipe_id !== null && !indisponible;
 
   // Ouvrir le choix du jour avec une valeur de départ logique
   function choisir(action: Placement) {
+    if (action !== 'deplacer' && indisponible) return;
     if (action === "restes") {
       setDate(toISODate(addDays(jourRepas, 1))); // les restes : le lendemain…
       setMeal("diner");                           // …au dîner
@@ -101,7 +103,7 @@ export default function MealActionsSheet({ repas, onClose, onVoirRecette, onPort
               {estRecette && !repas.is_leftover && (
                 <Ligne icone="refresh-outline" texte="Prévoir les restes" onPress={() => choisir("restes")} />
               )}
-              <Ligne icone="copy-outline" texte="Dupliquer" onPress={() => choisir("dupliquer")} />
+              {!indisponible && <Ligne icone="copy-outline" texte="Dupliquer" onPress={() => choisir("dupliquer")} />}
               <Ligne icone="calendar-outline" texte="Déplacer" onPress={() => choisir("deplacer")} />
 
               <View style={styles.separateur} />

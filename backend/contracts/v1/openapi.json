@@ -545,6 +545,22 @@
             }
           },
           {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "accessible",
+                "discover",
+                "mine",
+                "favorites"
+              ],
+              "type": "string",
+              "default": "accessible",
+              "title": "Scope"
+            }
+          },
+          {
             "name": "favorites",
             "in": "query",
             "required": false,
@@ -869,6 +885,93 @@
         "responses": {
           "204": {
             "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/recipes/{recipe_id}/visibility": {
+      "patch": {
+        "tags": [
+          "Recettes v1"
+        ],
+        "summary": "Set Visibility",
+        "operationId": "set_visibility_api_v1_recipes__recipe_id__visibility_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "recipe_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Recipe Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecipeVisibilityUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_RecipeRead_"
+                }
+              }
+            }
           },
           "401": {
             "content": {
@@ -3254,6 +3357,15 @@
             "type": "array",
             "minItems": 1,
             "title": "Instructions"
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "private",
+              "public"
+            ],
+            "title": "Visibility",
+            "default": "private"
           }
         },
         "additionalProperties": false,
@@ -3390,6 +3502,27 @@
             "type": "boolean",
             "title": "Is Favorite",
             "default": false
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "private",
+              "public"
+            ],
+            "title": "Visibility",
+            "default": "public"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
           },
           "prep_time_minutes": {
             "type": "integer",
@@ -3528,6 +3661,27 @@
             "type": "boolean",
             "title": "Is Favorite",
             "default": false
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "private",
+              "public"
+            ],
+            "title": "Visibility",
+            "default": "public"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
           }
         },
         "additionalProperties": false,
@@ -3541,6 +3695,24 @@
           "image_url"
         ],
         "title": "RecipeSummary"
+      },
+      "RecipeVisibilityUpdate": {
+        "properties": {
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "private",
+              "public"
+            ],
+            "title": "Visibility"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "visibility"
+        ],
+        "title": "RecipeVisibilityUpdate"
       },
       "RecipeWrite": {
         "properties": {

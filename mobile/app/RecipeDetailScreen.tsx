@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Heading, Message, Screen } from '../components/ui';
 import { api } from '../services/api';
-import { Detail, Ingredient, Page, Recipe } from '../types/api';
+import { Detail, Ingredient, Page, Recipe, RecipeVisibility } from '../types/api';
 import { RecipeStackParams } from '../types/navigation';
 import RecipeImage from '../components/RecipeImage';
 import { RecipeChip, recipeStyles } from '../components/recipes';
@@ -40,6 +40,26 @@ export default function RecipeDetailScreen({ route, navigation }: NativeStackScr
     try { await api<void>('/api/v1/recipes/' + recipe.id, { method: 'DELETE' }); navigation.popToTop(); }
     catch (e) { setError((e as Error).message); } finally { setBusy(false); }
   }
+  async function changeVisibility(visibility: RecipeVisibility) {
+    if (!recipe?.is_owned || !session || busy) return;
+    setBusy(true); setError('');
+    try {
+      const result = await api<Detail<Recipe>>('/api/v1/recipes/' + recipe.id + '/visibility', {
+        method: 'PATCH', body: JSON.stringify({ visibility }),
+      });
+      setRecipe(result.item);
+    } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+  }
+  function confirmVisibility() {
+    if (!recipe?.is_owned || !session || busy) return;
+    const visibility = recipe.visibility === 'public' ? 'private' : 'public';
+    Alert.alert(visibility === 'public' ? 'Publier cette recette ?' : 'Rendre cette recette privée ?',
+      visibility === 'public' ? 'Elle sera visible par tous dans Découvrir, même sans compte. Tu pourras la rendre privée plus tard.' :
+        'Elle sera retirée de Découvrir et ne sera plus accessible aux autres comptes. Elle restera dans Mes recettes. Sa photo restera accessible par son lien dans ce prototype.', [
+        { text: 'Annuler', style: 'cancel' },
+        { text: visibility === 'public' ? 'Publier' : 'Rendre privée', onPress: () => void changeVisibility(visibility) },
+      ]);
+  }
   return <Screen><Message text={error} />
     {!recipe ? <><Text>{error ? 'Recette indisponible.' : 'Chargement…'}</Text><Button title="Réessayer" onPress={() => setRetry(retry + 1)} /></> : <>
       <RecipeImage recipe={recipe} />
@@ -53,6 +73,11 @@ export default function RecipeDetailScreen({ route, navigation }: NativeStackScr
       {recipe.ingredients.map(i => <Text key={i.ingredient_id}>{i.quantity} {i.unit} · {names[i.ingredient_id] ?? i.ingredient_id}{i.preparation ? ' · ' + i.preparation : ''}</Text>)}
       <Heading>Préparation</Heading>{recipe.instructions.map(step => <Text key={step.position}>{step.position}. {step.text}</Text>)}
       {recipe.is_owned && <>
+        <View style={recipeStyles.notice}>
+          <Text style={recipeStyles.sectionTitle}>Visibilité de la recette</Text>
+          <Text style={recipeStyles.body}>{recipe.visibility === 'public' ? 'Publique — consultable par tous dans Découvrir.' : 'Privée — accessible uniquement dans ton compte.'}</Text>
+          <Button title={recipe.visibility === 'public' ? 'Rendre privée' : 'Publier la recette'} disabled={busy} onPress={confirmVisibility} />
+        </View>
         <Button title="Modifier" disabled={busy} onPress={() => navigation.navigate('Editor', { id: recipe.id })} />
         <Button title="Supprimer" disabled={busy} onPress={() => Alert.alert('Supprimer cette recette ?', 'Cette action est définitive.', [
           { text: 'Annuler', style: 'cancel' }, { text: 'Supprimer', style: 'destructive', onPress: () => void remove() },

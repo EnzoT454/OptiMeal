@@ -59,18 +59,24 @@ pour éviter de les transformer en données partagées ou de les perdre.
 | `GET /api/v1/me` | Requise | Profil personnel, créé si absent |
 | `PATCH /api/v1/me` | Requise | Modifier seulement son nom affiché |
 | `DELETE /api/v1/me` | Requise | Supprimer définitivement le compte connecté, après confirmation |
-| `GET /api/v1/recipes` | Facultative | Recettes initiales, plus les recettes du compte connecté |
-| `GET /api/v1/recipes/{id}` | Facultative | Recette partagée ou personnelle du compte courant |
+| `GET /api/v1/recipes` | Facultative | Recettes publiques, plus les recettes privées du compte connecté ; sections via `scope` |
+| `GET /api/v1/recipes/{id}` | Facultative | Recette publique ou personnelle du compte courant |
 | `POST /api/v1/recipes` | Requise | Créer une recette manuelle, propriétaire déduit du jeton |
 | `PUT /api/v1/recipes/{id}` | Requise | Remplacer sa propre recette et ses ingrédients atomiquement |
+| `PATCH /api/v1/recipes/{id}/visibility` | Requise | Publier ou rendre privée sa propre recette |
 | `DELETE /api/v1/recipes/{id}` | Requise | Supprimer sa propre recette et ses liens/favoris |
 | `PUT /api/v1/recipes/{id}/favorite` | Requise | Ajouter un favori accessible, de façon idempotente |
 | `DELETE /api/v1/recipes/{id}/favorite` | Requise | Retirer son favori, de façon idempotente |
 
 `favorites=true` filtre les favoris du compte connecté et exige une session.
-Les résultats ajoutent `is_owned` et `is_favorite`. Une recette personnelle
-appartenant à un autre compte renvoie 404, même pour une mutation. Les recettes
-initiales ne sont pas modifiables par ces routes.
+Les résultats ajoutent `is_owned`, `is_favorite`, `visibility` et `published_at`.
+Une recette privée appartenant à un autre compte renvoie 404. Une recette
+publique d’autrui est consultable, mais toute modification, suppression ou
+publication reste refusée (404). Les recettes initiales ne sont pas modifiables
+par ces routes. Les recettes personnelles sont privées par défaut ; une
+publication est volontaire. Les sections `mine` et `favorites` exigent une
+session ; `discover` montre uniquement les recettes publiques. Voir les
+[contrats](CONTRACTS.md#visibilité-et-sections-de-recettes--étape-backend).
 
 La création utilise `RecipeCreate` et exige une URL de photo HTTPS valide
 et non vide. La modification utilise `RecipeWrite`, qui conserve l’image

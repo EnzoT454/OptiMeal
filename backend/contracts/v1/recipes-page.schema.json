@@ -77,6 +77,28 @@
           "default": false,
           "title": "Is Favorite",
           "type": "boolean"
+        },
+        "visibility": {
+          "default": "public",
+          "enum": [
+            "private",
+            "public"
+          ],
+          "title": "Visibility",
+          "type": "string"
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Published At"
         }
       },
       "required": [

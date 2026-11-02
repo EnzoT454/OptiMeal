@@ -21,29 +21,23 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 Éléments réalisés :
 
-- Site de suivi et documentation du projet.
-- API FastAPI permettant de consulter le catalogue.
-- Contrats communs Recettes et Promos, avec API de lecture du catalogue partagé et des 10 recettes initiales.
-- Connexion PostgreSQL/Supabase, contrôle `/health/db` et migrations des ingrédients, recettes, profils, favoris, catégories, offres et circulaires. Imports rejouables des 31 ingrédients, 10 recettes initiales et offres ; les ingrédients HTTP restent sur JSON et les offres peuvent être lues en base avec `OFFERS_SOURCE=database`.
-- Supabase Auth, profil minimal et recettes personnelles : création manuelle, édition, suppression et favoris avec contrôles de propriétaire.
-- Parcours comptes et Recettes confirmés sur iOS et Android : inscription avec confirmation du courriel, connexion, session persistante, profil, recherche, recettes personnelles et favoris. La séparation des données entre deux comptes a aussi été vérifiée sur iPhone.
-- Images des dix recettes initiales hébergées dans Supabase Storage ; parcours des photos personnelles confirmé sur iOS et Android. Les photos sont publiques dans ce prototype, avec des droits d’écriture limités au dossier du propriétaire.
-- Parcours Recettes adapté aux éléments retenus de Figma, avec fonctionnement confirmé : en-tête, filtres, collection, choix d’ajout et formulaire ; difficulté facultative et étiquettes enregistrées en base. Petit budget et les choix IA affichent « Disponible prochainement ».
-- Onglet Promos confirmé sur iOS et Android : recherche, filtre par magasin, détail des offres, consultation des circulaires et recettes associées aux ingrédients en promotion. Le classement de ces recettes ne calcule pas encore leur coût complet.
-- Import des catégories et offres dans PostgreSQL ; conversion des circulaires PDF en images dans Supabase Storage, avec leurs informations conservées en base.
-- Collecte des produits et promotions Maxi avec Apify, avec vérification des données.
-- Échantillons de produits Metro et Super C disponibles au format JSON.
-- Extraction locale des reçus et vérification des prix sur un échantillon Maxi et Metro.
-- Pipeline de correspondance entre reçus Maxi et fiches web PC Express, testé sur cinq produits.
+- Comptes, profil et mode visiteur.
+- Recettes personnelles, partage public/privé et favoris.
+- Calendrier hebdomadaire des repas.
+- Promotions et consultation des circulaires.
+- Catalogue commun des produits et ingrédients.
+- Collecte Maxi et lecture locale des reçus.
+- Documentation et site de suivi.
 
-À faire :
+À développer ou à compléter :
 
-- Valider les échantillons Metro et Super C et développer leur collecte automatisée.
-- Compléter la validation de l’extraction des reçus, notamment sur Windows et pour Super C.
-- Développer l’historique des prix et les préférences de compte au-delà du profil minimal.
-- Compléter les essais d’erreur et d’affichage sur différentes tailles d’écran, poursuivre l’adaptation des autres écrans à Figma, puis développer la planification et les listes d’épicerie.
-- Intégrer les estimations de prix et la confirmation des reçus dans l’application.
-- Prévoir le nettoyage des fichiers Storage inutilisés et compléter les essais d’erreur réseau des photos.
+- Modes IA pour les recettes.
+- Listes d’épicerie par magasin et gestion du budget.
+- Historique stable des plans et des prix.
+- Estimations de prix et contribution par reçu dans l’application.
+- Collecte automatisée Metro et Super C.
+- Préférences de compte et recommandations économiques.
+- Validation complète sur iOS et Android.
 
 ## Installation
 
@@ -117,35 +111,67 @@ explique la mise à jour des offres et l’import des circulaires PDF.
 
 Le [guide du backend](backend/README.md) détaille les routes disponibles et les limites des données. Une [collection Postman](backend/postman/OptiMeal.postman_collection.json) permet aussi d’essayer les requêtes.
 
+## Lancer le frontend (Mobile)
+
+Installer **Node.js 22.13+ et npm**, puis, depuis la racine du projet :
+
+```bash
+cd mobile
+npm ci
+```
+
+Copier `mobile/.env.example` vers `mobile/.env` et renseigner l’adresse de
+l’API ainsi que les deux valeurs publiques Supabase. Sur un téléphone,
+`EXPO_PUBLIC_API_URL` doit utiliser l’adresse IP locale de l’ordinateur,
+par exemple `http://192.168.1.10:8001`. Le téléphone et l’ordinateur doivent
+être sur le même réseau. Démarrer le backend dans un autre terminal, depuis
+la racine avec l’environnement Python activé :
+
+```text
+python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8001
+```
+
+Pour installer l’application de développement sur un téléphone connecté en
+USB, lancer depuis `mobile/` la commande correspondant à la plateforme :
+
+```bash
+# iOS (macOS avec Xcode)
+npm run ios -- --device
+
+# Android (avec Android Studio et son SDK)
+npm run android -- --device
+```
+
+Ces commandes compilent l’application et lancent Expo. Aux lancements
+suivants, depuis `mobile/` :
+
+```bash
+npm start -- --dev-client
+```
+
+Scanner le QR code pour ouvrir l’application installée. Le [guide mobile](mobile/README.md)
+détaille la configuration, les prérequis sur téléphone et le lancement sur simulateur.
+
 ## Tests
 
-Le [guide mobile](mobile/README.md) décrit l’installation sur téléphone et les
-scénarios de vérification. Le 27 octobre, nous avons confirmé le fonctionnement
-des parcours actuellement intégrés sur iOS et Android : comptes, profil,
-session persistante, recettes, favoris, photos et onglet Promos, y compris
-les circulaires et les recettes associées aux promotions. Les essais Android
-ont été réalisés par notre coéquipier sur son téléphone. La séparation des recettes et
-favoris entre deux comptes avait également été vérifiée sur iPhone.
-Les essais d’erreur réseau et d’affichage sur différentes tailles d’écran
-restent à compléter.
-
-Les tests ordinaires utilisent des réponses enregistrées et ne contactent pas Supabase ni les fournisseurs externes. Les tests PostgreSQL demandent une base locale jetable ; la CI en fournit une automatiquement. Voir le [guide des migrations](backend/docs/MIGRATIONS.md#tests). Avec l’environnement virtuel activé, la commande est identique sur macOS, Linux et Windows (PowerShell) :
+Backend, depuis la racine avec l’environnement virtuel activé :
 
 ```text
 python -m pytest backend/tests -q
 ```
 
-Pour le mobile, depuis `mobile/` :
+Les tests PostgreSQL nécessitent une base locale jetable configurée avec
+`OPTIMEAL_TEST_DATABASE_URL` ; ils sont ignorés si elle n’est pas définie.
+Voir le [guide des tests PostgreSQL](backend/docs/MIGRATIONS.md#tests).
+
+Mobile, depuis `mobile/` :
 
 ```bash
 npm run typecheck
 npm test
 ```
 
-La vérification automatisée documentée le 21 octobre avait donné 300 tests backend réussis avec
-PostgreSQL local, 10 tests mobiles (photos et règles du formulaire) et des bundles iOS/Android générés.
-Le lint mobile n’est pas encore configuré. Le [guide des photos](backend/docs/RECIPE_IMAGES.md)
-explique la configuration du bucket, ses droits et les limites du prototype.
+Le [guide mobile](mobile/README.md) décrit les essais sur téléphone.
 
 ## Structure du projet
 
@@ -171,7 +197,8 @@ OptiMeal/
 │   │   ├── database.py               # Moteur PostgreSQL et sessions par requête
 │   │   ├── security.py               # Validation des jetons auprès de Supabase Auth
 │   │   ├── accounts/                 # Identité Supabase et profil minimal
-│   │   │   ├── router.py             # Identité vérifiée et profil personnel
+│   │   │   ├── router.py             # Identité, profil et suppression du compte connecté
+│   │   │   ├── deletion.py           # Nettoyage Storage puis suppression Supabase Auth
 │   │   │   ├── schemas.py            # Contrats identité et profil minimal
 │   │   │   ├── models.py             # Profil lié à auth.users (géré par Supabase)
 │   │   │   └── service.py            # Création idempotente et lecture du profil
@@ -181,11 +208,11 @@ OptiMeal/
 │   │   │   ├── models.py             # Modèles Recipe, RecipeIngredient et Favorite
 │   │   │   ├── service.py            # Lectures, mutations et autorisations des recettes
 │   │   │   └── seed_import.py        # Import transactionnel et rejouable des recettes
-│   │   ├── planning/                 # Calendrier et historique à développer
-│   │   │   ├── router.py             # Futures requêtes de planification
-│   │   │   ├── schemas.py            # Futurs formats des repas et portions
-│   │   │   ├── models.py             # Futures tables des semaines et repas
-│   │   │   └── service.py            # Futures règles de sauvegarde des plans
+│   │   ├── planning/                 # Calendrier privé ; instantanés à développer
+│   │   │   ├── router.py             # Routes /api/v1/plans et entrées de repas
+│   │   │   ├── schemas.py            # Repas, notes, portions et changements
+│   │   │   ├── models.py             # Table MealPlanEntry
+│   │   │   └── service.py            # Lecture par semaine et mutations privées
 │   │   ├── shopping_lists/           # Listes d’épicerie à développer
 │   │   │   ├── router.py             # Futures requêtes de gestion des listes
 │   │   │   ├── schemas.py            # Futurs formats des articles et totaux
@@ -262,7 +289,11 @@ OptiMeal/
 │   │       ├── 0003_accounts_and_ownership.py # Profils, propriété et favoris
 │   │       ├── 0004_recipe_metadata.py # Difficulté et étiquettes facultatives
 │   │       ├── 0005_catalog_offers.py # Catégories et offres des magasins
-│   │       └── 0006_circulars.py      # Informations des circulaires
+│   │       ├── 0006_circulars.py      # Informations des circulaires
+│   │       ├── 0007_product_images.py # URL et provenance des photos de produits
+│   │       ├── 0008_meal_plan.py     # Repas planifiés par compte
+│   │       ├── 0009_recipe_visibility.py # Visibilité privée/publique des recettes
+│   │       └── 0010_preserve_meals.py  # Conservation des repas après suppression de recette
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express
@@ -275,6 +306,7 @@ OptiMeal/
 │   │   ├── AUTH.md                   # Supabase Auth, profils et droits
 │   │   ├── RECIPE_IMAGES.md          # Photos, Storage, droits et limites du prototype
 │   │   ├── MIGRATIONS.md             # Migrations et imports rejouables
+│   │   ├── PLANNING.md               # Calendrier, routes et limites historiques
 │   │   └── examples/                 # Exemples pour expliquer la conception
 │   │       └── catalog.proposed.json # Exemple de catalogue avec des prix fictifs
 │   ├── postman/                      # Requêtes pour essayer l’API manuellement
@@ -298,24 +330,29 @@ OptiMeal/
 │       ├── test_recipe_metadata.py   # Difficulté et étiquettes des recettes
 │       ├── test_pcx_probe.py         # Récupération des fiches du pilote PC Express
 │       ├── test_maxi_web_matching.py # Correspondances entre reçus Maxi et fiches web
-│       ├── test_planning.py          # Futurs tests des plans
+│       ├── test_planning.py          # Dates et contrats du calendrier
 │       └── test_shopping_lists.py    # Futurs tests des listes
 ├── mobile/                           # Expo, comptes, recettes et promotions
 │   ├── README.md                     # Lancement et essai sur appareil
-│   ├── App.tsx                       # Navigation et barrière de connexion
-│   ├── app/                          # Écrans comptes, recettes, promos et circulaires
+│   ├── App.tsx                       # Onglets publics et connexion à la demande
+│   ├── app/                          # Comptes, recettes, promos, circulaires et calendrier
 │   ├── context/AuthContext.tsx       # État du compte et gestion de la session
 │   ├── types/                        # Types TypeScript de l’API et de la navigation
 │   ├── components/                   # Composants réutilisables du mobile
 │   │   ├── RecipeImage.tsx           # Affichage des URL d’images et repli local
+│   │   ├── ProductImage.tsx          # Photos des produits et icône en cas d’erreur
 │   │   ├── IngredientPicker.tsx      # Recherche et sélection des ingrédients communs
+│   │   ├── AccountRequired.tsx       # Protection des écrans personnels
 │   │   ├── recipes.tsx               # Composants partagés du parcours Recettes
 │   │   └── promos.ts                 # Chargement des offres/circulaires et présentation
 │   ├── services/                     # Auth, client FastAPI et sélection/envoi des photos
 │   │   └── recipeForm.ts             # Règles de quantités et badges des recettes
 │   ├── tests/                        # Tests des services mobiles
 │   │   ├── recipeImages.test.cjs     # Tests du service photo avec doubles natifs
-│   │   └── recipeForm.test.cjs       # Tests des règles du formulaire de recette
+│   │   ├── recipeForm.test.cjs       # Tests des règles du formulaire de recette
+│   │   ├── recipeCreation.test.cjs   # Photo obligatoire et échec d’envoi
+│   │   ├── visitorAccess.test.cjs    # Visiteurs et confirmation de suppression
+│   │   └── accountSession.test.cjs   # Nettoyage local après suppression du compte
 │   ├── metro.config.js              # Inclusion des illustrations locales de secours
 │   └── package-lock.json             # Dépendances mobiles verrouillées
 ├── data/                             # Données et résultats pouvant être ajoutés à Git
@@ -370,6 +407,7 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Photos des recettes et Supabase Storage](backend/docs/RECIPE_IMAGES.md)
 - [Démarrer le mobile](mobile/README.md)
 - [Migrations et imports](backend/docs/MIGRATIONS.md)
+- [Calendrier des repas et limites actuelles](backend/docs/PLANNING.md)
 
 Le [site de suivi du projet](https://enzot454.github.io/OptiMeal/) regroupe nos objectifs, notre avancement et les références utilisées. Il reprend le [template du cours IFT3150](https://github.com/udem-diro/template-projet).
 
@@ -396,4 +434,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 27 octobre 2026*
+*Dernière mise à jour : 1er novembre 2026*

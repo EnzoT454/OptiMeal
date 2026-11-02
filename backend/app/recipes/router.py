@@ -10,7 +10,7 @@ from backend.app.common.public_router import Limit, Offset, Search, fail
 from backend.app.database import get_db
 from backend.app.security import CurrentUser, current_user, optional_user, auth_error
 from . import service
-from .schemas import RecipeCreate, RecipeRead, RecipeSummary, RecipeWrite
+from .schemas import RecipeCreate, RecipeRead, RecipeScope, RecipeSummary, RecipeVisibilityUpdate, RecipeWrite
 
 router = APIRouter(prefix='/api/v1/recipes', tags=['Recettes v1'], responses={
     401: {'model': ErrorResponse}, 404: {'model': ErrorResponse},
@@ -37,14 +37,17 @@ def recipe_meta(kind='demo') -> ResponseMeta:
 
 @router.get('', response_model=Page[RecipeSummary])
 def list_recipes(q: Search = '', quick: bool = False, limit: Limit = 20, offset: Offset = 0,
+                 scope: RecipeScope = 'accessible',
                  favorites: bool = False, user: CurrentUser | None = Depends(optional_user),
                  db: Session = Depends(recipe_db)):
-    if favorites and user is None:
+    if (favorites or scope in ('mine', 'favorites')) and user is None:
         raise auth_error()
+    if favorites and scope not in ('accessible', 'favorites'):
+        fail(422, 'VALIDATION_ERROR', 'Utiliser scope=favorites sans autre section.')
     items, total = service.list_recipes(db, q=q, quick=quick, limit=limit, offset=offset,
-                                       user_id=user.id if user else None, favorites=favorites)
+                                       user_id=user.id if user else None, favorites=favorites, scope=scope)
     return {'items': items, 'total': total, 'limit': limit, 'offset': offset,
-            'meta': recipe_meta('mixed' if user else 'demo')}
+            'meta': recipe_meta('mixed')}
 
 
 @router.get('/{recipe_id}', response_model=Detail[RecipeRead])
@@ -52,7 +55,13 @@ def get_recipe(recipe_id: str, user: CurrentUser | None = Depends(optional_user)
     item = service.get_recipe(db, recipe_id, user.id if user else None)
     if item is None:
         fail(404, 'RECIPE_NOT_FOUND', 'Recette introuvable.')
-    return {'item': item, 'meta': recipe_meta('user_content' if item.is_owned else 'demo')}
+    return {'item': item, 'meta': recipe_meta('demo' if item.review_required else 'user_content')}
+
+
+@router.patch('/{recipe_id}/visibility', response_model=Detail[RecipeRead])
+def set_visibility(recipe_id: str, body: RecipeVisibilityUpdate,
+                   user: CurrentUser = Depends(current_user), db: Session = Depends(recipe_db)):
+    return {'item': service.set_visibility(db, recipe_id, body, user), 'meta': recipe_meta('user_content')}
 
 
 @router.post('', response_model=Detail[RecipeRead], status_code=201)

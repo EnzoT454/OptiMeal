@@ -35,6 +35,7 @@ def test_storage_policies_isolate_writes_and_preserve_seed_images(postgres):
     c.exec_driver_sql(SQL_PATH.read_text())
     c.exec_driver_sql(SQL_PATH.read_text())  # Configuration rejouable.
     assert c.scalar(text("SELECT file_size_limit FROM storage.buckets")) == 5242880
+    assert c.scalar(text('SELECT public FROM storage.buckets')) is True
 
     def login(user):
         c.exec_driver_sql('RESET ROLE')

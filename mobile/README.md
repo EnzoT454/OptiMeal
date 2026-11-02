@@ -32,7 +32,7 @@ Les autorisations backend restent nécessaires pour toutes les données privées
 Essais à reproduire sur iOS et Android pour ce nouveau parcours :
 
 1. Sans session, ouvrir les onglets publics, consulter une recette, une promo et une circulaire.
-2. Appuyer sur Ajouter, Favoris et Ajouter aux favoris : vérifier la demande de connexion, puis l’annuler et poursuivre la consultation.
+2. Appuyer sur Ajouter, Mes recettes, Favoris et Ajouter aux favoris : vérifier la demande de connexion, puis l’annuler et poursuivre la consultation.
 3. Ouvrir Calendrier et Paramètres : vérifier la demande de connexion et l’absence de formulaire de profil visiteur.
 4. Créer un compte ou se connecter depuis la fenêtre, puis ajouter une recette et modifier son profil.
 5. Se déconnecter : vérifier le retour à l’accueil visiteur et l’absence des recettes personnelles et favoris du compte précédent.
@@ -41,6 +41,64 @@ Essais à reproduire sur iOS et Android pour ce nouveau parcours :
 Le mode visiteur et la connexion à la demande ont été confirmés par Hamza
 sur iOS le 1er novembre. Leur reproduction sur Android et les scénarios
 d’erreur détaillés restent à compléter.
+
+## Sections de l’onglet Recettes
+
+L’écran propose Découvrir, Mes recettes et Favoris. Découvrir affiche les
+recettes publiques d’OptiMeal et des utilisateurs ; Mes recettes affiche toutes
+les créations du compte, privées et publiques ; Favoris affiche les favoris
+encore accessibles. Les sections personnelles demandent une connexion. Les
+requêtes utilisent `scope=discover`, `scope=mine` ou `scope=favorites`, avec
+recherche, filtre Rapides et pagination de 20 recettes. Le backend doit être
+à la migration `0009_recipe_visibility` (appliquée sur Supabase le 1er novembre).
+
+Le choix de section est conservé tant que l’écran reste monté, y compris au
+retour d’un détail. Une connexion ou déconnexion réinitialise la navigation.
+Favoris est une section ; les filtres sont désormais Toutes, Rapides et Petit
+budget. Ce dernier conserve son message d’attente. Le formulaire et le détail proposent désormais le choix de publication.
+
+Les 66 tests mobiles et TypeScript passent. Le lint n’est pas configuré.
+Essais sur téléphone à effectuer sur iOS et Android :
+
+1. Sans compte, consulter Découvrir puis annuler la connexion demandée par Mes recettes et Favoris ; Découvrir reste sélectionnée.
+2. Avec un compte, retrouver ses créations dans Mes recettes avec le badge Privée/Publique, puis ses favoris dans Favoris.
+3. Chercher et activer Rapides dans chaque section ; vérifier la remise à la première page lors d’un changement de section ou de recherche.
+4. Ouvrir un détail, modifier ses favoris et revenir : la section est conservée et les données sont rechargées.
+5. Vérifier les listes vides et leurs actions : première recette, Découvrir et effacement de recherche/filtres.
+6. Couper le réseau, réessayer, puis changer de section pendant un chargement ; vérifier l’absence de résultats de la section précédente.
+7. Se déconnecter et changer de compte : aucune recette privée ni favori du compte précédent ne doit rester affiché.
+
+## Publication depuis le formulaire et le détail
+
+Le formulaire propose « Partager avec la communauté », désactivé pour une
+nouvelle recette et initialisé au statut courant en édition. Le changement de
+l’interrupteur prépare le choix ; seule la sauvegarde l’applique. Une nouvelle
+publication ou un changement de visibilité demande confirmation. Les exigences
+de nom, photo à la création, ingrédients et étapes restent en place.
+
+Le détail affiche le statut et une action Publier/Rendre privée uniquement
+pour le propriétaire. La réponse du serveur confirme le nouveau statut. Les
+boutons sont bloqués pendant l’appel ; une erreur laisse le statut confirmé
+affiché et permet de réessayer. Les recettes initiales et celles d’autrui
+n’affichent pas ces actions.
+
+En édition, le retrait du public précède le PUT du contenu ; une publication
+suit le PUT réussi. Une erreur entre les deux opérations affiche un message
+précis de sauvegarde partielle. Le même bucket public de photos est conservé,
+y compris pour les recettes privées, comme indiqué dans le formulaire.
+
+Scénarios à reproduire sur iOS et Android avec deux comptes :
+
+1. Créer une recette sans activer le partage : elle figure dans Mes recettes et reste inaccessible à l’autre compte.
+2. Activer le partage : aucune publication avant Enregistrer ; annuler la confirmation n’envoie aucune photo ni recette.
+3. Confirmer une création publique : elle figure dans Mes recettes et Découvrir, et devient consultable par un visiteur ou l’autre compte.
+4. Depuis le détail, annuler puis confirmer Publier/Rendre privée ; vérifier le statut après retour à la liste et réouverture.
+5. Modifier une recette privée pour la publier et une recette publique pour la rendre privée ; vérifier le statut chargé par le formulaire et le résultat après sauvegarde.
+6. Couper le réseau pendant l’enregistrement ou le changement de visibilité ; vérifier les messages, l’absence de faux succès et la possibilité de réessayer.
+7. Vérifier qu’une recette d’autrui ou initiale n’affiche aucune action de publication, modification ou suppression.
+8. Avec l’autre compte, vérifier la disparition de Découvrir et Favoris après retrait de publication ; les repas déjà créés restent conservés sans nom/photo dans l’API.
+
+Le 1er novembre 2026, Hamza a confirmé les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
 
 ## Calendrier connecté
 
@@ -51,7 +109,11 @@ enregistrées via `/api/v1/plans`. Appliquer `0008_meal_plan` côté serveur ava
 les essais ; aucune migration distante n’est exécutée par le mobile.
 
 Le calendrier reste protégé en mode visiteur. Les recettes sont liées à leur
-version courante : leur suppression retire aussi les repas associés. Les
+version courante : une suppression ou une perte d’accès conserve le repas
+avec le libellé « Recette indisponible ». Pour ce repas, seules les actions
+Portions, Déplacer et Retirer restent proposées. Le calendrier recharge les
+données à chaque retour dans l’onglet. La migration `0010_preserve_meals` est
+requise côté serveur, appliquée sur Supabase le 1er novembre. Les
 instantanés historiques et les listes d’épicerie restent à développer. Voir
 le [guide du calendrier](../backend/docs/PLANNING.md) pour les routes, les
 limites et les scénarios détaillés. Hamza a confirmé le 1er novembre
@@ -321,7 +383,7 @@ des parcours intégrés a été confirmé sur iOS et Android le 27 octobre.
 ### Parcours Recettes et maquette
 
 Les éléments retenus de la maquette sont repris dans la liste (en-tête,
-recherche, quatre filtres, bouton d’ajout et collection), les deux écrans de
+sections Découvrir/Mes recettes/Favoris, recherche, filtres Toutes/Rapides/Petit budget, bouton d’ajout et collection), les deux écrans de
 choix et le formulaire. Les grandes cartes avec photos restent présentes.
 La police DM Sans et les quatre pictogrammes des parcours sont inclus localement.
 `expo-image` affiche ces SVG ; recompiler l’application après installation
@@ -331,7 +393,8 @@ Le chemin fonctionnel est **Ajouter une recette → Entrer manuellement →
 Remplir un formulaire**. Trouver une idée, Cuisiner avec ce qu’on a et
 Structurer une idée affichent un message d’attente.
 Le formulaire présente le nom, la photo, les portions, la préparation,
-les ingrédients avec quantité/unité, les étapes, la difficulté et les étiquettes.
+les ingrédients avec quantité séparée du choix d’unité, les étapes, la difficulté,
+les étiquettes et le réglage de partage.
 Le choix d’un ingrédient ouvre une liste consultable avec recherche.
 Les unités acceptées sont `g`, `ml` et `unit` (pièces entières).
 Description et cuisson restent accessibles dans « Autres informations » ;
@@ -346,7 +409,8 @@ fonctionnent dans l’application. La prévisualisation à 320 et 390 pixels a
 aussi été contrôlée sans débordement des champs et boutons ; elle utilise
 React Native Web avec des services simulés et ne remplace pas un essai natif.
 
-Pour les vérifications détaillées sur téléphone : les quatre filtres, les
+Pour les vérifications détaillées sur téléphone : les trois sections, les
+filtres Toutes/Rapides/Petit budget, les
 messages d’attente, le retour entre les choix, le clavier dans le formulaire,
 l’ajout avec photo/difficulté/étiquettes, puis la modification et la reconnexion.
 La confirmation générale ne valide pas séparément tous ces scénarios ;
@@ -358,9 +422,9 @@ par Hamza le 27 octobre ; son coéquipier l’a aussi vérifié sur Android.
 npm test
 ```
 
-Les 32 tests couvrent les photos et leur obligation à la création, les quantités,
-les badges, les accès visiteurs, la confirmation de suppression du compte et
-le nettoyage de la session locale et la protection du nouveau calendrier.
+Les 66 tests couvrent les photos, les quantités, les badges, les accès visiteurs,
+les sessions, les sections et la publication des recettes, ainsi que les repas
+indisponibles et les actions du calendrier.
 Les appels externes sont simulés.
 
 ## Structure et vérification
