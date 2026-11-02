@@ -68,7 +68,9 @@ def import_recipes(connection: Connection, seeds: list[RecipeSeed]) -> ImportRes
         links = connection.execute(select(RecipeIngredient.__table__).where(
             RecipeIngredient.recipe_id == recipe['id'],
         ).order_by(RecipeIngredient.position)).mappings().all()
-        if len(existing) != 1 or dict(existing[0]) != recipe or list(map(dict, links)) != ingredients:
+        # Les dates sont des métadonnées serveur, pas des champs du fichier
+        # source : leur présence ne doit pas rendre un import identique conflictuel.
+        if len(existing) != 1 or {key: existing[0][key] for key in recipe} != recipe or list(map(dict, links)) != ingredients:
             raise ValueError(f'Conflit pour {recipe["id"]} : recette existante différente. '
                              'Aucune recette existante n’a été remplacée ; import annulé.')
     return ImportResult(

@@ -5,7 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Message, styles } from '../components/ui';
 import { RecipeButton, RecipeChip, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
 import { api } from '../services/api';
-import { Page, RecipeScope, RecipeSummary } from '../types/api';
+import { Page, RecipeScope, RecipeSummary, RecipeSort } from '../types/api';
 import { RecipeStackParams } from '../types/navigation';
 import RecipeImage from '../components/RecipeImage';
 import { useAuth } from '../context/AuthContext';
@@ -24,7 +24,12 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
   const [total, setTotal] = useState(0); const [busy, setBusy] = useState(true);
   const [error, setError] = useState(''); const [retry, setRetry] = useState(0);
   const [section, setSection] = useState<Section>('discover');
+  const [sorts, setSorts] = useState<Record<Section, RecipeSort>>({ discover: 'top', mine: 'updated', favorites: 'top' });
   const activeSection = session ? section : 'discover';
+  const activeSort = sorts[activeSection];
+  const sortOptions: { value: RecipeSort; label: string }[] = activeSection === 'mine'
+    ? [{ value: 'updated', label: 'Modifiées récemment' }, { value: 'newest', label: 'Créées récemment' }]
+    : [{ value: 'top', label: 'Mieux notées' }, { value: 'newest', label: 'Plus récentes' }];
   function resetResults() { setItems([]); setTotal(0); setError(''); setBusy(true); setOffset(0); }
   function selectSection(value: Section) {
     if (value !== 'discover' && !session) {
@@ -42,13 +47,13 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
     let active = true;
     if (filter === 'Petit budget') { setBusy(false); setError(''); return; }
     setBusy(true); setError('');
-    const params = new URLSearchParams({ scope: activeSection, q: query, limit: '20', offset: String(offset) });
+    const params = new URLSearchParams({ scope: activeSection, sort: activeSort, q: query, limit: '20', offset: String(offset) });
     if (filter === 'Rapides') params.set('quick', 'true');
     api<Page<RecipeSummary>>('/api/v1/recipes?' + params).then(result => {
       if (active) { setItems(result.items); setTotal(result.total); }
     }).catch(e => { if (active) setError(e.message); }).finally(() => { if (active) setBusy(false); });
     return () => { active = false; };
-  }, [query, filter, offset, retry, activeSection, session?.user.id]));
+  }, [query, filter, offset, retry, activeSection, activeSort, session?.user.id]));
   return <RecipeScreen>
     <RecipeTitle>Recettes</RecipeTitle><Text style={recipeStyles.subtitle}>Vos idées, toujours à portée de main.</Text>
     <View style={{ flexDirection: 'row', padding: 4, gap: 4, borderRadius: 14, backgroundColor: recipeColors.light }}>
@@ -71,6 +76,15 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
     </View> : <>
     <View style={recipeStyles.row}><Text style={[recipeStyles.sectionTitle, { flex: 1 }]}>{activeSection === 'discover' ? 'Recettes à découvrir' : activeSection === 'mine' ? 'Mes recettes' : 'Mes favoris'}</Text>
       <Text style={recipeStyles.count}>{busy ? '…' : `${total} recette${total > 1 ? 's' : ''}`}</Text></View>
+    <View accessibilityRole="radiogroup" accessibilityLabel="Trier les recettes" style={recipeStyles.chips}>
+      {sortOptions.map(option => <Pressable key={option.value} accessibilityRole="radio" accessibilityLabel={option.label}
+        accessibilityState={{ checked: activeSort === option.value }} onPress={() => {
+          if (activeSort !== option.value) { resetResults(); setSorts(previous => ({ ...previous, [activeSection]: option.value })); }
+        }} style={[recipeStyles.chip, { minHeight: 44, justifyContent: 'center' }, activeSort === option.value && { backgroundColor: recipeColors.green }]}>
+        <Text style={[recipeStyles.chipText, activeSort === option.value && { color: 'white' }]}>{option.label}</Text>
+      </Pressable>)}
+    </View>
+    {activeSort === 'top' && <Text style={recipeStyles.note}>Le classement tient compte de la moyenne et du nombre d’évaluations.</Text>}
     <Message text={error} />
     {error ? <Button title="Réessayer" onPress={() => setRetry(retry + 1)} /> : busy ? <Text>Chargement…</Text> : <>
       {items.length === 0 && <View style={recipeStyles.notice}>
@@ -89,6 +103,8 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
         <RecipeImage recipe={recipe} />
         <Text style={{ fontSize: 20, fontWeight: '600' }}>{recipe.name}</Text>
         <Text>{recipe.total_time_minutes} min · {recipe.servings} portions{recipe.is_favorite ? ' · Favori' : ''}</Text>
+        <Text style={recipeStyles.body}>{recipe.rating.count === 0 ? 'Pas encore évaluée' :
+          `★ ${Number(recipe.rating.average).toLocaleString('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}/5 · ${recipe.rating.count} évaluation${recipe.rating.count > 1 ? 's' : ''}`}</Text>
         <Text style={recipeStyles.note}>{recipe.is_owned ? 'Par vous' : recipe.published_at ? 'Par la communauté' : 'Par OptiMeal'}</Text>
         {activeSection === 'mine' && <View style={recipeStyles.chips}><RecipeChip label={recipe.visibility === 'public' ? 'Publique' : 'Privée'} /></View>}
         <Button title="Voir la recette" onPress={() => navigation.navigate('Detail', { id: recipe.id })} />

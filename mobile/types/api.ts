@@ -2,6 +2,7 @@ export type RecipeUnit = 'g' | 'ml' | 'unit';
 export type RecipeDifficulty = 'easy' | 'medium' | 'hard';
 export type RecipeVisibility = 'private' | 'public';
 export type RecipeScope = 'accessible' | 'discover' | 'mine' | 'favorites';
+export type RecipeSort = 'top' | 'newest' | 'updated';
 export interface RecipeIngredient {
   ingredient_id: string; quantity: string; unit: RecipeUnit; preparation: string | null;
 }
@@ -14,13 +15,27 @@ export interface RecipeWrite {
 }
 export type RecipeCreate = RecipeWrite & { image_url: string; visibility?: RecipeVisibility };
 export interface RecipeVisibilityUpdate { visibility: RecipeVisibility; }
+export interface RecipeRatingWrite {
+  recipe_version: number;
+  taste_score: number; reliability_score: number; ease_score: number;
+}
+export interface RecipeRatingRead extends RecipeRatingWrite {
+  created_at: string; updated_at: string;
+}
+export interface RecipeRatingSummary {
+  average: string | null; count: number;
+  criteria: { taste: string | null; reliability: string | null; ease: string | null };
+}
 export interface RecipeSummary {
+  content_version: number;
+  rating: RecipeRatingSummary;
   visibility: RecipeVisibility; published_at: string | null;
+  created_at: string | null; updated_at: string | null;
   id: string; name: string; description: string; servings: number; total_time_minutes: number;
   image_url: string | null; review_required: boolean; is_owned: boolean; is_favorite: boolean;
   difficulty: RecipeDifficulty | null; tags: string[];
 }
-export type Recipe = RecipeSummary & RecipeWrite;
+export type Recipe = RecipeSummary & RecipeWrite & { my_rating: RecipeRatingRead | null };
 export interface Page<T> { items: T[]; total: number; limit: number; offset: number; }
 export interface Detail<T> { item: T; }
 export interface Ingredient { id: string; name: string; category: string; aliases: string[]; }

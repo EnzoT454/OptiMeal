@@ -96,3 +96,17 @@ test('pendant un changement, ignorer une nouvelle action de visibilité', () => 
   assert.equal(d.calls.length, 1);
   d.complete();
 });
+
+test('pendant une notation, bloquer les autres mutations du détail puis les réactiver', () => {
+  const d = detail();
+  const panel = nodes(d.render()).find(node => node.props?.onBusyChange);
+  assert.ok(panel);
+  panel.props.onBusyChange(true);
+  for (const title of ['Ajouter aux favoris', 'Modifier', 'Supprimer', 'Publier la recette']) {
+    assert.equal(button(d.render(), title).props.disabled, true);
+  }
+  button(d.render(), 'Publier la recette').props.onPress();
+  assert.equal(d.alerts.length, 0);
+  panel.props.onBusyChange(false);
+  assert.equal(button(d.render(), 'Modifier').props.disabled, false);
+});

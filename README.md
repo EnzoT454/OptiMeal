@@ -23,6 +23,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 - Comptes, profil et mode visiteur.
 - Recettes personnelles, partage public/privé et favoris.
+- Évaluations des recettes et classement par notes.
 - Calendrier hebdomadaire des repas.
 - Promotions et consultation des circulaires.
 - Catalogue commun des produits et ingrédients.
@@ -293,7 +294,10 @@ OptiMeal/
 │   │       ├── 0007_product_images.py # URL et provenance des photos de produits
 │   │       ├── 0008_meal_plan.py     # Repas planifiés par compte
 │   │       ├── 0009_recipe_visibility.py # Visibilité privée/publique des recettes
-│   │       └── 0010_preserve_meals.py  # Conservation des repas après suppression de recette
+│   │       ├── 0010_preserve_meals.py  # Conservation des repas après suppression de recette
+│   │       ├── 0011_recipe_ratings.py  # Évaluations des recettes
+│   │       ├── 0012_recipe_timestamps.py # Dates pour les tris des recettes
+│   │       └── 0013_rating_versions.py # Versions du contenu évalué
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express
@@ -396,6 +400,7 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 
 ## Documentation
 
+- [Validation de la notation et migrations Supabase](backend/docs/RATINGS_VALIDATION.md)
 - [Comprendre le fonctionnement de l’application et du dépôt](README-fonctionnement.md)
 - [Structure et utilisation des données locales](backend/docs/DATA.md)
 - [Catalogue pilote : utilisation et résultats](backend/docs/CATALOG.md)
@@ -434,4 +439,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 2 novembre 2026*

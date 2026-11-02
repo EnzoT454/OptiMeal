@@ -7,7 +7,7 @@ const ts = require('typescript');
 
 function screen(file, { states = {}, reply = { item: { entries: [] } } } = {}) {
   let cursor = 0;
-  const effects = [], calls = [], timers = [];
+  const effects = [], calls = [], timers = [], navigations = [];
   const jsx = (type, props) => ({ type, props: props ?? {} });
   const native = new Proxy({ StyleSheet: { create: x => x, absoluteFill: {}, hairlineWidth: 1 }, Platform: { OS: 'ios' } },
     { get: (object, name) => object[name] ?? String(name) });
@@ -30,14 +30,14 @@ function screen(file, { states = {}, reply = { item: { entries: [] } } } = {}) {
         if (name === 'react-native') return native;
         if (name.endsWith('services/api')) return { api };
         if (name.endsWith('/planning')) return load('components/planning.ts');
-        if (name === '@react-navigation/native') return { useNavigation: () => ({ navigate() {} }), useFocusEffect: fn => effects.push(fn) };
+        if (name === '@react-navigation/native') return { useNavigation: () => ({ navigate: (...args) => navigations.push(args) }), useFocusEffect: fn => effects.push(fn) };
         if (name === 'react-native-safe-area-context') return { SafeAreaView: 'SafeAreaView' };
         return { __esModule: true, default: name };
       } });
     return exports;
   }
   const module = load(file);
-  return { render: props => { cursor = 0; return module.default(props); }, effects, calls, timers, states };
+  return { render: props => { cursor = 0; return module.default(props); }, effects, calls, timers, states, navigations };
 }
 function nodes(tree) {
   if (!tree || typeof tree !== 'object') return [];
@@ -100,5 +100,28 @@ for (const mode of ['recette', 'favoris']) {
     const query = new URLSearchParams(s.calls[0][0].split('?')[1]);
     assert.equal(query.get('scope'), mode === 'favoris' ? 'favorites' : 'accessible');
     assert.equal(s.states[4].length, 0);
+  });
+}
+
+test('calendrier : ouvrir la fiche et ses évaluations ferme le menu sans créer de vote', () => {
+  const s = screen('app/CalendarScreen.tsx', { states: { 0: new Date(2026, 10, 2), 1: [meal], 2: false, 5: meal } });
+  const tree = s.render();
+  const menu = nodes(tree).find(node => node.props?.onVoirRecette);
+  menu.props.onVoirRecette(meal.recipe_id);
+  assert.equal(s.navigations.length, 1);
+  assert.equal(s.navigations[0][0], 'Recettes');
+  assert.equal(s.navigations[0][1].screen, 'Detail');
+  assert.equal(s.navigations[0][1].params.id, meal.recipe_id);
+  assert.equal(s.states[5], null);
+  assert.equal(s.calls.length, 0);
+});
+
+for (const entry of [{ ...meal, recipe_name: null }, { ...meal, recipe_id: null, recipe_name: null, free_text: 'Resto' }]) {
+  test(`calendrier : aucune ouverture ni notation pour ${entry.free_text ?? 'recette inaccessible'}`, () => {
+    const s = screen('app/CalendarScreen.tsx', { states: { 0: new Date(2026, 10, 2), 1: [entry], 2: false, 5: entry } });
+    const menu = nodes(s.render()).find(node => node.props?.onVoirRecette);
+    menu.props.onVoirRecette(meal.recipe_id);
+    assert.equal(s.navigations.length, 0);
+    assert.equal(s.calls.length, 0);
   });
 }
