@@ -16,8 +16,8 @@ prototype ; sa séparation privé/public est reportée après le prototype.
 Les routes `PUT` et `DELETE /api/v1/recipes/{id}/rating` permettent désormais
 de gérer sa notation. Listes et détails incluent les moyennes ; seul le détail
 inclut les notes du compte connecté. Les migrations jusqu’à `0013` sont requises pour
-ces lectures et écritures. Le formulaire mobile est intégré, avec essais sur
-appareil à effectuer : voir le [contrat de notation](docs/CONTRACTS.md#notation-des-recettes).
+ces lectures et écritures. Le formulaire mobile est intégré ; Hamza confirme
+les tests sur téléphone le 2 novembre 2026, sans préciser la plateforme : voir le [contrat de notation](docs/CONTRACTS.md#notation-des-recettes).
 Les listes acceptent `sort=top/newest/updated` avec classement SQL avant
 pagination. Les dates historiques inconnues restent nulles ; voir les
 [dates des recettes](docs/MIGRATIONS.md#dates-et-tris-des-recettes).

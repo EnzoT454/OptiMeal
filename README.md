@@ -14,7 +14,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 - **Mobile :**  React Native · TypeScript · Expo , pour iOS et Android
 - **Backend :** Python · FastAPI
-- **Données :** PostgreSQL et Supabase Storage pour les photos de recettes et les circulaires
+- **Données :** PostgreSQL et Supabase Storage
 - **Documentation :** Zensical · GitHub Pages
 
 ## Statut actuel

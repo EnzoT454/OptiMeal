@@ -228,7 +228,8 @@ Le détail mobile intègre le formulaire de notation depuis l’étape 6 : trois
 critères suivis de leur question et des étoiles, correction et suppression
 confirmée. L’introduction reste visible, sans afficher les pondérations.
 Il affiche les résultats après confirmation serveur et conserve la saisie en
-cas d’échec. Les essais sur appareil restent à effectuer ; voir le
+cas d’échec. Hamza confirme globalement les tests sur téléphone le 2 novembre
+2026, sans préciser la plateforme ; voir le
 [guide mobile](../../mobile/README.md#noter-une-recette).
 
 ### Versions évaluées

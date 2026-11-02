@@ -73,7 +73,8 @@ nouveau résultat ; une erreur conservera la saisie pour permettre de réessayer
 
 Les réponses backend ci-dessous sont implémentées et testées à l’étape 5 ;
 les interactions du formulaire mobile sont intégrées à l’étape 6, avec tests
-simulés ; leurs essais sur appareil restent à effectuer.
+simulés. Les tests sur téléphone sont confirmés globalement par Hamza le
+2 novembre 2026, sans détail par plateforme ni par cas limite.
 Elles suivent les conventions d’erreur du
 backend existant : enveloppe `error`, identité issue du jeton et ressource
 privée inaccessible présentée comme introuvable.
@@ -333,7 +334,7 @@ un chantier distinct. Voir [MIGRATIONS.md](MIGRATIONS.md#versions-des-évaluatio
    mobiles implémentés ; exports OpenAPI, schémas et exemples actualisés.
 6. Mobile : formulaire intégré au détail avec critères, questions et étoiles,
    moyennes, modification, suppression et gestion des erreurs. Tests simulés
-   et bundles vérifiés ; essais sur appareil à effectuer.
+   et bundles vérifiés ; tests sur téléphone confirmés globalement par Hamza.
 7. Listes : note sur les cartes et tris SQL avant pagination intégrés ; dates
    ajoutées par la migration `0012`, sans date historique inventée.
 8. Versions : archive des votes par contenu, filtrage des notes courantes,
