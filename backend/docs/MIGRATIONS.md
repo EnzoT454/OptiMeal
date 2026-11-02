@@ -7,6 +7,32 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
+La tête courante est `0013_rating_versions`, qui versionne les évaluations.
+`0012_recipe_timestamps` ajoute les dates pour les tris.
+`0011_recipe_ratings` ajoute la table des évaluations
+(voir les sections ci-dessous). La révision
+`0009_recipe_visibility` ajoute à `recipe` les
+champs `visibility` (privée par défaut) et `published_at` (avec fuseau), les
+contraintes de publication et un index sur la visibilité. Les recettes
+initiales existantes deviennent publiques ; les recettes personnelles
+existantes restent privées, sans publication automatique. Aucune recette,
+aucun favori ni repas n’est supprimé par cette migration. Le rejeu de l’import
+initial reste compatible. Le retour à `0008` retire uniquement ces champs
+et leurs contraintes/index ; il perd les choix de publication.
+
+Les migrations `0011` à `0013` ont été appliquées sur Supabase le 2 novembre
+2026 dans une transaction unique. La tête `0013` est confirmée après commit,
+le schéma correspond aux modèles et les données préexistantes sont conservées.
+Voir le [bilan de validation](RATINGS_VALIDATION.md).
+
+Les contrôles de liste, détail, favoris et calendrier exigent `0009` :
+appliquer les migrations avant de redémarrer le backend mis à jour. Les tests
+locaux ne prouvent pas son application sur Supabase. Le 1er novembre 2026,
+`0009` a également été appliquée sur le projet Supabase configuré : révision
+contrôlée, schéma conforme aux modèles et comptages identiques avant/après
+pour les neuf tables applicatives. Les 10 recettes initiales sont publiques ;
+aucune recette personnelle n’était présente lors de cette application.
+
 Depuis la racine, avec l’environnement Python activé et `DATABASE_URL`
 configurée dans `backend/.env` ou dans l’environnement serveur :
 
@@ -48,6 +74,96 @@ La migration active RLS sur `ingredient`, sans politique d’accès direct aux
 clients Supabase. L’import et les futurs services utilisent la connexion
 PostgreSQL serveur configurée, avec un rôle autorisé à accéder à la table.
 Les identifiants restent dans `backend/.env`, jamais dans `alembic.ini`.
+
+## Évaluations des recettes
+
+`0011_recipe_ratings`, après `0010_preserve_meals`, crée `public.recipe_rating`
+sans modifier les recettes, favoris ou repas existants :
+
+| Colonne | Type et règle |
+| --- | --- |
+| `recipe_id` | TEXT, référence à `recipe.id`, suppression en cascade |
+| `user_id` | UUID, référence à `profile.id`, suppression en cascade |
+| `taste_score` | INTEGER obligatoire, de 1 à 5 |
+| `reliability_score` | INTEGER obligatoire, de 1 à 5 |
+| `ease_score` | INTEGER obligatoire, de 1 à 5 |
+| `created_at`, `updated_at` | Horodatages avec fuseau, initialisés côté serveur |
+
+La clé primaire composée initiale `(recipe_id, user_id)` interdit plusieurs
+évaluations du même compte pour une recette ; `0013` y ajoute la version
+(voir ci-dessous). Son index couvre les recherches par recette ;
+un index supplémentaire sur `user_id` couvre celles par évaluateur. Les notes
+brutes sont conservées ; aucune moyenne ni pondération n’est stockée.
+
+RLS est activée sans politique d’accès direct pour les clients Supabase.
+Les services FastAPI contrôlent désormais la visibilité et l’autoévaluation.
+Les mises à jour SQLAlchemy ordinaires actualisent `updated_at` ; l’upsert de
+notation renseigne aussi explicitement cet horodatage dans sa clause de mise
+à jour, car ce comportement n’est pas un déclencheur SQL.
+
+Le retour à `0010` supprime la table seulement si elle est vide ; il échoue
+si des évaluations existent afin de ne pas perdre les contributions.
+Cette migration est appliquée sur Supabase depuis le 2 novembre 2026.
+Les routes de notation et les lectures de recettes
+exigent cette table ; le formulaire mobile est intégré, avec essais sur appareil
+à effectuer. Voir
+[RATINGS.md](RATINGS.md).
+
+## Dates et tris des recettes
+
+`0012_recipe_timestamps` ajoute `recipe.created_at` et `recipe.updated_at`,
+deux horodatages avec fuseau, et un index sur `updated_at`. Les colonnes
+sont ajoutées sans défaut, puis un défaut `now()` est défini pour les futures
+insertions : les dates des recettes déjà présentes restent inconnues (`NULL`).
+La migration conserve leurs contenus, évaluations, favoris et repas.
+
+Une nouvelle recette reçoit ses dates de création en base et de modification
+du serveur. Une modification de contenu ou de visibilité actualise `updated_at`
+via SQLAlchemy, sans changer `created_at`. Un vote ou un favori ne modifie pas
+ces dates. Un import identique conserve les dates existantes et les ignore
+dans la comparaison avec le fichier source ; il ne rafraîchit pas leur récence.
+Les commandes SQL externes doivent renseigner explicitement la modification,
+car aucun déclencheur SQL n’est ajouté.
+
+Ces dates sont des métadonnées de lecture, refusées dans les corps de création
+et d’édition. Le tri public récent utilise la publication, ou la création en
+base si la publication manque ; Mes recettes utilise la création pour le tri
+« Créées récemment » et la modification pour « Modifiées récemment ».
+Les dates inconnues restent à la fin, avec départage stable par identifiant.
+
+Appliquer `upgrade head` avant de redémarrer cette version : les lectures
+utilisent les nouvelles colonnes. La migration est appliquée à Supabase depuis
+le 2 novembre 2026. Le retour à `0011` supprime les deux dates et
+leur index, sans supprimer les recettes ni les évaluations ; les dates connues
+seraient perdues et ne seraient pas retrouvées lors d’une nouvelle montée.
+
+## Versions des évaluations
+
+`0013_rating_versions` ajoute `recipe.content_version` et
+`recipe_rating.recipe_version`, entiers positifs initialisés à 1 pour les
+lignes existantes et futures. Les valeurs des notes, recettes et horodatages
+sont conservées. Cette version 1 est le point de départ du mécanisme ; elle
+ne reconstitue pas d’éventuelles modifications précédant la migration.
+
+La clé primaire de `recipe_rating` devient
+`(recipe_id, user_id, recipe_version)`. Chaque compte peut réévaluer le nouveau
+contenu sans écraser son ancien vote ; les moyennes et le tri utilisent
+uniquement les notes dont la version égale celle de la recette courante.
+Les clés étrangères et suppressions en cascade restent en place, ainsi que
+RLS sans politique client. Supprimer sa contribution retire toutes ses
+versions pour la recette.
+
+Les services incrémentent le compteur pour les changements d’ingrédients,
+d’étapes, de portions ou de durées. Ils vérifient la version demandée par un
+vote sous le verrou de recette ; un décalage renvoie 409. Le compteur seul
+n’archive pas les anciens contenus et ne remplace pas les futurs instantanés
+historiques. Les commandes SQL externes doivent respecter ces règles : les
+contraintes vérifient la positivité et l’unicité, pas le contenu entre tables.
+
+Le retour à `0012` refuse de supprimer les versions si une recette ou un vote
+a une version supérieure à 1, afin d’éviter de perdre la distinction entre
+contenus évalués. Les lectures et écritures actuelles exigent `0013`.
+La migration est appliquée sur Supabase depuis le 2 novembre 2026.
 
 ## Tables des recettes
 
@@ -136,6 +252,68 @@ mobile. FastAPI les lit avec sa connexion serveur. Les retours en arrière de
 `0005` et `0006` suppriment leurs tables et leurs données ; ils ne constituent
 pas une procédure de conservation de l’historique.
 
+## Photos des produits
+
+`0007_product_images`, après `0006_circulars`, ajoute deux colonnes à
+`public.product_offer` :
+
+| Colonne | Type et règle |
+| --- | --- |
+| `image_url` | `TEXT NULL`, URL de la photo ; contrainte SQL imposant le préfixe `https://` lorsqu’elle est renseignée |
+| `image_source` | `TEXT NULL`, provenance de la photo, par exemple `maxi`, `metro` ou `superc` |
+
+Les lignes existantes sont conservées avec ces champs à `NULL`. La migration
+ne télécharge aucune image et ne remplit pas les URL. Depuis la racine,
+après configuration du serveur et import initial des ingrédients :
+
+```bash
+python -m alembic -c backend/alembic.ini upgrade head
+python -m backend.cli.build_common_catalog
+python -m backend.cli.import_offers
+```
+
+L’assembleur reprend `ImageUrl` et `ImageSource` des fichiers `produits.json`
+des trois enseignes et les transforme en `image_url` et `image_source` dans
+le catalogue commun. L’import insère ou actualise ces champs ; un rejeu
+identique ne modifie aucune ligne. Un catalogue sans photo fournit `NULL` :
+son import peut donc aussi retirer un lien précédemment enregistré.
+
+Appliquer `0007` avant les lectures PostgreSQL du code actuel. En lecture
+JSON, redémarrer FastAPI après reconstruction du catalogue. Les photos
+restent sur les serveurs des magasins, indépendamment des buckets Storage
+des recettes et circulaires. Le retour en arrière supprime les deux colonnes
+et leurs valeurs, sans supprimer les produits ni leurs prix. Voir les
+[contrats des photos de produits](CONTRACTS.md#photos-des-produits).
+
+## Repas planifiés
+
+`0008_meal_plan`, après `0007_product_images`, crée `meal_plan_entry` : UUID,
+propriétaire, date, moment du repas, recette ou note, portions et marquage de
+restes. À l’origine, les clés étrangères supprimaient les entrées lors de la
+suppression du compte ou de la recette référencée. Depuis `0010_preserve_meals`,
+la suppression d’une recette conserve le repas et met sa référence à NULL ;
+la suppression du compte retire toujours ses propres entrées. RLS est activée ; le mobile passe par
+FastAPI. L’historique par instantanés n’est pas encore implémenté.
+
+Appliquer `python -m alembic -c backend/alembic.ini upgrade head` avant les
+requêtes Calendrier. Le retour en arrière supprime la table et ses entrées.
+L’audit local n’applique aucune migration au projet Supabase distant. Voir le
+[guide du calendrier](PLANNING.md) pour les routes, contraintes et limites.
+
+### Conservation après suppression — 0010
+
+`0010_preserve_meals` remplace la cascade de `recipe_id` par `ON DELETE SET NULL`
+et adapte les contraintes : une entrée existante sans recette ni note représente
+une recette supprimée, y compris pour les restes. La validation HTTP continue
+à exiger une recette accessible ou une note à la création. Aucun repas ni
+contenu de recette n’est copié ; les droits de lecture sont toujours contrôlés.
+
+La migration a été appliquée sur Supabase le 1er novembre 2026 : schéma conforme
+aux modèles, référence SET NULL vérifiée et comptages des neuf tables inchangés,
+dont 10 repas conservés. Elle ne reconstitue pas les repas supprimés auparavant.
+Un retour à 0009 est refusé tant que des entrées sans recette ni note existent,
+pour éviter leur suppression silencieuse. Le rejeu de la migration est sans effet.
+
 ## Importer les recettes et rejouer la commande
 
 ```bash
@@ -215,4 +393,18 @@ initiales avec les tables. Leurs insertions restent dans la base de test.
 Les tests de l’import vérifient également le rejeu complet, les ingrédients
 manquants, les conflits après modifications et l’annulation des ajouts partiels.
 
-*Dernière mise à jour : 27 octobre 2026*
+Le test de conversion PDF exige PyMuPDF, déjà déclaré dans `requirements.txt`.
+Une installation incomplète fait désormais échouer ce test au lieu de l’ignorer.
+Pour réinstaller les dépendances dans l’environnement virtuel actif :
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Pour une vérification complète sans test ignoré, installer ces dépendances et
+définir `OPTIMEAL_TEST_DATABASE_URL` vers la base locale jetable avant pytest.
+Sans cette variable, les tests PostgreSQL restent volontairement ignorés :
+ils ne doivent jamais utiliser automatiquement la base Supabase du projet.
+L’option `-rs` affiche la raison de chaque test ignoré.
+
+*Dernière mise à jour : 1er novembre 2026*

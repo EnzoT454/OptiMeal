@@ -50,6 +50,7 @@
     "items": [
       {
         "id": "recipe_crepes_banane",
+        "content_version": 1,
         "name": "Crêpes à la banane",
         "description": "Des crêpes fines garnies de banane.",
         "servings": 2,
@@ -59,10 +60,24 @@
         "tags": [],
         "review_required": true,
         "is_owned": false,
-        "is_favorite": false
+        "is_favorite": false,
+        "visibility": "public",
+        "published_at": null,
+        "created_at": null,
+        "updated_at": null,
+        "rating": {
+          "average": null,
+          "count": 0,
+          "criteria": {
+            "taste": null,
+            "reliability": null,
+            "ease": null
+          }
+        }
       },
       {
         "id": "recipe_mijote_pois_chiches_haricots",
+        "content_version": 1,
         "name": "Mijoté de pois chiches et de haricots rouges",
         "description": "Un mijoté de légumineuses avec tomates et poivron.",
         "servings": 2,
@@ -72,7 +87,20 @@
         "tags": [],
         "review_required": true,
         "is_owned": false,
-        "is_favorite": false
+        "is_favorite": false,
+        "visibility": "public",
+        "published_at": null,
+        "created_at": null,
+        "updated_at": null,
+        "rating": {
+          "average": null,
+          "count": 0,
+          "criteria": {
+            "taste": null,
+            "reliability": null,
+            "ease": null
+          }
+        }
       }
     ],
     "total": 10,
@@ -91,6 +119,7 @@
   "recipe-detail": {
     "item": {
       "id": "recipe_poulet_riz_brocoli",
+      "content_version": 1,
       "name": "Poulet, riz et brocoli",
       "description": "Une assiette de poulet à l’ail avec du riz et du brocoli.",
       "servings": 2,
@@ -101,6 +130,19 @@
       "review_required": true,
       "is_owned": false,
       "is_favorite": false,
+      "visibility": "public",
+      "published_at": null,
+      "created_at": null,
+      "updated_at": null,
+      "rating": {
+        "average": null,
+        "count": 0,
+        "criteria": {
+          "taste": null,
+          "reliability": null,
+          "ease": null
+        }
+      },
       "prep_time_minutes": 10,
       "cook_time_minutes": 25,
       "ingredients": [
@@ -158,7 +200,8 @@
           "position": 4,
           "text": "Ajouter l’ail et le sel, poursuivre brièvement la cuisson et servir avec le riz et le brocoli."
         }
-      ]
+      ],
+      "my_rating": null
     },
     "meta": {
       "contract_version": "1.0",
@@ -169,6 +212,12 @@
         "recipe_drafts_require_review"
       ]
     }
+  },
+  "recipe-rating-write": {
+    "recipe_version": 1,
+    "taste_score": 5,
+    "reliability_score": 4,
+    "ease_score": 3
   },
   "offers-page": {
     "items": [

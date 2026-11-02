@@ -5,7 +5,7 @@ import { supabase } from '../services/supabase';
 import { useAuth } from '../context/AuthContext';
 import { Button, Field, Heading, Message, Screen } from '../components/ui';
 
-export default function AuthScreen() {
+export default function AuthScreen({ reason, onCancel }: { reason?: string; onCancel?: () => void }) {
   const [signup, setSignup] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,11 +38,13 @@ export default function AuthScreen() {
     finally { setBusy(false); }
   }
   return <Screen><Heading>OptiMeal</Heading><Text>{signup ? 'Créer un compte' : 'Retrouve tes recettes'}</Text>
+    {reason && <Text>{reason}</Text>}
     <Field label="Courriel" autoCapitalize="none" keyboardType="email-address" value={email} onChangeText={setEmail} autoComplete="email" />
     <Field label="Mot de passe" secureTextEntry value={password} onChangeText={setPassword} autoComplete={signup ? 'new-password' : 'current-password'} />
     {signup && <Field label="Confirmer le mot de passe" secureTextEntry value={confirm} onChangeText={setConfirm} />}
     <Message text={message || auth.error} />
     <Button title={busy ? 'Un instant…' : signup ? 'Créer mon compte' : 'Se connecter'} disabled={busy} onPress={() => void submit()} />
     <Button title={signup ? 'J’ai déjà un compte' : 'Créer un compte'} disabled={busy} onPress={() => { setSignup(!signup); setMessage(''); }} />
+    {onCancel && <Button title="Continuer sans compte" disabled={busy} onPress={onCancel} />}
   </Screen>;
 }

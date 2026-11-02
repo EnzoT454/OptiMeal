@@ -1,15 +1,23 @@
 """Contrats de lecture du catalogue initial de recettes, indépendants du stockage."""
 from decimal import Decimal
-from datetime import date
+from datetime import date, datetime
 from typing import Annotated, Literal
 
-from pydantic import Field, StringConstraints, field_validator, model_validator
+from pydantic import Field, HttpUrl, StringConstraints, field_validator, model_validator
 import unicodedata
 
 from backend.app.common.contracts import ContractModel, IngredientId, Quantity, RecipeUnit
 
 NonEmpty = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 Difficulty = Literal['easy', 'medium', 'hard']
+RecipeVisibility = Literal['private', 'public']
+RecipeScope = Literal['accessible', 'discover', 'mine', 'favorites']
+RecipeSort = Literal['top', 'newest', 'updated']
+
+
+class RecipeVisibilityUpdate(ContractModel):
+    visibility: RecipeVisibility
+
 Tag = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=40)]
 
 
@@ -70,12 +78,55 @@ class RecipeWrite(ContractModel):
         return self
 
 
+class RecipeCreate(RecipeWrite):
+    """La création personnelle exige une photo ; lecture, édition et imports restent compatibles."""
+
+    image_url: NonEmpty
+    visibility: RecipeVisibility = 'private'
+
+    @field_validator('image_url')
+    @classmethod
+    def require_photo_url(cls, value: str) -> str:
+        if HttpUrl(value).scheme != 'https':
+            raise ValueError('La photo de la recette doit avoir une URL HTTPS valide.')
+        return value
+
+
 class RecipeSeed(RecipeWrite):
     seed_key: Annotated[str, StringConstraints(pattern=r'^[a-z0-9_]+$')]
 
 
+RatingScore = Annotated[int, Field(ge=1, le=5, strict=True)]
+RatingAverage = Annotated[Decimal, Field(ge=1, le=5, allow_inf_nan=False)]
+
+
+class RecipeRatingWrite(ContractModel):
+    recipe_version: int = Field(gt=0, strict=True)
+    taste_score: RatingScore
+    reliability_score: RatingScore
+    ease_score: RatingScore
+
+
+class RecipeRatingRead(RecipeRatingWrite):
+    created_at: datetime
+    updated_at: datetime
+
+
+class RatingCriteria(ContractModel):
+    taste: RatingAverage | None = None
+    reliability: RatingAverage | None = None
+    ease: RatingAverage | None = None
+
+
+class RecipeRatingSummary(ContractModel):
+    average: RatingAverage | None = None
+    count: int = Field(default=0, ge=0)
+    criteria: RatingCriteria = Field(default_factory=RatingCriteria)
+
+
 class RecipeSummary(ContractModel):
     id: str
+    content_version: int = Field(default=1, gt=0)
     name: str
     description: str
     servings: int = Field(gt=0)
@@ -86,6 +137,11 @@ class RecipeSummary(ContractModel):
     review_required: bool = True
     is_owned: bool = False
     is_favorite: bool = False
+    visibility: RecipeVisibility = 'public'
+    published_at: datetime | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    rating: RecipeRatingSummary = Field(default_factory=RecipeRatingSummary)
 
 
 class RecipeRead(RecipeSummary):
@@ -93,6 +149,7 @@ class RecipeRead(RecipeSummary):
     cook_time_minutes: int = Field(ge=0)
     ingredients: list[RecipeIngredient]
     instructions: list[RecipeStep]
+    my_rating: RecipeRatingRead | None = None
 
 
 class RecipeSeedDocument(ContractModel):

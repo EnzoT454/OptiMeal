@@ -298,3 +298,81 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 - Connexion du téléphone au serveur en Wi-Fi (pare-feu Windows, adresse IP qui change selon le réseau) ; solution de secours par câble USB
 - Données de test anciennes : la plupart des promotions étaient déjà terminées
+
+---
+
+## Semaine 9 (26 octobre – 1er novembre)
+
+### Objectifs de la période
+
+- Compléter l’intégration des comptes, des recettes et des promotions
+- Permettre la consultation sans compte et demander la connexion pour les actions personnelles
+- Intégrer le calendrier des repas et vérifier les nouveaux parcours (flux d'utilisation)
+
+### Travail réalisé
+
+- **Comptes**
+    - Mode visiteur et connexion à la demande pour les actions personnelles
+    - Suppression du compte depuis les paramètres, avec confirmation et nettoyage des photos
+- **Recettes**
+    - Organisation en Découvrir, Mes recettes et Favoris, avec recherche et filtres dans chaque section
+    - Partage public ou privé depuis le formulaire et le détail de la recette
+    - Formulaire avec nom et photo obligatoires, quantité séparée de l’unité
+- **Promotions et circulaires**
+    - Ajout des photos de produits et actualisation des promotions
+    - Consultation des circulaires dans l’application
+- **Calendrier**
+    - Intégration du calendrier hebdomadaire : recettes ou notes, portions, déplacement, duplication et restes
+    - Conservation des repas après suppression d’une recette et affichage « Recette indisponible » lorsque l’accès est perdu
+- **Vérifications**
+    - Essais des nouveaux parcours sur iOS et des scénarios de partage
+    
+
+### Décisions et ajustements
+
+- Garder les recettes privées par défaut ; seul le propriétaire peut les publier ou les rendre privées
+- Limiter les recettes accessibles dans le calendrier aux recettes publiques et à celles du compte
+- Conserver le bucket public de photos pour le prototype ; reporter la séparation privé/public du stockage à la fin du prototype
+
+### Difficultés rencontrées
+
+### Prochaines étapes
+
+- Développer les instantanés historiques des plans et les listes d’épicerie
+- Développer onglet Accueil
+
+
+---
+
+## Semaine 10 (2 – 8 novembre) — point au 2 novembre 2026
+
+### Objectifs de la période
+
+- Ajouter la notation des recettes et l’intégrer aux parcours existants.
+- Vérifier la persistance, les droits d’accès et le classement des recettes.
+
+### Travail réalisé
+
+- **Notation des recettes**
+    - Évaluation des recettes publiques d’autres auteurs selon trois critères : Goût, Fiabilité et Facilité, chacun noté de 1 à 5.
+    - Formulaire avec une introduction, puis chaque critère, sa question et les étoiles ; modification et suppression de son évaluation.
+    - Affichage de la moyenne réelle et du nombre d’évaluations dans le détail et sur les cartes, y compris dans les recettes associées aux promotions.
+    - Tri « Mieux notées » calculé côté serveur avant pagination, avec ajustement selon le nombre d’avis ; tris alternatifs pour retrouver les nouvelles recettes.
+- **Versions et accès**
+    - Une modification des ingrédients, des étapes, des portions ou des durées ouvre une nouvelle version à évaluer ; les anciens votes sont conservés mais exclus de la moyenne courante.
+    - Les changements de nom, de photo ou de visibilité conservent les évaluations de la version courante.
+    - Refus de l’autoévaluation, connexion requise pour voter et contrôle de l’accès aux recettes privées.
+
+- **Extraction des reçus**
+    - Ajout du profil Super C : rayons, poids net, consignes et corrections de prix, avec séparation des rabais informatifs.
+    - Amélioration de la lecture des colonnes et des gros totaux avec Vision et Tesseract.
+
+### Décisions et ajustements
+
+- Calculer la note globale avec les poids Goût 40 %, Fiabilité 40 % et Facilité 20 %.
+- Utiliser une moyenne bayésienne pour le tri, avec une référence initiale de 4/5 et un poids de 20 avis.
+- Conserver un formulaire court et ne pas ajouter de commentaires écrits pour cette première intégration.
+
+### Limites et prochaines étapes
+
+- Poursuivre l’historique stable des plans, les listes d’épicerie et l’onglet Accueil ; les modes IA, estimations et contributions restent prévus.

@@ -2,7 +2,7 @@
 
 Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il suit des actions concrètes : se connecter, enregistrer une recette avec une photo, consulter les promotions et ouvrir une circulaire.
 
-Il décrit le code présent au **27 octobre 2026**. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
+Il décrit le code et les confirmations disponibles au **2 novembre 2026**, y compris le mode visiteur, la connexion à la demande, la suppression du compte, la photo obligatoire à la création et les photos des produits dans Promos. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
 ## 1. Les grandes parties de l’application
 
@@ -24,6 +24,7 @@ flowchart LR
     B -->|Vérification du jeton| A
     B <-->|Requêtes SQL| D
     M <-->|Photos de recettes et lecture des circulaires| I
+    M -->|Lecture directe des photos de produits| P[Serveurs images des magasins]
 ```
 
 | Partie | Question à laquelle elle répond | Exemple |
@@ -70,28 +71,72 @@ Sur un téléphone, `localhost` désigne le téléphone. L’URL du backend doit
 
 Pour une utilisation autonome, il faudra une version mobile contenant son code JavaScript et un backend hébergé à une adresse accessible. Le site GitHub Pages actuel héberge la documentation.
 
+Sur iPhone, la signature de développement constitue une autre condition
+d’ouverture : avec une Personal Team Apple gratuite, le profil expire après
+7 jours. Un renouvellement et une réinstallation sont alors nécessaires,
+indépendamment des serveurs. Le [guide mobile](mobile/README.md#iphone--renouveler-la-signature-du-compte-apple-gratuit)
+donne la procédure et la commande `xcodebuild -allowProvisioningUpdates`
+utilisée lorsqu’Expo ne peut pas générer le profil manquant.
+
 ## 3. Ouvrir l’application et se connecter
 
 [mobile/App.tsx](mobile/App.tsx) contient la navigation et choisit ce qui doit être affiché selon la session. [AuthContext.tsx](mobile/context/AuthContext.tsx) partage l’état de connexion entre les écrans.
 
 ```mermaid
 flowchart TD
-    A[Ouverture de l’application] --> B[AuthContext restaure la session locale]
-    B --> C{Session présente ?}
-    C -->|Oui| T[Afficher les cinq onglets]
-    C -->|Non| L[Afficher AuthScreen]
+    A[Ouverture de l’application] --> B[Restaurer la session éventuelle]
+    B --> T[Afficher les cinq onglets]
+    T --> P[Consulter accueil, promos, recettes et paramètres]
+    T --> C[Ajouter une recette, gérer ses favoris ou accéder au calendrier et au profil]
+    C --> Q{Compte connecté ?}
+    Q -->|Oui| R[Accéder au parcours personnel]
+    Q -->|Non| L[Proposer la connexion ou la création de compte]
     L --> S[Connexion auprès de Supabase Auth]
+    L -->|Continuer sans compte| P
     S --> V{Connexion réussie ?}
-    V -->|Oui| T
+    V -->|Oui| H[Revenir à l’accueil avec la session du compte]
     V -->|Non| E[Afficher une erreur et permettre de réessayer]
     E --> L
 ```
 
 À l’inscription, l’utilisateur doit confirmer son courriel. Le retour dans l’application utilise le lien `optimeal://auth/callback` et un échange de code pour obtenir la session.
 
-Une fois connecté, l’utilisateur retrouve cinq onglets. Accueil affiche un message de bienvenue ; Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier annonce la future planification ; Paramètres donne accès au profil et à la déconnexion. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
+Les cinq onglets sont visibles avec ou sans compte. Accueil affiche un message de bienvenue ; Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine ; Paramètres présente le mode visiteur ou, après connexion, le profil et la déconnexion. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
 
-Le client [services/supabase.ts](mobile/services/supabase.ts) configure Supabase et conserve la session avec AsyncStorage. `AuthContext.tsx` écoute aussi les changements de connexion et gère le retour du lien de confirmation. La session locale permet d’ouvrir l’interface ; chaque demande protégée reste vérifiée par le serveur.
+Le client [services/supabase.ts](mobile/services/supabase.ts) configure Supabase et conserve la session avec AsyncStorage. `AuthContext.tsx` écoute aussi les changements de connexion et gère le retour du lien de confirmation. La consultation est accessible sans session ; chaque demande protégée reste vérifiée par le serveur.
+
+La connexion s’ouvre dans une fenêtre que l’on peut fermer avec « Continuer sans compte » ou le retour Android. Annuler conserve la page consultée. Une connexion, une déconnexion ou un changement de compte réinitialise la navigation vers l’accueil, afin de retirer les écrans et données du compte précédent. Après connexion, l’utilisateur peut relancer l’action souhaitée.
+
+[AccountRequired.tsx](mobile/components/AccountRequired.tsx) protège aussi les écrans d’ajout, de saisie et d’édition lorsqu’ils sont ouverts directement. Les paramètres visiteurs ne demandent pas le profil privé à l’API. Le calendrier est soumis à la connexion ; les instantanés historiques et les listes restent à développer.
+
+### Supprimer son compte depuis Paramètres
+
+L’utilisateur connecté peut choisir « Supprimer mon compte », saisir
+`SUPPRIMER` et confirmer. Le mobile envoie `DELETE /api/v1/me` avec son jeton ;
+il ne choisit jamais librement l’identifiant du compte à supprimer.
+
+```mermaid
+flowchart TD
+    U[Paramètres : saisir SUPPRIMER et confirmer] --> A[FastAPI : vérifier la session et la confirmation]
+    A --> S[Retirer les photos de users/id dans recipes-images]
+    S --> D[Supabase Auth : supprimer définitivement le compte]
+    D --> C[PostgreSQL : cascades vers profil, recettes et favoris]
+    C --> R[Réponse 204]
+    R --> M[Effacer la session locale et revenir à l’accueil visiteur]
+```
+
+[accounts/deletion.py](backend/app/accounts/deletion.py) appelle Storage et
+Auth avec la clé serveur `SUPABASE_SECRET_KEY`. Les relations existantes
+suppriment le profil, les favoris, les repas planifiés et toutes les recettes
+du compte, privées comme publiques, par cascade. Les autres comptes, leurs
+recettes, les recettes initiales du catalogue et les circulaires sont conservés.
+Les repas des autres comptes liés à une recette supprimée restent dans leur
+calendrier avec la mention « Recette indisponible ». Les fichiers inutilisés
+du dossier photo sont aussi supprimés. En cas d’échec, des photos peuvent déjà
+avoir disparu : Storage et Auth ne partagent pas de transaction. La suppression
+du compte est confirmée sur iOS le 1er novembre ; les essais Android et les
+scénarios d’interruption restent à compléter. Les tests ordinaires
+utilisent des fournisseurs simulés. Voir le [guide Auth](backend/docs/AUTH.md#suppression-définitive-du-compte).
 
 ### À quoi sert le jeton ?
 
@@ -129,15 +174,42 @@ Le fichier [RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) demande la li
 
 | Action | Requête correspondante |
 | --- | --- |
-| Lire les recettes | `GET /api/v1/recipes` |
-| Chercher « poulet » | `GET /api/v1/recipes?q=poulet` |
-| Voir les recettes rapides | `GET /api/v1/recipes?quick=true` |
-| Voir ses favoris | `GET /api/v1/recipes?favorites=true` |
+| Découvrir | `GET /api/v1/recipes?scope=discover` |
+| Mes recettes | `GET /api/v1/recipes?scope=mine` |
+| Chercher « poulet » dans Découvrir | `GET /api/v1/recipes?scope=discover&q=poulet` |
+| Voir ses recettes rapides | `GET /api/v1/recipes?scope=mine&quick=true` |
+| Voir ses favoris | `GET /api/v1/recipes?scope=favorites` |
 | Lire une recette complète | `GET /api/v1/recipes/{id}` |
 
 Rapides signifie **30 minutes au maximum, préparation et cuisson comprises**. Petit budget affiche encore « Disponible prochainement ».
 
-Sans jeton, l’API permet de lire les recettes initiales. Avec une identité valide, elle ajoute les recettes personnelles de ce compte. L’interface mobile actuelle demande une connexion avant d’afficher les onglets.
+Sans jeton, l’API permet de lire les recettes initiales et les recettes publiées par les utilisateurs. Avec une identité valide, elle ajoute les recettes privées de ce compte. Le mobile permet également cette consultation sans compte. Ajouter une recette, consulter ou modifier ses favoris et accéder au profil demande une connexion.
+
+Le mobile propose trois sections : Découvrir (`scope=discover`, recettes
+publiques), Mes recettes (`scope=mine`, créations du compte) et Favoris
+(`scope=favorites`, favoris accessibles). Découvrir est sélectionnée au départ.
+Les deux autres sections demandent une connexion. Recherche et filtres Toutes,
+Rapides et Petit budget restent dans la section active ; changer de section
+réinitialise la pagination. Les cartes indiquent Par vous, Par OptiMeal ou
+Par la communauté. Mes recettes affiche aussi le statut Privée/Publique.
+Les cartes affichent la note globale et le nombre d’évaluations, ou
+« Pas encore évaluée ». Découvrir et Favoris proposent Mieux notées (par
+défaut) et Plus récentes ; Mes recettes propose Modifiées récemment (par
+défaut) et Créées récemment. Le tri est conservé par section et au retour du
+détail. Le changer ramène à la première page sans effacer recherche et filtres.
+Le serveur trie tous les résultats accessibles avant la pagination. Mieux
+notées tient compte du nombre de votes, sans remplacer la moyenne affichée
+par le score de classement.
+
+Une section vide propose une action adaptée : créer sa première recette,
+découvrir des recettes ou effacer la recherche et les filtres. Sans paramètre
+de section, le backend conserve la collection accessible pour les autres consommateurs. La création
+accepte `visibility`, privée par défaut ; le propriétaire peut ensuite envoyer
+`PATCH /api/v1/recipes/{id}/visibility` avec `public` ou `private`. Une ancienne
+modification de contenu ne change pas la visibilité. Le formulaire propose un interrupteur de partage, désactivé par défaut à la création, et charge le statut courant en édition. Le détail permet au propriétaire de publier ou rendre privée sa recette après confirmation. Le même bucket public de photos
+est conservé pendant le prototype ; sa séparation privé/public est reportée après
+le prototype. Publier ou rendre privée une recette conserve le fichier et son URL.
+Les règles détaillées sont dans les [contrats](backend/docs/CONTRACTS.md).
 
 ## 5. Créer une recette et enregistrer sa photo
 
@@ -147,7 +219,10 @@ Le parcours manuel passe par le choix d’ajout, le choix de saisie et le formul
 flowchart TD
     A[AddRecipeScreen : choix d’ajout] --> M[ManualEntryScreen : choix de saisie]
     M --> F[RecipeEditorScreen : formulaire manuel]
-    F --> P{Nouvelle photo choisie ?}
+    F --> C{Photo choisie ou URL déjà obtenue ?}
+    C -->|Non| B[Création bloquée : ajouter une photo]
+    B --> F
+    C -->|Oui| P{Nouvelle photo locale ?}
     P -->|Oui| I[recipeImages.ts : préparer et envoyer à Storage]
     I --> URL[Obtenir l’URL publique]
     URL --> H[api.ts : POST /api/v1/recipes avec jeton]
@@ -161,16 +236,36 @@ flowchart TD
 
 Les responsabilités se répartissent ainsi :
 
-1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes, la difficulté et les étiquettes.
-2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. `recipeForm.ts` regroupe des règles de quantités et de badges.
-3. Une photo choisie est préparée par `recipeImages.ts` : JPEG, côté maximal de 1 200 pixels et limite de 5 Mo. Son envoi intervient à l’enregistrement.
+1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes, la difficulté et les étiquettes. Le nom est obligatoire : le bouton d’enregistrement reste désactivé s’il est vide ou ne contient que des espaces. À la création, une photo est également obligatoire ; les autres champs requis sont vérifiés avant l’enregistrement.
+2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. La quantité se saisit dans un champ numérique séparé ; l’unité se choisit parmi trois boutons visibles : g, ml et unité. Aucune unité n’est présélectionnée pour un nouvel ingrédient. Les quantités doivent être positives et les unités en pièces entières. `recipeForm.ts` regroupe ces validations et les règles des badges.
+3. La photo, obligatoire pour créer une recette, est préparée par `recipeImages.ts` : JPEG, côté maximal de 1 200 pixels et limite de 5 Mo. Son envoi intervient à l’enregistrement.
 4. `api.ts` transmet le formulaire à FastAPI avec le jeton.
-5. Le backend valide les champs et vérifie que les ingrédients existent en base. Il déduit le propriétaire de l’identité authentifiée.
+5. Le backend exige une URL de photo HTTPS valide à la création, valide les autres champs et vérifie que les ingrédients existent en base. Il déduit le propriétaire de l’identité authentifiée.
 6. Le service enregistre la recette et ses liens vers les ingrédients dans une transaction PostgreSQL, puis renvoie le résultat.
 
 **L’image et la recette sont enregistrées dans deux services différents.** Storage reçoit le fichier ; PostgreSQL conserve son URL dans `recipe.image_url`. Si l’envoi de l’image réussit mais que la recette ne peut pas être enregistrée, un fichier inutilisé peut rester dans Storage.
 
-Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les politiques Storage limitent les écritures à `users/<identifiant du compte>/`. Retirer une photo enregistre `image_url: null` ; le fichier n’est pas automatiquement supprimé. Cette politique publique concerne les photos de recettes ; le futur parcours des reçus prévoit un stockage privé.
+Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les politiques Storage limitent les écritures à `users/<identifiant du compte>/`. En édition, retirer une photo enregistre `image_url: null` ; le fichier n’est pas automatiquement supprimé. Cette politique publique concerne les photos de recettes ; le futur parcours des reçus prévoit un stockage privé.
+
+### Choisir la visibilité et changer la publication
+
+Le réglage « Partager avec la communauté » prépare le choix sans envoyer de
+requête. Le bouton Enregistrer valide d’abord les champs, puis demande une
+confirmation si la recette doit être publiée ou changer de visibilité. Annuler
+n’envoie ni photo ni recette. À la création, le statut choisi fait partie du
+POST ; il reste privé par défaut.
+
+En édition, le contenu passe toujours par PUT et le changement de statut par
+PATCH. Pour rendre privée une recette publique, le retrait est confirmé par
+le serveur avant l’envoi des modifications de contenu. Pour publier une recette
+privée, le contenu est enregistré avant publication. Ces deux requêtes ne sont
+pas une transaction commune : si une seule réussit, le formulaire indique
+l’opération confirmée et celle à réessayer, sans quitter l’écran.
+
+Dans le détail, seules les recettes du propriétaire affichent « Publier la
+recette » ou « Rendre privée », avec une confirmation et le statut courant.
+Les actions sont bloquées pendant la requête et le statut est mis à jour à
+partir de la réponse du serveur. Une erreur conserve le dernier statut confirmé.
 
 ### Modifier, supprimer et mettre en favori
 
@@ -179,6 +274,7 @@ Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les poli
 | Créer | `POST /api/v1/recipes` | Associer au compte authentifié |
 | Modifier | `PUT /api/v1/recipes/{id}` | Vérifier le propriétaire |
 | Supprimer | `DELETE /api/v1/recipes/{id}` | Vérifier le propriétaire |
+| Publier ou rendre privée | `PATCH /api/v1/recipes/{id}/visibility` | Vérifier le propriétaire ; recettes initiales exclues |
 | Ajouter un favori | `PUT /api/v1/recipes/{id}/favorite` | La recette doit être accessible au compte |
 | Retirer un favori | `DELETE /api/v1/recipes/{id}/favorite` | Retirer seulement le favori de ce compte |
 
@@ -249,7 +345,7 @@ flowchart LR
     F[circular : magasin, dates et nombre de pages] -.->|storage_prefix| S[Pages JPEG dans Storage]
 ```
 
-`product_offer` conserve le prix de base, le prix promotionnel éventuel, les dates et la source. Un nouvel import actualise le produit de même identifiant ; cette table ne conserve pas encore l’historique des prix. `circular` garde une seule circulaire par magasin et les informations nécessaires pour retrouver ses images dans le bucket public `circulars`.
+`product_offer` conserve le prix de base, le prix promotionnel éventuel, les dates, la source et, depuis la migration `0007`, le lien de la photo du produit et sa provenance (`image_url`, `image_source`). Un nouvel import actualise le produit de même identifiant ; cette table ne conserve pas encore l’historique des prix. `circular` garde une seule circulaire par magasin et les informations nécessaires pour retrouver ses images dans le bucket public `circulars`.
 
 ### Ingrédient et produit commercial : quelle différence ?
 
@@ -283,7 +379,8 @@ Le raccordement à PostgreSQL avance par étapes. Le référentiel des ingrédie
 | `/api/v1/offers` et détail | JSON par défaut, ou PostgreSQL avec `OFFERS_SOURCE=database` |
 | `/api/v1/circulars` | PostgreSQL pour les informations ; Storage pour les images des pages |
 | `/catalog` et `/catalog/offers` | Ancien export choisi avec `CATALOG_IMPORT_PATH` |
-| Fichiers images | Supabase Storage |
+| Photos de recettes et pages des circulaires | Supabase Storage |
+| Photos des produits | Serveurs images des magasins ; l’API transmet leur URL |
 
 [common/public_data.py](backend/app/common/public_data.py) prépare les données exposées depuis le JSON ou les offres en base. [common/public_router.py](backend/app/common/public_router.py) fournit les routes des ingrédients, des offres et des circulaires.
 
@@ -310,6 +407,35 @@ Une panne PostgreSQL produit une erreur sur les routes qui en dépendent : recet
 
 Le détail présente le prix, le format, le prix par unité lorsque le format est reconnu, les dates et le lien vers le site du magasin. « Ajouter à la liste » affiche encore un message d’attente. Le chargement actuel porte sur les 100 premières offres ; les pages suivantes ne sont pas récupérées par cet écran.
 
+Le prix affiché est `promo_price.amount` lorsqu’il est renseigné, sinon `price.amount`. Le pourcentage de rabais est calculé seulement si les deux prix sont strictement positifs et que le prix promotionnel est inférieur au prix de base. Les conversions d’affichage couvrent g, kg, lb, ml, L et les lots en unités ; elles ne constituent pas encore le moteur de calcul des besoins ou des listes.
+
+### Photos des produits : du fichier source à l’écran
+
+Depuis les ajouts des 29–30 octobre, les cartes Promos et leur détail affichent la photo du produit. Les 93 fiches du catalogue commun contiennent actuellement un lien d’image, soit 31 par enseigne. Ces liens pointent vers les serveurs images des magasins ; les fichiers ne sont ni copiés dans Supabase Storage ni servis par FastAPI.
+
+```mermaid
+flowchart TD
+    J[produits.json des trois magasins : ImageUrl et ImageSource] --> B[build_common_catalog.py : valider et assembler]
+    B --> C[Catalogue commun : image_url et image_source]
+    C --> Q[Lecture JSON par FastAPI]
+    C --> I[import_offers.py]
+    I --> D[(PostgreSQL : product_offer)]
+    D --> P[Lecture PostgreSQL par FastAPI]
+    Q --> A[API offres : URL de la photo et provenance]
+    P --> A
+    A --> M[ProductImage dans la carte et le détail]
+    S[Serveurs images des magasins] -->|Téléchargement direct de l’image| M
+    M --> E{Lien présent et chargement réussi ?}
+    E -->|Oui| V[Afficher la photo sans la recadrer]
+    E -->|Non| F[Afficher une icône de panier]
+```
+
+Les champs sont facultatifs : un ancien fichier sans photo reste accepté. L’assembleur vérifie qu’un lien renseigné commence par `https://` et refuse le champ `ImageSource` seul sans champ `ImageUrl`. La migration ajoute aussi une contrainte HTTPS en base. Ces contrôles ne vérifient ni que le lien répond ni que la photo représente le bon produit.
+
+Les lectures JSON et PostgreSQL exposent les mêmes champs dans la liste et le détail des offres. Les contrats exportés dans `backend/contracts/v1/` et le type `Offer` du mobile les incluent. L’identifiant public `offer_…` est calculé sans les champs de photo : changer uniquement l’image ou sa provenance ne change donc pas cet identifiant. Une modification des autres données de l’offre peut le changer.
+
+[ProductImage.tsx](mobile/components/ProductImage.tsx) utilise l’image distante et affiche une icône si l’URL manque ou si le chargement échoue. Le détail indique aussi le magasin comme source de la photo lorsque l’URL est présente. La disponibilité des photos dépend ainsi du réseau et des serveurs des magasins, indépendamment de celle des données de prix.
+
 ### Trouver une recette avec les promos
 
 [CookWithPromosScreen.tsx](mobile/app/CookWithPromosScreen.tsx) réutilise les promotions et charge les recettes accessibles au compte, puis leur détail pour connaître les ingrédients.
@@ -326,6 +452,55 @@ flowchart TD
 ```
 
 Pour chaque ingrédient, le code retient l’offre au prix affiché le plus bas parmi celles chargées. Cette comparaison porte sur le prix du produit, sans ajustement aux formats ou aux quantités de la recette. Le classement ne calcule donc ni un coût total ni le panier le moins cher. Il fonctionne sans IA et reste distinct du filtre « Petit budget », encore à développer.
+
+Les cartes affichent aussi la moyenne réelle et le nombre d’évaluations de la
+version courante, ou « Pas encore évaluée ». Les notes ne changent pas ce
+classement par ingrédients en promotion. Toucher une carte ouvre le détail
+dans Recettes, avec ses notes et son formulaire ; revenir dans Promos recharge
+les données. Si une recette devient privée ou disparaît entre la liste et son
+détail, elle est ignorée. Une panne du service reste affichée comme une erreur.
+
+### Calendrier et repas enregistrés
+
+Le calendrier ajouté depuis `main` le 1er novembre utilise la migration
+`0008_meal_plan`. Un compte connecté peut consulter une semaine, choisir une
+recette ou une note, ajuster les portions, déplacer, dupliquer ou retirer un
+repas, et marquer des restes de recette. Le mobile passe par les routes
+`/api/v1/plans` ; le backend filtre les entrées par propriétaire.
+
+```mermaid
+flowchart LR
+    M[CalendarScreen : semaine et actions] --> A[API plans : identité et validation]
+    A --> S[planning/service.py : repas du compte]
+    S --> D[(meal_plan_entry)]
+    R[(recipe : nom et photo courants)] --> S
+    D --> S
+    S --> A
+    A --> M
+```
+
+Le nom et la photo viennent de la recette courante. La suppression d’une
+recette conserve les repas qui la référencent, sans nom ni photo et avec une
+référence à NULL depuis `0010_preserve_meals` ; la suppression du compte retire
+ses propres repas. Ce fonctionnement ne fournit pas encore l’historique stable par
+instantanés prévu pour les anciennes semaines. Les listes et le calcul
+économique restent à développer. Voir le [guide du calendrier](backend/docs/PLANNING.md)
+pour l’installation, les routes, les limites et les essais sur appareil.
+
+Si une recette publique ajoutée par un autre compte redevient privée, le backend
+conserve son repas mais renvoie un nom et une photo nuls. Il masque aussi cette
+recette dans les favoris du lecteur. Le mobile affiche « Recette indisponible » dans la carte et le menu.
+Les portions, le déplacement et le retrait restent possibles ; ouverture,
+duplication et nouveaux restes ne sont plus proposés. Le calendrier recharge
+les droits au retour dans l’onglet. Le sélecteur n’utilise que les recettes
+publiques et celles du compte, ou leurs favoris accessibles.
+
+Le menu d’un repas accessible propose « Voir la recette ».
+Cette action ferme le menu et ouvre la fiche de Recettes ; la notation se fait
+ensuite depuis cette fiche, avec ses droits et la version courante du contenu.
+Une note libre ou une recette indisponible ne propose pas cette action.
+Planifier, déplacer ou marquer des restes ne crée aucun vote et ne prouve pas
+que la recette a été préparée.
 
 ## 9. Migrations et imports : deux opérations différentes
 
@@ -348,6 +523,13 @@ flowchart LR
 | `0004_recipe_metadata.py` | Difficulté et étiquettes |
 | `0005_catalog_offers.py` | Tables `category` et `product_offer` |
 | `0006_circulars.py` | Table `circular` |
+| `0007_product_images.py` | URL et provenance des photos dans `product_offer`, avec contrainte HTTPS |
+| `0008_meal_plan.py` | Repas privés dans `meal_plan_entry`, liés à une recette ou une note |
+| `0009_recipe_visibility.py` | Recettes privées par défaut, publication volontaire et contraintes de visibilité |
+| `0010_preserve_meals.py` | Conservation des repas après suppression d’une recette, sans contenu devenu inaccessible |
+| `0011_recipe_ratings.py` | Table des évaluations avec trois notes, unicité par compte et recette, horodatages et cascades |
+| `0012_recipe_timestamps.py` | Dates de création et de modification pour les tris ; anciennes dates inconnues conservées à NULL |
+| `0013_rating_versions.py` | Votes conservés par version du contenu ; anciennes notes exclues des moyennes et du classement courants |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -361,6 +543,8 @@ python -m backend.cli.import_offers
 L’import des ingrédients peut actualiser le référentiel sans supprimer les éléments absents du fichier. L’import des recettes conserve les recettes identiques et annule sa transaction en cas de contenu différent, afin de préserver les corrections existantes. Les dix recettes initiales constituent un jeu de départ ; la base peut accueillir d’autres recettes.
 
 L’import des offres valide le catalogue, puis insère ou actualise les catégories et les produits dans une transaction. Il exige que les ingrédients existent déjà en base et ne supprime pas les offres absentes du fichier. Modifier les fichiers de prix demande donc de reconstruire le catalogue commun et de relancer cet import pour les lectures PostgreSQL.
+
+Sur une base déjà à la migration `0006`, `upgrade head` ajoute les colonnes de photo sans remplir les anciennes lignes : elles restent à `NULL` jusqu’à l’import des offres enrichies. Il faut appliquer `0007` avant d’utiliser les lectures PostgreSQL du code actuel ; disposer du fichier de migration dans Git ne prouve pas qu’il a été appliqué sur la base distante.
 
 FastAPI ne lance automatiquement ni ces migrations, ni ces imports. Le guide [MIGRATIONS.md](backend/docs/MIGRATIONS.md) détaille les migrations et les imports initiaux ; le [guide backend](backend/README.md#promos-et-circulaires-de-la-semaine) décrit la mise à jour des offres et des circulaires.
 
@@ -405,6 +589,48 @@ Apify est retenu pour la collecte Maxi. Metro et Super C ont des échantillons J
 
 Les captures ne garantissent pas le prix ni le stock actuels en magasin. Épiceries.ca et l’extraction automatique des prix depuis les PDF restent des pistes abandonnées. L’affichage des circulaires PDF dans l’application est un parcours distinct, décrit ci-dessous.
 
+### Actualiser les prix et les photos des trois magasins
+
+Les fichiers sources utilisés pour assembler le catalogue sont :
+
+- `data/catalog/maxi/data_final/produits.json` ;
+- `data/catalog/metro/produits.json` ;
+- `data/catalog/superc/produits.json`.
+
+Dans ces fichiers, `Prix` désigne le prix de base et `PrixPromo` le prix promotionnel éventuel, avec `IsPromotion`, les dates de validité et `DateRecuperation`. `ImageUrl` désigne la photo ; `Url` reste la page du produit. L’assemblage transforme ces noms en champs communs tels que `price`, `promo_price`, `valid_from`, `valid_to`, `retrieved_at` et `image_url`.
+
+Le changement du 30 octobre actualise notamment dix promotions pour la période du **29 octobre au 4 novembre 2026**. Le catalogue conserve aussi deux promotions avec d’autres périodes et des relevés plus anciens hors promotion : tous les produits n’ont donc pas été relevés à nouveau le 30 octobre. Les dates de chaque fiche font foi. Un prix de base absent reste inconnu ; il ne faut pas l’inventer pour afficher un pourcentage de rabais.
+
+```mermaid
+flowchart TD
+    V[Vérifier produit, format, prix et dates dans la source] --> J[Mettre à jour les produits.json concernés]
+    J --> B[Reconstruire le catalogue commun]
+    B --> S{Source des offres du serveur ?}
+    S -->|JSON| R[Redémarrer FastAPI pour relire le catalogue]
+    S -->|PostgreSQL| M[Appliquer les migrations nécessaires]
+    M --> I[Importer les offres dans PostgreSQL]
+    R --> A[Ouvrir de nouveau l’onglet Promos]
+    I --> A
+    A --> F[Le backend filtre les offres actives à la date demandée]
+```
+
+Après la vérification et la mise à jour des fichiers, les commandes suivantes se lancent depuis la racine, avec l’environnement Python activé :
+
+```bash
+python -m backend.cli.build_common_catalog
+```
+
+Pour le chemin PostgreSQL, appliquer les migrations puis importer :
+
+```bash
+python -m alembic -c backend/alembic.ini upgrade head
+python -m backend.cli.import_offers
+```
+
+Les offres en base sont relues à chaque requête ; un changement de `OFFERS_SOURCE` exige toutefois un redémarrage du serveur. La liste des ingrédients reste chargée depuis le JSON au démarrage. Le mobile recharge les promotions lorsqu’on revient dans l’onglet.
+
+`ON_DATE` dans [components/promos.ts](mobile/components/promos.ts) vaut actuellement `undefined` : le backend utilise la date du jour à Toronto. Une date explicite sert à essayer les offres du catalogue pour cette date, sans restaurer un historique des anciens prix. Après expiration, une promotion disparaît de la liste active ; importer une circulaire plus récente ne suffit pas à actualiser les offres.
+
 ### Préparer et consulter les circulaires
 
 Les PDF sont téléchargés manuellement dans `data/circulars/`. La commande [import_circulars.py](backend/cli/import_circulars.py) prépare leur affichage : elle convertit chaque page en JPEG, envoie les images dans Storage, puis enregistre les informations de la circulaire dans PostgreSQL.
@@ -445,7 +671,7 @@ flowchart LR
     J -.-> F[À développer : confirmation dans le mobile et observations de prix]
 ```
 
-L’OCR utilise Apple Vision sur Mac ou Tesseract + OpenCV. Le chemin Windows et les reçus Super C restent à valider. Des sommes cohérentes ne garantissent pas que tous les articles ont été correctement reconnus.
+L’OCR utilise Apple Vision sur Mac ou Tesseract + OpenCV. Un profil Super C reconnaît désormais les rayons, les rabais informatifs, les consignes et les corrections de prix. Au 2 novembre, les prix de deux nouveaux reçus Maxi et de cinq reçus Super C ont été vérifiés ligne par ligne avec les deux moteurs sur Mac. Les relectures Tesseract utilisent des modèles locaux supplémentaires, décrits dans le guide des reçus. Le chemin Windows reste à vérifier sur PC ; les noms, quantités et autres champs restent à relire.
 
 Le pilote PC Express est un traitement complémentaire testé sur cinq produits Maxi. [match_maxi_receipts.py](backend/cli/match_maxi_receipts.py) prépare les correspondances puis actualise les produits dont le lien est renseigné ; [web_matching.py](backend/app/receipts/web_matching.py) porte les traitements et [pcx_products.py](backend/app/price_sources/pcx_products.py) récupère les fiches. Ce pilote ne fait pas partie du parcours HTTP des recettes.
 
@@ -458,18 +684,22 @@ Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/
 | Fichier ou dossier | Utilité et lien avec les autres |
 | --- | --- |
 | [App.tsx](mobile/App.tsx) | Assemble AuthProvider, les cinq onglets et les navigations Recettes et Promos |
-| [app/AuthScreen.tsx](mobile/app/AuthScreen.tsx) | Inscription et connexion via le client Supabase |
-| [app/ProfileScreen.tsx](mobile/app/ProfileScreen.tsx) | Profil minimal via FastAPI et déconnexion via Auth |
+| [app/AuthScreen.tsx](mobile/app/AuthScreen.tsx) | Inscription et connexion à la demande, avec retour au mode visiteur |
+| [components/AccountRequired.tsx](mobile/components/AccountRequired.tsx) | Protection des écrans personnels sans bloquer la consultation publique |
+| [app/ProfileScreen.tsx](mobile/app/ProfileScreen.tsx) | Profil, déconnexion et suppression du compte |
+| [app/CalendarScreen.tsx](mobile/app/CalendarScreen.tsx) | Semaines et actions sur les repas personnels |
+| [components/AddMealSheet.tsx](mobile/components/AddMealSheet.tsx) et [components/MealActionsSheet.tsx](mobile/components/MealActionsSheet.tsx) | Choix de recette ou note, portions, déplacement, duplication et restes |
 | [app/RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) | Recherche, filtres, pagination et cartes |
 | [app/RecipeDetailScreen.tsx](mobile/app/RecipeDetailScreen.tsx) | Détail, favoris et actions sur ses recettes |
 | [app/AddRecipeScreen.tsx](mobile/app/AddRecipeScreen.tsx) | Choix entre les trois modes d’ajout |
 | [app/ManualEntryScreen.tsx](mobile/app/ManualEntryScreen.tsx) | Choix formulaire ou texte ; le texte IA reste prévu |
-| [app/RecipeEditorScreen.tsx](mobile/app/RecipeEditorScreen.tsx) | Création et modification manuelles avec photo facultative |
+| [app/RecipeEditorScreen.tsx](mobile/app/RecipeEditorScreen.tsx) | Création manuelle avec photo obligatoire ; modification des recettes existantes |
 | [app/PromotionsScreen.tsx](mobile/app/PromotionsScreen.tsx) | Promotions actives, recherche et filtre par magasin |
 | [app/PromoDetailScreen.tsx](mobile/app/PromoDetailScreen.tsx) | Prix, format, dates et lien vers le produit |
 | [app/CookWithPromosScreen.tsx](mobile/app/CookWithPromosScreen.tsx) | Recettes classées par nombre d’ingrédients en promotion |
 | [app/CircularsScreen.tsx](mobile/app/CircularsScreen.tsx) et [app/CircularScreen.tsx](mobile/app/CircularScreen.tsx) | Choix du magasin et lecture des pages de la circulaire |
 | [components/promos.ts](mobile/components/promos.ts) | Chargement des promos et circulaires, affichage des prix, formats et dates |
+| [components/ProductImage.tsx](mobile/components/ProductImage.tsx) | Photo distante du produit et icône de remplacement en cas d’absence ou d’erreur |
 | [components/](mobile/components/) | Champs, boutons, sélecteur d’ingrédients et affichage des images réutilisés par les écrans |
 | [services/api.ts](mobile/services/api.ts) | Requêtes FastAPI, jeton, délai réseau et gestion des erreurs |
 | [services/recipeImages.ts](mobile/services/recipeImages.ts) | Galerie, préparation du JPEG et envoi à Storage |
@@ -491,6 +721,7 @@ Les types TypeScript aident le développeur à utiliser les données correctemen
 | [backend/cli/](backend/cli/) | Commandes d’import, de collecte, d’OCR et d’export des contrats |
 | [backend/app/catalog/models.py](backend/app/catalog/models.py) | Tables des ingrédients, catégories, offres et circulaires |
 | [backend/app/catalog/offer_import.py](backend/app/catalog/offer_import.py) | Validation et import des catégories et offres |
+| [backend/alembic/versions/0007_product_images.py](backend/alembic/versions/0007_product_images.py) | Ajout des colonnes de photo ; migration à appliquer avant les lectures d’offres PostgreSQL du code actuel |
 | [backend/app/catalog/circulars.py](backend/app/catalog/circulars.py) | Conversion PDF en images, accès Storage et préparation des liens des pages |
 | [backend/cli/import_offers.py](backend/cli/import_offers.py) et [backend/cli/import_circulars.py](backend/cli/import_circulars.py) | Mise à jour des offres et des circulaires depuis le terminal |
 | [backend/config/storage/recipe_images.sql](backend/config/storage/recipe_images.sql) | Politiques du bucket d’images, appliquées par la commande dédiée ; séparées des migrations applicatives |
@@ -504,7 +735,7 @@ Les types TypeScript aident le développeur à utiliser les données correctemen
 | `tools/` | Consignes, architecture, décisions et tâches locales, actuellement ignorées par Git |
 | [requirements.txt](requirements.txt) | Dépendances Python du backend, des tests et du site |
 
-Les fichiers `__init__.py` identifient les packages Python. Un fichier présent peut encore être un emplacement réservé : c’est notamment le cas des domaines planning/listes et de `backend/tests/conftest.py`.
+Les fichiers `__init__.py` identifient les packages Python. Un fichier présent peut encore être un emplacement réservé : c’est notamment le cas des domaine des listes et de `backend/tests/conftest.py`.
 
 ## 12. Configuration : comment les adresses relient les composants
 
@@ -515,7 +746,7 @@ Les fichiers `__init__.py` identifient les packages Python. Un fichier présent 
 | `mobile/.env` : `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Clé publique du client Supabase |
 | `backend/.env` : `DATABASE_URL` | Connexion PostgreSQL réservée au serveur |
 | `backend/.env` : `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` | Vérification des jetons auprès de Supabase Auth |
-| `backend/.env` : `SUPABASE_SECRET_KEY` | Envoi et suppression des images par la commande d’import des circulaires ; clé réservée au serveur |
+| `backend/.env` : `SUPABASE_SECRET_KEY` | Import des circulaires et suppression de compte (Auth et photos) ; clé réservée au serveur |
 | `backend/.env` : `OFFERS_SOURCE` | `database` pour lire les offres en base ; JSON par défaut |
 | `COMMON_CATALOG_PATH` | Autre chemin éventuel pour le catalogue JSON commun |
 | `CATALOG_IMPORT_PATH` | Export utilisé par les anciennes routes `/catalog` |
@@ -538,28 +769,58 @@ npm start -- --dev-client
 
 Le [guide mobile](mobile/README.md) détaille la première compilation, la configuration Auth et les essais sur appareil.
 
+### Appels depuis Expo Web et autorisations CORS
+
+Le backend autorise désormais les origines `http://localhost:8081` et `http://127.0.0.1:8081` dans [main.py](backend/app/main.py). Une origine correspond au protocole, à l’hôte et au port de la page qui effectue l’appel. Le navigateur applique la règle CORS lorsque cette origine diffère de celle du backend.
+
+```mermaid
+sequenceDiagram
+    participant W as Navigateur avec Expo Web sur le port 8081
+    participant B as FastAPI sur le port 8001
+    W->>B: Vérification préalable OPTIONS si nécessaire
+    B-->>W: Origine et en-têtes autorisés par CORS
+    W->>B: Requête API avec jeton pour les opérations protégées
+    B-->>W: Réponse avec autorisation de lecture par le navigateur
+```
+
+Cette configuration permet les appels API depuis ces deux origines locales. Un autre port, une adresse IP du réseau ou un futur domaine web demande une adaptation de la liste. CORS ne remplace ni la connexion ni les contrôles de propriétaire et ne règle pas un problème de pare-feu ou d’URL inaccessible. Les applications natives iOS et Android ne sont pas soumises à cette restriction du navigateur. Cet ajout ne constitue pas une validation complète de l’application dans sa version web.
+
 ## 13. Ce qui fonctionne et le parcours encore à construire
 
-| État au 27 octobre 2026 | Parcours |
+Les trois scénarios manuels de partage ont été validés le 1er novembre 2026 : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. 
+
+Le nom obligatoire et la quantité séparée du choix de l’unité (g, ml ou unité) ont été validés sur iOS le 1er novembre 2026. Les essais Android de ces ajustements restent à effectuer.
+
+| État au 1er novembre 2026 | Parcours |
 | --- | --- |
-| Confirmé sur iOS et Android | Inscription, confirmation du courriel, connexion, session persistante et profil minimal |
+| Confirmé sur iOS le 1er novembre ; Android à vérifier | Mode visiteur et connexion à la demande |
+| Confirmé sur iOS le 1er novembre ; Android à vérifier | Photo obligatoire à la création d’une recette et suppression du compte |
+| Confirmé sur iOS et Android le 27 octobre | Inscription, confirmation du courriel, connexion, session persistante et profil minimal |
 | Confirmé sur iOS et Android | Consultation, recherche, Rapides, recettes manuelles et favoris ; séparation de deux comptes aussi vérifiée sur iPhone |
 | Confirmé sur iOS et Android | Photo de galerie, hébergement Storage et URL enregistrée dans la recette |
 | Outils locaux disponibles | Collecte Maxi, catalogue commun, OCR et pilote PC Express |
 | Implémenté dans le code | Tables et import des catégories/offres ; choix de lecture JSON ou PostgreSQL |
 | Confirmé sur iOS et Android | Consultation des promos, détail et recettes associées aux ingrédients en promotion |
 | Import disponible, lecture confirmée sur iOS et Android | Circulaires en images dans Storage et consultation dans le mobile |
+| Affichage confirmé sur iOS le 1er novembre ; Android à vérifier | Photos des produits dans les JSON, l’import PostgreSQL, les contrats API et les écrans Promos |
+| Données locales actualisées le 30 octobre | Dix promotions du 29 octobre au 4 novembre ; d’autres relevés gardent leurs propres dates |
+| Configuré dans le backend | CORS pour les deux origines locales Expo Web sur le port 8081 |
 | À développer | Collecte web IA Metro/Super C |
 | À développer | Modes IA des recettes, Petit budget et calcul des coûts |
-| À développer | Calendrier sauvegardé, historique et listes modifiables par magasin |
+| Confirmé sur Supabase et iOS le 1er novembre ; Android à vérifier | Calendrier privé et repas sauvegardés ; migration 0008 appliquée sur Supabase |
+| À développer | Historique stable par instantanés et listes modifiables par magasin |
 | À développer | Confirmation des reçus dans le mobile, contributions et estimations de prix |
 | À compléter | Scénarios d’erreur réseau et essais sur différentes tailles d’écran |
 
-Le 27 octobre, Hamza a confirmé le fonctionnement des parcours comptes, recettes, photos et Promos sur iOS et Android. Son coéquipier a également vérifié ces parcours sur son téléphone Android. Les fonctionnalités encore prévues ci-dessous restent à développer.
+Les parcours comptes, recettes, photos et Promos ont été validés sur iOS et Android le 27 octobre. Les fonctionnalités encore prévues ci-dessous restent à développer.
+
+Le mode visiteur, la connexion à la demande, la photo obligatoire à la création, les photos de produits dans Promos et la suppression du compte ont été validés sur iOS le 1er novembre 2026. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android. La configuration CORS pour Expo Web n’est pas validée par ces essais iOS.
 
 ### Parcours cible : de la semaine de repas aux achats
 
-Le schéma suivant décrit l’objectif futur ; l’enchaînement complet n’est pas implémenté.
+Le calendrier enregistre désormais les repas, mais les instantanés et le
+parcours jusqu’aux achats ne sont pas encore implémentés. Le schéma suivant
+décrit cet objectif complet.
 
 ```mermaid
 flowchart TD
@@ -580,11 +841,79 @@ Les calculs de portions, conversions connues et prix seront effectués par le ba
 
 Les propositions IA devront être corrigées et confirmées avant sauvegarde. Les anciennes semaines devront conserver leurs recettes, portions et prix sous forme d’instantanés, même si les données courantes changent ensuite.
 
+### Notation des recettes
+
+La notation est intégrée au détail depuis le 2 novembre 2026. Les migrations
+`0011` à `0013` sont appliquées sur Supabase ; le schéma et la conservation des
+données ont été vérifiés. Les routes
+`PUT` et `DELETE /api/v1/recipes/{id}/rating` enregistrent ou retirent la note
+du compte connecté, avec contrôle de visibilité et refus d’autoévaluation.
+Le bouton « Noter cette recette » ouvre une fenêtre défilante avec trois
+critères : Goût, Fiabilité et Facilité, chacun
+avec sa question directement suivie des étoiles pour choisir une note de 1 à 5.
+L’introduction est conservée ; les explications supplémentaires et les poids
+des critères ne sont plus affichés dans le formulaire.
+Un compte peut évaluer une recette publique d’un autre auteur, puis modifier
+ou supprimer son évaluation. Sans compte, le bouton propose la connexion.
+Les trois notes sont obligatoires et ne sont pas présélectionnées. En
+modification, le formulaire charge les notes déjà enregistrées. Annuler ferme
+sans enregistrer ; une erreur réseau conserve la saisie. La suppression
+demande une confirmation, puis recharge les moyennes. Si ce rechargement
+échoue après une suppression réussie, un bouton permet d’actualiser les
+moyennes sans renvoyer la suppression.
+
+Le détail affiche la note globale, le nombre d’évaluations et les trois
+moyennes, ou « Pas encore évaluée ». La note globale pondère le goût à 40 %,
+la fiabilité à 40 % et la facilité à 20 %, sans afficher ces poids dans l’interface.
+Les fonctions backend calculent déjà les moyennes par critère, la note
+pondérée et un score de classement ajusté au nombre de votes. Elles sont
+reliées aux routes : les listes incluent les moyennes et leur effectif ; le
+détail ajoute uniquement les trois notes du compte connecté. Le tri est
+calculé avant pagination et le score de classement reste interne au backend.
+Le [guide de notation](backend/docs/RATINGS.md) précise les textes, les droits
+et les étapes d’intégration. Le formulaire est couvert par les tests mobiles
+et les bundles iOS/Android sont générés. Hamza confirme le 2 novembre 2026
+que les tests sur téléphone fonctionnent ; la plateforme n’est pas précisée. Les notes sur les cartes et les tris sont intégrés. La migration
+`0012_recipe_timestamps` ajoute les dates nécessaires sans inventer celles des
+recettes déjà présentes ; elle est appliquée sur Supabase. Les recettes
+sans note suivent les recettes évaluées dans Mieux notées. Le tri Plus récentes
+utilise la publication, ou la création en base si la publication manque ; dans
+Mes recettes, Créées récemment utilise seulement la création. Les dates
+inconnues sont placées à la fin.
+
+Un changement d’ingrédients, d’étapes, de portions ou de durées ouvre une
+nouvelle version évaluée. Les anciens votes restent enregistrés mais ne
+comptent plus dans la note et le classement actuels. Un changement de nom,
+photo ou visibilité conserve les évaluations courantes. La dernière note
+personnelle reste visible dans le détail avec un avertissement si elle est
+ancienne ; « Réévaluer la recette » ouvre alors une saisie vide. Supprimer sa
+contribution retire toutes ses versions pour la recette après confirmation.
+Si le contenu change pendant la saisie, le serveur refuse le vote et le
+mobile demande d’actualiser puis de relire la recette. Cette version de
+notation ne fournit pas encore les instantanés historiques des recettes
+utilisées dans les anciennes semaines.
+
+La suppression du compte retire aussi toutes ses évaluations, anciennes
+versions comprises. Supprimer ses recettes retire les votes associés, sans
+retirer les votes des autres comptes sur les recettes conservées. Les moyennes
+et le classement reflètent les lignes restantes à la lecture suivante. Ce
+parcours est couvert par un test de l’API de suppression avec Auth simulé et
+PostgreSQL local ; son essai réel avec notation reste à effectuer sur appareil.
+
+La [validation finale](backend/docs/RATINGS_VALIDATION.md) consigne les tests,
+les lectures de l’API sur Supabase et l’application des migrations. Les
+essais sur téléphone portent sur la notation et sa modification, la
+réévaluation après modification de la recette, les liens entre onglets et
+les erreurs. Hamza confirme globalement leur bon
+fonctionnement sur téléphone le 2 novembre 2026, après les ajustements du
+formulaire et du libellé Calendrier ; les résultats par plateforme ne sont
+pas détaillés.
+
 ## 14. Un ordre de lecture pour explorer le code
 
 Pour suivre un parcours sans lire tout le dépôt à la fois :
 
-1. Ouvrir [App.tsx](mobile/App.tsx) pour repérer les écrans et la barrière de connexion.
+1. Ouvrir [App.tsx](mobile/App.tsx) pour repérer les onglets publics et les écrans réservés aux comptes.
 2. Lire [AuthContext.tsx](mobile/context/AuthContext.tsx), puis [supabase.ts](mobile/services/supabase.ts), pour comprendre la session.
 3. Suivre [RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) vers [api.ts](mobile/services/api.ts) pour voir comment part une demande.
 4. Repérer le routeur dans [main.py](backend/app/main.py), puis lire [recipes/router.py](backend/app/recipes/router.py).
@@ -596,6 +925,8 @@ Pour suivre un parcours sans lire tout le dépôt à la fois :
 10. Suivre [import_circulars.py](backend/cli/import_circulars.py), puis les écrans Circulaires, pour comprendre le trajet des PDF jusqu’au téléphone.
 11. Examiner ensuite les autres outils de catalogue et de reçus selon le besoin.
 
+Pour suivre les ajouts récents, partir des champs `ImageUrl` et `ImageSource` d’un fichier `produits.json`, puis lire `common_catalog.py`, la migration `0007`, `offer_import.py`, `public_data.py` et enfin `ProductImage.tsx`. Ce trajet distingue l’enregistrement du lien et le téléchargement réel de la photo par le mobile.
+
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 27 octobre 2026*
+*Dernière mise à jour : 2 novembre 2026*

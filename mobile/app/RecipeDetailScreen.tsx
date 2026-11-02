@@ -4,15 +4,19 @@ import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Button, Heading, Message, Screen } from '../components/ui';
 import { api } from '../services/api';
-import { Detail, Ingredient, Page, Recipe } from '../types/api';
+import { Detail, Ingredient, Page, Recipe, RecipeVisibility } from '../types/api';
 import { RecipeStackParams } from '../types/navigation';
 import RecipeImage from '../components/RecipeImage';
+import RecipeRatingPanel from '../components/RecipeRatingPanel';
 import { RecipeChip, recipeStyles } from '../components/recipes';
 import { difficultyLabels, recipeBadges } from '../services/recipeForm';
+import { useAuth } from '../context/AuthContext';
 
 export default function RecipeDetailScreen({ route, navigation }: NativeStackScreenProps<RecipeStackParams, 'Detail'>) {
+  const { session, requestSignIn } = useAuth();
   const [recipe, setRecipe] = useState<Recipe | null>(null); const [names, setNames] = useState<Record<string, string>>({});
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false); const [retry, setRetry] = useState(0);
+  const [ratingBusy, setRatingBusy] = useState(false);
   useFocusEffect(useCallback(() => {
     let active = true;
     setRecipe(null); setError('');
@@ -24,7 +28,8 @@ export default function RecipeDetailScreen({ route, navigation }: NativeStackScr
     return () => { active = false; };
   }, [route.params.id, retry]));
   async function favorite() {
-    if (!recipe || busy) return;
+    if (!recipe || busy || ratingBusy) return;
+    if (!session) { requestSignIn('Connecte-toi pour enregistrer tes recettes favorites.'); return; }
     setBusy(true); setError('');
     try {
       await api<void>('/api/v1/recipes/' + recipe.id + '/favorite', { method: recipe.is_favorite ? 'DELETE' : 'PUT' });
@@ -32,10 +37,30 @@ export default function RecipeDetailScreen({ route, navigation }: NativeStackScr
     } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
   }
   async function remove() {
-    if (!recipe || busy) return;
+    if (!recipe || busy || ratingBusy) return;
     setBusy(true);
     try { await api<void>('/api/v1/recipes/' + recipe.id, { method: 'DELETE' }); navigation.popToTop(); }
     catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+  }
+  async function changeVisibility(visibility: RecipeVisibility) {
+    if (!recipe?.is_owned || !session || busy || ratingBusy) return;
+    setBusy(true); setError('');
+    try {
+      const result = await api<Detail<Recipe>>('/api/v1/recipes/' + recipe.id + '/visibility', {
+        method: 'PATCH', body: JSON.stringify({ visibility }),
+      });
+      setRecipe(result.item);
+    } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+  }
+  function confirmVisibility() {
+    if (!recipe?.is_owned || !session || busy || ratingBusy) return;
+    const visibility = recipe.visibility === 'public' ? 'private' : 'public';
+    Alert.alert(visibility === 'public' ? 'Publier cette recette ?' : 'Rendre cette recette privée ?',
+      visibility === 'public' ? 'Elle sera visible par tous dans Découvrir, même sans compte. Tu pourras la rendre privée plus tard.' :
+        'Elle sera retirée de Découvrir et ne sera plus accessible aux autres comptes. Elle restera dans Mes recettes. Sa photo restera accessible par son lien dans ce prototype.', [
+        { text: 'Annuler', style: 'cancel' },
+        { text: visibility === 'public' ? 'Publier' : 'Rendre privée', onPress: () => void changeVisibility(visibility) },
+      ]);
   }
   return <Screen><Message text={error} />
     {!recipe ? <><Text>{error ? 'Recette indisponible.' : 'Chargement…'}</Text><Button title="Réessayer" onPress={() => setRetry(retry + 1)} /></> : <>
@@ -43,15 +68,23 @@ export default function RecipeDetailScreen({ route, navigation }: NativeStackScr
       <Heading>{recipe.name}</Heading><Text>{recipe.description}</Text>
       <Text>{recipe.total_time_minutes} min · {recipe.difficulty ? difficultyLabels[recipe.difficulty] : 'Difficulté non précisée'} · {recipe.servings} portions</Text>
       {recipe.review_required && <Text>Recette de démonstration à vérifier avant utilisation.</Text>}
-      <Button title={recipe.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'} disabled={busy} onPress={() => void favorite()} />
+      <Button title={recipe.is_favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'} disabled={busy || ratingBusy} onPress={() => void favorite()} />
       <View style={recipeStyles.chips}>{recipeBadges(recipe).map(tag => <RecipeChip key={tag} label={tag} />)}</View>
       {recipe.tags?.includes('Économique') && <Text style={recipeStyles.note}>Économique : étiquette choisie par l’auteur, coût non calculé.</Text>}
       <Heading>Ingrédients</Heading>
       {recipe.ingredients.map(i => <Text key={i.ingredient_id}>{i.quantity} {i.unit} · {names[i.ingredient_id] ?? i.ingredient_id}{i.preparation ? ' · ' + i.preparation : ''}</Text>)}
       <Heading>Préparation</Heading>{recipe.instructions.map(step => <Text key={step.position}>{step.position}. {step.text}</Text>)}
+      <RecipeRatingPanel key={recipe.id + ':' + (session?.user.id ?? 'visitor')} recipe={recipe} disabled={busy}
+        onChange={setRecipe} onBusyChange={setRatingBusy}
+        onUnavailable={() => { setRecipe(null); setRatingBusy(false); setError('Cette recette n’est plus accessible.'); }} />
       {recipe.is_owned && <>
-        <Button title="Modifier" disabled={busy} onPress={() => navigation.navigate('Editor', { id: recipe.id })} />
-        <Button title="Supprimer" disabled={busy} onPress={() => Alert.alert('Supprimer cette recette ?', 'Cette action est définitive.', [
+        <View style={recipeStyles.notice}>
+          <Text style={recipeStyles.sectionTitle}>Visibilité de la recette</Text>
+          <Text style={recipeStyles.body}>{recipe.visibility === 'public' ? 'Publique — consultable par tous dans Découvrir.' : 'Privée — accessible uniquement dans ton compte.'}</Text>
+          <Button title={recipe.visibility === 'public' ? 'Rendre privée' : 'Publier la recette'} disabled={busy || ratingBusy} onPress={confirmVisibility} />
+        </View>
+        <Button title="Modifier" disabled={busy || ratingBusy} onPress={() => navigation.navigate('Editor', { id: recipe.id })} />
+        <Button title="Supprimer" disabled={busy || ratingBusy} onPress={() => Alert.alert('Supprimer cette recette ?', 'Cette action est définitive.', [
           { text: 'Annuler', style: 'cancel' }, { text: 'Supprimer', style: 'destructive', onPress: () => void remove() },
         ])} />
       </>}

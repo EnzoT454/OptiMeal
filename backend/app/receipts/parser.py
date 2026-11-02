@@ -6,7 +6,7 @@ from statistics import median
 from typing import Literal
 
 from .schemas import OCRBlock, ReceiptExtraction, ReceiptItem, ReceiptSource
-from .rules import generic, maxi, metro
+from .rules import generic, maxi, metro, superc
 from .rules.common import ADJUSTMENT, DETAIL, STOP, TOTAL, decimal, normalized, trailing_amount
 from .validation import validate_totals
 
@@ -31,7 +31,7 @@ def prepare_tesseract_lines(lines: list[str]) -> tuple[list[str], dict[str, list
         cleaned = raw
         for pattern in patterns:
             match = pattern.search(raw)
-            if match and match.start() <= 4:
+            if match and match.start() <= 6:
                 cleaned = raw[match.start():]
                 break
         prepared.append(cleaned)
@@ -51,7 +51,8 @@ def discard_tesseract_maxi_noise(lines: list[str]) -> tuple[list[str], list[str]
     return kept, discarded
 
 
-def group_rows(blocks: list[OCRBlock], use_tsv_lines: bool = True) -> list[str]:
+def group_blocks(blocks: list[OCRBlock], use_tsv_lines: bool = True,
+                 deskew: bool = False) -> list[list[OCRBlock]]:
     """Réunir les colonnes par proximité verticale, puis lire de gauche à droite.
 
     Les moteurs lisent parfois tous les noms puis toute la colonne de prix.
@@ -59,23 +60,51 @@ def group_rows(blocks: list[OCRBlock], use_tsv_lines: bool = True) -> list[str]:
     """
     # Conserver les lignes TSV lorsqu'elles existent ; Vision garde son
     # regroupement géométrique historique.
-    if use_tsv_lines and blocks and all(block.line_key is not None for block in blocks):
+    if (use_tsv_lines and not deskew and blocks
+            and all(block.line_key is not None and not block.line_key.startswith('vision:') for block in blocks)):
         grouped: dict[str, list[OCRBlock]] = {}
         for block in blocks:
             grouped.setdefault(block.line_key, []).append(block)
         rows = sorted(grouped.values(), key=lambda row: median(b.y for b in row))
-        return [' '.join(b.text for b in sorted(row, key=lambda b: b.x)) for row in rows]
-    rows: list[list[OCRBlock]] = []
-    for block in sorted(blocks, key=lambda b: b.y + b.height / 2):
+        return [sorted(row, key=lambda b: b.x) for row in rows]
+    slopes = []
+    if deskew:
+        observations: dict[str, list[OCRBlock]] = {}
+        for block in blocks:
+            if block.line_key:
+                observations.setdefault(block.line_key, []).append(block)
+        for row in observations.values():
+            first, last = min(row, key=lambda b: b.x), max(row, key=lambda b: b.x)
+            dx = (last.x + last.width / 2) - (first.x + first.width / 2)
+            if dx > .15:
+                slope = ((last.y + last.height / 2) - (first.y + first.height / 2)) / dx
+                if abs(slope) < .15:
+                    slopes.append((median(b.y + b.height / 2 for b in row), slope))
+
+    def center_y(block):
         center = block.y + block.height / 2
-        candidates = [(abs(center - median(b.y + b.height / 2 for b in row)), row)
+        if slopes:
+            nearby = sorted(slopes, key=lambda pair: abs(pair[0] - center))[:5]
+            center -= median(s for _, s in nearby) * (block.x + block.width / 2 - .5)
+        return center
+
+    rows: list[list[OCRBlock]] = []
+    for block in sorted(blocks, key=center_y):
+        center = center_y(block)
+        candidates = [(abs(center - median(center_y(b) for b in row)), row)
                       for row in rows[-3:]]
         distance, closest = min(candidates, key=lambda pair: pair[0]) if candidates else (1, [])
         if closest and distance <= 0.5 * min(block.height, median(b.height for b in closest)):
             closest.append(block)
         else:
             rows.append([block])
-    return [' '.join(b.text.strip() for b in sorted(row, key=lambda b: b.x)) for row in rows]
+    return [sorted(row, key=lambda b: b.x) for row in rows]
+
+
+def group_rows(blocks: list[OCRBlock], use_tsv_lines: bool = True,
+               deskew: bool = False) -> list[str]:
+    return [' '.join(b.text.strip() for b in row)
+            for row in group_blocks(blocks, use_tsv_lines, deskew)]
 
 
 def purchase_date(lines: list[str], order: Literal['ymd', 'dmy']) -> tuple[date | None, list[str]]:
@@ -114,10 +143,17 @@ def detect_profile(lines: list[str], requested: str, tesseract: bool = False) ->
         brands.append('maxi')
     if re.search(r'\bMETRO\b', header) or re.search(r'\bMETROSONDAGE\s*\.\s*CA\b|RABAIS METRO&MOI', full):
         brands.append('metro')
+    superc_header = bool(re.search(r'\bSUPER\s*C\b', header) or 'SUPERCSONDAGE.CA' in full)
+    superc_header_variant = tesseract and bool(re.search(
+        r'\bSUPER\s*[©€G]\s+\d{3,6}\b|BIENVENUE CHEZ\s*[:•-]?\s*SUPER\s*[©€G](?:\s|$)', header))
+    if superc_header or superc_header_variant:
+        brands.append('superc')
     retailer = brands[0] if len(brands) == 1 else None
     numbered = any(maxi.category(line) for line in lines)
     named = any(generic.category(line) for line in lines)
     issues = ['tesseract_retailer_header_requires_review'] if maxi_header_variant else []
+    if superc_header_variant and not superc_header:
+        issues.append('tesseract_retailer_header_requires_review')
     if requested != 'auto':
         issues.append('parsing_profile_forced')
         if retailer and requested not in (retailer, 'generic'):
@@ -127,6 +163,8 @@ def detect_profile(lines: list[str], requested: str, tesseract: bool = False) ->
         return retailer, 'maxi', issues
     if retailer == 'metro' and named:
         return retailer, 'metro', issues
+    if retailer == 'superc':
+        return retailer, 'superc', issues
     if len(brands) > 1:
         issues.append('ambiguous_retailer')
     issues.append('generic_profile_requires_review')
@@ -135,6 +173,12 @@ def detect_profile(lines: list[str], requested: str, tesseract: bool = False) ->
 
 def apply_detail(item: ReceiptItem, raw: str, detail: re.Match) -> None:
     item.source_lines.append(raw)
+    if detail['total']:
+        amount = decimal(detail['total'])
+        if item.line_total is not None and item.line_total != amount:
+            item.warnings.append('conflicting_line_totals')
+        else:
+            item.line_total = amount
     quantity = decimal(detail['quantity'])
     unit = (detail['unit'] or 'unit').lower()
     if quantity <= 0:
@@ -148,35 +192,37 @@ def apply_detail(item: ReceiptItem, raw: str, detail: re.Match) -> None:
         return
     item.quantity, item.unit, item.quantity_source = quantity, unit, 'explicit'
     item.unit_price = decimal(detail['price'])
-    if detail['total']:
-        amount = decimal(detail['total'])
-        if item.line_total is not None and item.line_total != amount:
-            item.warnings.append('conflicting_line_totals')
-        else:
-            item.line_total = amount
 
 
 def parse_receipt(lines: list[str], source: ReceiptSource,
                   date_order: Literal['ymd', 'dmy'] = 'ymd',
-                  profile: Literal['auto', 'maxi', 'metro', 'generic'] = 'auto') -> ReceiptExtraction:
-    if profile not in ('auto', 'maxi', 'metro', 'generic'):
+                  profile: Literal['auto', 'maxi', 'metro', 'superc', 'generic'] = 'auto') -> ReceiptExtraction:
+    if profile not in ('auto', 'maxi', 'metro', 'superc', 'generic'):
         raise ValueError('Profil de reçu inconnu.')
     original_lines = {}
     if source.engine.startswith('tesseract'):
         lines, original_lines = prepare_tesseract_lines(lines)
     is_tesseract = source.engine.startswith('tesseract')
     retailer, chosen, issues = detect_profile(lines, profile, tesseract=is_tesseract)
+    if chosen == 'superc':
+        lines, superc_originals = superc.prepare_lines(lines)
+        original_lines.update(superc_originals)
     discarded_tesseract_noise = []
     if source.engine.startswith('tesseract') and chosen == 'maxi':
         lines, discarded_tesseract_noise = discard_tesseract_maxi_noise(lines)
+    elif source.engine.startswith('tesseract') and chosen == 'superc':
+        discarded_tesseract_noise = [line for line in lines if re.fullmatch(r'\s*[^\w\s]\s*', line)]
+        lines = [line for line in lines if line not in discarded_tesseract_noise]
     if chosen == 'generic':
         lines, generic_originals = generic.prepare_lines(lines)
         original_lines = {
             combined: [source for part in parts for source in original_lines.get(part, [part])]
             for combined, parts in generic_originals.items()
         } | original_lines
-    rules = {'maxi': maxi, 'metro': metro, 'generic': generic}[chosen]
+    rules = {'maxi': maxi, 'metro': metro, 'superc': superc, 'generic': generic}[chosen]
     warnings = ['unconfirmed_ocr_not_a_price_observation', 'package_formats_not_inferred', *issues]
+    if chosen == 'superc' and superc_originals:
+        warnings.append('superc_ocr_typography_requires_review')
     if source.engine.startswith('tesseract') and original_lines:
         warnings.append('tesseract_ocr_prefix_removed_requires_review')
     if discarded_tesseract_noise:
@@ -213,6 +259,9 @@ def parse_receipt(lines: list[str], source: ReceiptSource,
             continue
         if TOTAL.match(text):
             ended, pending = True, None
+            if text.startswith('TOTAL ARRONDI'):
+                warnings.append('cash_rounding_not_in_merchandise_total')
+                continue
             _, value = trailing_amount(raw)
             if text.startswith('TOTAL'):
                 if total is None:
@@ -224,6 +273,10 @@ def parse_receipt(lines: list[str], source: ReceiptSource,
             # Lire uniquement les taxes explicites entre sous-total et total/paiement.
             compact = text.replace('.', '').replace(' ', '')
             tax = next((label for label in ('TPS', 'TVQ', 'GST', 'QST', 'HST') if label in compact), None)
+            if (chosen == 'superc' and tax is None and total is None
+                    and re.fullmatch(r'\d+[.,]\d{2}\s+\(\d+[.,]\d+\)\s*%\s+\d+[.,]\d{2}', text)):
+                tax = 'unlabelled_rate_' + str(index)
+                warnings.append('tax_label_unreadable_requires_review')
             if tax and total is None:
                 _, value = trailing_amount(raw)
                 if value is None or tax in tax_values:
@@ -241,8 +294,14 @@ def parse_receipt(lines: list[str], source: ReceiptSource,
             if generic.product(raw, 1, None, following) is None:
                 continue
             in_items = True
-        if ADJUSTMENT.search(text):
-            adjustment = metro.adjustment(raw) if chosen == 'metro' else None
+        if chosen == 'superc' and superc.weight_line(raw):
+            if pending:
+                pending.source_lines.append(raw)
+            else:
+                unparsed.append(raw)
+            continue
+        if ADJUSTMENT.search(text) or (chosen == 'superc' and text.startswith('PRIX ')):
+            adjustment = rules.adjustment(raw) if chosen in ('metro', 'superc') else None
             if adjustment:
                 adjustments.append(adjustment)
             else:
@@ -256,7 +315,7 @@ def parse_receipt(lines: list[str], source: ReceiptSource,
         # Les OCR peuvent confondre @ avec G, e ou 0. Cette tolérance est
         # commune aux profils : elle ne s'applique qu'à une ligne complète
         # quantité + prix unitaire + montant final, déjà rattachée à un article.
-        detail, detail_warnings = generic.detail(raw)
+        detail, detail_warnings = (superc.detail(raw) if chosen == 'superc' else generic.detail(raw))
         if detail and pending:
             apply_detail(pending, raw, detail)
             pending.warnings.extend(detail_warnings)

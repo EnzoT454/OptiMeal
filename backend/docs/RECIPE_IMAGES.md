@@ -6,6 +6,28 @@ présent, conserve l’URL publique. Les recettes restent accessibles selon les
 droits FastAPI ; une photo est lisible par toute personne qui possède son URL.
 Les reçus ne doivent pas être ajoutés à ce bucket.
 
+## Visibilité des recettes et photos du prototype
+
+Pour le prototype, le même bucket public `recipes-images` est conservé pour
+les recettes privées et publiques, conformément au choix du 1er novembre 2026.
+La séparation du stockage privé/public est reportée après la fin du prototype.
+Aucune migration de fichiers ou de colonnes d’image n’est nécessaire pour
+cette étape : les dix illustrations restent à leur emplacement et les photos
+personnelles restent sous `users/<identifiant du compte>/`.
+
+Publier ou rendre privée une recette modifie uniquement ses droits de lecture
+FastAPI et sa date de publication. Cela ne copie, ne déplace ni ne supprime sa
+photo et ne change pas son URL. Une recette privée reste inaccessible aux autres
+comptes par l’API, mais sa photo reste consultable par une personne qui possède
+déjà son URL. Le formulaire explique cette distinction avant l’enregistrement.
+
+Les écritures et suppressions Storage restent limitées au propriétaire, même
+pour une recette publiée. Le statut public ne donne aucun droit de modification
+aux autres utilisateurs. La suppression de compte nettoie le dossier personnel
+quel que soit le statut des recettes ; les illustrations initiales et les
+photos des autres comptes sont conservées. Le nettoyage des photos détachées
+après remplacement ou suppression d’une recette reste à développer.
+
 ## Configuration
 
 Le bucket public doit exister. Depuis la racine, avec la connexion serveur
@@ -37,17 +59,36 @@ Le mobile utilise la clé publique et le jeton de session pour envoyer les
 octets à l’API Storage ; aucune clé administrative n’est distribuée. L’envoi
 est limité à 30 secondes. Il n’a lieu qu’après validation du formulaire.
 FastAPI enregistre ensuite l’URL avec les autres champs de la recette.
-Les formats HTTP et le schéma PostgreSQL des recettes restent identiques.
+À la création, `POST /api/v1/recipes` utilise le contrat `RecipeCreate` :
+`image_url` doit être une chaîne non vide contenant une URL HTTPS valide.
+Une photo manquante, nulle ou invalide produit 422 avant toute création.
+Le mobile désactive l’enregistrement sans photo et n’envoie la recette
+qu’après la réussite de l’envoi Storage. Il peut réutiliser une URL obtenue
+lors d’une tentative précédente dont seule la sauvegarde API a échoué.
+
+Le schéma PostgreSQL reste inchangé et nullable, pour conserver les recettes
+existantes et les imports. La lecture et `PUT` utilisent toujours leurs
+contrats compatibles avec `image_url: null`. Cette obligation porte sur les
+nouvelles créations personnelles ; elle ne modifie pas les anciennes recettes.
+Le backend valide le format de l’URL, sans télécharger la photo pour vérifier
+son contenu ou sa disponibilité.
 
 Le formulaire conserve la photo locale en cas d’échec de l’envoi. Si seule
 la sauvegarde FastAPI échoue, il conserve l’URL déjà obtenue pour réessayer.
-Le retrait d’une photo met `image_url` à `null` ; il ne supprime pas le fichier
+En édition, le retrait d’une photo met `image_url` à `null` ; il ne supprime pas le fichier
 Storage. Les remplacements, suppressions de recettes et formulaires abandonnés
 après envoi peuvent laisser des fichiers inutilisés. Leur nettoyage reste
 à développer ; aucun fichier n’est supprimé automatiquement après une erreur
 réseau dont le résultat d’enregistrement est incertain.
 
 ## Vérification
+
+Le 1er novembre, l’adaptation au partage avec stockage public conservé a été
+vérifiée par 35 tests backend ciblés sur PostgreSQL local jetable : conservation
+de l’URL à la publication et au retrait, droits Storage et suppression des
+comptes avec recettes privées ou publiques. Les 38 tests mobiles et TypeScript
+passent. Ces essais ne déplacent aucun fichier sur Supabase et ne constituent
+pas une nouvelle validation sur téléphone.
 
 `backend/tests/test_recipe_image_storage.py` teste les politiques avec deux
 identités sur des tables Storage simulées dans PostgreSQL local jetable :
@@ -62,4 +103,8 @@ parcours des photos sur iOS et Android ; son coéquipier l’a également essay�
 sur Android. Les essais d’erreur réseau restent à compléter selon le
 [guide mobile](../../mobile/README.md).
 
-*Dernière mise à jour : 27 octobre 2026*
+Le 1er novembre 2026, Hamza a confirmé sur iOS le parcours de création
+avec photo obligatoire. Cette nouvelle règle reste à vérifier sur Android ;
+les scénarios d’erreur réseau détaillés restent à compléter.
+
+*Dernière mise à jour : 1er novembre 2026*

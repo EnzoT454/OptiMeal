@@ -1,5 +1,51 @@
 {
   "$defs": {
+    "RatingCriteria": {
+      "additionalProperties": false,
+      "properties": {
+        "taste": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Taste"
+        },
+        "reliability": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reliability"
+        },
+        "ease": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ease"
+        }
+      },
+      "title": "RatingCriteria",
+      "type": "object"
+    },
     "RecipeIngredient": {
       "additionalProperties": false,
       "properties": {
@@ -43,12 +89,95 @@
       "title": "RecipeIngredient",
       "type": "object"
     },
+    "RecipeRatingRead": {
+      "additionalProperties": false,
+      "properties": {
+        "recipe_version": {
+          "exclusiveMinimum": 0,
+          "title": "Recipe Version",
+          "type": "integer"
+        },
+        "taste_score": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Taste Score",
+          "type": "integer"
+        },
+        "reliability_score": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Reliability Score",
+          "type": "integer"
+        },
+        "ease_score": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Ease Score",
+          "type": "integer"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "recipe_version",
+        "taste_score",
+        "reliability_score",
+        "ease_score",
+        "created_at",
+        "updated_at"
+      ],
+      "title": "RecipeRatingRead",
+      "type": "object"
+    },
+    "RecipeRatingSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "average": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Average"
+        },
+        "count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Count",
+          "type": "integer"
+        },
+        "criteria": {
+          "$ref": "#/$defs/RatingCriteria"
+        }
+      },
+      "title": "RecipeRatingSummary",
+      "type": "object"
+    },
     "RecipeRead": {
       "additionalProperties": false,
       "properties": {
         "id": {
           "title": "Id",
           "type": "string"
+        },
+        "content_version": {
+          "default": 1,
+          "exclusiveMinimum": 0,
+          "title": "Content Version",
+          "type": "integer"
         },
         "name": {
           "title": "Name",
@@ -121,6 +250,57 @@
           "title": "Is Favorite",
           "type": "boolean"
         },
+        "visibility": {
+          "default": "public",
+          "enum": [
+            "private",
+            "public"
+          ],
+          "title": "Visibility",
+          "type": "string"
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Published At"
+        },
+        "created_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Created At"
+        },
+        "updated_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Updated At"
+        },
+        "rating": {
+          "$ref": "#/$defs/RecipeRatingSummary"
+        },
         "prep_time_minutes": {
           "minimum": 0,
           "title": "Prep Time Minutes",
@@ -144,6 +324,17 @@
           },
           "title": "Instructions",
           "type": "array"
+        },
+        "my_rating": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RecipeRatingRead"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [

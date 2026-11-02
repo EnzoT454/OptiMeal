@@ -1,0 +1,249 @@
+{
+  "schema_version": "receipt-1.1",
+  "parsing_profile": "maxi",
+  "status": "review_required",
+  "source_kind": "receipt",
+  "currency": "CAD",
+  "retailer": "maxi",
+  "store_id": "8661",
+  "purchase_date": "2026-10-24",
+  "date_order": "ymd",
+  "source": {
+    "filename": "maxi-1.jpg",
+    "sha256": "19a58c3f3c7f4e28963e5def71a76d743778ef3c153c6333616f584ccfab37ae",
+    "engine": "tesseract-text-column-legacy-gray",
+    "elapsed_seconds": 3.803
+  },
+  "items": [
+    {
+      "line_id": 1,
+      "product_code": "06038309830",
+      "name": "SN COQUILLES MR",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.00",
+      "source_lines": [
+        "06038309830 SN COQUILLES MR 2.00"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 2,
+      "product_code": "06780000049",
+      "name": "UNICO THON DOLIV",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "5.99",
+      "source_lines": [
+        "06780000049 UNICO THON DOLIV MRJ 5.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 3,
+      "product_code": "08870201640",
+      "name": "BM CONFITURE MR",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "5.99",
+      "source_lines": [
+        "08870201640 BM CONFITURE MR 5.99"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 4,
+      "product_code": "66151100250",
+      "name": "TISSA SARD HUILE",
+      "category_raw": "21-EPICERIE",
+      "format_raw": null,
+      "quantity": "3",
+      "unit": "unit",
+      "quantity_source": "explicit",
+      "unit_price": "1.89",
+      "line_total": "5.67",
+      "source_lines": [
+        "(3)66151100250 TISSA SARD HUILE MRJ",
+        "3 @ $1,89 5.67"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 5,
+      "product_code": "05680051175",
+      "name": "DACT YOGT FRAISE",
+      "category_raw": "22-PRODUITS LAITIERS",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "4.79",
+      "source_lines": [
+        "05680051175 DACT YOGT FRAISE MRJ 4.79"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 6,
+      "product_code": "05500068186",
+      "name": "HD BARR VAN AMND FMRJ",
+      "category_raw": "23-PRODUITS SURGELES",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "5.50",
+      "source_lines": [
+        "05500068186 HD BARR VAN AMND FMRJ 5.50"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 7,
+      "product_code": "94011",
+      "name": "BANANES BIO",
+      "category_raw": "27-FRUITS ET LEGUMES",
+      "format_raw": null,
+      "quantity": "1.025",
+      "unit": "kg",
+      "quantity_source": "explicit",
+      "unit_price": "2.40",
+      "line_total": "2.46",
+      "source_lines": [
+        "94011 BANANES BIO MRJ",
+        "1.025 kg @ $2.40/kg 2.46"
+      ],
+      "review_required": true,
+      "warnings": []
+    },
+    {
+      "line_id": 8,
+      "product_code": "62883487112",
+      "name": "CHARLOTTE CHOCO FMRJ",
+      "category_raw": "33-BOULANGERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.25",
+      "source_lines": [
+        "62883487112 CHARLOTTE CHOCO FMRJ 3.25"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 9,
+      "product_code": "62883487113",
+      "name": "PARF BR ARACHIDE FMRJ",
+      "category_raw": "33-BOULANGERIE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.25",
+      "source_lines": [
+        "62883487113 PARF BR ARACHIDE FMRJ 3.25"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 10,
+      "product_code": "05657305383",
+      "name": "GADOUA MENAG BLE",
+      "category_raw": "34-BOULANGERIE COMMERCIALE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "3.88",
+      "source_lines": [
+        "05657305383 GADOUA MENAG BLE MRJ 3.88"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    },
+    {
+      "line_id": 11,
+      "product_code": "87668101932",
+      "name": "SANTOSH NAAN AIL",
+      "category_raw": "34-BOULANGERIE COMMERCIALE",
+      "format_raw": null,
+      "quantity": null,
+      "unit": null,
+      "quantity_source": "unknown",
+      "unit_price": null,
+      "line_total": "2.29",
+      "source_lines": [
+        "87668101932 SANTOSH NAAN AIL MRJ 2.29"
+      ],
+      "review_required": true,
+      "warnings": [
+        "quantity_not_explicit"
+      ]
+    }
+  ],
+  "adjustments": [],
+  "totals": {
+    "subtotal": "45.07",
+    "total": "45.67",
+    "taxes": "0.60",
+    "items_sum": "45.07",
+    "calculated_subtotal": "45.07",
+    "difference_from_subtotal": "0.00",
+    "arithmetic_status": "matches",
+    "tax_check_status": "matches"
+  },
+  "unparsed_lines": [],
+  "warnings": [
+    "unconfirmed_ocr_not_a_price_observation",
+    "package_formats_not_inferred",
+    "parsing_profile_forced",
+    "tesseract_ocr_prefix_removed_requires_review",
+    "tesseract_noise_lines_ignored_requires_review",
+    "purchase_date_order_requires_review",
+    "ambiguous_tax_lines",
+    "tesseract_legacy_price_model",
+    "taxes_from_full_image"
+  ]
+}

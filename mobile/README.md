@@ -2,12 +2,241 @@
 
 Socle Expo/TypeScript avec React Navigation : inscription, confirmation de
 courriel, connexion, restauration et renouvellement de session, déconnexion,
-profil minimal et recettes manuelles avec photo facultative depuis la galerie.
+profil minimal et recettes manuelles avec photo obligatoire à la création, choisie dans la galerie.
 Les cinq onglets sont présents : Accueil, Promos, Recettes, Calendrier et
 Paramètres. Promos permet de consulter les offres, les circulaires et les
-recettes associées aux ingrédients en promotion. Calendrier reste à développer.
+recettes associées aux ingrédients en promotion. Calendrier permet de conserver
+et modifier les repas d’une semaine ; les essais sur appareil et les
+instantanés historiques restent à compléter.
 Les parcours comptes, recettes, photos et Promos sont confirmés sur iOS et
 Android au 27 octobre 2026. Aucune fonction IA n’est intégrée.
+
+## Consultation sans compte
+
+L’application s’ouvre sur l’accueil sans imposer de connexion. Les visiteurs
+peuvent consulter Accueil, Promos, les circulaires, les recettes partagées
+et Paramètres. Les recherches, détails et recettes associées aux promotions
+restent accessibles.
+
+La connexion est proposée pour ajouter ou noter une recette, utiliser les favoris,
+accéder au calendrier ou modifier le profil. Le calendrier est désormais
+accessible aux comptes connectés, avec des repas sauvegardés. Les paramètres visiteurs présentent un accès
+à la connexion sans appeler la route privée du profil.
+
+La fenêtre de connexion propose « Continuer sans compte » ; le retour Android
+permet aussi de la fermer. Une connexion ou déconnexion réinitialise la
+navigation vers l’accueil ; après connexion, relancer l’action souhaitée.
+La déconnexion conserve l’accès public et retire les écrans du compte précédent.
+Les autorisations backend restent nécessaires pour toutes les données privées.
+
+Essais à reproduire sur iOS et Android pour ce nouveau parcours :
+
+1. Sans session, ouvrir les onglets publics, consulter une recette, une promo et une circulaire.
+2. Appuyer sur Ajouter, Mes recettes, Favoris et Ajouter aux favoris : vérifier la demande de connexion, puis l’annuler et poursuivre la consultation.
+3. Ouvrir Calendrier et Paramètres : vérifier la demande de connexion et l’absence de formulaire de profil visiteur.
+4. Créer un compte ou se connecter depuis la fenêtre, puis ajouter une recette et modifier son profil.
+5. Se déconnecter : vérifier le retour à l’accueil visiteur et l’absence des recettes personnelles et favoris du compte précédent.
+6. Refaire avec deux comptes ; fermer la fenêtre par le retour Android, puis vérifier la confirmation du courriel par lien.
+
+Le mode visiteur et la connexion à la demande ont été confirmés par Hamza
+sur iOS le 1er novembre. Leur reproduction sur Android et les scénarios
+d’erreur détaillés restent à compléter.
+
+## Noter une recette
+
+Le détail affiche les moyennes Goût, Fiabilité et Facilité ainsi qu’une note
+globale et le nombre d’évaluations. Les pondérations restent internes au calcul. Sans vote, il affiche
+« Pas encore évaluée ». Un visiteur peut consulter les notes ; « Noter cette
+recette » propose la connexion. Le bouton n’est pas proposé pour sa propre
+recette ni pour une recette privée.
+
+Le formulaire défilant conserve son introduction, puis présente chaque critère
+et sa question directement suivis de cinq étoiles accessibles, numérotées de
+1 à 5, sans explication supplémentaire ni pondération affichée. Les trois critères sont
+obligatoires, sans présélection. En modification, les notes enregistrées sont
+préchargées. Enregistrer attend la réponse du serveur ; Annuler et le retour
+Android ferment sans écrire. Une erreur réseau conserve la saisie. Supprimer
+son évaluation demande confirmation, puis recharge le détail. Si seule la
+suppression réussit, les anciennes moyennes sont masquées et « Actualiser
+les moyennes » permet de les recharger.
+
+Le backend doit avoir la migration `0013_rating_versions` et les routes de
+notation de l’étape 5. Les migrations jusqu’à `0013` sont appliquées sur
+Supabase depuis le 2 novembre 2026.
+Les cartes affichent aussi la moyenne et l’effectif ; les tris sont décrits
+ci-dessous. Les questions, droits et
+contrats sont décrits dans [RATINGS.md](../backend/docs/RATINGS.md).
+
+Validation du 2 novembre, étape 9 : 100 tests mobiles réussis, TypeScript valide et
+bundles iOS/Android générés avec Node 22.23.3. Le lint n’est pas configuré.
+La validation finale confirme aussi les migrations et lectures sur Supabase.
+Le [bilan technique](../backend/docs/RATINGS_VALIDATION.md) distingue les contrôles automatisés et la confirmation sur téléphone.
+Hamza confirme le 2 novembre 2026 que les tests sur téléphone fonctionnent
+après les derniers ajustements ; la plateforme n’a pas été précisée.
+Les tests utilisent des composants et services natifs simulés ; les essais
+suivants constituent le protocole de référence ; la confirmation sur téléphone
+est globale, sans détail distinct par plateforme :
+
+1. En visiteur, lire les notes, demander la connexion puis l’annuler.
+2. Avec un compte, ouvrir une recette d’autrui, lire les questions et
+   vérifier qu’aucune étoile n’est présélectionnée.
+3. Choisir les trois notes, enregistrer, rouvrir et modifier son évaluation.
+4. Annuler une saisie et une suppression ; confirmer ensuite la suppression.
+5. Couper le réseau pendant une soumission : vérifier la conservation de la
+   saisie, puis réessayer après rétablissement.
+6. Retirer le public depuis un autre compte avant soumission : vérifier
+   l’affichage « Recette indisponible » sans succès annoncé.
+7. Vérifier le défilement sur petit écran, les grandes polices et la sélection
+   des étoiles avec VoiceOver/TalkBack ; quitter puis changer de compte pour
+   vérifier l’absence de saisie ou de réponse de l’ancien compte.
+8. Noter une recette d’autrui, puis modifier ses ingrédients ou étapes depuis
+   le compte auteur : vérifier que la note courante revient à zéro évaluation,
+   que l’ancien vote est identifié et que Réévaluer ouvre trois choix vides.
+9. Modifier la recette depuis le compte auteur pendant que l’autre compte
+   remplit son formulaire : vérifier le refus, l’actualisation et la relecture,
+   sans réenvoi automatique des notes. Supprimer ensuite sa contribution et
+   vérifier la confirmation mentionnant aussi les anciennes versions.
+
+Chaque vote envoie le `recipe_version` du contenu consulté. Les changements
+d’ingrédients, d’étapes, de portions ou de durées ouvrent une nouvelle version ;
+les notes précédentes ne comptent plus. Le détail affiche la dernière note
+personnelle même ancienne et propose « Réévaluer la recette », sans
+présélection. Les changements de nom, photo ou visibilité ne l’invalident pas.
+L’éditeur explique ces effets avant enregistrement. Un conflit 409 ferme le
+formulaire, abandonne les choix et demande d’actualiser puis de relire la
+recette. Supprimer sa contribution retire toutes ses versions pour la recette.
+
+Depuis Cuisiner avec les promos, les cartes affichent les notes et ouvrent
+la même fiche pour noter ; le retour recharge les résultats. Depuis le menu
+d’un repas accessible du Calendrier, « Voir la recette »
+ouvre aussi cette fiche. Cette action est absente pour les notes libres et
+recettes indisponibles ; planifier ne crée jamais de vote. La suppression du
+compte depuis Paramètres retire ses votes, y compris les anciennes versions.
+Les essais réels suivants constituent le protocole de référence ; la confirmation sur téléphone
+est globale, sans détail distinct par plateforme : noter depuis
+une carte Promos puis vérifier son actualisation au retour ; ouvrir les
+évaluations depuis Calendrier ; retirer le public depuis un autre compte puis
+vérifier l’indisponibilité de la fiche ; vérifier le retrait des contributions
+après suppression d’un compte de test.
+
+## Sections de l’onglet Recettes
+
+L’écran propose Découvrir, Mes recettes et Favoris. Découvrir affiche les
+recettes publiques d’OptiMeal et des utilisateurs ; Mes recettes affiche toutes
+les créations du compte, privées et publiques ; Favoris affiche les favoris
+encore accessibles. Les sections personnelles demandent une connexion. Les
+requêtes utilisent `scope=discover`, `scope=mine` ou `scope=favorites`, avec
+recherche, filtre Rapides et pagination de 20 recettes. Le backend doit être
+à la migration `0013_rating_versions` pour cette version ; les nouvelles
+migrations `0011` à `0013` sont appliquées sur Supabase depuis le 2 novembre.
+
+Le choix de section est conservé tant que l’écran reste monté, y compris au
+retour d’un détail. Une connexion ou déconnexion réinitialise la navigation.
+Favoris est une section ; les filtres sont désormais Toutes, Rapides et Petit
+budget. Ce dernier conserve son message d’attente. Le formulaire et le détail proposent désormais le choix de publication.
+
+Chaque carte affiche « ★ 4,5/5 · 28 évaluations » ou « Pas encore évaluée ».
+Découvrir et Favoris proposent Mieux notées (par défaut, `sort=top`) et Plus
+récentes (`sort=newest`). Mes recettes propose Modifiées récemment (par défaut,
+`sort=updated`) et Créées récemment (`sort=newest`). Le choix est conservé par
+section et au retour du détail. Changer de tri ramène à la première page en
+conservant recherche et filtres. Le serveur trie l’ensemble des résultats
+avant pagination ; le mobile ne retrie pas les cartes chargées.
+
+Mieux notées tient compte de l’effectif sans modifier la moyenne affichée.
+Sans vote, une recette est placée après celles évaluées. Plus récentes utilise
+la publication, ou la création en base si elle manque ; Créées récemment de
+Mes recettes utilise uniquement la création. Les dates des anciennes recettes
+peuvent être inconnues et vont à la fin. Sur téléphone, vérifier le changement
+de tri depuis une deuxième page, le retour du détail après un vote et les
+grandes polices des contrôles de tri.
+
+Les tests mobiles et TypeScript passent. Le lint n’est pas configuré.
+Essais sur téléphone à effectuer sur iOS et Android :
+
+1. Sans compte, consulter Découvrir puis annuler la connexion demandée par Mes recettes et Favoris ; Découvrir reste sélectionnée.
+2. Avec un compte, retrouver ses créations dans Mes recettes avec le badge Privée/Publique, puis ses favoris dans Favoris.
+3. Chercher et activer Rapides dans chaque section ; vérifier la remise à la première page lors d’un changement de section ou de recherche.
+4. Ouvrir un détail, modifier ses favoris et revenir : la section est conservée et les données sont rechargées.
+5. Vérifier les listes vides et leurs actions : première recette, Découvrir et effacement de recherche/filtres.
+6. Couper le réseau, réessayer, puis changer de section pendant un chargement ; vérifier l’absence de résultats de la section précédente.
+7. Se déconnecter et changer de compte : aucune recette privée ni favori du compte précédent ne doit rester affiché.
+
+## Publication depuis le formulaire et le détail
+
+Le formulaire propose « Partager avec la communauté », désactivé pour une
+nouvelle recette et initialisé au statut courant en édition. Le changement de
+l’interrupteur prépare le choix ; seule la sauvegarde l’applique. Une nouvelle
+publication ou un changement de visibilité demande confirmation. Les exigences
+de nom, photo à la création, ingrédients et étapes restent en place.
+
+Le détail affiche le statut et une action Publier/Rendre privée uniquement
+pour le propriétaire. La réponse du serveur confirme le nouveau statut. Les
+boutons sont bloqués pendant l’appel ; une erreur laisse le statut confirmé
+affiché et permet de réessayer. Les recettes initiales et celles d’autrui
+n’affichent pas ces actions.
+
+En édition, le retrait du public précède le PUT du contenu ; une publication
+suit le PUT réussi. Une erreur entre les deux opérations affiche un message
+précis de sauvegarde partielle. Le même bucket public de photos est conservé,
+y compris pour les recettes privées, comme indiqué dans le formulaire.
+
+Scénarios à reproduire sur iOS et Android avec deux comptes :
+
+1. Créer une recette sans activer le partage : elle figure dans Mes recettes et reste inaccessible à l’autre compte.
+2. Activer le partage : aucune publication avant Enregistrer ; annuler la confirmation n’envoie aucune photo ni recette.
+3. Confirmer une création publique : elle figure dans Mes recettes et Découvrir, et devient consultable par un visiteur ou l’autre compte.
+4. Depuis le détail, annuler puis confirmer Publier/Rendre privée ; vérifier le statut après retour à la liste et réouverture.
+5. Modifier une recette privée pour la publier et une recette publique pour la rendre privée ; vérifier le statut chargé par le formulaire et le résultat après sauvegarde.
+6. Couper le réseau pendant l’enregistrement ou le changement de visibilité ; vérifier les messages, l’absence de faux succès et la possibilité de réessayer.
+7. Vérifier qu’une recette d’autrui ou initiale n’affiche aucune action de publication, modification ou suppression.
+8. Avec l’autre compte, vérifier la disparition de Découvrir et Favoris après retrait de publication ; les repas déjà créés restent conservés sans nom/photo dans l’API.
+
+Le 1er novembre 2026, Hamza a confirmé les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
+
+## Calendrier connecté
+
+Le calendrier intégré depuis `main` le 1er novembre propose une semaine,
+l’ajout de recettes ou de notes, les favoris, les portions et un menu pour
+déplacer, dupliquer, retirer un repas ou prévoir des restes. Les données sont
+enregistrées via `/api/v1/plans`. Appliquer `0008_meal_plan` côté serveur avant
+les essais ; aucune migration distante n’est exécutée par le mobile.
+
+Le calendrier reste protégé en mode visiteur. Les recettes sont liées à leur
+version courante : une suppression ou une perte d’accès conserve le repas
+avec le libellé « Recette indisponible ». Pour ce repas, seules les actions
+Portions, Déplacer et Retirer restent proposées. Le calendrier recharge les
+données à chaque retour dans l’onglet. La migration `0010_preserve_meals` est
+requise côté serveur, appliquée sur Supabase le 1er novembre. Les
+instantanés historiques et les listes d’épicerie restent à développer. Voir
+le [guide du calendrier](../backend/docs/PLANNING.md) pour les routes, les
+limites et les scénarios détaillés. Hamza a confirmé le 1er novembre
+l’application de `0008_meal_plan` sur Supabase et le fonctionnement du
+calendrier sur iOS. Les essais Android et les scénarios d’erreur détaillés
+restent à compléter ; l’historique par instantanés reste à développer.
+
+## Supprimer son compte
+
+Dans **Paramètres**, connecté à son compte, choisir **Supprimer mon compte**,
+saisir `SUPPRIMER`, puis **Confirmer la suppression**. Annuler ne modifie rien.
+La suppression est définitive : compte, profil, recettes personnelles,
+favoris, repas planifiés et photos du dossier utilisateur sont retirés. Après succès, la session
+locale est effacée et l’application revient à l’accueil visiteur.
+
+Le backend doit disposer de `SUPABASE_SECRET_KEY`, uniquement dans
+`backend/.env`, puis être redémarré après configuration. Le traitement passe
+par `DELETE /api/v1/me` ; aucune clé privilégiée n’est distribuée au mobile.
+Une interruption peut survenir après la suppression de certaines photos :
+le message d’échec invite à réessayer sans annoncer une réussite. Voir les
+[limites détaillées](../backend/docs/AUTH.md#suppression-définitive-du-compte).
+
+Pour l’essai réel, utiliser un compte de test dédié avec une recette, un
+favori et une photo. Vérifier l’annulation, le refus d’une confirmation
+incorrecte, le retour au mode visiteur après suppression et l’impossibilité
+de se reconnecter avec ce compte. Vérifier aussi qu’un autre compte et les
+recettes partagées sont conservés. La suppression du compte est confirmée par Hamza sur iOS le 1er novembre ;
+les essais Android et les scénarios détaillés d’interruption restent à compléter.
+Les tests automatisés utilisent des fournisseurs simulés.
 
 ## 1. Installer
 
@@ -45,7 +274,7 @@ L’adresse FastAPI dépend de l’appareil :
 | --- | --- |
 | Simulateur iOS sur ce Mac | `http://localhost:8001` |
 | Émulateur Android standard | `http://10.0.2.2:8001` |
-| Téléphone sur le même Wi-Fi | `http://IP_LOCALE_DU_MAC:8001` |
+| Téléphone sur le même réseau local | `http://IP_LOCALE_DU_MAC:8001` |
 
 Depuis la racine, dans un autre terminal avec Python activé :
 
@@ -59,9 +288,19 @@ Une réponse 401 provoque au maximum une tentative de renouvellement avant
 retour d’une erreur ; une panne réseau garde les données non enregistrées
 dans le formulaire pour permettre une nouvelle tentative.
 
-Pour un téléphone, connecter les deux appareils au même Wi-Fi et utiliser
-l’IP locale du Mac, obtenue avec `ipconfig getifaddr en0` ou dans les réglages
-Wi-Fi. Ouvrir `http://IP_LOCALE_DU_MAC:8001/health` dans le navigateur du
+Pour un téléphone, utiliser un réseau permettant la communication avec le
+Mac. Le Mac peut être en Ethernet et le téléphone en Wi-Fi sur le même
+routeur ; un réseau invité peut isoler les appareils. Utiliser l’IP de
+l’interface active du Mac. `ipconfig getifaddr en0` ne renvoie rien si cette
+interface n’a pas d’adresse IPv4. Dans ce cas :
+
+```bash
+networksetup -listallhardwareports
+```
+
+Repérer le nom `Device` de Wi-Fi ou Ethernet, puis lancer par exemple
+`ipconfig getifaddr en5` si l’interface active est `en5`. On peut aussi lire
+l’adresse dans les détails TCP/IP du réseau dans Réglages Système. Ouvrir `http://IP_LOCALE_DU_MAC:8001/health` dans le navigateur du
 téléphone : la réponse attendue est `{"status":"ok"}`. `localhost` sur le
 téléphone désigne le téléphone, pas le Mac. L’IP peut changer entre deux réseaux.
 
@@ -127,7 +366,7 @@ Si le port 8081 est occupé, accepter 8082 et scanner le nouveau QR code.
 Ces ports servent Expo ; `EXPO_PUBLIC_API_URL` garde le port **8001** de
 FastAPI. Les modifications natives nécessitent une nouvelle compilation.
 
-1. Créer un compte avec votre adresse et confirmer le courriel reçu.
+1. Depuis Paramètres, ouvrir la connexion, créer un compte avec votre adresse et confirmer le courriel reçu.
 2. Se connecter ; vérifier Paramètres et enregistrer un nom affiché.
 3. Fermer puis rouvrir l’application : la session doit être restaurée.
 4. Ouvrir Recettes, rechercher, filtrer Rapides, puis consulter un détail.
@@ -150,6 +389,68 @@ suppression. Les confirmations de suppression utilisent le dialogue natif.
 Le calcul du coût, le filtre Petit budget et les parcours IA restent à développer.
 Leur accès affiche « Disponible prochainement ».
 
+### iPhone : renouveler la signature du compte Apple gratuit
+
+Avec une **Personal Team** gratuite, le profil permettant d’installer
+l’application expire **7 jours après sa création**. Il faut alors renouveler
+la signature et réinstaller l’application pour poursuivre les essais. Cette
+durée ne peut pas être prolongée par un réglage du projet.
+Voir les [limites du compte gratuit chez Apple](https://developer.apple.com/help/account/basics/about-your-developer-account).
+
+Si iOS affiche « L’app n’est plus disponible », l’expiration est une cause
+possible, à distinguer d’un serveur Expo ou FastAPI arrêté. Brancher et
+déverrouiller l’iPhone, puis essayer depuis `mobile/` :
+
+```bash
+npx expo run:ios --device --port 8082
+```
+
+Si la compilation échoue avec **No profiles for 'com.anonymous.optimeal'
+were found** et demande `-allowProvisioningUpdates`, autoriser Xcode à
+générer le profil. La commande suivante a permis de résoudre ce problème
+lors des essais sur l’iPhone 12. Remplacer `IDENTIFIANT_IPHONE` par
+l’identifiant affiché par Expo après le choix de l’appareil :
+
+```bash
+xcodebuild \
+  -workspace ios/OptiMeal.xcworkspace \
+  -scheme OptiMeal \
+  -configuration Debug \
+  -destination 'id=IDENTIFIANT_IPHONE' \
+  -allowProvisioningUpdates \
+  build
+```
+
+Cette commande compile et permet la mise à jour du profil ; elle ne réinstalle
+pas à elle seule l’application. Après sa réussite, relancer :
+
+```bash
+npx expo run:ios --device --port 8082
+```
+
+Le compte Apple doit être connecté dans **Xcode → Settings → Apple Accounts**.
+Si nécessaire, ouvrir `ios/OptiMeal.xcworkspace`, sélectionner la cible
+**OptiMeal → Signing & Capabilities**, vérifier **Automatically manage signing**
+et la **Personal Team**, puis sélectionner l’iPhone et lancer **Run**.
+Voir le [fonctionnement de la signature dans Xcode](https://help.apple.com/xcode/mac/current/en.lproj/dev60b6fbbc7.html).
+
+Conserver le même Bundle Identifier (`com.anonymous.optimeal`) et la même
+équipe de signature. Ne pas supprimer l’application avant cette opération :
+la réinstallation par-dessus peut préserver ses données locales.
+
+Expo démarre normalement Metro pendant la réinstallation ; éviter de lancer
+un second serveur sur le même port. Pour les sessions suivantes, depuis
+`mobile/` :
+
+```bash
+npx expo start --dev-client --port 8082 --lan
+```
+
+FastAPI doit aussi fonctionner, sur le port **8001**. Le port **8082** est
+celui d’Expo et ne remplace pas le port de `EXPO_PUBLIC_API_URL`.
+L’avertissement du script « Strip Local Network Keys for Release » est
+distinct de l’erreur de profil de signature.
+
 ### Parcours Promos et circulaires
 
 Depuis Promos, rechercher un produit, filtrer par magasin et ouvrir le détail
@@ -162,6 +463,12 @@ par `ingredient_id`, puis classe les recettes par nombre d’ingrédients en
 promotion. Le prix affiché le plus bas est retenu pour chaque ingrédient,
 sans comparaison des formats ni calcul du coût complet de la recette.
 Ce parcours fonctionne sans IA ; Petit budget reste à développer.
+
+Chaque carte affiche également la note courante et son effectif, sans changer
+le classement par ingrédients en promotion. Ouvrir la carte réutilise le
+détail Recettes et son formulaire ; revenir recharge les notes. Une recette
+supprimée ou devenue privée entre liste et détail est ignorée ; une panne
+de chargement garde son état d’erreur et le bouton Réessayer.
 
 Dans Circulaires, choisir un magasin pour lire les pages. Toucher une page
 ouvre son image ; une circulaire terminée est signalée. Les PDF doivent être
@@ -176,7 +483,7 @@ des parcours intégrés a été confirmé sur iOS et Android le 27 octobre.
 ### Parcours Recettes et maquette
 
 Les éléments retenus de la maquette sont repris dans la liste (en-tête,
-recherche, quatre filtres, bouton d’ajout et collection), les deux écrans de
+sections Découvrir/Mes recettes/Favoris, recherche, filtres Toutes/Rapides/Petit budget, bouton d’ajout et collection), les deux écrans de
 choix et le formulaire. Les grandes cartes avec photos restent présentes.
 La police DM Sans et les quatre pictogrammes des parcours sont inclus localement.
 `expo-image` affiche ces SVG ; recompiler l’application après installation
@@ -186,7 +493,8 @@ Le chemin fonctionnel est **Ajouter une recette → Entrer manuellement →
 Remplir un formulaire**. Trouver une idée, Cuisiner avec ce qu’on a et
 Structurer une idée affichent un message d’attente.
 Le formulaire présente le nom, la photo, les portions, la préparation,
-les ingrédients avec quantité/unité, les étapes, la difficulté et les étiquettes.
+les ingrédients avec quantité séparée du choix d’unité, les étapes, la difficulté,
+les étiquettes et le réglage de partage.
 Le choix d’un ingrédient ouvre une liste consultable avec recherche.
 Les unités acceptées sont `g`, `ml` et `unit` (pièces entières).
 Description et cuisson restent accessibles dans « Autres informations » ;
@@ -201,7 +509,8 @@ fonctionnent dans l’application. La prévisualisation à 320 et 390 pixels a
 aussi été contrôlée sans débordement des champs et boutons ; elle utilise
 React Native Web avec des services simulés et ne remplace pas un essai natif.
 
-Pour les vérifications détaillées sur téléphone : les quatre filtres, les
+Pour les vérifications détaillées sur téléphone : les trois sections, les
+filtres Toutes/Rapides/Petit budget, les
 messages d’attente, le retour entre les choix, le clavier dans le formulaire,
 l’ajout avec photo/difficulté/étiquettes, puis la modification et la reconnexion.
 La confirmation générale ne valide pas séparément tous ces scénarios ;
@@ -213,13 +522,20 @@ par Hamza le 27 octobre ; son coéquipier l’a aussi vérifié sur Android.
 npm test
 ```
 
-Les 10 tests couvrent les photos, la lecture des quantités et les badges.
+Les 100 tests couvrent les photos, les quantités, les badges, les accès visiteurs,
+les sessions, les sections et la publication des recettes, ainsi que les repas
+indisponibles et les actions du calendrier. Ils couvrent aussi le formulaire
+de notation, ses erreurs, le blocage des autres mutations du détail, les notes
+sur les cartes, la conservation des tris par section, les anciennes notes et
+la réévaluation après conflit de version, les notes depuis Promos et l’accès
+aux évaluations depuis Calendrier.
+Les appels externes sont simulés.
 
 ## Structure et vérification
 
 ### Photos des recettes personnelles
 
-Le formulaire propose une photo facultative depuis la galerie, avec aperçu,
+Le formulaire exige une photo à la création, choisie depuis la galerie, avec aperçu,
 remplacement et retrait. Le sélecteur système donne accès à l’image choisie ;
 une annulation conserve la sélection précédente. `expo-image-picker` ouvre
 la galerie, `expo-image-manipulator` réduit le côté le plus long à 1 200 pixels
@@ -242,14 +558,15 @@ seulement après validation du formulaire, à l’enregistrement. L’URL publiq
 est enregistrée dans `recipe.image_url` par FastAPI. Un refus Storage ou une
 erreur réseau conserve le formulaire et permet de réessayer. Si l’envoi réussit
 mais que FastAPI échoue, l’URL reste dans le formulaire pour éviter un second
-envoi. Une recette peut toujours être enregistrée sans photo.
+envoi. Sans photo choisie ou URL déjà obtenue, le bouton d’enregistrement est désactivé et la création est refusée. Un échec d’envoi de la photo empêche aussi la création. Les anciennes recettes sans photo restent modifiables.
 
 Vérifier sur téléphone : créer avec une photo, relancer l’application,
-remplacer la photo, annuler le sélecteur, retirer la photo puis sauvegarder,
-enregistrer sans photo, et essayer un envoi sans connexion. Les photos sont
+remplacer la photo, annuler le sélecteur, retirer la sélection avant création et vérifier le blocage,
+vérifier que la création sans photo est bloquée, et essayer un envoi sans connexion. Les photos sont
 publiques dans ce prototype même si les recettes sont personnelles ; le
 formulaire le précise. Retirer la photo enlève son lien à la recette ; le
-nettoyage des fichiers Storage inutilisés reste à développer.
+nettoyage courant des fichiers Storage inutilisés après remplacement ou retrait
+reste à développer. La suppression du compte nettoie déjà tout son dossier photo.
 
 ```bash
 npm run test:images
@@ -307,7 +624,9 @@ Expo/Metro. La correction compatible a été tentée ; une correction complète
 reste à évaluer avant livraison. Ne pas appliquer la rétrogradation majeure
 Expo suggérée par `--force` sans vérifier sa compatibilité.
 
+Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visiteur, de la connexion à la demande, de la photo obligatoire à la création, des photos de produits dans Promos et de la suppression du compte. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android.
+
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native)
 et [React Navigation](https://reactnavigation.org/docs/getting-started/).
 
-*Dernière mise à jour : 27 octobre 2026*
+*Dernière mise à jour : 1er novembre 2026*

@@ -1,8 +1,9 @@
 """Stockage du catalogue initial de recettes et de ses ingrédients quantifiés."""
 from decimal import Decimal
+from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import Boolean, CheckConstraint, ForeignKey, Integer, Numeric, Text, UniqueConstraint, Uuid, text
+from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, Integer, Numeric, Text, UniqueConstraint, Uuid, func, text
 from sqlalchemy.dialects.postgresql import ARRAY, JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -12,6 +13,12 @@ from backend.app.database import Base
 class Recipe(Base):
     __tablename__ = 'recipe'
     __table_args__ = (
+        CheckConstraint('content_version > 0', name='content_version_positive'),
+        CheckConstraint("visibility IN ('private', 'public')", name='visibility_supported'),
+        CheckConstraint("owner_id IS NOT NULL OR visibility = 'public'", name='public_seed'),
+        CheckConstraint("(visibility = 'private' AND published_at IS NULL) OR "
+                        "(visibility = 'public' AND (owner_id IS NULL OR published_at IS NOT NULL))",
+                        name='publication_consistent'),
         CheckConstraint("id ~ '^recipe_[a-z0-9_]+$'", name='id_format'),
         CheckConstraint("seed_key ~ '^[a-z0-9_]+$'", name='seed_key_format'),
         CheckConstraint('(owner_id IS NULL AND seed_key IS NOT NULL) OR (owner_id IS NOT NULL AND seed_key IS NULL)',
@@ -28,9 +35,15 @@ class Recipe(Base):
     )
 
     id: Mapped[str] = mapped_column(Text, primary_key=True)
+    content_version: Mapped[int] = mapped_column(Integer, nullable=False, server_default=text('1'))
     seed_key: Mapped[str | None] = mapped_column(Text, nullable=True, unique=True)
     owner_id: Mapped[UUID | None] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), nullable=True, index=True)
     name: Mapped[str] = mapped_column(Text, nullable=False)
+    visibility: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'private'"), index=True)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, server_default=func.now())
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, server_default=func.now(),
+                                                      onupdate=func.now(), index=True)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     servings: Mapped[int] = mapped_column(Integer, nullable=False)
     prep_time_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -70,3 +83,25 @@ class Favorite(Base):
     __tablename__ = 'favorite'
     user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), primary_key=True)
     recipe_id: Mapped[str] = mapped_column(Text, ForeignKey('recipe.id', ondelete='CASCADE'), primary_key=True, index=True)
+
+
+class RecipeRating(Base):
+    """Une évaluation par version de recette et compte ; droits vérifiés par les services."""
+
+    __tablename__ = 'recipe_rating'
+    __table_args__ = (
+        CheckConstraint('recipe_version > 0', name='recipe_version_positive'),
+        CheckConstraint('taste_score BETWEEN 1 AND 5', name='taste_score_range'),
+        CheckConstraint('reliability_score BETWEEN 1 AND 5', name='reliability_score_range'),
+        CheckConstraint('ease_score BETWEEN 1 AND 5', name='ease_score_range'),
+    )
+
+    recipe_id: Mapped[str] = mapped_column(Text, ForeignKey('recipe.id', ondelete='CASCADE'), primary_key=True)
+    user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), primary_key=True, index=True)
+    recipe_version: Mapped[int] = mapped_column(Integer, primary_key=True, server_default=text('1'))
+    taste_score: Mapped[int] = mapped_column(Integer, nullable=False)
+    reliability_score: Mapped[int] = mapped_column(Integer, nullable=False)
+    ease_score: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now(),
+                                                onupdate=func.now())

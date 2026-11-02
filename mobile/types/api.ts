@@ -1,5 +1,8 @@
 export type RecipeUnit = 'g' | 'ml' | 'unit';
 export type RecipeDifficulty = 'easy' | 'medium' | 'hard';
+export type RecipeVisibility = 'private' | 'public';
+export type RecipeScope = 'accessible' | 'discover' | 'mine' | 'favorites';
+export type RecipeSort = 'top' | 'newest' | 'updated';
 export interface RecipeIngredient {
   ingredient_id: string; quantity: string; unit: RecipeUnit; preparation: string | null;
 }
@@ -10,12 +13,29 @@ export interface RecipeWrite {
   difficulty: RecipeDifficulty | null; tags: string[];
   instructions: { position: number; text: string }[];
 }
+export type RecipeCreate = RecipeWrite & { image_url: string; visibility?: RecipeVisibility };
+export interface RecipeVisibilityUpdate { visibility: RecipeVisibility; }
+export interface RecipeRatingWrite {
+  recipe_version: number;
+  taste_score: number; reliability_score: number; ease_score: number;
+}
+export interface RecipeRatingRead extends RecipeRatingWrite {
+  created_at: string; updated_at: string;
+}
+export interface RecipeRatingSummary {
+  average: string | null; count: number;
+  criteria: { taste: string | null; reliability: string | null; ease: string | null };
+}
 export interface RecipeSummary {
+  content_version: number;
+  rating: RecipeRatingSummary;
+  visibility: RecipeVisibility; published_at: string | null;
+  created_at: string | null; updated_at: string | null;
   id: string; name: string; description: string; servings: number; total_time_minutes: number;
   image_url: string | null; review_required: boolean; is_owned: boolean; is_favorite: boolean;
   difficulty: RecipeDifficulty | null; tags: string[];
 }
-export type Recipe = RecipeSummary & RecipeWrite;
+export type Recipe = RecipeSummary & RecipeWrite & { my_rating: RecipeRatingRead | null };
 export interface Page<T> { items: T[]; total: number; limit: number; offset: number; }
 export interface Detail<T> { item: T; }
 export interface Ingredient { id: string; name: string; category: string; aliases: string[]; }
@@ -50,6 +70,7 @@ export interface Circular {
   page_count: number; pages: string[]; imported_at: string;
 }
 
+
 // ---- Calendrier (planification des repas) ----
 export type MealType = "dejeuner" | "diner" | "souper" | "collation";
 
@@ -57,10 +78,10 @@ export type MealPlanEntry = {
   id: string;
   date: string;               // "AAAA-MM-JJ"
   meal: MealType;
-  recipe_id: RecipeSummary["id"] | null;
-  recipe_name: string | null;
+  recipe_id: RecipeSummary["id"] | null; // null pour une note ou une recette supprimée
+  recipe_name: string | null; // null si la recette est supprimée ou inaccessible
   recipe_image_url: string | null;
-  free_text: string | null;   // …ou un texte libre : « Restes », « Resto »
+  free_text: string | null;   // note libre ; nom et note nuls = recette indisponible
   servings: number;
   is_leftover: boolean;       // vrai = restes d'une recette déjà cuisinée
 };

@@ -82,7 +82,8 @@ def test_second_import_preserves_every_recipe_and_link(postgres):
     for seed in seeds:
         recipe, links = recipe_rows(seed)
         actual = postgres.execute(select(Recipe.__table__).where(Recipe.id == recipe['id'])).mappings().one()
-        assert dict(actual) == recipe
+        assert {key: actual[key] for key in recipe} == recipe
+        assert actual['created_at'] is not None and actual['updated_at'] is not None
         actual_links = postgres.execute(select(RecipeIngredient.__table__).where(
             RecipeIngredient.recipe_id == recipe['id'],
         ).order_by(RecipeIngredient.position)).mappings().all()

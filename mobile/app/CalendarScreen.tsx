@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import type { MealPlanEntry, MealType, RecipeSummary } from "../types/api";
 import AddMealSheet from "../components/AddMealSheet";
@@ -13,7 +13,7 @@ import { RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from "../compon
 const MAX = 1.2;
 import {
   MEALS, MEAL_COLORS, MEAL_LABELS,
-  addDays, addEntry, dayName, getPlan, mondayOf, removeEntry, toISODate, updateEntry,
+  addDays, addEntry, dayName, getPlan, mealName, mondayOf, recipeUnavailable, removeEntry, toISODate, updateEntry,
 } from "../components/planning";
 
 // Le jeudi décide à quel mois appartient une semaine (ex. 28 oct. → 3 nov. = novembre)
@@ -61,16 +61,19 @@ export default function CalendarScreen() {
 
   // ---- Charger les repas du mois : une requête par semaine de la grille (4 à 6), en même temps ----
   // (la semaine affichée est toujours dans la grille, donc une seule source pour les points ET la liste)
-  useEffect(() => {
+  // Recharger aussi au retour d'un autre onglet, après publication ou suppression d'une recette.
+  useFocusEffect(useCallback(() => {
     let annule = false;
     setChargement(true);
     setErreur(null);
+    setEntries([]);
+    setRepasOuvert(null);
     Promise.all(semainesDuMois(mois).map((s) => getPlan(toISODate(s[0]))))
       .then((plans) => { if (!annule) setEntries(plans.flatMap((p) => p.entries)); })
       .catch(() => { if (!annule) setErreur("Impossible de charger le calendrier."); })
       .finally(() => { if (!annule) setChargement(false); });
     return () => { annule = true; };
-  }, [mois.getFullYear(), mois.getMonth()]);
+  }, [mois.getFullYear(), mois.getMonth()]));
 
   // ---- Naviguer ----
   function allerSemaine(nouveauLundi: Date) {   // flèches de la semaine
@@ -134,6 +137,7 @@ export default function CalendarScreen() {
   async function placer(action: Placement, date: string, meal: MealType) {
     const r = repasOuvert;
     if (r === null) return;
+    if (action !== "deplacer" && recipeUnavailable(r)) return;
     try {
       if (action === "deplacer") {
         remplacer(await updateEntry(r.id, { date, meal }));
@@ -167,6 +171,7 @@ export default function CalendarScreen() {
   }
 
   function voirRecette(recipeId: string) {
+    if (!repasOuvert || recipeUnavailable(repasOuvert) || repasOuvert.recipe_id !== recipeId) return;
     setRepasOuvert(null);
     navigation.navigate("Recettes", { screen: "Detail", params: { id: recipeId }, initial: false });
   }
@@ -291,7 +296,7 @@ function CarteRepas({ repas, onPress }: { repas: MealPlanEntry; onPress: () => v
         </View>
       )}
       <View style={{ flex: 1, gap: 1 }}>
-        <Text style={styles.carteNom} numberOfLines={1} maxFontSizeMultiplier={MAX}>{repas.recipe_name ?? repas.free_text}</Text>
+        <Text style={styles.carteNom} numberOfLines={1} maxFontSizeMultiplier={MAX}>{mealName(repas)}</Text>
         <Text style={[styles.carteMoment, { color: couleur.text }]} numberOfLines={1} maxFontSizeMultiplier={MAX}>
           {repas.is_leftover ? "♻ Restes · " : ""}{MEAL_LABELS[repas.meal]} · {repas.servings} p.
         </Text>

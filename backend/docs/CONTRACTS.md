@@ -42,7 +42,10 @@ hors réseau. `/health` reste disponible sans base ni catalogue.
 Les recettes utilisent le champ nullable `image_url` pour leurs images
 Supabase Storage. Les dix URL initiales sont synchronisées avec le fichier
 d’import ; les photos personnelles sont envoyées par le mobile avant
-POST/PUT de la recette. Le retrait envoie `image_url: null`. Les contrats
+POST/PUT de la recette. À la création, `RecipeCreate` exige une chaîne
+`image_url` non vide contenant une URL HTTPS valide ; une omission, `null`,
+une chaîne vide ou une URL invalide produit 422 avant création. L’édition
+conserve le contrat `RecipeWrite` nullable : le retrait envoie `image_url: null`. Les contrats
 HTTP sont inchangés ; les droits et limites Storage sont décrits dans
 [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
 
@@ -51,10 +54,11 @@ HTTP sont inchangés ; les droits et limites Storage sont décrits dans
 | Méthode et route | Réponse | Filtres |
 | --- | --- | --- |
 | `GET /api/v1/ingredients` | Liste du référentiel commun | `q`, `limit`, `offset` |
-| `GET /api/v1/recipes` | Recettes initiales et personnelles accessibles | `q`, `quick`, `favorites`, `limit`, `offset` |
+| `GET /api/v1/recipes` | Recettes publiques et personnelles accessibles | `scope`, `q`, `quick`, `favorites`, `limit`, `offset` |
 | `GET /api/v1/recipes/{id}` | Recette complète accessible, avec ingrédients et étapes | — |
 | `POST /api/v1/recipes` | Créer une recette personnelle, propriétaire issu du jeton | Connexion requise |
 | `PUT /api/v1/recipes/{id}` | Remplacer sa propre recette | Connexion requise |
+| `PATCH /api/v1/recipes/{id}/visibility` | Publier ou rendre privée sa propre recette | Connexion requise |
 | `DELETE /api/v1/recipes/{id}` | Supprimer sa propre recette | Connexion requise |
 | `PUT / DELETE /api/v1/recipes/{id}/favorite` | Ajouter/retirer son favori | Connexion requise |
 | `GET /api/v1/offers` | Prix relevés avec produit, format et contexte | `ingredient_id`, `retailer`, `store_id`, `category_id`, `promotion_only`, `on_date`, `limit`, `offset` |
@@ -87,9 +91,219 @@ préparation comprise. Pour ce petit catalogue, les noms candidats sont
 normalisés en Python ; les filtres de durée, le comptage et la pagination
 sont exécutés dans PostgreSQL. Création manuelle, édition, suppression et
 favoris utilisent Supabase Auth ; les parcours IA restent à implémenter.
-Sans jeton, seules les recettes initiales sont visibles ; avec un jeton
-valide, les recettes personnelles du compte s’ajoutent. `favorites=true`
-exige une session. Les droits et routes sont décrits dans [AUTH.md](AUTH.md).
+Sans jeton, les recettes initiales et les recettes personnelles publiées sont
+visibles ; avec un jeton valide, les recettes privées du compte s’ajoutent.
+`favorites=true` exige une session. Les droits et routes sont décrits dans
+[AUTH.md](AUTH.md).
+
+### Visibilité et sections de recettes — étape backend
+
+La migration `0009_recipe_visibility` est requise. Liste et détail exposent
+`visibility` (`private` ou `public`) et `published_at` (horodatage avec fuseau,
+nullable). Les dix recettes initiales restent publiques, avec une date de
+publication nulle. Les recettes personnelles existantes restent privées.
+
+| `scope` | Résultat |
+| --- | --- |
+| `accessible` (défaut) | Toutes les recettes publiques et les recettes privées du compte ; compatibilité avec le mobile actuel |
+| `discover` | Recettes publiques, y compris celles du compte connecté |
+| `mine` | Recettes du compte uniquement, privées et publiques ; 401 sans connexion |
+| `favorites` | Favoris accessibles du compte ; 401 sans connexion |
+
+Recherche, Rapides et pagination s’appliquent après les règles d’accès et de
+section, y compris pour `total`. L’ancien `favorites=true` reste accepté avec
+`scope=accessible` ou `scope=favorites` ; sa combinaison avec `mine` ou
+`discover` renvoie 422. Une section inconnue renvoie 422.
+
+`POST /api/v1/recipes` accepte `visibility`, privée par défaut. Une création
+publique fixe `published_at` côté serveur. Pour publier ou retirer une recette :
+
+```http
+PATCH /api/v1/recipes/recipe_identifiant/visibility
+Authorization: Bearer <jeton>
+Content-Type: application/json
+
+{"visibility": "public"}
+```
+
+La réponse 200 contient le détail sous `item`. Utiliser `private` pour retirer
+la publication ; la date redevient nulle. Répéter le même état conserve la date
+existante. Une nouvelle publication reçoit une nouvelle date. Les champs
+propriétaire et date de publication ne sont pas acceptés dans les écritures.
+401 sans session, 404 pour une recette absente, initiale ou appartenant à un
+autre compte, 422 pour un état invalide, 503 si la base est indisponible.
+
+Le `PUT` de contenu conserve son contrat actuel et ne change jamais la
+visibilité ; utiliser le `PATCH` dédié. Une recette publique d’un autre auteur
+reste non modifiable et non supprimable par le lecteur.
+
+Après retrait du public, le détail devient inaccessible aux autres comptes
+(404) et leurs favoris masquent la recette. Les associations de favoris sont
+conservées : une republication les réaffiche. Retirer son propre favori reste
+possible et idempotent même si la recette est devenue inaccessible ; cette
+opération ne confirme pas l’existence de la recette. Le calendrier masque
+alors nom et photo sans supprimer le repas ; voir [PLANNING.md](PLANNING.md).
+
+Le mobile utilise ces sections depuis le 1er novembre : Découvrir, Mes recettes
+et Favoris. Le formulaire propose le partage et le détail les actions de publication
+et retrait après confirmation. Le POST transmet la visibilité ; en édition,
+le contenu utilise PUT et le statut PATCH. Pour un retrait, PATCH précède PUT ;
+pour une publication, PUT précède PATCH. Une erreur entre les requêtes est
+signalée comme une sauvegarde partielle par le mobile. Le prototype conserve le
+bucket public `recipes-images`, pour toutes les photos de recettes. Une URL
+déjà connue reste accessible même après retrait de la publication. Le changement
+de visibilité conserve le fichier et son URL. La séparation privé/public du
+stockage est reportée après le prototype ; voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
+
+## Notation des recettes
+
+Appliquer `0013_rating_versions` et ses migrations précédentes avant de
+démarrer cette version. Les listes et
+les détails de recettes incluent `rating`, sans appel supplémentaire du mobile :
+
+```json
+{
+  "average": "4.20",
+  "count": 1,
+  "criteria": {"taste": "5", "reliability": "4", "ease": "3"}
+}
+```
+
+Les moyennes sont des chaînes décimales non arrondies à l’affichage. La note
+globale pondère Goût à 40 %, Fiabilité à 40 % et Facilité à 20 %. Sans vote,
+`count` vaut 0 et les quatre moyennes valent `null`. Le score ajusté de
+classement n’est pas exposé. Les tris disponibles sont décrits ci-dessous.
+
+Le détail ajoute `my_rating` : `null` sans vote personnel ou sans connexion,
+sinon la dernière évaluation de ce compte, avec ses trois notes entières,
+`recipe_version`, `created_at` et `updated_at`. La recette expose sa
+`content_version`. Si les versions diffèrent, la note personnelle est ancienne
+et exclue des agrégats. Aucune identité ni note individuelle d’un autre compte n’est
+exposée. Le propriétaire peut consulter les agrégats de sa recette privée ;
+les autres comptes ne peuvent pas consulter cette recette ni ses notes.
+
+```http
+PUT /api/v1/recipes/recipe_identifiant/rating
+Authorization: Bearer <jeton>
+Content-Type: application/json
+
+{"recipe_version": 1, "taste_score": 5, "reliability_score": 4, "ease_score": 3}
+```
+
+Les trois notes sont obligatoires et strictement entières entre 1 et 5 ;
+`recipe_version` est un entier strictement positif obligatoire, égal à la
+`content_version` lue dans le détail. Chaînes,
+booléens, décimaux, champs inconnus et métadonnées choisies par le client sont
+refusés. La réponse 200 contient le détail actualisé sous `item`, y compris
+`rating` et `my_rating`. Le propriétaire du vote vient uniquement du jeton.
+Une nouvelle soumission remplace les trois notes du compte pour la même version
+sans augmenter l’effectif. `created_at` est conservé, `updated_at` est actualisé
+par l’upsert. Pour une nouvelle version, une nouvelle ligne est créée et les
+anciennes évaluations sont conservées. Seule la version courante compte.
+
+401 sans session valide ; 403 `SELF_RATING_FORBIDDEN` pour sa propre recette ;
+404 `RECIPE_NOT_FOUND` pour une recette absente ou privée d’autrui ; 422
+`VALIDATION_ERROR` pour un corps invalide ; 503 si un service requis est
+indisponible. 409 `RECIPE_VERSION_CONFLICT` si la version a changé : aucune note
+n’est enregistrée ; recharger puis relire la recette avant une nouvelle
+évaluation explicite. L’échec n’enregistre aucune partie du vote. L’authentification
+et les données utilisent les conventions d’erreur existantes.
+
+`DELETE /api/v1/recipes/{id}/rating` retire toutes les notes du compte
+authentifié pour cette recette, y compris les versions anciennes. Réponse 204
+sans corps, même si le vote manque ou si la recette
+est devenue privée ou a été supprimée ; 401 sans connexion. Cette réponse
+ne révèle pas l’existence de la recette. La suppression du compte et celle
+de la recette retirent les évaluations concernées par cascade.
+
+Votes, retrait de vote, publication et suppression utilisent le verrou de la
+recette pour sérialiser leurs mutations. Les agrégats SQL sont recalculés à
+la lecture, par groupe pour une page ; aucun vote brut n’est chargé par carte.
+Les notes d’une recette retirée du public sont conservées et redeviennent
+accessibles à sa republication ; seules celles du contenu courant comptent.
+Le filtrage par version s’applique aux moyennes, effectifs et au classement.
+Voir [RATINGS.md](RATINGS.md).
+
+Le détail mobile intègre le formulaire de notation depuis l’étape 6 : trois
+critères suivis de leur question et des étoiles, correction et suppression
+confirmée. L’introduction reste visible, sans afficher les pondérations.
+Il affiche les résultats après confirmation serveur et conserve la saisie en
+cas d’échec. Hamza confirme globalement les tests sur téléphone le 2 novembre
+2026, sans préciser la plateforme ; voir le
+[guide mobile](../../mobile/README.md#noter-une-recette).
+
+### Versions évaluées
+
+`content_version` commence à 1. Une modification des ingrédients (identité,
+quantité, unité ou précision), des étapes (texte ou ordre), des portions ou
+des durées l’incrémente dans la même transaction que la recette. Des quantités
+numériquement égales ou un simple réordonnancement des ingrédients ne créent
+pas de version. Nom, photo, description, difficulté, étiquettes et visibilité
+ne changent pas ce compteur. Un enregistrement identique ne l’incrémente pas.
+Les clients ne peuvent pas définir `content_version` dans un POST ou PUT de
+recette. Le vote vérifie la version sous le verrou utilisé par l’édition.
+
+Le mobile identifie une ancienne évaluation, affiche ses notes personnelles et
+propose « Réévaluer la recette » avec une saisie vide. Après un conflit 409,
+il ferme le formulaire et propose d’actualiser la recette, sans réenvoyer les
+anciennes notes. Ce compteur et l’archive des votes ne constituent pas des
+instantanés historiques du contenu des recettes ou du calendrier.
+
+### Tri et dates des recettes
+
+`GET /api/v1/recipes` accepte `sort=top`, `newest` ou `updated` (422 pour une
+autre valeur). Recherche, filtre Rapides, sections, favoris et droits restent
+appliqués ; le tri SQL porte sur l’ensemble des résultats avant `limit/offset`.
+Changer les données entre deux requêtes peut déplacer une recette d’une page
+à une autre ; cette pagination n’est pas un instantané du classement.
+
+| Tri | Règle |
+| --- | --- |
+| `top` | Score `(somme pondérée des notes + 20 × 4,0) / (effectif + 20)`, décroissant ; sans vote à la fin ; identifiant croissant pour départager |
+| `newest` | Publication, ou création en base si absente ; dans `scope=mine`, création uniquement ; dates décroissantes, inconnues à la fin, puis identifiant |
+| `updated` | Modification décroissante, inconnue à la fin, puis identifiant |
+
+Sans `sort`, Découvrir et Favoris choisissent `top`, Mes recettes choisit
+`updated`. `scope=accessible` (y compris sans section) conserve l’ordre
+historique par identifiant pour ses consommateurs existants. Ces règles ne
+changent pas le rapprochement « Cuisiner avec les promos ».
+
+La note affichée reste la moyenne pondérée réelle, distincte du score ajusté
+de tri. Aucune donnée manquante n’est traitée comme une note zéro. Les listes
+et détails exposent aussi `created_at` et `updated_at`, horodatages avec fuseau
+ou null pour les anciennes dates inconnues. Les dates sont gérées par le
+serveur ; les clients ne peuvent pas les choisir dans un POST ou PUT.
+Voir [MIGRATIONS.md](MIGRATIONS.md#dates-et-tris-des-recettes).
+
+Le mobile affiche les moyennes et effectifs sur les cartes de ses trois
+sections. Découvrir et Favoris proposent « Mieux notées » et « Plus récentes » ;
+Mes recettes propose « Modifiées récemment » et « Créées récemment ». Le choix
+est conservé par section et au retour du détail ; le changement de tri ramène
+à la première page, sans effacer la recherche ni le filtre.
+
+## Calendrier
+
+Les routes `/api/v1/plans`, `/api/v1/plans/entries` et
+`/api/v1/plans/entries/{id}` sont intégrées et décrites dans l’export OpenAPI.
+Elles exigent une connexion et utilisent la table de la migration `0008`.
+Le [guide du calendrier](PLANNING.md) détaille lecture par semaine, création,
+modification, suppression, repas libres et restes. Le modèle actuel utilise
+les recettes courantes ; il ne réalise pas encore l’historique par instantanés.
+
+## Suppression du compte
+
+`DELETE /api/v1/me` exige un jeton valide et le corps
+`{"confirmation":"SUPPRIMER"}`. Aucun identifiant de compte n’est accepté :
+seul le compte authentifié est supprimé. La réponse est 204 sans corps ; 401
+si la session manque, 422 si la confirmation est invalide ou un champ interdit
+est fourni, et 503 en cas de panne ou de configuration serveur manquante.
+
+Le nettoyage des photos précède la suppression Auth et les cascades métier.
+Ces opérations ne sont pas atomiques : une erreur peut survenir après le retrait
+de photos. Voir le [guide Auth](AUTH.md#suppression-définitive-du-compte) pour
+la configuration, les données supprimées et les limites. L’export OpenAPI
+inclut cette route et son schéma `AccountDelete` ; le mobile retire sa session
+locale seulement après une réponse de succès.
 
 ## Difficulté et étiquettes des recettes
 
@@ -105,6 +319,39 @@ cuisson comprise. Économique est une indication de l’auteur, pas un coût cal
 Les recettes initiales conservent une difficulté non précisée et aucune
 étiquette personnelle. La migration requise est `0004_recipe_metadata`.
 
+## Photos des produits
+
+La liste `GET /api/v1/offers` et le détail `GET /api/v1/offers/{id}`
+exposent les mêmes champs additionnels, en lecture JSON et PostgreSQL :
+
+| Champ | Type | Rôle |
+| --- | --- | --- |
+| `image_url` | chaîne ou `null` | Lien direct de la photo du produit |
+| `image_source` | chaîne ou `null` | Provenance de la photo, par exemple `superc` |
+
+Dans les modèles Pydantic, leur omission donne `null`, ce qui permet de lire
+les anciens catalogues sans photo. Les réponses sérialisées et le type
+TypeScript `Offer` incluent les deux champs. Les exports JSON Schema,
+OpenAPI et exemples dans `backend/contracts/v1/` les décrivent également.
+
+L’assembleur du catalogue transforme `ImageUrl` et `ImageSource` des fichiers
+marchands en ces noms communs. Il exige un préfixe HTTPS pour un lien
+renseigné et refuse le champ `ImageSource` seul sans champ `ImageUrl`.
+Les schémas Pydantic déclarent des chaînes nullables, sans validation HTTPS
+supplémentaire ; PostgreSQL impose le préfixe HTTPS via la migration `0007`.
+Ces contrôles ne prouvent ni la disponibilité du lien ni l’exactitude de la photo.
+
+L’API transmet une URL, sans télécharger ou héberger le fichier. Le mobile
+charge l’image directement et affiche une icône de panier en cas d’absence
+ou d’erreur. Les champs de photo sont exclus de l’empreinte de l’offre :
+modifier uniquement sa photo ou sa provenance conserve l’identifiant public.
+Les autres données de la fiche continuent à participer à cette empreinte.
+
+Pour les lectures PostgreSQL, appliquer `0007_product_images` puis importer
+le catalogue enrichi ; voir le [guide des migrations](MIGRATIONS.md#photos-des-produits).
+Ces photos de produits sont distinctes de `recipe.image_url`, qui référence
+les photos de recettes dans Supabase Storage.
+
 ## Identifiants partagés
 
 | Identifiant | Convention |
@@ -114,7 +361,7 @@ Les recettes initiales conservent une difficulté non précisée et aucune
 | Produit | Identifiant de fiche qualifié du catalogue commun, par exemple `maxi:8661:21004355001_EA` |
 | Enseigne | `maxi`, `metro`, `superc` |
 | Succursale API | Identifiant qualifié, par exemple `metro:178` ; le code marchand seul reste dans `external_store_id` |
-| Offre | `offer_…`, empreinte de l’ingrédient et de la fiche source ; stable à données identiques, renouvelée si la fiche change |
+| Offre | `offer_…`, empreinte de l’ingrédient et de la fiche source ; stable à données identiques ; les champs de photo sont exclus de l’empreinte |
 
 Le mobile traite les identifiants comme des chaînes opaques. Il n’en extrait
 pas des codes par découpage. Les `Id` numériques propres aux trois fichiers
@@ -285,4 +532,4 @@ résumés/détails ajoutent `is_owned` et `is_favorite`. Les métadonnées
 manuelles confirmées n’exigent pas la revue des recettes de démonstration.
 Voir [AUTH.md](AUTH.md) pour les corps, droits et codes de réponse.
 
-*Dernière mise à jour : 27 octobre 2026*
+*Dernière mise à jour : 1er novembre 2026*
