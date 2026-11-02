@@ -10,10 +10,10 @@ from backend.app.common.public_router import Limit, Offset, Search, fail
 from backend.app.database import get_db
 from backend.app.security import CurrentUser, current_user, optional_user, auth_error
 from . import service
-from .schemas import RecipeCreate, RecipeRead, RecipeScope, RecipeSummary, RecipeVisibilityUpdate, RecipeWrite
+from .schemas import RecipeCreate, RecipeRead, RecipeScope, RecipeSummary, RecipeVisibilityUpdate, RecipeWrite, RecipeRatingWrite, RecipeSort
 
 router = APIRouter(prefix='/api/v1/recipes', tags=['Recettes v1'], responses={
-    401: {'model': ErrorResponse}, 404: {'model': ErrorResponse},
+    401: {'model': ErrorResponse}, 403: {'model': ErrorResponse}, 404: {'model': ErrorResponse}, 409: {'model': ErrorResponse},
         422: {'model': ErrorResponse, 'description': 'Unprocessable Entity'}, 503: {'model': ErrorResponse},
 })
 
@@ -37,7 +37,7 @@ def recipe_meta(kind='demo') -> ResponseMeta:
 
 @router.get('', response_model=Page[RecipeSummary])
 def list_recipes(q: Search = '', quick: bool = False, limit: Limit = 20, offset: Offset = 0,
-                 scope: RecipeScope = 'accessible',
+                 scope: RecipeScope = 'accessible', sort: RecipeSort | None = None,
                  favorites: bool = False, user: CurrentUser | None = Depends(optional_user),
                  db: Session = Depends(recipe_db)):
     if (favorites or scope in ('mine', 'favorites')) and user is None:
@@ -45,7 +45,7 @@ def list_recipes(q: Search = '', quick: bool = False, limit: Limit = 20, offset:
     if favorites and scope not in ('accessible', 'favorites'):
         fail(422, 'VALIDATION_ERROR', 'Utiliser scope=favorites sans autre section.')
     items, total = service.list_recipes(db, q=q, quick=quick, limit=limit, offset=offset,
-                                       user_id=user.id if user else None, favorites=favorites, scope=scope)
+                                       user_id=user.id if user else None, favorites=favorites, scope=scope, sort=sort)
     return {'items': items, 'total': total, 'limit': limit, 'offset': offset,
             'meta': recipe_meta('mixed')}
 
@@ -89,4 +89,17 @@ def add_favorite(recipe_id: str, user: CurrentUser = Depends(current_user), db: 
 @router.delete('/{recipe_id}/favorite', status_code=204)
 def remove_favorite(recipe_id: str, user: CurrentUser = Depends(current_user), db: Session = Depends(recipe_db)):
     service.set_favorite(db, recipe_id, user, False)
+    return Response(status_code=204)
+
+
+@router.put('/{recipe_id}/rating', response_model=Detail[RecipeRead])
+def put_rating(recipe_id: str, body: RecipeRatingWrite,
+               user: CurrentUser = Depends(current_user), db: Session = Depends(recipe_db)):
+    item = service.set_rating(db, recipe_id, body, user)
+    return {'item': item, 'meta': recipe_meta('demo' if item.review_required else 'user_content')}
+
+
+@router.delete('/{recipe_id}/rating', status_code=204)
+def remove_rating(recipe_id: str, user: CurrentUser = Depends(current_user), db: Session = Depends(recipe_db)):
+    service.delete_rating(db, recipe_id, user)
     return Response(status_code=204)

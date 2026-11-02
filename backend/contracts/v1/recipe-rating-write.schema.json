@@ -1,0 +1,36 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "recipe_version": {
+      "exclusiveMinimum": 0,
+      "title": "Recipe Version",
+      "type": "integer"
+    },
+    "taste_score": {
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Taste Score",
+      "type": "integer"
+    },
+    "reliability_score": {
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Reliability Score",
+      "type": "integer"
+    },
+    "ease_score": {
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Ease Score",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "recipe_version",
+    "taste_score",
+    "reliability_score",
+    "ease_score"
+  ],
+  "title": "RecipeRatingWrite",
+  "type": "object"
+}

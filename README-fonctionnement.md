@@ -2,7 +2,7 @@
 
 Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il suit des actions concrètes : se connecter, enregistrer une recette avec une photo, consulter les promotions et ouvrir une circulaire.
 
-Il décrit le code et les confirmations disponibles au **1er novembre 2026**, y compris le mode visiteur, la connexion à la demande, la suppression du compte, la photo obligatoire à la création et les photos des produits dans Promos. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
+Il décrit le code et les confirmations disponibles au **2 novembre 2026**, y compris le mode visiteur, la connexion à la demande, la suppression du compte, la photo obligatoire à la création et les photos des produits dans Promos. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
 ## 1. Les grandes parties de l’application
 
@@ -192,6 +192,15 @@ Les deux autres sections demandent une connexion. Recherche et filtres Toutes,
 Rapides et Petit budget restent dans la section active ; changer de section
 réinitialise la pagination. Les cartes indiquent Par vous, Par OptiMeal ou
 Par la communauté. Mes recettes affiche aussi le statut Privée/Publique.
+Les cartes affichent la note globale et le nombre d’évaluations, ou
+« Pas encore évaluée ». Découvrir et Favoris proposent Mieux notées (par
+défaut) et Plus récentes ; Mes recettes propose Modifiées récemment (par
+défaut) et Créées récemment. Le tri est conservé par section et au retour du
+détail. Le changer ramène à la première page sans effacer recherche et filtres.
+Le serveur trie tous les résultats accessibles avant la pagination. Mieux
+notées tient compte du nombre de votes, sans remplacer la moyenne affichée
+par le score de classement.
+
 Une section vide propose une action adaptée : créer sa première recette,
 découvrir des recettes ou effacer la recherche et les filtres. Sans paramètre
 de section, le backend conserve la collection accessible pour les autres consommateurs. La création
@@ -444,6 +453,13 @@ flowchart TD
 
 Pour chaque ingrédient, le code retient l’offre au prix affiché le plus bas parmi celles chargées. Cette comparaison porte sur le prix du produit, sans ajustement aux formats ou aux quantités de la recette. Le classement ne calcule donc ni un coût total ni le panier le moins cher. Il fonctionne sans IA et reste distinct du filtre « Petit budget », encore à développer.
 
+Les cartes affichent aussi la moyenne réelle et le nombre d’évaluations de la
+version courante, ou « Pas encore évaluée ». Les notes ne changent pas ce
+classement par ingrédients en promotion. Toucher une carte ouvre le détail
+dans Recettes, avec ses notes et son formulaire ; revenir dans Promos recharge
+les données. Si une recette devient privée ou disparaît entre la liste et son
+détail, elle est ignorée. Une panne du service reste affichée comme une erreur.
+
 ### Calendrier et repas enregistrés
 
 Le calendrier ajouté depuis `main` le 1er novembre utilise la migration
@@ -479,6 +495,13 @@ duplication et nouveaux restes ne sont plus proposés. Le calendrier recharge
 les droits au retour dans l’onglet. Le sélecteur n’utilise que les recettes
 publiques et celles du compte, ou leurs favoris accessibles.
 
+Le menu d’un repas accessible propose « Voir la recette ».
+Cette action ferme le menu et ouvre la fiche de Recettes ; la notation se fait
+ensuite depuis cette fiche, avec ses droits et la version courante du contenu.
+Une note libre ou une recette indisponible ne propose pas cette action.
+Planifier, déplacer ou marquer des restes ne crée aucun vote et ne prouve pas
+que la recette a été préparée.
+
 ## 9. Migrations et imports : deux opérations différentes
 
 **Une migration modifie la structure des tables. Un import remplit les tables avec des données.** Alembic est la seule chaîne de migrations applicatives retenue.
@@ -504,6 +527,9 @@ flowchart LR
 | `0008_meal_plan.py` | Repas privés dans `meal_plan_entry`, liés à une recette ou une note |
 | `0009_recipe_visibility.py` | Recettes privées par défaut, publication volontaire et contraintes de visibilité |
 | `0010_preserve_meals.py` | Conservation des repas après suppression d’une recette, sans contenu devenu inaccessible |
+| `0011_recipe_ratings.py` | Table des évaluations avec trois notes, unicité par compte et recette, horodatages et cascades |
+| `0012_recipe_timestamps.py` | Dates de création et de modification pour les tris ; anciennes dates inconnues conservées à NULL |
+| `0013_rating_versions.py` | Votes conservés par version du contenu ; anciennes notes exclues des moyennes et du classement courants |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -815,6 +841,74 @@ Les calculs de portions, conversions connues et prix seront effectués par le ba
 
 Les propositions IA devront être corrigées et confirmées avant sauvegarde. Les anciennes semaines devront conserver leurs recettes, portions et prix sous forme d’instantanés, même si les données courantes changent ensuite.
 
+### Notation des recettes
+
+La notation est intégrée au détail depuis le 2 novembre 2026. Les migrations
+`0011` à `0013` sont appliquées sur Supabase ; le schéma et la conservation des
+données ont été vérifiés. Les routes
+`PUT` et `DELETE /api/v1/recipes/{id}/rating` enregistrent ou retirent la note
+du compte connecté, avec contrôle de visibilité et refus d’autoévaluation.
+Le bouton « Noter cette recette » ouvre une fenêtre défilante avec trois
+critères : Goût, Fiabilité et Facilité, chacun
+avec sa question directement suivie des étoiles pour choisir une note de 1 à 5.
+L’introduction est conservée ; les explications supplémentaires et les poids
+des critères ne sont plus affichés dans le formulaire.
+Un compte peut évaluer une recette publique d’un autre auteur, puis modifier
+ou supprimer son évaluation. Sans compte, le bouton propose la connexion.
+Les trois notes sont obligatoires et ne sont pas présélectionnées. En
+modification, le formulaire charge les notes déjà enregistrées. Annuler ferme
+sans enregistrer ; une erreur réseau conserve la saisie. La suppression
+demande une confirmation, puis recharge les moyennes. Si ce rechargement
+échoue après une suppression réussie, un bouton permet d’actualiser les
+moyennes sans renvoyer la suppression.
+
+Le détail affiche la note globale, le nombre d’évaluations et les trois
+moyennes, ou « Pas encore évaluée ». La note globale pondère le goût à 40 %,
+la fiabilité à 40 % et la facilité à 20 %, sans afficher ces poids dans l’interface.
+Les fonctions backend calculent déjà les moyennes par critère, la note
+pondérée et un score de classement ajusté au nombre de votes. Elles sont
+reliées aux routes : les listes incluent les moyennes et leur effectif ; le
+détail ajoute uniquement les trois notes du compte connecté. Le tri est
+calculé avant pagination et le score de classement reste interne au backend.
+Le [guide de notation](backend/docs/RATINGS.md) précise les textes, les droits
+et les étapes d’intégration. Le formulaire est couvert par les tests mobiles
+et les bundles iOS/Android sont générés. Hamza confirme le 2 novembre 2026
+que les tests sur téléphone fonctionnent ; la plateforme n’est pas précisée. Les notes sur les cartes et les tris sont intégrés. La migration
+`0012_recipe_timestamps` ajoute les dates nécessaires sans inventer celles des
+recettes déjà présentes ; elle est appliquée sur Supabase. Les recettes
+sans note suivent les recettes évaluées dans Mieux notées. Le tri Plus récentes
+utilise la publication, ou la création en base si la publication manque ; dans
+Mes recettes, Créées récemment utilise seulement la création. Les dates
+inconnues sont placées à la fin.
+
+Un changement d’ingrédients, d’étapes, de portions ou de durées ouvre une
+nouvelle version évaluée. Les anciens votes restent enregistrés mais ne
+comptent plus dans la note et le classement actuels. Un changement de nom,
+photo ou visibilité conserve les évaluations courantes. La dernière note
+personnelle reste visible dans le détail avec un avertissement si elle est
+ancienne ; « Réévaluer la recette » ouvre alors une saisie vide. Supprimer sa
+contribution retire toutes ses versions pour la recette après confirmation.
+Si le contenu change pendant la saisie, le serveur refuse le vote et le
+mobile demande d’actualiser puis de relire la recette. Cette version de
+notation ne fournit pas encore les instantanés historiques des recettes
+utilisées dans les anciennes semaines.
+
+La suppression du compte retire aussi toutes ses évaluations, anciennes
+versions comprises. Supprimer ses recettes retire les votes associés, sans
+retirer les votes des autres comptes sur les recettes conservées. Les moyennes
+et le classement reflètent les lignes restantes à la lecture suivante. Ce
+parcours est couvert par un test de l’API de suppression avec Auth simulé et
+PostgreSQL local ; son essai réel avec notation reste à effectuer sur appareil.
+
+La [validation finale](backend/docs/RATINGS_VALIDATION.md) consigne les tests,
+les lectures de l’API sur Supabase et l’application des migrations. Les
+essais sur téléphone portent sur la notation et sa modification, la
+réévaluation après modification de la recette, les liens entre onglets et
+les erreurs. Hamza confirme globalement leur bon
+fonctionnement sur téléphone le 2 novembre 2026, après les ajustements du
+formulaire et du libellé Calendrier ; les résultats par plateforme ne sont
+pas détaillés.
+
 ## 14. Un ordre de lecture pour explorer le code
 
 Pour suivre un parcours sans lire tout le dépôt à la fois :
@@ -835,4 +929,4 @@ Pour suivre les ajouts récents, partir des champs `ImageUrl` et `ImageSource` d
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 2 novembre 2026*

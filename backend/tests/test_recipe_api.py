@@ -48,7 +48,9 @@ def test_list_detail_references_and_pagination(api):
     for recipe in expected:
         response = api.get('/api/v1/recipes/' + recipe.id)
         assert response.status_code == 200
-        assert response.json()['item'] == recipe.model_dump(mode='json')
+        actual = response.json()['item']
+        assert actual['created_at'] is not None and actual['updated_at'] is not None
+        assert {**actual, 'created_at': None, 'updated_at': None} == recipe.model_dump(mode='json')
     assert api.get('/api/v1/recipes?offset=100').json()['items'] == []
     assert api.get('/api/v1/recipes?q=BOEUF').json()['total'] == 1
     quick = api.get('/api/v1/recipes?quick=true').json()['items']
@@ -98,6 +100,7 @@ def test_database_changes_are_visible_and_json_files_are_not_required(postgres, 
 
 
 def test_missing_table_returns_sanitized_503_and_other_routes_work(postgres):
+    postgres.execute(text('DROP TABLE public.recipe_rating'))
     postgres.execute(text('DROP TABLE public.meal_plan_entry'))
     postgres.execute(text('DROP TABLE public.favorite'))
     postgres.execute(text('DROP TABLE public.recipe_ingredient'))

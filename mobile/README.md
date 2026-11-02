@@ -18,7 +18,7 @@ peuvent consulter Accueil, Promos, les circulaires, les recettes partagées
 et Paramètres. Les recherches, détails et recettes associées aux promotions
 restent accessibles.
 
-La connexion est proposée pour ajouter une recette, utiliser les favoris,
+La connexion est proposée pour ajouter ou noter une recette, utiliser les favoris,
 accéder au calendrier ou modifier le profil. Le calendrier est désormais
 accessible aux comptes connectés, avec des repas sauvegardés. Les paramètres visiteurs présentent un accès
 à la connexion sans appeler la route privée du profil.
@@ -42,6 +42,83 @@ Le mode visiteur et la connexion à la demande ont été confirmés par Hamza
 sur iOS le 1er novembre. Leur reproduction sur Android et les scénarios
 d’erreur détaillés restent à compléter.
 
+## Noter une recette
+
+Le détail affiche les moyennes Goût, Fiabilité et Facilité ainsi qu’une note
+globale et le nombre d’évaluations. Les pondérations restent internes au calcul. Sans vote, il affiche
+« Pas encore évaluée ». Un visiteur peut consulter les notes ; « Noter cette
+recette » propose la connexion. Le bouton n’est pas proposé pour sa propre
+recette ni pour une recette privée.
+
+Le formulaire défilant conserve son introduction, puis présente chaque critère
+et sa question directement suivis de cinq étoiles accessibles, numérotées de
+1 à 5, sans explication supplémentaire ni pondération affichée. Les trois critères sont
+obligatoires, sans présélection. En modification, les notes enregistrées sont
+préchargées. Enregistrer attend la réponse du serveur ; Annuler et le retour
+Android ferment sans écrire. Une erreur réseau conserve la saisie. Supprimer
+son évaluation demande confirmation, puis recharge le détail. Si seule la
+suppression réussit, les anciennes moyennes sont masquées et « Actualiser
+les moyennes » permet de les recharger.
+
+Le backend doit avoir la migration `0013_rating_versions` et les routes de
+notation de l’étape 5. Les migrations jusqu’à `0013` sont appliquées sur
+Supabase depuis le 2 novembre 2026.
+Les cartes affichent aussi la moyenne et l’effectif ; les tris sont décrits
+ci-dessous. Les questions, droits et
+contrats sont décrits dans [RATINGS.md](../backend/docs/RATINGS.md).
+
+Validation du 2 novembre, étape 9 : 100 tests mobiles réussis, TypeScript valide et
+bundles iOS/Android générés avec Node 22.23.3. Le lint n’est pas configuré.
+La validation finale confirme aussi les migrations et lectures sur Supabase.
+Le [bilan technique](../backend/docs/RATINGS_VALIDATION.md) distingue les contrôles automatisés et la confirmation sur téléphone.
+Hamza confirme le 2 novembre 2026 que les tests sur téléphone fonctionnent
+après les derniers ajustements ; la plateforme n’a pas été précisée.
+Les tests utilisent des composants et services natifs simulés ; les essais
+suivants constituent le protocole de référence ; la confirmation sur téléphone
+est globale, sans détail distinct par plateforme :
+
+1. En visiteur, lire les notes, demander la connexion puis l’annuler.
+2. Avec un compte, ouvrir une recette d’autrui, lire les questions et
+   vérifier qu’aucune étoile n’est présélectionnée.
+3. Choisir les trois notes, enregistrer, rouvrir et modifier son évaluation.
+4. Annuler une saisie et une suppression ; confirmer ensuite la suppression.
+5. Couper le réseau pendant une soumission : vérifier la conservation de la
+   saisie, puis réessayer après rétablissement.
+6. Retirer le public depuis un autre compte avant soumission : vérifier
+   l’affichage « Recette indisponible » sans succès annoncé.
+7. Vérifier le défilement sur petit écran, les grandes polices et la sélection
+   des étoiles avec VoiceOver/TalkBack ; quitter puis changer de compte pour
+   vérifier l’absence de saisie ou de réponse de l’ancien compte.
+8. Noter une recette d’autrui, puis modifier ses ingrédients ou étapes depuis
+   le compte auteur : vérifier que la note courante revient à zéro évaluation,
+   que l’ancien vote est identifié et que Réévaluer ouvre trois choix vides.
+9. Modifier la recette depuis le compte auteur pendant que l’autre compte
+   remplit son formulaire : vérifier le refus, l’actualisation et la relecture,
+   sans réenvoi automatique des notes. Supprimer ensuite sa contribution et
+   vérifier la confirmation mentionnant aussi les anciennes versions.
+
+Chaque vote envoie le `recipe_version` du contenu consulté. Les changements
+d’ingrédients, d’étapes, de portions ou de durées ouvrent une nouvelle version ;
+les notes précédentes ne comptent plus. Le détail affiche la dernière note
+personnelle même ancienne et propose « Réévaluer la recette », sans
+présélection. Les changements de nom, photo ou visibilité ne l’invalident pas.
+L’éditeur explique ces effets avant enregistrement. Un conflit 409 ferme le
+formulaire, abandonne les choix et demande d’actualiser puis de relire la
+recette. Supprimer sa contribution retire toutes ses versions pour la recette.
+
+Depuis Cuisiner avec les promos, les cartes affichent les notes et ouvrent
+la même fiche pour noter ; le retour recharge les résultats. Depuis le menu
+d’un repas accessible du Calendrier, « Voir la recette »
+ouvre aussi cette fiche. Cette action est absente pour les notes libres et
+recettes indisponibles ; planifier ne crée jamais de vote. La suppression du
+compte depuis Paramètres retire ses votes, y compris les anciennes versions.
+Les essais réels suivants constituent le protocole de référence ; la confirmation sur téléphone
+est globale, sans détail distinct par plateforme : noter depuis
+une carte Promos puis vérifier son actualisation au retour ; ouvrir les
+évaluations depuis Calendrier ; retirer le public depuis un autre compte puis
+vérifier l’indisponibilité de la fiche ; vérifier le retrait des contributions
+après suppression d’un compte de test.
+
 ## Sections de l’onglet Recettes
 
 L’écran propose Découvrir, Mes recettes et Favoris. Découvrir affiche les
@@ -50,14 +127,31 @@ les créations du compte, privées et publiques ; Favoris affiche les favoris
 encore accessibles. Les sections personnelles demandent une connexion. Les
 requêtes utilisent `scope=discover`, `scope=mine` ou `scope=favorites`, avec
 recherche, filtre Rapides et pagination de 20 recettes. Le backend doit être
-à la migration `0009_recipe_visibility` (appliquée sur Supabase le 1er novembre).
+à la migration `0013_rating_versions` pour cette version ; les nouvelles
+migrations `0011` à `0013` sont appliquées sur Supabase depuis le 2 novembre.
 
 Le choix de section est conservé tant que l’écran reste monté, y compris au
 retour d’un détail. Une connexion ou déconnexion réinitialise la navigation.
 Favoris est une section ; les filtres sont désormais Toutes, Rapides et Petit
 budget. Ce dernier conserve son message d’attente. Le formulaire et le détail proposent désormais le choix de publication.
 
-Les 66 tests mobiles et TypeScript passent. Le lint n’est pas configuré.
+Chaque carte affiche « ★ 4,5/5 · 28 évaluations » ou « Pas encore évaluée ».
+Découvrir et Favoris proposent Mieux notées (par défaut, `sort=top`) et Plus
+récentes (`sort=newest`). Mes recettes propose Modifiées récemment (par défaut,
+`sort=updated`) et Créées récemment (`sort=newest`). Le choix est conservé par
+section et au retour du détail. Changer de tri ramène à la première page en
+conservant recherche et filtres. Le serveur trie l’ensemble des résultats
+avant pagination ; le mobile ne retrie pas les cartes chargées.
+
+Mieux notées tient compte de l’effectif sans modifier la moyenne affichée.
+Sans vote, une recette est placée après celles évaluées. Plus récentes utilise
+la publication, ou la création en base si elle manque ; Créées récemment de
+Mes recettes utilise uniquement la création. Les dates des anciennes recettes
+peuvent être inconnues et vont à la fin. Sur téléphone, vérifier le changement
+de tri depuis une deuxième page, le retour du détail après un vote et les
+grandes polices des contrôles de tri.
+
+Les tests mobiles et TypeScript passent. Le lint n’est pas configuré.
 Essais sur téléphone à effectuer sur iOS et Android :
 
 1. Sans compte, consulter Découvrir puis annuler la connexion demandée par Mes recettes et Favoris ; Découvrir reste sélectionnée.
@@ -370,6 +464,12 @@ promotion. Le prix affiché le plus bas est retenu pour chaque ingrédient,
 sans comparaison des formats ni calcul du coût complet de la recette.
 Ce parcours fonctionne sans IA ; Petit budget reste à développer.
 
+Chaque carte affiche également la note courante et son effectif, sans changer
+le classement par ingrédients en promotion. Ouvrir la carte réutilise le
+détail Recettes et son formulaire ; revenir recharge les notes. Une recette
+supprimée ou devenue privée entre liste et détail est ignorée ; une panne
+de chargement garde son état d’erreur et le bouton Réessayer.
+
 Dans Circulaires, choisir un magasin pour lire les pages. Toucher une page
 ouvre son image ; une circulaire terminée est signalée. Les PDF doivent être
 importés côté serveur : voir le [guide backend](../backend/README.md#promos-et-circulaires-de-la-semaine).
@@ -422,9 +522,13 @@ par Hamza le 27 octobre ; son coéquipier l’a aussi vérifié sur Android.
 npm test
 ```
 
-Les 66 tests couvrent les photos, les quantités, les badges, les accès visiteurs,
+Les 100 tests couvrent les photos, les quantités, les badges, les accès visiteurs,
 les sessions, les sections et la publication des recettes, ainsi que les repas
-indisponibles et les actions du calendrier.
+indisponibles et les actions du calendrier. Ils couvrent aussi le formulaire
+de notation, ses erreurs, le blocage des autres mutations du détail, les notes
+sur les cartes, la conservation des tris par section, les anciennes notes et
+la réévaluation après conflit de version, les notes depuis Promos et l’accès
+aux évaluations depuis Calendrier.
 Les appels externes sont simulés.
 
 ## Structure et vérification

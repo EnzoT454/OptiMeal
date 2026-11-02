@@ -6,7 +6,7 @@ import { Message } from '../components/ui';
 import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
 import RecipeImage from '../components/RecipeImage';
 import { currentPrice, discount, fetchPromos, money, storeName } from '../components/promos';
-import { api } from '../services/api';
+import { api, ApiError } from '../services/api';
 import type { Detail, Offer, Page, Recipe, RecipeSummary } from '../types/api';
 import { PromoStackParams } from '../types/navigation';
 
@@ -24,7 +24,15 @@ async function fetchAllRecipes() {
     if (page.items.length === 0) break;
   }
   // La liste ne contient pas les ingrédients : on lit le détail de chaque recette.
-  return Promise.all(summaries.map(s => api<Detail<Recipe>>('/api/v1/recipes/' + s.id).then(d => d.item)));
+  const recipes = await Promise.all(summaries.map(async summary => {
+    try { return (await api<Detail<Recipe>>('/api/v1/recipes/' + summary.id)).item; }
+    catch (error) {
+      // Une recette peut avoir été supprimée ou rendue privée depuis la liste.
+      if (error instanceof ApiError && error.status === 404) return null;
+      throw error;
+    }
+  }));
+  return recipes.filter((recipe): recipe is Recipe => recipe !== null);
 }
 
 // Pour chaque ingrédient, la promo la moins chère (tous magasins confondus).
@@ -64,7 +72,7 @@ export default function CookWithPromosScreen({ navigation }: NativeStackScreenPr
     return () => { active = false; };
   }, [retry]));
 
-  // Ouvre la recette dans l'onglet Recettes (écran de ton collègue, sans le modifier).
+  // Réutiliser le détail et son formulaire de notation, avec les droits courants.
   const openRecipe = (id: string) =>
     navigation.getParent()?.navigate('Recettes', { screen: 'Detail', params: { id }, initial: false });
 
@@ -98,6 +106,8 @@ function RecipeCard({ match, onPress }: { match: Match; onPress: () => void }) {
     <Text style={recipeStyles.body}>
       {recipe.total_time_minutes} min · {recipe.servings} portions · {offers.length} ingrédient{offers.length > 1 ? 's' : ''} en promo sur {count}
     </Text>
+    <Text style={recipeStyles.body}>{recipe.rating.count === 0 ? 'Pas encore évaluée' :
+      `★ ${Number(recipe.rating.average).toLocaleString('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}/5 · ${recipe.rating.count} évaluation${recipe.rating.count > 1 ? 's' : ''}`}</Text>
     {offers.map(o => {
       const percent = discount(o);
       return <View key={o.id} style={styles.offerRow}>

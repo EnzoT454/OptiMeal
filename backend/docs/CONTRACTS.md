@@ -155,6 +155,132 @@ déjà connue reste accessible même après retrait de la publication. Le change
 de visibilité conserve le fichier et son URL. La séparation privé/public du
 stockage est reportée après le prototype ; voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
 
+## Notation des recettes
+
+Appliquer `0013_rating_versions` et ses migrations précédentes avant de
+démarrer cette version. Les listes et
+les détails de recettes incluent `rating`, sans appel supplémentaire du mobile :
+
+```json
+{
+  "average": "4.20",
+  "count": 1,
+  "criteria": {"taste": "5", "reliability": "4", "ease": "3"}
+}
+```
+
+Les moyennes sont des chaînes décimales non arrondies à l’affichage. La note
+globale pondère Goût à 40 %, Fiabilité à 40 % et Facilité à 20 %. Sans vote,
+`count` vaut 0 et les quatre moyennes valent `null`. Le score ajusté de
+classement n’est pas exposé. Les tris disponibles sont décrits ci-dessous.
+
+Le détail ajoute `my_rating` : `null` sans vote personnel ou sans connexion,
+sinon la dernière évaluation de ce compte, avec ses trois notes entières,
+`recipe_version`, `created_at` et `updated_at`. La recette expose sa
+`content_version`. Si les versions diffèrent, la note personnelle est ancienne
+et exclue des agrégats. Aucune identité ni note individuelle d’un autre compte n’est
+exposée. Le propriétaire peut consulter les agrégats de sa recette privée ;
+les autres comptes ne peuvent pas consulter cette recette ni ses notes.
+
+```http
+PUT /api/v1/recipes/recipe_identifiant/rating
+Authorization: Bearer <jeton>
+Content-Type: application/json
+
+{"recipe_version": 1, "taste_score": 5, "reliability_score": 4, "ease_score": 3}
+```
+
+Les trois notes sont obligatoires et strictement entières entre 1 et 5 ;
+`recipe_version` est un entier strictement positif obligatoire, égal à la
+`content_version` lue dans le détail. Chaînes,
+booléens, décimaux, champs inconnus et métadonnées choisies par le client sont
+refusés. La réponse 200 contient le détail actualisé sous `item`, y compris
+`rating` et `my_rating`. Le propriétaire du vote vient uniquement du jeton.
+Une nouvelle soumission remplace les trois notes du compte pour la même version
+sans augmenter l’effectif. `created_at` est conservé, `updated_at` est actualisé
+par l’upsert. Pour une nouvelle version, une nouvelle ligne est créée et les
+anciennes évaluations sont conservées. Seule la version courante compte.
+
+401 sans session valide ; 403 `SELF_RATING_FORBIDDEN` pour sa propre recette ;
+404 `RECIPE_NOT_FOUND` pour une recette absente ou privée d’autrui ; 422
+`VALIDATION_ERROR` pour un corps invalide ; 503 si un service requis est
+indisponible. 409 `RECIPE_VERSION_CONFLICT` si la version a changé : aucune note
+n’est enregistrée ; recharger puis relire la recette avant une nouvelle
+évaluation explicite. L’échec n’enregistre aucune partie du vote. L’authentification
+et les données utilisent les conventions d’erreur existantes.
+
+`DELETE /api/v1/recipes/{id}/rating` retire toutes les notes du compte
+authentifié pour cette recette, y compris les versions anciennes. Réponse 204
+sans corps, même si le vote manque ou si la recette
+est devenue privée ou a été supprimée ; 401 sans connexion. Cette réponse
+ne révèle pas l’existence de la recette. La suppression du compte et celle
+de la recette retirent les évaluations concernées par cascade.
+
+Votes, retrait de vote, publication et suppression utilisent le verrou de la
+recette pour sérialiser leurs mutations. Les agrégats SQL sont recalculés à
+la lecture, par groupe pour une page ; aucun vote brut n’est chargé par carte.
+Les notes d’une recette retirée du public sont conservées et redeviennent
+accessibles à sa republication ; seules celles du contenu courant comptent.
+Le filtrage par version s’applique aux moyennes, effectifs et au classement.
+Voir [RATINGS.md](RATINGS.md).
+
+Le détail mobile intègre le formulaire de notation depuis l’étape 6 : trois
+critères suivis de leur question et des étoiles, correction et suppression
+confirmée. L’introduction reste visible, sans afficher les pondérations.
+Il affiche les résultats après confirmation serveur et conserve la saisie en
+cas d’échec. Hamza confirme globalement les tests sur téléphone le 2 novembre
+2026, sans préciser la plateforme ; voir le
+[guide mobile](../../mobile/README.md#noter-une-recette).
+
+### Versions évaluées
+
+`content_version` commence à 1. Une modification des ingrédients (identité,
+quantité, unité ou précision), des étapes (texte ou ordre), des portions ou
+des durées l’incrémente dans la même transaction que la recette. Des quantités
+numériquement égales ou un simple réordonnancement des ingrédients ne créent
+pas de version. Nom, photo, description, difficulté, étiquettes et visibilité
+ne changent pas ce compteur. Un enregistrement identique ne l’incrémente pas.
+Les clients ne peuvent pas définir `content_version` dans un POST ou PUT de
+recette. Le vote vérifie la version sous le verrou utilisé par l’édition.
+
+Le mobile identifie une ancienne évaluation, affiche ses notes personnelles et
+propose « Réévaluer la recette » avec une saisie vide. Après un conflit 409,
+il ferme le formulaire et propose d’actualiser la recette, sans réenvoyer les
+anciennes notes. Ce compteur et l’archive des votes ne constituent pas des
+instantanés historiques du contenu des recettes ou du calendrier.
+
+### Tri et dates des recettes
+
+`GET /api/v1/recipes` accepte `sort=top`, `newest` ou `updated` (422 pour une
+autre valeur). Recherche, filtre Rapides, sections, favoris et droits restent
+appliqués ; le tri SQL porte sur l’ensemble des résultats avant `limit/offset`.
+Changer les données entre deux requêtes peut déplacer une recette d’une page
+à une autre ; cette pagination n’est pas un instantané du classement.
+
+| Tri | Règle |
+| --- | --- |
+| `top` | Score `(somme pondérée des notes + 20 × 4,0) / (effectif + 20)`, décroissant ; sans vote à la fin ; identifiant croissant pour départager |
+| `newest` | Publication, ou création en base si absente ; dans `scope=mine`, création uniquement ; dates décroissantes, inconnues à la fin, puis identifiant |
+| `updated` | Modification décroissante, inconnue à la fin, puis identifiant |
+
+Sans `sort`, Découvrir et Favoris choisissent `top`, Mes recettes choisit
+`updated`. `scope=accessible` (y compris sans section) conserve l’ordre
+historique par identifiant pour ses consommateurs existants. Ces règles ne
+changent pas le rapprochement « Cuisiner avec les promos ».
+
+La note affichée reste la moyenne pondérée réelle, distincte du score ajusté
+de tri. Aucune donnée manquante n’est traitée comme une note zéro. Les listes
+et détails exposent aussi `created_at` et `updated_at`, horodatages avec fuseau
+ou null pour les anciennes dates inconnues. Les dates sont gérées par le
+serveur ; les clients ne peuvent pas les choisir dans un POST ou PUT.
+Voir [MIGRATIONS.md](MIGRATIONS.md#dates-et-tris-des-recettes).
+
+Le mobile affiche les moyennes et effectifs sur les cartes de ses trois
+sections. Découvrir et Favoris proposent « Mieux notées » et « Plus récentes » ;
+Mes recettes propose « Modifiées récemment » et « Créées récemment ». Le choix
+est conservé par section et au retour du détail ; le changement de tri ramène
+à la première page, sans effacer la recherche ni le filtre.
+
 ## Calendrier
 
 Les routes `/api/v1/plans`, `/api/v1/plans/entries` et

@@ -119,9 +119,18 @@ Le traitement liste les fichiers du dossier `users/<id>/` dans le bucket
 puis les supprime par lots. Il demande ensuite la suppression définitive du
 compte par l’API administrative Auth. Les clés étrangères existantes de la
 migration `0003_accounts` suppriment le profil, les recettes personnelles,
-leurs ingrédients, les favoris et les repas planifiés par cascade. Les recettes initiales, les
-données des autres comptes et les circulaires restent intactes. Aucune
+leurs ingrédients, les favoris et les repas planifiés par cascade. Les recettes initiales,
+les recettes des autres comptes et les circulaires sont conservées. Aucune
 migration supplémentaire n’est nécessaire.
+
+Les clés étrangères de `recipe_rating` retirent aussi toutes les évaluations
+du compte supprimé, courantes et historiques, ainsi que les votes d’autres
+comptes liés à ses recettes supprimées. Les votes des autres comptes sur les
+recettes conservées restent présents. Les moyennes et le classement sont
+recalculés à la lecture suivante. Le test d’intégration de notation passe par
+DELETE /me avec Auth simulé et PostgreSQL local ; il vérifie aussi que le repas
+d’un autre compte lié à une recette supprimée reste indisponible dans son
+calendrier. Aucun nettoyage supplémentaire n’est nécessaire dans le service.
 
 Une réussite renvoie **204 sans corps**. Le mobile retire la session locale,
 y compris si la déconnexion distante échoue, et revient à l’accueil visiteur.

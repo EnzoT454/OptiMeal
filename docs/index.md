@@ -37,14 +37,14 @@ Nous proposons **OptiMeal**, une application sur iOS et Android qui réunira rec
 
 Les principaux objectifs sont les suivants :
 
-- **Gérer et découvrir des recettes** : créer ses recettes, les rechercher et les ajouter aux favoris. Trois modes d’ajout sont prévus : manuel, selon une envie et à partir des ingrédients disponibles. Le mode manuel proposera un formulaire ou un texte à structurer par l’IA, avec vérification avant sauvegarde.
+- **Gérer et découvrir des recettes** : créer ses recettes, les rechercher, les ajouter aux favoris et évaluer les recettes publiques d’autres utilisateurs. Trois modes d’ajout sont prévus : manuel, selon une envie et à partir des ingrédients disponibles. Le mode manuel proposera un formulaire ou un texte à structurer par l’IA, avec vérification avant sauvegarde.
 - **Planifier les repas** : organiser une semaine, ajuster les portions et retrouver ses anciennes semaines dans son compte.
 - **Préparer les achats** : regrouper les ingrédients nécessaires dans une liste par magasin, en tenant compte des prix et des contraintes choisies, puis permettre de cocher, supprimer ou remplacer les articles.
 - **Aider aux choix économiques** : proposer des recettes selon les promotions, signaler les prix incertains et permettre de contribuer aux données de prix par un reçu vérifié, de façon facultative.
 
 Lorsque les prix précis manquent, l’application affichera une fourchette estimée et signalera les articles dont le coût ne peut pas être estimé.
 
-La consultation est accessible sans compte ; les fonctions personnelles demandent une connexion. Les comptes, les recettes manuelles et la consultation des promotions et circulaires sont déjà intégrés. Le calendrier des repas est désormais intégré ; son historique stable, les listes d’épicerie, les modes IA et les estimations restent à développer. L’avancement est détaillé dans le [suivi de projet](suivi.md).
+La consultation est accessible sans compte ; les fonctions personnelles demandent une connexion. Les comptes, les recettes manuelles et la consultation des promotions et circulaires sont déjà intégrés. Le calendrier des repas et la notation des recettes sont intégrés. La notation porte sur le goût, la fiabilité et la facilité ; le classement tient compte de la moyenne et du nombre d’évaluations. Les tests sur téléphone sont confirmés réussis le 2 novembre. L’historique stable des plans, les listes d’épicerie, les modes IA et les estimations restent à développer. L’avancement est détaillé dans le [suivi de projet](suivi.md).
 
 ## Méthodologie
 
@@ -76,7 +76,7 @@ Les résultats, les limites observées et les fonctionnalités effectivement ré
 
 ## Échéancier
 
-Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md). Les statuts correspondent à l’état au 1er novembre. Les prochaines priorités sont l’historique stable des plans, les listes d’épicerie et l’onglet Accueil ; leurs dates restent à planifier.
+Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md). Les statuts correspondent à l’état au 2 novembre 2026. Les prochaines priorités sont l’historique stable des plans, les listes d’épicerie et l’onglet Accueil ; leurs dates restent à planifier.
 
 | Activités | Début | Fin | Livrable | Statut |
 | --- | --- | --- | --- | --- |
@@ -92,8 +92,9 @@ Les périodes ci-dessous reprennent le travail présenté dans le [suivi de proj
 | Promotions et circulaires | 26 oct. | 1 nov. | Photos des produits, promotions actualisées et consultation des circulaires | ✅ Terminé |
 | Calendrier des repas | 26 oct. | 1 nov. | Calendrier hebdomadaire avec portions et actions sur les repas ; conservation des repas dont la recette devient indisponible | ✅ Terminé |
 | Essais sur iOS et scénarios de partage | 26 oct. | 1 nov. | Essais réalisés sur les nouveaux parcours ; validation complète sur iOS et Android à poursuivre | ✅ Terminé |
+| Notation des recettes | 2 nov. | 9 nov. | Trois critères, classement ajusté, réévaluation après changement de contenu et validation sur téléphone | ✅ Terminé |
 | Historique stable des plans et listes d’épicerie | À planifier | À planifier | Anciennes semaines conservées et listes d’achats par magasin | ⏳ À développer |
 | Onglet Accueil | À planifier | À planifier | Écran d’accueil de l’application | ⏳ À développer |
 | Modes IA, estimations et contributions | À planifier | À planifier | Aide aux recettes, estimations de prix et contribution par reçu, puis évaluation et synthèse | ⏳ À développer |
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 2 novembre 2026*

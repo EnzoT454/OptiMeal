@@ -202,6 +202,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
             <Text style={recipeStyles.body}>{visibility === 'public' ? 'Publique — consultable par tous dans Découvrir.' : 'Privée — la recette est accessible uniquement dans ton compte.'}</Text>
             <Text style={recipeStyles.note}>Ce choix sera appliqué à l’enregistrement. La photo reste accessible par son lien, même pour une recette privée.</Text>
           </View>
+          {id && <Text style={recipeStyles.note}>Changer les ingrédients, les étapes, les portions ou les durées ouvre une nouvelle version : les anciennes évaluations seront conservées, mais ne compteront plus dans la note actuelle.</Text>}
           {!name.trim() && <Text style={recipeStyles.note}>Ajoute un nom pour pouvoir enregistrer la recette.</Text>}
           {!id && !(localImage?.trim() || image?.trim()) && <Text style={recipeStyles.note}>Ajoute une photo pour pouvoir enregistrer la recette.</Text>}
           <RecipeButton title={busy ? 'Enregistrement…' : 'Enregistrer la recette'} disabled={busy || picking || !name.trim() || (!id && !(localImage?.trim() || image?.trim()))} onPress={() => void save()} />

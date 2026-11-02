@@ -10,7 +10,7 @@ from backend.app.common.contracts import Detail, ErrorResponse, Page
 from backend.app.common.public_data import DEFAULT_CATALOG, DEFAULT_RECIPES, ROOT, load_catalog, load_recipes
 from backend.app.common.public_router import meta, page
 from backend.app.main import create_app
-from backend.app.recipes.schemas import RecipeRead, RecipeSeedDocument, RecipeSummary
+from backend.app.recipes.schemas import RecipeRead, RecipeSeedDocument, RecipeSummary, RecipeRatingWrite
 from backend.app.recipes.router import recipe_meta
 
 OUTPUT = ROOT / 'backend/contracts/v1'
@@ -24,6 +24,7 @@ def artifacts() -> dict:
         'recipe-detail': Detail[RecipeRead], 'offers-page': Page[OfferRead],
         'offer-detail': Detail[OfferRead], 'error': ErrorResponse,
         'common-catalog': CommonCatalog, 'recipe-seed': RecipeSeedDocument,
+        'recipe-rating-write': RecipeRatingWrite,
     }
     files = {name + '.schema.json': model.model_json_schema(mode='serialization')
              for name, model in models.items()}
@@ -34,6 +35,7 @@ def artifacts() -> dict:
         'ingredients-page': page(catalog.ingredients, 2, 0),
         'recipes-page': {**page(sorted(recipes.summaries(), key=lambda r: r.id), 2, 0, 'demo'), 'meta': recipe_meta()},
         'recipe-detail': {'item': recipes.recipes[0], 'meta': recipe_meta()},
+        'recipe-rating-write': {'recipe_version': 1, 'taste_score': 5, 'reliability_score': 4, 'ease_score': 3},
         'offers-page': page(offers, 2, 0),
         'offer-detail': {'item': offers[0], 'meta': meta()},
         'error': {'error': {'code': 'RECIPE_NOT_FOUND', 'message': 'Recette introuvable.', 'details': []}},
