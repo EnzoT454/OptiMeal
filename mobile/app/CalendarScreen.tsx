@@ -1,64 +1,118 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import type { MealPlanEntry, MealType, RecipeSummary } from "../types/api";
 import AddMealSheet from "../components/AddMealSheet";
 import MealActionsSheet, { type Placement } from "../components/MealActionsSheet";
+import MonthGrid, { semainesDuMois } from "../components/MonthGrid";
+import { RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from "../components/recipes";
+
+// Le texte du calendrier grandit au maximum de 20 % avec la taille de police du téléphone,
+// sinon les lignes deviennent énormes (on garde quand même un peu d'accessibilité).
+const MAX = 1.2;
 import {
   MEALS, MEAL_COLORS, MEAL_LABELS,
-  addDays, addEntry, dayName, getPlan, mondayOf, removeEntry, toISODate, updateEntry, weekLabel,
+  addDays, addEntry, dayName, getPlan, mondayOf, removeEntry, toISODate, updateEntry,
 } from "../components/planning";
 
-const VERT = "#25603c";
+// Le jeudi décide à quel mois appartient une semaine (ex. 28 oct. → 3 nov. = novembre)
+const jeudiDe = (lundi: Date) => addDays(lundi, 3);
+
+// La semaine à afficher quand on arrive sur un mois : celle d'aujourd'hui si c'est ce mois-ci,
+// sinon la première semaine du mois
+function premiereSemaine(mois: Date): Date {
+  const auj = new Date();
+  if (auj.getFullYear() === mois.getFullYear() && auj.getMonth() === mois.getMonth()) return mondayOf(auj);
+  const lundi = mondayOf(new Date(mois.getFullYear(), mois.getMonth(), 1));
+  return jeudiDe(lundi).getMonth() === mois.getMonth() ? lundi : addDays(lundi, 7);
+}
+
+const MOIS_COURTS = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+// « 2 – 8 nov. » ou « 26 oct. – 1 nov. » (court, pour tenir sur une ligne)
+function titreSemaine(lundi: Date): string {
+  const dim = addDays(lundi, 6);
+  return lundi.getMonth() === dim.getMonth()
+    ? `${lundi.getDate()} – ${dim.getDate()} ${MOIS_COURTS[dim.getMonth()]}`
+    : `${lundi.getDate()} ${MOIS_COURTS[lundi.getMonth()]} – ${dim.getDate()} ${MOIS_COURTS[dim.getMonth()]}`;
+}
+
+// « Cette semaine », « Semaine prochaine », « Dans 3 semaines », « Il y a 2 semaines »…
+function semaineRelative(lundi: Date): string {
+  const ecart = Math.round((lundi.getTime() - mondayOf(new Date()).getTime()) / (7 * 24 * 3600 * 1000));
+  if (ecart === 0) return "Cette semaine";
+  if (ecart === 1) return "Semaine prochaine";
+  if (ecart === -1) return "Semaine dernière";
+  return ecart > 0 ? `Dans ${ecart} semaines` : `Il y a ${-ecart} semaines`;
+}
 
 export default function CalendarScreen() {
   const navigation = useNavigation<any>();
 
   // ---- L'état de l'écran ----
-  const [lundi, setLundi] = useState(() => mondayOf(new Date()));
-  const [entries, setEntries] = useState<MealPlanEntry[]>([]);
+  const [lundi, setLundi] = useState(() => mondayOf(new Date()));    // la semaine affichée
+  const [mois, setMois] = useState(() => new Date());                // le mois de la grille
+  const [moisOuvert, setMoisOuvert] = useState(true);                 // grille ouverte au départ
+  const [entries, setEntries] = useState<MealPlanEntry[]>([]);        // tous les repas du mois
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState<string | null>(null);
   const [jourAjout, setJourAjout] = useState<Date | null>(null);        // panneau « ajouter » (null = fermé)
   const [repasOuvert, setRepasOuvert] = useState<MealPlanEntry | null>(null); // menu du repas (null = fermé)
 
-  // ---- Charger le plan chaque fois que la semaine change ----
+  // ---- Charger les repas du mois : une requête par semaine de la grille (4 à 6), en même temps ----
+  // (la semaine affichée est toujours dans la grille, donc une seule source pour les points ET la liste)
   useEffect(() => {
     let annule = false;
     setChargement(true);
     setErreur(null);
-    getPlan(toISODate(lundi))
-      .then((plan) => { if (!annule) setEntries(plan.entries); })
+    Promise.all(semainesDuMois(mois).map((s) => getPlan(toISODate(s[0]))))
+      .then((plans) => { if (!annule) setEntries(plans.flatMap((p) => p.entries)); })
       .catch(() => { if (!annule) setErreur("Impossible de charger le calendrier."); })
       .finally(() => { if (!annule) setChargement(false); });
     return () => { annule = true; };
-  }, [lundi]);
+  }, [mois.getFullYear(), mois.getMonth()]);
 
-  // Un repas est-il dans la semaine affichée ? (sinon on ne l'affiche pas)
-  const debut = toISODate(lundi);
-  const fin = toISODate(addDays(lundi, 6));
-  const dansLaSemaine = (e: MealPlanEntry) => e.date >= debut && e.date <= fin;
-
-  // Remplacer un repas modifié dans la liste
-  function remplacer(nouveau: MealPlanEntry) {
-    setEntries((avant) => avant.map((e) => (e.id === nouveau.id ? nouveau : e)).filter(dansLaSemaine));
+  // ---- Naviguer ----
+  function allerSemaine(nouveauLundi: Date) {   // flèches de la semaine
+    setLundi(nouveauLundi);
+    // La grille ne change de mois que si la nouvelle semaine n'y est plus
+    const visible = semainesDuMois(mois).some((s) => toISODate(s[0]) === toISODate(nouveauLundi));
+    if (!visible) setMois(jeudiDe(nouveauLundi));
   }
+
+  function changerMois(decalage: number) {      // flèches du mois
+    const nouveau = new Date(mois.getFullYear(), mois.getMonth() + decalage, 1);
+    setMois(nouveau);
+    setLundi(premiereSemaine(nouveau));
+  }
+
+  function allerAuJour(jour: Date) {            // toucher un jour dans la grille
+    setLundi(mondayOf(jour));
+    if (jour.getMonth() !== mois.getMonth()) setMois(jour); // jour gris d'un autre mois
+  }
+
+  function allerAujourdhui() {
+    setLundi(mondayOf(new Date()));
+    setMois(new Date());                         // le vrai mois d'aujourd'hui
+  }
+
+  // ---- Modifier la liste locale (sans tout recharger) ----
+  const remplacer = (nouveau: MealPlanEntry) =>
+    setEntries((avant) => avant.map((e) => (e.id === nouveau.id ? nouveau : e)));
+  const ajouterLocal = (nouveau: MealPlanEntry) => setEntries((avant) => [...avant, nouveau]);
 
   // ---- Ajouter un repas (appelé par le panneau +) ----
   async function ajouter(meal: MealType, recette: RecipeSummary | null, texte: string, portions: number) {
     if (jourAjout === null) return;
     try {
-      const nouveau = await addEntry({
+      ajouterLocal(await addEntry({
         date: toISODate(jourAjout),
         meal,
         recipe_id: recette ? recette.id : null,
         recipe_name: recette ? recette.name : null,
         free_text: recette ? null : texte,
         servings: portions,
-      });
-      setEntries((avant) => [...avant, nouveau]);
+      }));
       setJourAjout(null);
     } catch {
       setErreur("Impossible d'ajouter ce repas.");
@@ -85,15 +139,14 @@ export default function CalendarScreen() {
         remplacer(await updateEntry(r.id, { date, meal }));
       } else {
         // « restes » et « dupliquer » créent un nouveau repas avec la même recette
-        const nouveau = await addEntry({
+        ajouterLocal(await addEntry({
           date, meal,
           recipe_id: r.recipe_id,
           recipe_name: r.recipe_name,
           free_text: r.free_text,
           servings: r.servings,
           is_leftover: action === "restes" ? true : r.is_leftover,
-        });
-        if (dansLaSemaine(nouveau)) setEntries((avant) => [...avant, nouveau]);
+        }));
       }
       setRepasOuvert(null);
     } catch {
@@ -118,81 +171,96 @@ export default function CalendarScreen() {
     navigation.navigate("Recettes", { screen: "Detail", params: { id: recipeId }, initial: false });
   }
 
-  const jours = Array.from({ length: 7 }, (_, i) => addDays(lundi, i));
+  // ---- Ce qu'on affiche ----
   const aujourdhui = toISODate(new Date());
+  const jours = Array.from({ length: 7 }, (_, i) => addDays(lundi, i));
+  const debut = toISODate(lundi);
+  const fin = toISODate(addDays(lundi, 6));
+  const nbRepas = entries.filter((e) => e.date >= debut && e.date <= fin).length;
   const cetteSemaine = toISODate(mondayOf(new Date())) === debut;
 
+  // Les points de la grille : "2026-11-03" → ["dejeuner", "souper"]
+  const points: Record<string, MealType[]> = {};
+  for (const e of entries) points[e.date] = [...(points[e.date] ?? []), e.meal];
+
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
-      <ScrollView contentContainerStyle={styles.contenu}>
-        {/* ---- En-tête ---- */}
-        <View style={styles.entete}>
-          <Text style={styles.title}>Calendrier</Text>
-          {!cetteSemaine && (
-            <Pressable style={styles.aujourdhui} onPress={() => setLundi(mondayOf(new Date()))}>
-              <Ionicons name="today-outline" size={16} color={VERT} />
-              <Text style={styles.aujourdhuiTexte}>Aujourd'hui</Text>
-            </Pressable>
-          )}
+    <RecipeScreen compact>
+      <RecipeTitle>Calendrier</RecipeTitle>
+
+      {/* ---- ‹ Novembre ⌄ › (+ la grille quand elle est ouverte) ---- */}
+      <MonthGrid
+        mois={mois}
+        choisi={debut}
+        points={points}
+        ouvert={moisOuvert}
+        onBasculer={() => setMoisOuvert(!moisOuvert)}
+        onMois={changerMois}
+        onJour={allerAuJour}
+        estAujourdhui={cetteSemaine}
+        onAujourdhui={allerAujourdhui}
+      />
+
+      {/* ---- ‹ Semaine du 2 au 8 nov. › ---- */}
+      <View style={styles.semaine}>
+        <Pressable onPress={() => allerSemaine(addDays(lundi, -7))} hitSlop={12} style={styles.fleche} accessibilityLabel="Semaine précédente">
+          <Ionicons name="chevron-back" size={18} color={recipeColors.green} />
+        </Pressable>
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <Text style={styles.semaineTitre} numberOfLines={1} maxFontSizeMultiplier={MAX}>{titreSemaine(lundi)}</Text>
+          <Text style={recipeStyles.note} maxFontSizeMultiplier={MAX}>
+            {semaineRelative(lundi)} · {nbRepas === 0 ? "aucun repas" : `${nbRepas} repas`}
+          </Text>
         </View>
+        <Pressable onPress={() => allerSemaine(addDays(lundi, 7))} hitSlop={12} style={styles.fleche} accessibilityLabel="Semaine suivante">
+          <Ionicons name="chevron-forward" size={18} color={recipeColors.green} />
+        </Pressable>
+      </View>
 
-        <View style={styles.semaineLigne}>
-          <Pressable onPress={() => setLundi(addDays(lundi, -7))} hitSlop={12} accessibilityLabel="Semaine précédente">
-            <Ionicons name="chevron-back" size={22} color={VERT} />
-          </Pressable>
-          <Text style={styles.week}>{weekLabel(lundi)}</Text>
-          <Pressable onPress={() => setLundi(addDays(lundi, 7))} hitSlop={12} accessibilityLabel="Semaine suivante">
-            <Ionicons name="chevron-forward" size={22} color={VERT} />
-          </Pressable>
+      {chargement && <ActivityIndicator color={recipeColors.green} style={{ marginTop: 12 }} />}
+      {erreur !== null && (
+        <View style={recipeStyles.notice}>
+          <Text style={styles.erreur} maxFontSizeMultiplier={MAX}>{erreur}</Text>
         </View>
-        <Text style={styles.resume}>{entries.length} repas planifiés</Text>
+      )}
 
-        {/* ---- Légende des couleurs ---- */}
-        <View style={styles.legende}>
-          {MEALS.map((m) => (
-            <View key={m} style={styles.legendeItem}>
-              <View style={[styles.point, { backgroundColor: MEAL_COLORS[m].text }]} />
-              <Text style={[styles.legendeTexte, { color: MEAL_COLORS[m].text }]}>{MEAL_LABELS[m]}</Text>
-            </View>
-          ))}
-        </View>
+      {/* ---- Les 7 jours de la semaine, d'un bord à l'autre ---- */}
+      {!chargement && (
+        <View style={styles.liste}>
+          {jours.map((jour, i) => {
+            const iso = toISODate(jour);
+            const estAujourdhui = iso === aujourdhui;
+            const repasDuJour = entries
+              .filter((e) => e.date === iso)
+              .sort((a, b) => MEALS.indexOf(a.meal) - MEALS.indexOf(b.meal));
 
-        {chargement && <ActivityIndicator color={VERT} style={{ marginTop: 24 }} />}
-        {erreur !== null && <Text style={styles.erreur}>{erreur}</Text>}
+            return (
+              <View key={iso} style={[styles.jour, i > 0 && styles.separateur]}>
+                {/* Gros chiffre + jour de la semaine */}
+                <View style={styles.date}>
+                  <View style={[styles.rond, estAujourdhui && styles.rondAujourdhui]}>
+                    <Text style={[styles.chiffre, estAujourdhui && { color: "white" }]} maxFontSizeMultiplier={MAX}>{jour.getDate()}</Text>
+                  </View>
+                  <Text style={[styles.jourNom, estAujourdhui && { color: recipeColors.green }]} maxFontSizeMultiplier={MAX}>
+                    {dayName(jour).toLowerCase()}
+                  </Text>
+                </View>
 
-        {/* ---- Les 7 jours ---- */}
-        {!chargement && jours.map((jour) => {
-          const iso = toISODate(jour);
-          const estAujourdhui = iso === aujourdhui;
-          const repasDuJour = entries
-            .filter((e) => e.date === iso)
-            .sort((a, b) => MEALS.indexOf(a.meal) - MEALS.indexOf(b.meal));
+                {/* Les repas (rien si le jour est vide : la ligne reste fine) */}
+                <View style={styles.repas}>
+                  {repasDuJour.map((e) => (
+                    <CarteRepas key={e.id} repas={e} onPress={() => setRepasOuvert(e)} />
+                  ))}
+                </View>
 
-          return (
-            <View key={iso} style={styles.jour}>
-              <View style={[styles.jourEntete, estAujourdhui && styles.jourAujourdhui]}>
-                <Text style={[styles.jourNom, estAujourdhui && { color: "#fff" }]}>{dayName(jour)}</Text>
-                <Text style={[styles.jourDate, estAujourdhui && { color: "#fff" }]}>{jour.getDate()}</Text>
+                <Pressable onPress={() => setJourAjout(jour)} hitSlop={10} style={styles.plus} accessibilityLabel={`Ajouter un repas le ${jour.getDate()}`}>
+                  <Ionicons name="add" size={18} color={recipeColors.green} />
+                </Pressable>
               </View>
+            );
+          })}
 
-              <View style={{ flex: 1 }}>
-                {repasDuJour.map((e) => (
-                  <CarteRepas key={e.id} repas={e} onPress={() => setRepasOuvert(e)} />
-                ))}
-                {repasDuJour.length === 0 && (
-                  <Pressable onPress={() => setJourAjout(jour)}>
-                    <Text style={styles.ajouter}>Ajouter un repas</Text>
-                  </Pressable>
-                )}
-              </View>
-
-              <Pressable onPress={() => setJourAjout(jour)} hitSlop={10} style={styles.plus} accessibilityLabel="Ajouter un repas">
-                <Ionicons name="add" size={24} color={VERT} />
-              </Pressable>
-            </View>
-          );
-        })}
-      </ScrollView>
+        </View>
+      )}
 
       <AddMealSheet jour={jourAjout} onClose={() => setJourAjout(null)} onAdd={ajouter} />
       <MealActionsSheet
@@ -203,33 +271,29 @@ export default function CalendarScreen() {
         onPlacer={placer}
         onRetirer={retirer}
       />
-    </SafeAreaView>
+    </RecipeScreen>
   );
 }
 
-// ---- Une carte de repas : photo (ou icône) + nom + « 2 p. · Souper » ----
+// ---- Une carte de repas : barre de couleur + photo (ou icône) + nom + « Souper · 2 p. » ----
 function CarteRepas({ repas, onPress }: { repas: MealPlanEntry; onPress: () => void }) {
   const couleur = MEAL_COLORS[repas.meal];
   const icone = repas.is_leftover ? "refresh-outline" : repas.recipe_id ? "restaurant-outline" : "create-outline";
 
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [styles.carte, { backgroundColor: couleur.bg }, pressed && { opacity: 0.7 }]}
-    >
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.carte, pressed && { opacity: 0.7 }]}>
+      <View style={[styles.barre, { backgroundColor: couleur.dot }]} />
       {repas.recipe_image_url ? (
         <Image source={{ uri: repas.recipe_image_url }} style={styles.photo} />
       ) : (
         <View style={[styles.photo, styles.photoVide]}>
-          <Ionicons name={icone} size={20} color={couleur.text} />
+          <Ionicons name={icone} size={16} color={recipeColors.green} />
         </View>
       )}
-      <View style={{ flex: 1 }}>
-        <Text style={[styles.carteNom, { color: couleur.text }]} numberOfLines={1}>
-          {repas.recipe_name ?? repas.free_text}
-        </Text>
-        <Text style={[styles.carteMoment, { color: couleur.text }]}>
-          {repas.is_leftover ? "♻ Restes · " : ""}{repas.servings} p. · {MEAL_LABELS[repas.meal]}
+      <View style={{ flex: 1, gap: 1 }}>
+        <Text style={styles.carteNom} numberOfLines={1} maxFontSizeMultiplier={MAX}>{repas.recipe_name ?? repas.free_text}</Text>
+        <Text style={[styles.carteMoment, { color: couleur.text }]} numberOfLines={1} maxFontSizeMultiplier={MAX}>
+          {repas.is_leftover ? "♻ Restes · " : ""}{MEAL_LABELS[repas.meal]} · {repas.servings} p.
         </Text>
       </View>
     </Pressable>
@@ -237,30 +301,25 @@ function CarteRepas({ repas, onPress }: { repas: MealPlanEntry; onPress: () => v
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  contenu: { padding: 20, paddingBottom: 40 },
-  entete: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  title: { fontSize: 28, fontWeight: "700", color: "#1d2b22" },
-  aujourdhui: { flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1, borderColor: VERT },
-  aujourdhuiTexte: { color: VERT, fontWeight: "600" },
-  semaineLigne: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 12 },
-  week: { fontSize: 18, fontWeight: "600" },
-  resume: { color: "#65746a", marginTop: 4 },
-  legende: { flexDirection: "row", flexWrap: "wrap", gap: 12, marginTop: 10, marginBottom: 8 },
-  legendeItem: { flexDirection: "row", alignItems: "center", gap: 4 },
-  point: { width: 8, height: 8, borderRadius: 4 },
-  legendeTexte: { fontSize: 12 },
-  jour: { flexDirection: "row", gap: 12, paddingVertical: 10, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: "#d9e0db" },
-  jourEntete: { width: 44, alignItems: "center", paddingVertical: 4, borderRadius: 10, alignSelf: "flex-start" },
-  jourAujourdhui: { backgroundColor: VERT },
-  jourNom: { fontSize: 11, color: "#65746a" },
-  jourDate: { fontSize: 18, fontWeight: "600" },
-  carte: { flexDirection: "row", alignItems: "center", gap: 10, padding: 6, borderRadius: 10, marginBottom: 6 },
-  photo: { width: 44, height: 44, borderRadius: 8 },
-  photoVide: { alignItems: "center", justifyContent: "center", backgroundColor: "rgba(255,255,255,0.6)" },
-  carteNom: { fontSize: 15, fontWeight: "600" },
-  carteMoment: { fontSize: 12, marginTop: 2 },
-  ajouter: { color: VERT, paddingVertical: 10 },
-  plus: { paddingTop: 8 },
-  erreur: { color: "#b3261e", marginTop: 16 },
+  erreur: { fontFamily: "DMSans_500Medium", fontSize: 14, lineHeight: 19, color: "#b3261e" },
+  // marginHorizontal: -20 annule la marge de RecipeScreen : la liste va d'un bord à l'autre du téléphone
+  liste: { backgroundColor: "white", marginHorizontal: -20, paddingHorizontal: 16 },
+  semaine: { flexDirection: "row", alignItems: "center", gap: 8 },
+  semaineTitre: { fontFamily: "DMSans_700Bold", fontSize: 16, lineHeight: 21, color: recipeColors.ink },
+  fleche: { width: 32, height: 32, borderRadius: 16, alignItems: "center", justifyContent: "center", backgroundColor: recipeColors.light },
+  jour: { flexDirection: "row", alignItems: "flex-start", gap: 10, paddingVertical: 8, minHeight: 48 },
+  separateur: { borderTopWidth: 1, borderTopColor: recipeColors.border },
+  date: { width: 34, alignItems: "center" },
+  rond: { width: 28, height: 28, borderRadius: 14, alignItems: "center", justifyContent: "center" },
+  rondAujourdhui: { backgroundColor: recipeColors.green },
+  chiffre: { fontFamily: "DMSans_700Bold", fontSize: 16, lineHeight: 20, color: recipeColors.ink },
+  jourNom: { fontFamily: "DMSans_500Medium", fontSize: 10, lineHeight: 13, color: recipeColors.muted },
+  repas: { flex: 1, gap: 6 },
+  plus: { width: 28, height: 28, borderRadius: 14, alignItems: "center", justifyContent: "center", backgroundColor: recipeColors.light },
+  carte: { flexDirection: "row", alignItems: "center", gap: 8, padding: 4, paddingLeft: 0, borderRadius: 10, backgroundColor: recipeColors.background, overflow: "hidden" },
+  barre: { width: 4, alignSelf: "stretch" },
+  photo: { width: 34, height: 34, borderRadius: 8 },
+  photoVide: { alignItems: "center", justifyContent: "center", backgroundColor: recipeColors.light },
+  carteNom: { fontFamily: "DMSans_700Bold", fontSize: 13, lineHeight: 17, color: recipeColors.ink },
+  carteMoment: { fontFamily: "DMSans_500Medium", fontSize: 11, lineHeight: 14 },
 });

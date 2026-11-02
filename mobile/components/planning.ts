@@ -11,11 +11,12 @@ export const MEAL_LABELS: Record<MealType, string> = {
   collation: "Collation",
 };
 
-export const MEAL_COLORS: Record<MealType, { bg: string; text: string }> = {
-  dejeuner: { bg: "#FAEEDA", text: "#633806" },
-  diner: { bg: "#E6F1FB", text: "#0C447C" },
-  souper: { bg: "#EAF3DE", text: "#27500A" },
-  collation: { bg: "#FBEAF0", text: "#72243E" },
+// bg = fond clair, text = texte foncé, dot = couleur vive (points du mois, barre des cartes)
+export const MEAL_COLORS: Record<MealType, { bg: string; text: string; dot: string }> = {
+  dejeuner: { bg: "#FAEEDA", text: "#633806", dot: "#F59E0B" },
+  diner: { bg: "#E6F1FB", text: "#0C447C", dot: "#3B82F6" },
+  souper: { bg: "#EAF3DE", text: "#27500A", dot: "#22A05A" },
+  collation: { bg: "#FBEAF0", text: "#72243E", dot: "#E0569B" },
 };
 
 // ---- Dates ----

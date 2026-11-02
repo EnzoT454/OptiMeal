@@ -3,10 +3,10 @@ import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import Ionicons from "@expo/vector-icons/Ionicons";
 import type { MealPlanEntry, MealType } from "../types/api";
 import {
-  MEALS, MEAL_COLORS, MEAL_LABELS, addDays, dayFullName, dayName, fromISODate, toISODate,
+  MEALS, MEAL_LABELS, addDays, dayFullName, dayName, fromISODate, toISODate,
 } from "./planning";
+import { RecipeButton, RecipeChip, recipeColors, recipeStyles } from "./recipes";
 
-const VERT = "#25603c";
 const ROUGE = "#b3261e";
 
 // "menu" = la liste des actions ; les 3 autres = on choisit un jour et un moment.
@@ -87,7 +87,7 @@ export default function MealActionsSheet({ repas, onClose, onVoirRecette, onPort
 
               {/* Portions : − / + directement dans la ligne */}
               <View style={styles.ligne}>
-                <Ionicons name="people-outline" size={22} color="#1d2b22" />
+                <Ionicons name="people-outline" size={22} color={recipeColors.green} />
                 <Text style={styles.ligneTexte}>Portions</Text>
                 <Pressable onPress={() => onPortions(Math.max(1, repas.servings - 1))} style={styles.rond} accessibilityLabel="Une portion de moins">
                   <Text style={styles.rondTexte}>−</Text>
@@ -126,31 +126,21 @@ export default function MealActionsSheet({ repas, onClose, onVoirRecette, onPort
               </ScrollView>
 
               {/* Le moment */}
-              <View style={styles.choix}>
+              <View style={[recipeStyles.chips, { marginTop: 14 }]}>
                 {MEALS.map((m) => (
-                  <Pressable
-                    key={m}
-                    onPress={() => setMeal(m)}
-                    style={[styles.puce, { backgroundColor: MEAL_COLORS[m].bg }, meal === m && styles.puceActive]}
-                  >
-                    <Text style={{ color: MEAL_COLORS[m].text }}>{MEAL_LABELS[m]}</Text>
-                  </Pressable>
+                  <RecipeChip key={m} label={MEAL_LABELS[m]} selected={meal === m} onPress={() => setMeal(m)} />
                 ))}
               </View>
 
-              <Pressable style={styles.bouton} onPress={() => onPlacer(ecran, date, meal)}>
-                <Text style={styles.boutonTexte}>Valider</Text>
-              </Pressable>
-              <Pressable style={styles.fermer} onPress={() => setEcran("menu")}>
-                <Text style={styles.fermerTexte}>Retour</Text>
-              </Pressable>
+              <View style={{ gap: 8, marginTop: 20 }}>
+                <RecipeButton title="Valider" onPress={() => onPlacer(ecran, date, meal)} />
+                <RecipeButton title="Retour" variant="neutral" onPress={() => setEcran("menu")} />
+              </View>
             </>
           )}
 
           {ecran === "menu" && (
-            <Pressable style={styles.fermer} onPress={onClose}>
-              <Text style={styles.fermerTexte}>Fermer</Text>
-            </Pressable>
+            <RecipeButton title="Fermer" variant="neutral" onPress={onClose} style={{ marginTop: 8 }} />
           )}
         </View>
       </View>
@@ -159,39 +149,32 @@ export default function MealActionsSheet({ repas, onClose, onVoirRecette, onPort
 }
 
 // Une ligne du menu : icône + texte
-function Ligne({ icone, texte, onPress, couleur = "#1d2b22" }: {
+function Ligne({ icone, texte, onPress, couleur }: {
   icone: keyof typeof Ionicons.glyphMap; texte: string; onPress: () => void; couleur?: string;
 }) {
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [styles.ligne, pressed && { opacity: 0.5 }]}>
-      <Ionicons name={icone} size={22} color={couleur} />
-      <Text style={[styles.ligneTexte, { color: couleur }]}>{texte}</Text>
+      <Ionicons name={icone} size={22} color={couleur ?? recipeColors.green} />
+      <Text style={[styles.ligneTexte, couleur ? { color: couleur } : null]}>{texte}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   fond: { flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.4)" },
-  panneau: { backgroundColor: "#fff", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 20, paddingBottom: 32 },
-  poignee: { alignSelf: "center", width: 40, height: 4, borderRadius: 2, backgroundColor: "#d9e0db", marginBottom: 12 },
-  titre: { fontSize: 20, fontWeight: "700", color: "#1d2b22" },
-  sousTitre: { color: "#65746a", marginTop: 4 },
-  separateur: { height: StyleSheet.hairlineWidth, backgroundColor: "#d9e0db", marginVertical: 12 },
+  panneau: { backgroundColor: recipeColors.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, paddingBottom: 32 },
+  poignee: { alignSelf: "center", width: 40, height: 4, borderRadius: 2, backgroundColor: recipeColors.border, marginBottom: 14 },
+  titre: { fontFamily: "DMSans_700Bold", fontSize: 22, lineHeight: 29, color: recipeColors.ink },
+  sousTitre: { fontFamily: "DMSans_400Regular", fontSize: 14, lineHeight: 19, color: recipeColors.muted, marginTop: 2 },
+  separateur: { height: 1, backgroundColor: recipeColors.border, marginVertical: 12 },
   ligne: { flexDirection: "row", alignItems: "center", gap: 16, paddingVertical: 12 },
-  ligneTexte: { flex: 1, fontSize: 17, color: "#1d2b22" },
-  rond: { width: 34, height: 34, borderRadius: 17, borderWidth: 1, borderColor: "#d9e0db", alignItems: "center", justifyContent: "center" },
-  rondTexte: { fontSize: 20, color: VERT },
-  portionsNb: { fontSize: 17, fontWeight: "600", minWidth: 24, textAlign: "center" },
-  label: { marginBottom: 10, color: "#65746a", fontSize: 14 },
-  jour: { width: 52, paddingVertical: 8, borderRadius: 10, alignItems: "center", backgroundColor: "#f2f5f3" },
-  jourActif: { backgroundColor: VERT },
-  jourNom: { fontSize: 11, color: "#65746a" },
-  jourDate: { fontSize: 17, fontWeight: "600", color: "#1d2b22" },
-  choix: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 14 },
-  puce: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8, borderWidth: 2, borderColor: "transparent" },
-  puceActive: { borderColor: VERT },
-  bouton: { marginTop: 20, backgroundColor: VERT, borderRadius: 8, paddingVertical: 12, alignItems: "center" },
-  boutonTexte: { color: "#fff", fontSize: 16, fontWeight: "600" },
-  fermer: { marginTop: 8, paddingVertical: 10, alignItems: "center" },
-  fermerTexte: { color: "#65746a", fontSize: 16 },
+  ligneTexte: { flex: 1, fontFamily: "DMSans_500Medium", fontSize: 16, lineHeight: 22, color: recipeColors.ink },
+  rond: { width: 36, height: 36, borderRadius: 18, borderWidth: 1, borderColor: recipeColors.border, backgroundColor: "white", alignItems: "center", justifyContent: "center" },
+  rondTexte: { fontFamily: "DMSans_700Bold", fontSize: 20, lineHeight: 24, color: recipeColors.green },
+  portionsNb: { fontFamily: "DMSans_700Bold", fontSize: 16, lineHeight: 22, minWidth: 26, textAlign: "center", color: recipeColors.ink },
+  label: { fontFamily: "DMSans_700Bold", fontSize: 13, lineHeight: 18, color: recipeColors.ink, marginBottom: 10 },
+  jour: { width: 54, paddingVertical: 8, borderRadius: 12, alignItems: "center", backgroundColor: "white", borderWidth: 1, borderColor: recipeColors.border },
+  jourActif: { backgroundColor: recipeColors.green, borderColor: recipeColors.green },
+  jourNom: { fontFamily: "DMSans_500Medium", fontSize: 11, lineHeight: 15, color: recipeColors.muted },
+  jourDate: { fontFamily: "DMSans_700Bold", fontSize: 17, lineHeight: 22, color: recipeColors.ink },
 });
