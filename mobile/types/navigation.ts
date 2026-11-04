@@ -5,7 +5,7 @@ export type RecipeStackParams = {
 };
 
 export type PromoStackParams = {
-  List: undefined; Detail: { offer: Offer }; Circulars: undefined; Circular: { circular: Circular }; Cook: undefined;
+  List: undefined; Detail: { offer: Offer }; Circulars: undefined; Circular: { circular: Circular }; Cook: undefined; Follows: undefined;
 };
 
 export type MainTabParams = {

@@ -16,8 +16,14 @@ from backend.app.common.contracts import ContractModel, Retailer
 from .models import Circular
 
 BUCKET = 'circulars'
-PAGE_WIDTH = 1200          # largeur des images en pixels : lisible sur téléphone, léger à charger
-JPEG_QUALITY = 80
+# Android (Fresco, le moteur d'images de React Native) réduit toute image dont un côté dépasse 2048 px :
+# une page de 2400 × 5334 était réduite 4 fois et le texte devenait flou au zoom.
+# Donc : pages de 2048 px de large, et chaque page est aussi découpée en STRIPS bandes horizontales
+# (environ 2048 × 1150 px) que l'app affiche collées les unes sous les autres, en pleine définition.
+PAGE_WIDTH = 2048
+STRIPS = 4                 # même valeur que STRIPS dans mobile/app/CircularScreen.tsx
+MAX_SIDE = 2048            # plus grand côté qu'Android affiche sans réduire
+JPEG_QUALITY = 85
 MAX_PAGE_BYTES = 5 * 1024 * 1024   # même limite que le bucket des photos de recettes
 
 
@@ -34,6 +40,11 @@ def page_name(number: int) -> str:
     return f'p{number:02d}.jpg'
 
 
+def strip_name(number: int, strip: int) -> str:
+    """Bande d'une page : p01-1.jpg … p01-4.jpg (de haut en bas)."""
+    return f'p{number:02d}-{strip}.jpg'
+
+
 def public_url(supabase_url: str, path: str) -> str:
     return f'{supabase_url.rstrip("/")}/storage/v1/object/public/{BUCKET}/{path}'
 
@@ -48,9 +59,21 @@ def circulars_from_database(db: Session, supabase_url: str) -> list[CircularRead
     return [circular_read(row, supabase_url) for row in db.scalars(select(Circular).order_by(Circular.retailer))]
 
 
-def pdf_to_jpegs(path: Path) -> list[bytes]:
-    """Une image JPEG par page du PDF. Aucune connexion : tout se fait sur l'ordinateur."""
+def pdf_to_jpegs(path: Path) -> list[tuple[bytes, list[bytes]]]:
+    """Pour chaque page du PDF : l'image entière (couverture, aperçu) et ses STRIPS bandes.
+
+    Aucune connexion : tout se fait sur l'ordinateur.
+    """
     import pymupdf  # importé ici : l'API n'en a pas besoin, seulement le script d'import
+
+    def jpeg(page, matrix, clip=None) -> bytes:
+        image = page.get_pixmap(matrix=matrix, clip=clip, alpha=False)
+        if clip is not None and max(image.width, image.height) > MAX_SIDE:
+            raise ValueError(f'Page {page.number + 1} de {path.name} trop haute : augmenter STRIPS.')
+        data = image.tobytes('jpeg', jpg_quality=JPEG_QUALITY)
+        if len(data) > MAX_PAGE_BYTES:
+            raise ValueError(f'Page {page.number + 1} de {path.name} trop lourde ({len(data)} octets).')
+        return data
 
     pages = []
     with pymupdf.open(path) as document:
@@ -58,11 +81,12 @@ def pdf_to_jpegs(path: Path) -> list[bytes]:
             raise ValueError(f'{path.name} ne contient aucune page.')
         for page in document:
             zoom = PAGE_WIDTH / page.rect.width
-            image = page.get_pixmap(matrix=pymupdf.Matrix(zoom, zoom), alpha=False)
-            data = image.tobytes('jpeg', jpg_quality=JPEG_QUALITY)
-            if len(data) > MAX_PAGE_BYTES:
-                raise ValueError(f'Page {page.number + 1} de {path.name} trop lourde ({len(data)} octets).')
-            pages.append(data)
+            matrix = pymupdf.Matrix(zoom, zoom)
+            r = page.rect
+            strips = [jpeg(page, matrix, pymupdf.Rect(r.x0, r.y0 + r.height * k / STRIPS,
+                                                       r.x1, r.y0 + r.height * (k + 1) / STRIPS))
+                      for k in range(STRIPS)]
+            pages.append((jpeg(page, matrix), strips))
     return pages
 
 
