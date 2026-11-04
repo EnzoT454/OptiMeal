@@ -33,6 +33,7 @@ export default function CircularsScreen({ navigation }: NativeStackScreenProps<P
     <View style={recipeStyles.chips}>
       <RecipeChip label="Promotions" onPress={() => navigation.goBack()} />
       <RecipeChip label="Circulaires" selected />
+      <RecipeChip label="Suivis" onPress={() => navigation.navigate('Follows')} />
     </View>
 
     {loading ? <ActivityIndicator color={recipeColors.green} style={{ marginTop: 24 }} />

@@ -7,7 +7,8 @@ from alembic.config import Config
 from fastapi.testclient import TestClient
 import pytest
 
-from backend.app.catalog.circulars import circular_read, pdf_to_jpegs
+
+from backend.app.catalog.circulars import STRIPS, circular_read, pdf_to_jpegs
 from backend.app.catalog.models import Circular
 from backend.app.common.public_data import ROOT
 from backend.app.main import create_app
@@ -46,7 +47,10 @@ def test_pdf_pages_become_jpeg_images(tmp_path):
         document.save(path)
     pages = pdf_to_jpegs(path)
     assert len(pages) == 3
-    assert all(page.startswith(b'\xff\xd8') for page in pages)  # signature JPEG
+    for whole, strips in pages:                                  # chaque page : image entière + ses bandes
+        assert whole.startswith(b'\xff\xd8')                     # signature JPEG
+        assert len(strips) == STRIPS
+        assert all(strip.startswith(b'\xff\xd8') for strip in strips)
 
 
 @pytest.mark.parametrize('arguments,message', [

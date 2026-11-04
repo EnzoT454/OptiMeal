@@ -36,7 +36,7 @@ export function RecipeChip({ label, selected, onPress }: { label: string; select
   const content = <Text style={[recipeStyles.chipText, selected && { color: 'white' }]}>{label}</Text>;
   return onPress ? <Pressable accessibilityRole="button" accessibilityState={{ selected: !!selected }}
     onPress={onPress} hitSlop={4} style={[recipeStyles.chip, selected && { backgroundColor: recipeColors.green }]}>{content}</Pressable>
-    : <View style={recipeStyles.chip}>{content}</View>;
+       : <View style={[recipeStyles.chip, selected && { backgroundColor: recipeColors.green }]}>{content}</View>;
 }
 export function showRecipeComingSoon(title: string) {
   Alert.alert(title, 'Disponible prochainement.');

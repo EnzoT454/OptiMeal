@@ -30,8 +30,10 @@ function screen(file, { states = {}, reply = { item: { entries: [] } } } = {}) {
         if (name === 'react-native') return native;
         if (name.endsWith('services/api')) return { api };
         if (name.endsWith('/planning')) return load('components/planning.ts');
+        if (name.endsWith('/MonthGrid')) return load('components/MonthGrid.tsx');
         if (name === '@react-navigation/native') return { useNavigation: () => ({ navigate: (...args) => navigations.push(args) }), useFocusEffect: fn => effects.push(fn) };
         if (name === 'react-native-safe-area-context') return { SafeAreaView: 'SafeAreaView' };
+        if (name.endsWith('/recipes')) return new Proxy({ recipeColors: new Proxy({}, { get: (_, color) => '#' + String(color) }), recipeStyles: new Proxy({}, { get: () => ({}) }) }, { get: (object, key) => object[key] ?? String(key) });
         return { __esModule: true, default: name };
       } });
     return exports;
@@ -76,16 +78,16 @@ test('recette accessible : conserver ouverture, duplication et restes ; notes to
 });
 
 test('carte calendrier et retour au focus : recharger et remplacer un ancien nom par Recette indisponible', async () => {
-  const s = screen('app/CalendarScreen.tsx', { states: { 0: new Date(2026, 10, 2), 1: [meal], 2: false },
-    reply: { item: { entries: [{ ...meal, recipe_name: null, recipe_id: null }] } } });
+    const s = screen('app/CalendarScreen.tsx', { states: { 0: new Date(2026, 10, 2), 1: new Date(2026, 10, 2), 2: false, 3: [meal], 4: false },
+  reply: { item: { entries: [{ ...meal, recipe_name: null, recipe_id: null }] } } });
   assert.match(content(s.render()), /Soupe maison/);
   s.effects[0]();
   await new Promise(setImmediate);
   const tree = s.render();
   assert.match(content(tree), /Recette indisponible/);
   assert.doesNotMatch(content(tree), /Soupe maison/);
-  assert.equal(s.calls[0][0], '/api/v1/plans?week=2026-11-02');
-  assert.equal(s.states[5], null);
+  assert.ok(s.calls.some(call => call[0] === '/api/v1/plans?week=2026-11-02'));
+  assert.equal(s.states[7], null);
 });
 
 for (const mode of ['recette', 'favoris']) {
@@ -104,7 +106,7 @@ for (const mode of ['recette', 'favoris']) {
 }
 
 test('calendrier : ouvrir la fiche et ses évaluations ferme le menu sans créer de vote', () => {
-  const s = screen('app/CalendarScreen.tsx', { states: { 0: new Date(2026, 10, 2), 1: [meal], 2: false, 5: meal } });
+  const s = screen('app/CalendarScreen.tsx', { states: { 0: new Date(2026, 10, 2), 1: new Date(2026, 10, 2), 2: false, 3: [meal], 4: false, 7: meal } });
   const tree = s.render();
   const menu = nodes(tree).find(node => node.props?.onVoirRecette);
   menu.props.onVoirRecette(meal.recipe_id);
@@ -112,13 +114,13 @@ test('calendrier : ouvrir la fiche et ses évaluations ferme le menu sans créer
   assert.equal(s.navigations[0][0], 'Recettes');
   assert.equal(s.navigations[0][1].screen, 'Detail');
   assert.equal(s.navigations[0][1].params.id, meal.recipe_id);
-  assert.equal(s.states[5], null);
+  assert.equal(s.states[7], null);
   assert.equal(s.calls.length, 0);
 });
 
 for (const entry of [{ ...meal, recipe_name: null }, { ...meal, recipe_id: null, recipe_name: null, free_text: 'Resto' }]) {
   test(`calendrier : aucune ouverture ni notation pour ${entry.free_text ?? 'recette inaccessible'}`, () => {
-    const s = screen('app/CalendarScreen.tsx', { states: { 0: new Date(2026, 10, 2), 1: [entry], 2: false, 5: entry } });
+    const s = screen('app/CalendarScreen.tsx', { states: { 0: new Date(2026, 10, 2), 1: new Date(2026, 10, 2), 2: false, 3: [entry], 4: false, 7: entry } });
     const menu = nodes(s.render()).find(node => node.props?.onVoirRecette);
     menu.props.onVoirRecette(meal.recipe_id);
     assert.equal(s.navigations.length, 0);

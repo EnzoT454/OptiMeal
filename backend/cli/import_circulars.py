@@ -1,4 +1,4 @@
-"""Envoyer la circulaire PDF d'un magasin dans Supabase (une image par page) et l'enregistrer.
+"""Envoyer la circulaire PDF d'un magasin dans Supabase (une image par page + ses bandes) et l'enregistrer.
 
 Exemples, depuis la racine du projet :
     python -m backend.cli.import_circulars --retailer maxi
@@ -19,7 +19,7 @@ from sqlalchemy import select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.exc import SQLAlchemyError
 
-from backend.app.catalog.circulars import Storage, page_name, pdf_to_jpegs
+from backend.app.catalog.circulars import Storage, page_name, pdf_to_jpegs, strip_name
 from backend.app.catalog.models import Circular
 from backend.app.common.public_data import ROOT, today
 from backend.app.config import load_settings
@@ -71,9 +71,13 @@ def main(argv=None) -> int:
         # 2. Envoyer les nouvelles images dans un dossier neuf (l'ancienne circulaire reste visible).
         storage = Storage(settings.supabase_url, settings.supabase_secret_key)
         prefix = f'{args.retailer}/{datetime.now():%Y%m%d-%H%M%S}'
-        for number, data in enumerate(pages, start=1):
-            storage.upload(f'{prefix}/{page_name(number)}', data)
-            uploaded.append(f'{prefix}/{page_name(number)}')
+        for number, (data, strips) in enumerate(pages, start=1):
+            files = [(page_name(number), data)] + [(strip_name(number, k), strip)
+                                                   for k, strip in enumerate(strips, start=1)]
+            for name, content in files:
+                storage.upload(f'{prefix}/{name}', content)
+                uploaded.append(f'{prefix}/{name}')
+            print(f'  page {number}/{len(pages)} envoyée')
 
         # 3. Remplacer la ligne du magasin dans public.circular.
         with database.engine.begin() as connection:

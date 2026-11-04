@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView,
-  StyleSheet, Text, TextInput, View,
+  ActivityIndicator, Image, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView,
+  StyleSheet, Text, View,
 } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { api } from "../services/api";
 import type { MealType, Page, RecipeSummary } from "../types/api";
-import { MEALS, MEAL_COLORS, MEAL_LABELS, dayName } from "./planning";
-
-const VERT = "#25603c";
+import { MEALS, MEAL_LABELS, dayFullName } from "./planning";
+import { RecipeButton, RecipeChip, RecipeField, recipeColors, recipeStyles } from "./recipes";
 
 type Mode = "recette" | "favoris" | "texte";
 
@@ -53,7 +53,7 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
     const minuteur = setTimeout(() => {
       setChargement(true);
       setErreurRecettes(null);
-      const params = new URLSearchParams({ scope: mode === 'favoris' ? 'favorites' : 'accessible', q: recherche, limit: "10", offset: "0" });
+      const params = new URLSearchParams({ scope: mode === "favoris" ? "favorites" : "accessible", q: recherche, limit: "10", offset: "0" });
       api<Page<RecipeSummary>>("/api/v1/recipes?" + params)
         .then((res) => { if (actif) setRecettes(res.items); })
         .catch((e) => { if (actif) setErreurRecettes(e?.message ?? "Impossible de charger les recettes."); })
@@ -86,74 +86,82 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
 
         <View style={styles.panneau}>
           <View style={styles.poignee} />
-          <ScrollView keyboardShouldPersistTaps="handled">
-            <Text style={styles.titre}>
-              Ajouter un repas{jour ? ` · ${dayName(jour)} ${jour.getDate()}` : ""}
-            </Text>
-
-            {/* ---- Moment ---- */}
-            <Text style={styles.label}>Moment</Text>
-            <View style={styles.choix}>
-              {MEALS.map((m) => (
-                <Pressable
-                  key={m}
-                  onPress={() => setMeal(m)}
-                  style={[styles.puce, { backgroundColor: MEAL_COLORS[m].bg }, meal === m && styles.puceActive]}
-                >
-                  <Text style={{ color: MEAL_COLORS[m].text }}>{MEAL_LABELS[m]}</Text>
-                </Pressable>
-              ))}
+          <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: 18 }}>
+            <View style={{ gap: 2 }}>
+              <Text style={styles.titre}>Ajouter un repas</Text>
+              {jour && <Text style={recipeStyles.body}>{dayFullName(jour)}</Text>}
             </View>
 
-            {/* ---- Recette ou texte libre ---- */}
-            <View style={styles.onglets}>
-              {(["recette", "favoris", "texte"] as Mode[]).map((m) => (
-                <Pressable
-                  key={m}
-                  onPress={() => { setMode(m); setErreur(null); }}
-                  style={[styles.onglet, mode === m && styles.ongletActif]}
-                >
-                  <Text style={[styles.ongletTexte, mode === m && styles.ongletTexteActif]}>
-                    {MODE_LABELS[m]}
-                  </Text>
-                </Pressable>
-              ))}
+            {/* ---- Moment ---- */}
+            <View>
+              <Text style={recipeStyles.label}>Moment</Text>
+              <View style={recipeStyles.chips}>
+                {MEALS.map((m) => (
+                  <RecipeChip key={m} label={MEAL_LABELS[m]} selected={meal === m} onPress={() => setMeal(m)} />
+                ))}
+              </View>
+            </View>
+
+            {/* ---- Recettes, favoris ou note ---- */}
+            <View>
+              <Text style={recipeStyles.label}>Quoi ?</Text>
+              <View style={recipeStyles.chips}>
+                {(["recette", "favoris", "texte"] as Mode[]).map((m) => (
+                  <RecipeChip key={m} label={MODE_LABELS[m]} selected={mode === m}
+                    onPress={() => { setMode(m); setErreur(null); }} />
+                ))}
+              </View>
             </View>
 
             {mode !== "texte" ? (
-              <>
-                <TextInput
+              <View style={{ gap: 8 }}>
+                <RecipeField
+                  label="Rechercher une recette"
+                  placeholder="Poulet, pâtes, soupe…"
                   value={recherche}
                   onChangeText={setRecherche}
-                  placeholder="Rechercher une recette"
-                  style={styles.champ}
                 />
-                {chargement && <ActivityIndicator color={VERT} style={{ marginTop: 12 }} />}
+                {chargement && <ActivityIndicator color={recipeColors.green} style={{ marginTop: 8 }} />}
                 {erreurRecettes !== null && <Text style={styles.erreur}>{erreurRecettes}</Text>}
                 {!chargement && erreurRecettes === null && recettes.length === 0 && (
-                  <Text style={styles.vide}>
+                  <Text style={recipeStyles.body}>
                     {mode === "favoris"
                       ? "Aucun favori. Touche le cœur d'une recette dans l'onglet Recettes."
                       : "Aucune recette trouvée. Ajoute-en dans l'onglet Recettes, ou écris une note."}
                   </Text>
                 )}
-                {!chargement && recettes.map((r) => (
-                  <Pressable
-                    key={String(r.id)}
-                    onPress={() => choisirRecette(r)}
-                    style={[styles.recette, recette?.id === r.id && styles.recetteActive]}
-                  >
-                    <Text style={styles.recetteNom} numberOfLines={1}>{r.name}</Text>
-                    <Text style={styles.recetteInfo}>{r.total_time_minutes} min · {r.servings} portions</Text>
-                  </Pressable>
-                ))}
-              </>
+                {!chargement && recettes.map((r) => {
+                  const choisie = recette?.id === r.id;
+                  // La photo de la recette (même champ image_url que dans l'onglet Recettes)
+                  const photo = (r as RecipeSummary & { image_url?: string | null }).image_url;
+                  return (
+                    <Pressable
+                      key={String(r.id)}
+                      onPress={() => choisirRecette(r)}
+                      style={[styles.recette, choisie && styles.recetteActive]}
+                    >
+                      {photo ? (
+                        <Image source={{ uri: photo }} style={styles.photo} />
+                      ) : (
+                        <View style={[styles.photo, styles.photoVide]}>
+                          <Ionicons name="restaurant-outline" size={18} color={recipeColors.green} />
+                        </View>
+                      )}
+                      <View style={{ flex: 1, gap: 2 }}>
+                        <Text style={styles.recetteNom} numberOfLines={1}>{r.name}</Text>
+                        <Text style={recipeStyles.note}>{r.total_time_minutes} min · {r.servings} portions</Text>
+                      </View>
+                      {choisie && <Ionicons name="checkmark-circle" size={22} color={recipeColors.green} />}
+                    </Pressable>
+                  );
+                })}
+              </View>
             ) : (
-              <TextInput
-                value={texte}
-                onChangeText={(t) => { setTexte(t); setErreur(null); }}
+              <RecipeField
+                label="Note"
                 placeholder="Resto, pizza commandée…"
-                style={styles.champ}
+                value={texte}
+                onChangeText={(t: string) => { setTexte(t); setErreur(null); }}
                 returnKeyType="done"
                 onSubmitEditing={valider}
               />
@@ -161,8 +169,8 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
             {erreur !== null && <Text style={styles.erreur}>{erreur}</Text>}
 
             {/* ---- Portions ---- */}
-            <Text style={styles.label}>Portions</Text>
-            <View style={styles.portions}>
+            <View style={recipeStyles.row}>
+              <Text style={[recipeStyles.label, { flex: 1, marginBottom: 0 }]}>Portions</Text>
               <Pressable onPress={() => setPortions(Math.max(1, portions - 1))} style={styles.rond} accessibilityLabel="Une portion de moins">
                 <Text style={styles.rondTexte}>−</Text>
               </Pressable>
@@ -172,12 +180,10 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
               </Pressable>
             </View>
 
-            <Pressable style={styles.bouton} onPress={valider}>
-              <Text style={styles.boutonTexte}>Ajouter</Text>
-            </Pressable>
-            <Pressable style={styles.annuler} onPress={onClose}>
-              <Text style={styles.annulerTexte}>Annuler</Text>
-            </Pressable>
+            <View style={{ gap: 8 }}>
+              <RecipeButton title="Ajouter" onPress={valider} />
+              <RecipeButton title="Annuler" variant="neutral" onPress={onClose} />
+            </View>
           </ScrollView>
         </View>
       </KeyboardAvoidingView>
@@ -187,31 +193,16 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
 
 const styles = StyleSheet.create({
   fond: { flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.4)" },
-  panneau: { maxHeight: "90%", backgroundColor: "#fff", borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 20, paddingBottom: 32 },
-  poignee: { alignSelf: "center", width: 40, height: 4, borderRadius: 2, backgroundColor: "#d9e0db", marginBottom: 12 },
-  titre: { fontSize: 20, fontWeight: "700", color: "#1d2b22" },
-  label: { marginTop: 16, marginBottom: 6, color: "#65746a", fontSize: 13 },
-  choix: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  puce: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8, borderWidth: 2, borderColor: "transparent" },
-  puceActive: { borderColor: VERT },
-  onglets: { flexDirection: "row", marginTop: 16, marginBottom: 10, borderWidth: 1, borderColor: "#d9e0db", borderRadius: 8, overflow: "hidden" },
-  onglet: { flex: 1, paddingVertical: 8, alignItems: "center" },
-  ongletActif: { backgroundColor: "#EAF3DE" },
-  ongletTexte: { color: "#65746a" },
-  ongletTexteActif: { color: VERT, fontWeight: "600" },
-  champ: { borderWidth: 1, borderColor: "#d9e0db", borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 16 },
-  vide: { color: "#65746a", marginTop: 12 },
-  recette: { marginTop: 8, padding: 10, borderRadius: 8, borderWidth: 2, borderColor: "#eef1ef" },
-  recetteActive: { borderColor: VERT, backgroundColor: "#EAF3DE" },
-  recetteNom: { fontSize: 15, fontWeight: "600", color: "#1d2b22" },
-  recetteInfo: { fontSize: 12, color: "#65746a", marginTop: 2 },
-  erreur: { color: "#b3261e", marginTop: 6, fontSize: 13 },
-  portions: { flexDirection: "row", alignItems: "center", gap: 16 },
-  rond: { width: 36, height: 36, borderRadius: 18, borderWidth: 1, borderColor: "#d9e0db", alignItems: "center", justifyContent: "center" },
-  rondTexte: { fontSize: 20, color: VERT },
-  portionsNb: { fontSize: 18, fontWeight: "600", minWidth: 24, textAlign: "center" },
-  bouton: { marginTop: 24, backgroundColor: VERT, borderRadius: 8, paddingVertical: 12, alignItems: "center" },
-  boutonTexte: { color: "#fff", fontSize: 16, fontWeight: "600" },
-  annuler: { marginTop: 8, paddingVertical: 10, alignItems: "center" },
-  annulerTexte: { color: "#65746a" },
+  panneau: { maxHeight: "90%", backgroundColor: recipeColors.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, paddingBottom: 32 },
+  poignee: { alignSelf: "center", width: 40, height: 4, borderRadius: 2, backgroundColor: recipeColors.border, marginBottom: 14 },
+  titre: { fontFamily: "DMSans_700Bold", fontSize: 22, lineHeight: 29, color: recipeColors.ink },
+  recette: { flexDirection: "row", alignItems: "center", gap: 12, padding: 8, borderRadius: 12, backgroundColor: "white", borderWidth: 2, borderColor: "white" },
+  photo: { width: 52, height: 52, borderRadius: 10 },
+  photoVide: { alignItems: "center", justifyContent: "center", backgroundColor: recipeColors.light },
+  recetteActive: { borderColor: recipeColors.green, backgroundColor: recipeColors.light },
+  recetteNom: { fontFamily: "DMSans_700Bold", fontSize: 15, lineHeight: 20, color: recipeColors.ink },
+  erreur: { fontFamily: "DMSans_500Medium", fontSize: 13, lineHeight: 18, color: "#b3261e" },
+  rond: { width: 38, height: 38, borderRadius: 19, borderWidth: 1, borderColor: recipeColors.border, backgroundColor: "white", alignItems: "center", justifyContent: "center" },
+  rondTexte: { fontFamily: "DMSans_700Bold", fontSize: 20, lineHeight: 24, color: recipeColors.green },
+  portionsNb: { fontFamily: "DMSans_700Bold", fontSize: 17, lineHeight: 22, minWidth: 28, textAlign: "center", color: recipeColors.ink },
 });
