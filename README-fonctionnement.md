@@ -319,6 +319,160 @@ Ce schéma présente les responsabilités. La validation et les dépendances son
 
 Auth gère les comptes dans son propre schéma. Les tables applicatives décrivent ensuite les profils, les recettes et leurs relations.
 
+### Schéma relationnel de la base
+
+Ce schéma présente les tables actuelles et leurs principaux champs. Les liens
+représentent les clés étrangères vérifiées dans les modèles du backend.
+`auth.users` appartient à Supabase Auth ; les autres tables figurent dans le
+schéma `public`.
+
+```mermaid
+erDiagram
+    AUTH_USER ||--o| profile : "possède un profil"
+    profile |o--o{ recipe : "possède"
+    profile ||--o{ favorite : "enregistre"
+    profile ||--o{ meal_plan_entry : "planifie"
+    profile ||--o{ recipe_rating : "évalue"
+    recipe ||--o{ recipe_ingredient : "contient"
+    ingredient ||--o{ recipe_ingredient : "entre dans"
+    recipe ||--o{ favorite : "est mise en favori"
+    recipe |o--o{ meal_plan_entry : "est planifiée"
+    recipe ||--o{ recipe_rating : "reçoit"
+    ingredient ||--o{ product_offer : "correspond à"
+    category |o--o{ product_offer : "classe"
+
+    AUTH_USER["auth.users"] {
+        uuid id PK
+    }
+    profile {
+        uuid id PK,FK
+        text display_name
+        timestamptz created_at
+    }
+    recipe {
+        text id PK
+        text seed_key UK
+        uuid owner_id FK "Facultatif pour les recettes initiales"
+        text name
+        int servings
+        int total_time_minutes
+        text image_url
+        jsonb instructions
+        text visibility
+        int content_version
+    }
+    recipe_ingredient {
+        text recipe_id PK,FK
+        text ingredient_id PK,FK
+        int position
+        numeric quantity
+        text unit
+        text preparation
+    }
+    ingredient {
+        text id PK
+        text name
+        text category
+        text[] aliases
+    }
+    favorite {
+        uuid user_id PK,FK
+        text recipe_id PK,FK
+    }
+    meal_plan_entry {
+        uuid id PK
+        uuid user_id FK
+        date date
+        text meal
+        text recipe_id FK "Facultatif"
+        text free_text
+        int servings
+        boolean is_leftover
+    }
+    recipe_rating {
+        text recipe_id PK,FK
+        uuid user_id PK,FK
+        int recipe_version PK
+        int taste_score
+        int reliability_score
+        int ease_score
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    category {
+        int id PK
+        text name UK
+    }
+    product_offer {
+        text id PK
+        text ingredient_id FK
+        int category_id FK "Facultatif"
+        text retailer
+        text store_id
+        text external_product_id
+        text name
+        numeric price
+        numeric promo_price
+        text currency
+        numeric quantity
+        text unit
+        date valid_from
+        date valid_to
+        text source
+    }
+    circular {
+        text retailer PK
+        date valid_from
+        date valid_to
+        int page_count
+        text storage_prefix
+        timestamptz imported_at
+    }
+    alembic_version {
+        varchar version_num PK
+    }
+```
+
+**Lire le schéma :** `PK` désigne une clé primaire, `FK` une clé étrangère
+et `UK` une valeur unique. Plusieurs champs marqués `PK` dans une même table
+forment ensemble sa clé primaire. Aux extrémités des liens, `||` signifie
+exactement un, `o|` ou `|o` zéro ou un, et `o{` zéro à plusieurs.
+Les champs affichés ne constituent pas la liste complète des colonnes ; les
+champs facultatifs ne sont signalés ici que lorsqu’ils expliquent une relation.
+
+| Table | Rôle dans l’application |
+| --- | --- |
+| `auth.users` | Identité et connexion, gérées par Supabase Auth |
+| `profile` | Profil applicatif portant le même identifiant que le compte Auth |
+| `recipe` | Contenu de la recette, portions de référence, visibilité et version évaluée |
+| `recipe_ingredient` | Association recette–ingrédient avec quantité, unité et ordre d’affichage |
+| `ingredient` | Référentiel commun utilisé pour relier recettes et produits des magasins |
+| `favorite` | Association personnelle entre un compte et une recette |
+| `meal_plan_entry` | Repas d’un compte à une date et un créneau, avec recette ou note libre |
+| `recipe_rating` | Trois notes d’un compte pour une version du contenu d’une recette |
+| `category` | Catégories des offres, comme les rayons alimentaires |
+| `product_offer` | Produit d’un magasin avec format, prix relevés et période de validité |
+| `circular` | Circulaire courante d’une enseigne et emplacement de ses pages dans Storage |
+| `alembic_version` | Révision du schéma appliquée par Alembic |
+
+Par exemple, une recette demandant 300 g de riz possède une ligne
+`recipe_ingredient` qui référence l’ingrédient riz et conserve `quantity = 300`
+et `unit = g`. Les fiches Maxi, Metro et Super C correspondantes référencent
+ce même ingrédient dans `product_offer`. Ce lien permet de retrouver les
+produits associés ; le calcul des paquets à acheter reste à développer.
+
+La clé de `recipe_rating` combine recette, compte et version : les votes des
+anciennes versions restent enregistrés. `recipe_version` est comparé à
+`recipe.content_version` par les services ; il ne constitue pas une clé
+étrangère vers une table d’anciennes recettes.
+
+`circular` et `alembic_version` n’ont pas de clé étrangère vers les autres
+tables. Le champ `retailer`, présent dans les offres et les circulaires,
+n’établit pas de relation SQL entre elles. De même, `ingredient.category`
+est un texte ; seule `product_offer.category_id` référence la table `category`.
+
+### Recettes, comptes et fichiers images
+
 ```mermaid
 flowchart TD
     A[auth.users : identité Supabase] -->|Même identifiant de compte| P[profile : profil applicatif]
@@ -929,4 +1083,4 @@ Pour suivre les ajouts récents, partir des champs `ImageUrl` et `ImageSource` d
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 2 novembre 2026*
+*Dernière mise à jour : 4 novembre 2026*
