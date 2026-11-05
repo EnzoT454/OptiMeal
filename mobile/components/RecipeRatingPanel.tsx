@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
+import { Alert, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { api, ApiError } from '../services/api';
@@ -10,15 +12,20 @@ import { RecipeButton, recipeColors, recipeStyles } from './recipes';
 type ScoreField = Exclude<keyof RecipeRatingWrite, 'recipe_version'>;
 type Draft = Record<ScoreField, number | null>;
 const emptyDraft = (): Draft => ({ taste_score: null, reliability_score: null, ease_score: null });
-const criteria: { field: ScoreField; label: string; question: string }[] = [
-  { field: 'taste_score', label: 'Goût', question: 'As-tu apprécié le résultat ?' },
-  { field: 'reliability_score', label: 'Fiabilité',
+const criteria: { field: ScoreField; metric: 'taste' | 'reliability' | 'ease'; label: string;
+  icon: ComponentProps<typeof MaterialCommunityIcons>['name'] | 'egg-pan' | 'taste-excellent'; question: string }[] = [
+  { field: 'taste_score', metric: 'taste', label: 'Goût', icon: 'taste-excellent', question: 'As-tu apprécié le résultat ?' },
+  { field: 'reliability_score', metric: 'reliability', label: 'Fiabilité', icon: 'clipboard-check-outline',
     question: 'Les ingrédients et les étapes étaient-ils suffisamment complets pour obtenir le résultat annoncé ?' },
-  { field: 'ease_score', label: 'Facilité', question: 'La préparation était-elle facile à réaliser ?' },
+  { field: 'ease_score', metric: 'ease', label: 'Facilité', icon: 'egg-pan', question: 'La préparation était-elle facile à réaliser ?' },
 ];
 
+function formattedScore(value: string | null) {
+  return value === null ? '—' : Number(value).toLocaleString('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
 function formatted(value: string | null) {
-  return value === null ? 'Non évaluée' : Number(value).toLocaleString('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '/5';
+  return value === null ? 'Non évaluée' : formattedScore(value) + '/5';
 }
 
 export default function RecipeRatingPanel({ recipe, disabled, onChange, onUnavailable, onBusyChange }: {
@@ -142,10 +149,26 @@ export default function RecipeRatingPanel({ recipe, disabled, onChange, onUnavai
     {needsRefresh ? <Text style={recipeStyles.body}>{versionConflict ? 'Recette à actualiser' : 'Moyennes à actualiser'}</Text> : <>
       <Text style={recipeStyles.sectionTitle}>{recipe.rating.count === 0 ? 'Pas encore évaluée' :
         `★ ${formatted(recipe.rating.average)} · ${recipe.rating.count} évaluation${recipe.rating.count > 1 ? 's' : ''}`}</Text>
-      {recipe.rating.count > 0 && <View style={recipeStyles.notice}>
-        <Text style={recipeStyles.body}>Goût : {formatted(recipe.rating.criteria.taste)}</Text>
-        <Text style={recipeStyles.body}>Fiabilité : {formatted(recipe.rating.criteria.reliability)}</Text>
-        <Text style={recipeStyles.body}>Facilité : {formatted(recipe.rating.criteria.ease)}</Text>
+      {recipe.rating.count > 0 && <View style={{ gap: 8 }}>
+        <Text style={recipeStyles.note}>Moyennes par critère</Text>
+        <View style={ratingStyles.criteriaRow}>
+          {criteria.map(criterion => {
+            const value = recipe.rating.criteria[criterion.metric];
+            return <View key={criterion.metric} style={ratingStyles.criterion} accessible
+              accessibilityLabel={`${criterion.label} : ${value === null ? 'non évaluée' : formattedScore(value) + ' sur 5'}`}>
+              <View style={ratingStyles.iconCircle}>
+                {criterion.icon === 'egg-pan' || criterion.icon === 'taste-excellent'
+                  ? <Image source={criterion.icon === 'egg-pan' ? require('../assets/icons/egg-pan.svg') : require('../assets/icons/taste-excellent.svg')} style={{ width: 24, height: 24 }}
+                    contentFit="contain" tintColor={recipeColors.green} accessible={false} />
+                  : <MaterialCommunityIcons name={criterion.icon} size={22} color={recipeColors.green} accessible={false} />}
+              </View>
+              <Text style={ratingStyles.criterionLabel}>{criterion.label}</Text>
+              <Text style={ratingStyles.score}>{formattedScore(value)}
+                {value !== null && <Text style={ratingStyles.scale}> / 5</Text>}
+              </Text>
+            </View>;
+          })}
+        </View>
       </View>}
     </>}
     {!open && <Text accessibilityLiveRegion="polite" style={recipeStyles.body}>{message}</Text>}
@@ -186,3 +209,14 @@ export default function RecipeRatingPanel({ recipe, disabled, onChange, onUnavai
     </Modal>
   </View>;
 }
+
+const ratingStyles = StyleSheet.create({
+  criteriaRow: { flexDirection: 'row', gap: 8, alignItems: 'stretch' },
+  criterion: { flex: 1, minWidth: 0, alignItems: 'center', paddingHorizontal: 6, paddingVertical: 14, gap: 8,
+    backgroundColor: 'white', borderRadius: 14, borderWidth: 1, borderColor: recipeColors.border },
+  iconCircle: { width: 38, height: 38, borderRadius: 19, backgroundColor: recipeColors.light,
+    alignItems: 'center', justifyContent: 'center' },
+  criterionLabel: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 19, color: recipeColors.ink, textAlign: 'center' },
+  score: { fontFamily: 'DMSans_700Bold', fontSize: 24, lineHeight: 32, color: recipeColors.ink, textAlign: 'center', fontVariant: ['tabular-nums'] },
+  scale: { fontFamily: 'DMSans_400Regular', fontSize: 12, color: recipeColors.muted },
+});

@@ -344,7 +344,7 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 
 ---
 
-## Semaine 10 (2 – 8 novembre) — point au 2 novembre 2026
+## Semaine 10 (2 – 8 novembre)
 
 ### Objectifs de la période
 
@@ -367,11 +367,20 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
     - Ajout du profil Super C : rayons, poids net, consignes et corrections de prix, avec séparation des rabais informatifs.
     - Amélioration de la lecture des colonnes et des gros totaux avec Vision et Tesseract.
 
+- **Onglet Recettes**
+    - Cartes compactes ouvrant le détail, avec durée, portions, nombres d’ingrédients et d’étapes, note et nombre d’avis.
+    - Ajout et retrait des favoris depuis le cœur sur la photo ; filtres illustrés et nouveau filtre Faciles lié aux évaluations.
+    - Formulaire allégé, messages des champs obligatoires plus visibles et moyennes Goût, Fiabilité et Facilité en trois colonnes avec icônes. Derniers ajustements confirmés fonctionnels sur téléphone le 5 novembre ; plateforme non précisée.
+    - Publication désormais définitive : une recette publique ne peut plus être supprimée ni rendue privée. Après suppression du compte, elle reste accessible dans Découvrir et les calendriers, avec sa photo, sans lien avec l’ancien compte. Base Supabase mise à jour ; confirmation globale des derniers ajustements sur téléphone.
+    - Ajout des unités tasse (250 ml), cuillère à table (15 ml) et cuillère à thé (5 ml), avec quantités décimales. Le formulaire utilise un sélecteur compact ouvrant une liste avec le choix courant coché. Tests locaux réussis et base Supabase mise à jour ; confirmation globale des derniers ajustements sur téléphone.
+
 ### Décisions et ajustements
 
 - Calculer la note globale avec les poids Goût 40 %, Fiabilité 40 % et Facilité 20 %.
 - Utiliser une moyenne bayésienne pour le tri, avec une référence initiale de 4/5 et un poids de 20 avis.
 - Conserver un formulaire court et ne pas ajouter de commentaires écrits pour cette première intégration.
+- Retirer le choix de difficulté par l’auteur ; la facilité est évaluée par les autres utilisateurs. Le filtre Faciles retient une moyenne d’au moins 4/5 pour la version courante.
+- Afficher Mes recettes de la création la plus récente à la plus ancienne, sans sélecteur de tri.
 
 ### Limites et prochaines étapes
 

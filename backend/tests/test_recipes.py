@@ -5,7 +5,7 @@ import io
 from alembic import command
 import pytest
 from sqlalchemy import func, inspect, select, text
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import DBAPIError, IntegrityError
 
 from backend.app.catalog.ingredient_import import read_ingredients, upsert_ingredients
 from backend.app.catalog.models import Ingredient
@@ -57,6 +57,27 @@ def test_recipe_schema_rls_and_model_match(postgres):
     postgres.execute(RecipeIngredient.__table__.insert().values(**row))
     assert postgres.scalar(select(RecipeIngredient.quantity)) == row['quantity']
     assert postgres.scalar(select(Recipe.review_required)) is True
+
+
+@pytest.mark.parametrize('unit', ['cup', 'tbsp', 'tsp'])
+def test_kitchen_units_are_persisted_and_block_lossy_downgrade(postgres, unit):
+    row = {**insert_recipe(postgres), 'quantity': Decimal('0.5'), 'unit': unit}
+    postgres.execute(RecipeIngredient.__table__.insert().values(**row))
+    stored = postgres.execute(select(RecipeIngredient.quantity, RecipeIngredient.unit)).one()
+    assert stored == (Decimal('0.5'), unit)
+    with pytest.raises(DBAPIError, match='des recettes utilisent des tasses ou cuillères'), postgres.begin_nested():
+        command.downgrade(alembic_config(postgres), '0013_rating_versions')
+    assert postgres.scalar(select(RecipeIngredient.unit)) == unit
+
+
+def test_kitchen_units_migration_can_be_reversed_without_new_units(postgres):
+    row = insert_recipe(postgres)
+    postgres.execute(RecipeIngredient.__table__.insert().values(**row))
+    config = alembic_config(postgres)
+    command.downgrade(config, '0013_rating_versions')
+    assert postgres.scalar(select(RecipeIngredient.quantity)) == row['quantity']
+    command.upgrade(config, 'head')
+    command.check(config)
 
 
 @pytest.mark.parametrize('changes', [

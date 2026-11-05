@@ -47,7 +47,7 @@ const button = (tree, title) => nodes(tree).find(n => n.props?.title === title);
 const confirm = d => d.alerts.at(-1)[2].find(action => action.style !== 'cancel').onPress();
 const flush = () => new Promise(setImmediate);
 
-for (const visibility of ['private', 'public']) {
+for (const visibility of ['private']) {
   test(`détail ${visibility} : demander confirmation, attendre le serveur et afficher son résultat`, async () => {
     const d = detail({ visibility, deferred: true });
     const title = visibility === 'public' ? 'Rendre privée' : 'Publier la recette';
@@ -63,7 +63,9 @@ for (const visibility of ['private', 'public']) {
     assert.equal(d.states[0].visibility, visibility);
     assert.equal(button(d.render(), title).props.disabled, true);
     d.complete(); await flush();
-    assert.ok(button(d.render(), visibility === 'public' ? 'Publier la recette' : 'Rendre privée'));
+    assert.equal(button(d.render(), 'Rendre privée'), undefined);
+    assert.equal(button(d.render(), 'Publier la recette'), undefined);
+    assert.equal(button(d.render(), 'Supprimer'), undefined);
     assert.equal(d.states[3], false);
   });
 }
@@ -109,4 +111,13 @@ test('pendant une notation, bloquer les autres mutations du détail puis les ré
   assert.equal(d.alerts.length, 0);
   panel.props.onBusyChange(false);
   assert.equal(button(d.render(), 'Modifier').props.disabled, false);
+});
+
+test('une recette publique reste modifiable mais ne propose ni retrait ni suppression', () => {
+  const d = detail({ visibility: 'public' });
+  const tree = d.render();
+  assert.ok(button(tree, 'Modifier'));
+  assert.equal(button(tree, 'Rendre privée'), undefined);
+  assert.equal(button(tree, 'Supprimer'), undefined);
+  assert.equal(button(tree, 'Publier la recette'), undefined);
 });

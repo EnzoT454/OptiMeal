@@ -55,7 +55,7 @@ export default function ProfileScreen() {
     {!confirmDelete ? <Button title="Supprimer mon compte" disabled={busy}
       style={{ backgroundColor: '#9c2f2f' }} onPress={() => { setConfirmDelete(true); setMessage(''); }} /> : <>
       <Heading>Supprimer définitivement mon compte</Heading>
-      <Text>Ton compte, ton profil, tes recettes personnelles, tes favoris, tes repas planifiés et les photos de ton dossier seront supprimés. Cette action est irréversible.</Text>
+      <Text>Ton compte, ton profil, tes recettes privées, tes favoris et tes repas planifiés seront supprimés. Tes recettes publiques et leurs photos resteront accessibles à la communauté, sans lien avec ton compte. Cette action est irréversible.</Text>
       <Text>Si la suppression est interrompue, certaines photos peuvent déjà avoir été retirées.</Text>
       <Field label="Écris SUPPRIMER pour confirmer" value={confirmation} onChangeText={setConfirmation}
         autoCapitalize="characters" autoCorrect={false} editable={!busy} />

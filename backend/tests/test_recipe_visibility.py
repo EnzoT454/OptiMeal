@@ -81,70 +81,32 @@ def test_create_public_and_owner_only_mutations(accounts):
             assert client.delete('/api/v1/recipes/' + recipe_id).status_code == (401 if user is None else 404)
 
 
-def test_public_bucket_photo_url_is_preserved_across_visibility_changes(accounts, postgres):
+def test_publication_is_permanent_and_preserves_favorites_and_calendar(accounts, postgres):
     client, app = accounts
-    payload = body()
-    image_url = f'https://test.supabase.co/storage/v1/object/public/recipes-images/users/{ALICE.id}/photo.jpg'
-    payload['image_url'] = image_url
-    login(app, ALICE)
-    recipe = client.post('/api/v1/recipes', json=payload).json()['item']
+    recipe = create(client, app)
     recipe_id = recipe['id']
-    assert recipe['visibility'] == 'private' and recipe['image_url'] == image_url
-    for visibility in ('public', 'private', 'public'):
-        login(app, ALICE)
-        response = publish(client, recipe_id, visibility)
-        assert response.status_code == 200
-        assert response.json()['item']['image_url'] == image_url
-        assert postgres.scalar(select(Recipe.image_url).where(Recipe.id == recipe_id)) == image_url
-        for user in (BOB, None):
-            login(app, user)
-            detail = client.get('/api/v1/recipes/' + recipe_id)
-            if visibility == 'public':
-                assert detail.status_code == 200 and detail.json()['item']['image_url'] == image_url
-            else:
-                assert detail.status_code == 404
-
-
-def test_unpublish_hides_favorites_and_calendar_without_deleting_meals(accounts):
-    client, app = accounts
-    recipe_id = create(client, app, 'public')['id']
+    assert publish(client, recipe_id, 'public').status_code == 200
+    image_url = client.get('/api/v1/recipes/' + recipe_id).json()['item']['image_url']
     login(app, BOB)
     assert client.put('/api/v1/recipes/' + recipe_id + '/favorite').status_code == 204
-    assert client.get('/api/v1/recipes?scope=favorites').json()['total'] == 1
-    assert client.get('/api/v1/recipes?favorites=true').json()['total'] == 1
-    meal = {'recipe_id': recipe_id, 'date': '2026-11-02', 'meal': 'souper'}
-    response = client.post('/api/v1/plans/entries', json=meal)
-    assert response.status_code == 201, response.text
+    response = client.post('/api/v1/plans/entries', json={
+        'recipe_id': recipe_id, 'date': '2026-11-02', 'meal': 'souper'})
+    assert response.status_code == 201
     entry_id = response.json()['item']['id']
     login(app, ALICE)
-    assert client.post('/api/v1/plans/entries', json=meal).status_code == 201
-    withdrawn = publish(client, recipe_id, 'private').json()['item']
-    assert withdrawn['visibility'] == 'private' and withdrawn['published_at'] is None
-    owner_meal = client.get('/api/v1/plans?week=2026-11-02').json()['item']['entries'][0]
-    assert owner_meal['recipe_name'] is not None
-    login(app, BOB)
-    assert client.get('/api/v1/recipes/' + recipe_id).status_code == 404
-    assert client.get('/api/v1/recipes?scope=favorites').json()['total'] == 0
-    assert client.get('/api/v1/recipes?favorites=true').json()['total'] == 0
-    assert client.put('/api/v1/recipes/' + recipe_id + '/favorite').status_code == 404
-    assert client.post('/api/v1/plans/entries', json=meal).status_code == 404
-    entries = client.get('/api/v1/plans?week=2026-11-02').json()['item']['entries']
-    assert len(entries) == 1 and entries[0]['id'] == entry_id
-    assert entries[0]['recipe_name'] is None and entries[0]['recipe_image_url'] is None
-    updated = client.patch('/api/v1/plans/entries/' + entry_id, json={'servings': 4})
-    assert updated.status_code == 200 and updated.json()['item']['recipe_name'] is None
-    # La republication restaure l'accès et le favori conservé.
-    login(app, ALICE)
+    for response in (publish(client, recipe_id, 'private'), client.delete('/api/v1/recipes/' + recipe_id)):
+        assert response.status_code == 409
+        assert response.json()['error']['code'] == 'PUBLIC_RECIPE_PERMANENT'
     assert publish(client, recipe_id, 'public').status_code == 200
+    for user in (BOB, None):
+        login(app, user)
+        detail = client.get('/api/v1/recipes/' + recipe_id)
+        assert detail.status_code == 200 and detail.json()['item']['image_url'] == image_url
+        assert recipe_id in {r['id'] for r in client.get('/api/v1/recipes?scope=discover&limit=100').json()['items']}
     login(app, BOB)
     assert client.get('/api/v1/recipes?scope=favorites').json()['total'] == 1
-    assert client.get('/api/v1/plans?week=2026-11-02').json()['item']['entries'][0]['recipe_name'] is not None
-    login(app, ALICE)
-    assert publish(client, recipe_id, 'private').status_code == 200
-    login(app, BOB)
-    for _ in range(2):
-        assert client.delete('/api/v1/recipes/' + recipe_id + '/favorite').status_code == 204
-    assert client.delete('/api/v1/plans/entries/' + entry_id).status_code == 204
+    meal = client.get('/api/v1/plans?week=2026-11-02').json()['item']['entries'][0]
+    assert meal['id'] == entry_id and meal['recipe_name'] is not None
 
 
 def test_scope_filters_authentication_pagination_and_invalid_values(accounts):

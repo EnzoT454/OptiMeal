@@ -63,7 +63,7 @@ pour éviter de les transformer en données partagées ou de les perdre.
 | `GET /api/v1/recipes/{id}` | Facultative | Recette publique ou personnelle du compte courant |
 | `POST /api/v1/recipes` | Requise | Créer une recette manuelle, propriétaire déduit du jeton |
 | `PUT /api/v1/recipes/{id}` | Requise | Remplacer sa propre recette et ses ingrédients atomiquement |
-| `PATCH /api/v1/recipes/{id}/visibility` | Requise | Publier ou rendre privée sa propre recette |
+| `PATCH /api/v1/recipes/{id}/visibility` | Requise | Publier définitivement sa propre recette |
 | `DELETE /api/v1/recipes/{id}` | Requise | Supprimer sa propre recette et ses liens/favoris |
 | `PUT /api/v1/recipes/{id}/favorite` | Requise | Ajouter un favori accessible, de façon idempotente |
 | `DELETE /api/v1/recipes/{id}/favorite` | Requise | Retirer son favori, de façon idempotente |
@@ -114,23 +114,24 @@ dans le mobile. Les nouvelles clés `sb_secret_` sont envoyées dans `apikey`,
 sans les employer comme jetons JWT. La clé historique `service_role` reste
 acceptée dans cette variable côté serveur.
 
-Le traitement liste les fichiers du dossier `users/<id>/` dans le bucket
-`recipes-images`, y compris les photos devenues inutilisées et les sous-dossiers,
-puis les supprime par lots. Il demande ensuite la suppression définitive du
-compte par l’API administrative Auth. Les clés étrangères existantes de la
-migration `0003_accounts` suppriment le profil, les recettes personnelles,
-leurs ingrédients, les favoris et les repas planifiés par cascade. Les recettes initiales,
-les recettes des autres comptes et les circulaires sont conservées. Aucune
-migration supplémentaire n’est nécessaire.
+La migration `0015_permanent_public_recipes` doit être appliquée. Le traitement
+marque le compte en cours de suppression et bloque les créations, modifications,
+publications et suppressions de recettes jusqu’à la fin de la suppression.
+Il copie les photos des recettes publiques depuis le dossier personnel vers
+`community/<recipe_id>/`, sans identifiant du compte. L’envoi utilise la clé
+serveur et les nouvelles URL sont sauvegardées avant de nettoyer les originaux.
+Une destination déterministe permet de reprendre après une interruption.
 
-Les clés étrangères de `recipe_rating` retirent aussi toutes les évaluations
-du compte supprimé, courantes et historiques, ainsi que les votes d’autres
-comptes liés à ses recettes supprimées. Les votes des autres comptes sur les
-recettes conservées restent présents. Les moyennes et le classement sont
-recalculés à la lecture suivante. Le test d’intégration de notation passe par
-DELETE /me avec Auth simulé et PostgreSQL local ; il vérifie aussi que le repas
-d’un autre compte lié à une recette supprimée reste indisponible dans son
-calendrier. Aucun nettoyage supplémentaire n’est nécessaire dans le service.
+Le dossier `users/<id>/` est ensuite nettoyé, puis l’API administrative Auth
+supprime le compte. Un déclencheur PostgreSQL détache les recettes publiques
+avant la cascade du profil : elles restent accessibles avec `owner_id = NULL`
+et `seed_key = NULL`, avec leurs ingrédients et références dans les calendriers.
+Les recettes privées, le profil, les favoris, les repas et toutes les versions
+d’évaluations du compte supprimé disparaissent. Les votes et favoris des autres
+comptes sur les recettes publiques conservées restent présents.
+Les autres comptes, les recettes initiales et les circulaires sont conservés.
+Les tests utilisent PostgreSQL local et des fournisseurs Storage/Auth simulés ;
+ils couvrent les copies de photos, les échecs avant nettoyage et la reprise.
 
 Une réussite renvoie **204 sans corps**. Le mobile retire la session locale,
 y compris si la déconnexion distante échoue, et revient à l’accueil visiteur.
@@ -211,4 +212,4 @@ Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quicksta
 [profils utilisateur](https://supabase.com/docs/guides/auth/managing-user-data),
 [liens mobiles](https://supabase.com/docs/guides/auth/native-mobile-deep-linking).
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 5 novembre 2026*

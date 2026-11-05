@@ -8,6 +8,7 @@ from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from backend.app.accounts.service import ensure_profile
+from backend.app.accounts.models import Profile
 from backend.app.common.public_data import search_text
 from backend.app.common.public_router import fail
 from backend.app.security import CurrentUser
@@ -53,7 +54,8 @@ def rating_summaries(db: Session, recipe_ids: list[str], user_id: UUID | None) -
 
 def list_recipes(db: Session, *, q: str, quick: bool, limit: int, offset: int,
                  user_id: UUID | None = None, favorites: bool = False,
-                 scope: RecipeScope = 'accessible', sort: RecipeSort | None = None) -> tuple[list[RecipeSummary], int]:
+                 scope: RecipeScope = 'accessible', sort: RecipeSort | None = None,
+                 easy: bool = False) -> tuple[list[RecipeSummary], int]:
     conditions = [visible(user_id)]
     if scope == 'discover':
         conditions.append(Recipe.visibility == 'public')
@@ -61,6 +63,13 @@ def list_recipes(db: Session, *, q: str, quick: bool, limit: int, offset: int,
         conditions.append(Recipe.owner_id == user_id)
     if quick:
         conditions.append(Recipe.total_time_minutes <= 30)
+    if easy:
+        conditions.append(exists(select(RecipeRating.recipe_id).where(
+            RecipeRating.recipe_id == Recipe.id,
+            RecipeRating.recipe_version == Recipe.content_version,
+        ).group_by(RecipeRating.recipe_id).having(
+            func.sum(RecipeRating.ease_score) >= 4 * func.count(),
+        )))
     if favorites or scope == 'favorites':
         conditions.append(favorite_for(user_id))
     query = search_text(q.strip())
@@ -70,8 +79,12 @@ def list_recipes(db: Session, *, q: str, quick: bool, limit: int, offset: int,
         conditions.append(Recipe.id.in_(ids))
     total = db.scalar(select(func.count()).select_from(Recipe).where(*conditions))
     columns = [Recipe.__table__.c[field] for field in RecipeSummary.model_fields if field in Recipe.__table__.c]
-    statement = select(*columns, Recipe.owner_id, favorite_for(user_id).label('is_favorite')).where(*conditions)
-    selected_sort = sort or {'discover': 'top', 'favorites': 'top', 'mine': 'updated'}.get(scope)
+    ingredient_count = select(func.count()).where(RecipeIngredient.recipe_id == Recipe.id)\
+        .correlate(Recipe).scalar_subquery()
+    statement = select(*columns, Recipe.owner_id, favorite_for(user_id).label('is_favorite'),
+                       ingredient_count.label('ingredient_count'),
+                       func.jsonb_array_length(Recipe.instructions).label('step_count')).where(*conditions)
+    selected_sort = sort or {'discover': 'top', 'favorites': 'top', 'mine': 'newest'}.get(scope)
     if selected_sort == 'top':
         # nR est la somme pondérée : même méthode que ratings.py, sans
         # arrondir les moyennes ni charger les recettes avant pagination.
@@ -127,6 +140,7 @@ def get_recipe(db: Session, recipe_id: str, user_id: UUID | None = None) -> Reci
         if row is not None:
             my_rating = RecipeRatingRead.model_validate({key: row[key] for key in RecipeRatingRead.model_fields})
     return RecipeRead(id=recipe_id, review_required=recipe['review_required'],
+                      ingredient_count=len(rows), step_count=len(validated.instructions),
                       content_version=recipe['content_version'],
                       visibility=recipe['visibility'], published_at=recipe['published_at'],
                       created_at=recipe['created_at'], updated_at=recipe['updated_at'],
@@ -149,6 +163,7 @@ def create_recipe(db: Session, body: RecipeCreate, user: CurrentUser) -> RecipeR
     recipe_id = 'recipe_' + uuid4().hex
     rows = ingredient_rows(db, body, recipe_id)
     ensure_profile(db, user)
+    active_author(db, user)
     db.execute(insert(Recipe).values(id=recipe_id, seed_key=None, owner_id=user.id,
                published_at=datetime.now(timezone.utc) if body.visibility == 'public' else None,
                review_required=False, **body.model_dump(exclude={'ingredients'})))
@@ -158,7 +173,13 @@ def create_recipe(db: Session, body: RecipeCreate, user: CurrentUser) -> RecipeR
     return result
 
 
+def active_author(db: Session, user: CurrentUser) -> None:
+    if db.scalar(select(Profile.deletion_pending).where(Profile.id == user.id).with_for_update()):
+        fail(409, 'ACCOUNT_DELETION_PENDING', 'La suppression du compte est en cours. Réessaie de la terminer depuis les paramètres.')
+
+
 def owned_recipe(db: Session, recipe_id: str, user: CurrentUser) -> None:
+    active_author(db, user)
     if db.scalar(select(Recipe.id).where(Recipe.id == recipe_id, Recipe.owner_id == user.id).with_for_update()) is None:
         fail(404, 'RECIPE_NOT_FOUND', 'Recette personnelle introuvable.')
 
@@ -198,6 +219,8 @@ def update_recipe(db: Session, recipe_id: str, body: RecipeWrite, user: CurrentU
 
 def delete_recipe(db: Session, recipe_id: str, user: CurrentUser) -> None:
     owned_recipe(db, recipe_id, user)
+    if db.scalar(select(Recipe.visibility).where(Recipe.id == recipe_id)) == 'public':
+        fail(409, 'PUBLIC_RECIPE_PERMANENT', 'Une recette publiée ne peut plus être supprimée ni rendue privée.')
     db.execute(delete(Recipe).where(Recipe.id == recipe_id, Recipe.owner_id == user.id))
     db.commit()
 
@@ -206,6 +229,8 @@ def set_visibility(db: Session, recipe_id: str, body: RecipeVisibilityUpdate, us
     owned_recipe(db, recipe_id, user)
     # Le verrou de propriété sérialise publication, retrait et suppression.
     recipe = db.execute(select(Recipe.visibility, Recipe.published_at).where(Recipe.id == recipe_id)).one()
+    if recipe.visibility == 'public' and body.visibility != 'public':
+        fail(409, 'PUBLIC_RECIPE_PERMANENT', 'Une recette publiée ne peut plus être supprimée ni rendue privée.')
     if recipe.visibility != body.visibility:
         db.execute(update(Recipe).where(Recipe.id == recipe_id, Recipe.owner_id == user.id).values(
             visibility=body.visibility,

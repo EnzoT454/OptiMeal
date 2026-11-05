@@ -36,7 +36,7 @@ def recipe_meta(kind='demo') -> ResponseMeta:
 
 
 @router.get('', response_model=Page[RecipeSummary])
-def list_recipes(q: Search = '', quick: bool = False, limit: Limit = 20, offset: Offset = 0,
+def list_recipes(q: Search = '', quick: bool = False, easy: bool = False, limit: Limit = 20, offset: Offset = 0,
                  scope: RecipeScope = 'accessible', sort: RecipeSort | None = None,
                  favorites: bool = False, user: CurrentUser | None = Depends(optional_user),
                  db: Session = Depends(recipe_db)):
@@ -44,7 +44,7 @@ def list_recipes(q: Search = '', quick: bool = False, limit: Limit = 20, offset:
         raise auth_error()
     if favorites and scope not in ('accessible', 'favorites'):
         fail(422, 'VALIDATION_ERROR', 'Utiliser scope=favorites sans autre section.')
-    items, total = service.list_recipes(db, q=q, quick=quick, limit=limit, offset=offset,
+    items, total = service.list_recipes(db, q=q, quick=quick, easy=easy, limit=limit, offset=offset,
                                        user_id=user.id if user else None, favorites=favorites, scope=scope, sort=sort)
     return {'items': items, 'total': total, 'limit': limit, 'offset': offset,
             'meta': recipe_meta('mixed')}
@@ -58,7 +58,8 @@ def get_recipe(recipe_id: str, user: CurrentUser | None = Depends(optional_user)
     return {'item': item, 'meta': recipe_meta('demo' if item.review_required else 'user_content')}
 
 
-@router.patch('/{recipe_id}/visibility', response_model=Detail[RecipeRead])
+@router.patch('/{recipe_id}/visibility', response_model=Detail[RecipeRead],
+              responses={409: {'description': 'Publication définitive ou suppression du compte en cours'}})
 def set_visibility(recipe_id: str, body: RecipeVisibilityUpdate,
                    user: CurrentUser = Depends(current_user), db: Session = Depends(recipe_db)):
     return {'item': service.set_visibility(db, recipe_id, body, user), 'meta': recipe_meta('user_content')}
@@ -74,7 +75,8 @@ def update_recipe(recipe_id: str, body: RecipeWrite, user: CurrentUser = Depends
     return {'item': service.update_recipe(db, recipe_id, body, user), 'meta': recipe_meta('user_content')}
 
 
-@router.delete('/{recipe_id}', status_code=204)
+@router.delete('/{recipe_id}', status_code=204,
+               responses={409: {'description': 'Une recette publique ne peut pas être supprimée'}})
 def delete_recipe(recipe_id: str, user: CurrentUser = Depends(current_user), db: Session = Depends(recipe_db)):
     service.delete_recipe(db, recipe_id, user)
     return Response(status_code=204)

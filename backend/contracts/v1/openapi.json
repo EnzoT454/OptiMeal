@@ -522,6 +522,16 @@
             }
           },
           {
+            "name": "easy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Easy"
+            }
+          },
+          {
             "name": "limit",
             "in": "query",
             "required": false,
@@ -1018,14 +1028,7 @@
             "description": "Not Found"
           },
           "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Conflict"
+            "description": "Une recette publique ne peut pas être supprimée"
           },
           "422": {
             "description": "Unprocessable Entity",
@@ -1125,14 +1128,7 @@
             "description": "Not Found"
           },
           "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Conflict"
+            "description": "Publication définitive ou suppression du compte en cours"
           },
           "422": {
             "description": "Unprocessable Entity",
@@ -3820,7 +3816,10 @@
             "enum": [
               "g",
               "ml",
-              "unit"
+              "unit",
+              "cup",
+              "tbsp",
+              "tsp"
             ],
             "title": "Unit"
           },
@@ -3963,6 +3962,16 @@
           "id": {
             "type": "string",
             "title": "Id"
+          },
+          "ingredient_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Ingredient Count"
+          },
+          "step_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Step Count"
           },
           "content_version": {
             "type": "integer",
@@ -4127,6 +4136,8 @@
         "type": "object",
         "required": [
           "id",
+          "ingredient_count",
+          "step_count",
           "name",
           "description",
           "servings",
@@ -4165,6 +4176,16 @@
           "id": {
             "type": "string",
             "title": "Id"
+          },
+          "ingredient_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Ingredient Count"
+          },
+          "step_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Step Count"
           },
           "content_version": {
             "type": "integer",
@@ -4295,6 +4316,8 @@
         "type": "object",
         "required": [
           "id",
+          "ingredient_count",
+          "step_count",
           "name",
           "description",
           "servings",

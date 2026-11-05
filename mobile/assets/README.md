@@ -17,3 +17,13 @@ utilise la variante pleine en vert et les autres la variante de contour.
 utilisés dans les parcours Recettes. La police DM Sans (400, 500 et 700) vient
 de `@expo-google-fonts/dm-sans` et est chargée avec `expo-font`. Ces ressources
 sont locales ; les photos de recettes restent servies par Storage.
+
+`icons/egg-pan.svg` est une icône locale créée pour le filtre Faciles : un œuf
+dans une poêle. Elle est aussi utilisée pour le critère Facilité des
+évaluations. `expo-image` la teinte en vert ou en blanc selon la sélection.
+Les autres filtres de Recettes utilisent MaterialCommunityIcons : grille,
+chronomètre et tirelire, avec leurs libellés sous les cercles.
+
+`icons/taste-excellent.svg` représente une fourchette et un couteau parallèles,
+à l’horizontale, pointant vers la droite. Cette icône locale illustre le critère
+Goût dans le détail des évaluations ; `expo-image` la teinte en vert.

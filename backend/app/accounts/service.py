@@ -13,4 +13,4 @@ def ensure_profile(db: Session, user: CurrentUser) -> None:
 
 def read_profile(db: Session, user: CurrentUser) -> ProfileRead:
     row = db.execute(select(Profile.__table__).where(Profile.id == user.id)).mappings().one()
-    return ProfileRead(email=user.email, **dict(row))
+    return ProfileRead(email=user.email, **{key: row[key] for key in ('id', 'display_name', 'created_at')})

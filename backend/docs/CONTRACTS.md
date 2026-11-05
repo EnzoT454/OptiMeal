@@ -54,11 +54,11 @@ HTTP sont inchangés ; les droits et limites Storage sont décrits dans
 | Méthode et route | Réponse | Filtres |
 | --- | --- | --- |
 | `GET /api/v1/ingredients` | Liste du référentiel commun | `q`, `limit`, `offset` |
-| `GET /api/v1/recipes` | Recettes publiques et personnelles accessibles | `scope`, `q`, `quick`, `favorites`, `limit`, `offset` |
+| `GET /api/v1/recipes` | Recettes publiques et personnelles accessibles | `scope`, `q`, `quick`, `easy`, `favorites`, `limit`, `offset`, `sort` |
 | `GET /api/v1/recipes/{id}` | Recette complète accessible, avec ingrédients et étapes | — |
 | `POST /api/v1/recipes` | Créer une recette personnelle, propriétaire issu du jeton | Connexion requise |
 | `PUT /api/v1/recipes/{id}` | Remplacer sa propre recette | Connexion requise |
-| `PATCH /api/v1/recipes/{id}/visibility` | Publier ou rendre privée sa propre recette | Connexion requise |
+| `PATCH /api/v1/recipes/{id}/visibility` | Publier définitivement sa propre recette | Connexion requise |
 | `DELETE /api/v1/recipes/{id}` | Supprimer sa propre recette | Connexion requise |
 | `PUT / DELETE /api/v1/recipes/{id}/favorite` | Ajouter/retirer son favori | Connexion requise |
 | `GET /api/v1/offers` | Prix relevés avec produit, format et contexte | `ingredient_id`, `retailer`, `store_id`, `category_id`, `promotion_only`, `on_date`, `limit`, `offset` |
@@ -87,7 +87,13 @@ pas la base IANA utilisée par `zoneinfo` ; elle est installée avec
 `q` effectue une recherche partielle sans distinction de casse ou d’accents,
 avec équivalence `œ`/`oe`. Pour les ingrédients, les alias sont aussi
 consultés. Le filtre Rapides correspond à `total_time_minutes <= 30`,
-préparation comprise. Pour ce petit catalogue, les noms candidats sont
+préparation comprise. Le filtre `easy=true` correspond à une moyenne de
+Facilité supérieure ou égale à 4/5 sur les évaluations de la version courante,
+sans arrondi avant comparaison. Les recettes sans évaluation courante sont
+exclues, quelle que soit leur ancienne métadonnée `difficulty`. Une évaluation
+courante suffit ; la note globale et le score de classement ne servent pas à
+ce filtre. Il s’applique avant comptage, tri et pagination et peut être combiné
+avec recherche, sections, favoris et `quick=true`. Pour ce petit catalogue, les noms candidats sont
 normalisés en Python ; les filtres de durée, le comptage et la pagination
 sont exécutés dans PostgreSQL. Création manuelle, édition, suppression et
 favoris utilisent Supabase Auth ; les parcours IA restent à implémenter.
@@ -97,6 +103,13 @@ visibles ; avec un jeton valide, les recettes privées du compte s’ajoutent.
 [AUTH.md](AUTH.md).
 
 ### Visibilité et sections de recettes — étape backend
+
+Les listes et détails exposent `ingredient_count` et `step_count`, deux entiers
+positifs ou nuls calculés depuis les ingrédients et les étapes courants.
+La liste fournit ces compteurs dans sa requête SQL, sans charger chaque détail
+ni ajouter de colonne en base. Les exemples de recettes initiales suivent la
+même convention. Ces champs sont des données de lecture, pas des champs du
+formulaire de création ou de modification.
 
 La migration `0009_recipe_visibility` est requise. Liste et détail exposent
 `visibility` (`private` ou `public`) et `published_at` (horodatage avec fuseau,
@@ -116,7 +129,7 @@ section, y compris pour `total`. L’ancien `favorites=true` reste accepté avec
 `discover` renvoie 422. Une section inconnue renvoie 422.
 
 `POST /api/v1/recipes` accepte `visibility`, privée par défaut. Une création
-publique fixe `published_at` côté serveur. Pour publier ou retirer une recette :
+publique fixe `published_at` côté serveur. Pour publier une recette privée :
 
 ```http
 PATCH /api/v1/recipes/recipe_identifiant/visibility
@@ -126,34 +139,31 @@ Content-Type: application/json
 {"visibility": "public"}
 ```
 
-La réponse 200 contient le détail sous `item`. Utiliser `private` pour retirer
-la publication ; la date redevient nulle. Répéter le même état conserve la date
-existante. Une nouvelle publication reçoit une nouvelle date. Les champs
-propriétaire et date de publication ne sont pas acceptés dans les écritures.
-401 sans session, 404 pour une recette absente, initiale ou appartenant à un
-autre compte, 422 pour un état invalide, 503 si la base est indisponible.
+La réponse 200 contient le détail sous `item`. La publication est définitive :
+`PATCH` vers `private` et `DELETE` d’une recette publique renvoient
+**409 `PUBLIC_RECIPE_PERMANENT`**, y compris pour le propriétaire.
+Répéter `public` conserve la date de publication. Une recette restée privée
+peut être modifiée, supprimée ou recevoir un PATCH `private` idempotent.
+Les champs propriétaire et date de publication ne sont pas acceptés dans les
+écritures. 401 sans session, 404 pour une recette absente, initiale ou d’autrui,
+422 pour un état invalide et 503 si la base est indisponible.
 
-Le `PUT` de contenu conserve son contrat actuel et ne change jamais la
-visibilité ; utiliser le `PATCH` dédié. Une recette publique d’un autre auteur
-reste non modifiable et non supprimable par le lecteur.
+Le `PUT` modifie le contenu sans changer la visibilité. En édition, le mobile
+enregistre ce contenu avant de publier par PATCH ; une erreur de publication
+signale la sauvegarde partielle. La confirmation indique le caractère définitif.
+Les recettes publiques ne proposent plus de retrait ni de suppression.
 
-Après retrait du public, le détail devient inaccessible aux autres comptes
-(404) et leurs favoris masquent la recette. Les associations de favoris sont
-conservées : une republication les réaffiche. Retirer son propre favori reste
-possible et idempotent même si la recette est devenue inaccessible ; cette
-opération ne confirme pas l’existence de la recette. Le calendrier masque
-alors nom et photo sans supprimer le repas ; voir [PLANNING.md](PLANNING.md).
-
-Le mobile utilise ces sections depuis le 1er novembre : Découvrir, Mes recettes
-et Favoris. Le formulaire propose le partage et le détail les actions de publication
-et retrait après confirmation. Le POST transmet la visibilité ; en édition,
-le contenu utilise PUT et le statut PATCH. Pour un retrait, PATCH précède PUT ;
-pour une publication, PUT précède PATCH. Une erreur entre les requêtes est
-signalée comme une sauvegarde partielle par le mobile. Le prototype conserve le
-bucket public `recipes-images`, pour toutes les photos de recettes. Une URL
-déjà connue reste accessible même après retrait de la publication. Le changement
-de visibilité conserve le fichier et son URL. La séparation privé/public du
-stockage est reportée après le prototype ; voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
+Les recettes publiques restent dans Découvrir, les favoris et les calendriers
+après suppression du compte auteur. Avec `0015_permanent_public_recipes`,
+leur `owner_id` devient NULL sans les transformer en recettes initiales ;
+aucun autre compte n’en devient propriétaire. Les photos du dossier personnel
+sont copiées côté serveur sous `community/` avant le nettoyage des originaux.
+Le compte perd ses données privées et ses propres évaluations ; les votes
+et favoris des autres utilisateurs sur les recettes conservées restent présents.
+Pendant une suppression de compte commencée, créer, modifier, publier ou
+supprimer une recette renvoie **409 `ACCOUNT_DELETION_PENDING`** ; l’utilisateur
+peut relancer la suppression depuis les paramètres.
+Le bucket `recipes-images` reste public pendant le prototype.
 
 ## Notation des recettes
 
@@ -219,8 +229,9 @@ de la recette retirent les évaluations concernées par cascade.
 Votes, retrait de vote, publication et suppression utilisent le verrou de la
 recette pour sérialiser leurs mutations. Les agrégats SQL sont recalculés à
 la lecture, par groupe pour une page ; aucun vote brut n’est chargé par carte.
-Les notes d’une recette retirée du public sont conservées et redeviennent
-accessibles à sa republication ; seules celles du contenu courant comptent.
+La publication est définitive. Après suppression du compte auteur, les notes
+des autres comptes sur sa recette publique restent conservées ; seules celles
+du contenu courant comptent.
 Le filtrage par version s’applique aux moyennes, effectifs et au classement.
 Voir [RATINGS.md](RATINGS.md).
 
@@ -264,7 +275,7 @@ Changer les données entre deux requêtes peut déplacer une recette d’une pag
 | `updated` | Modification décroissante, inconnue à la fin, puis identifiant |
 
 Sans `sort`, Découvrir et Favoris choisissent `top`, Mes recettes choisit
-`updated`. `scope=accessible` (y compris sans section) conserve l’ordre
+`newest` (date de création décroissante). `scope=accessible` (y compris sans section) conserve l’ordre
 historique par identifiant pour ses consommateurs existants. Ces règles ne
 changent pas le rapprochement « Cuisiner avec les promos ».
 
@@ -277,7 +288,8 @@ Voir [MIGRATIONS.md](MIGRATIONS.md#dates-et-tris-des-recettes).
 
 Le mobile affiche les moyennes et effectifs sur les cartes de ses trois
 sections. Découvrir et Favoris proposent « Mieux notées » et « Plus récentes » ;
-Mes recettes propose « Modifiées récemment » et « Créées récemment ». Le choix
+Mes recettes affiche directement les créations de la plus récente à la plus
+ancienne, sans sélecteur de tri. Pour Découvrir et Favoris, le choix
 est conservé par section et au retour du détail ; le changement de tri ramène
 à la première page, sans effacer la recherche ni le filtre.
 
@@ -298,7 +310,9 @@ seul le compte authentifié est supprimé. La réponse est 204 sans corps ; 401
 si la session manque, 422 si la confirmation est invalide ou un champ interdit
 est fourni, et 503 en cas de panne ou de configuration serveur manquante.
 
-Le nettoyage des photos précède la suppression Auth et les cascades métier.
+Les photos des recettes publiques sont conservées avant le nettoyage du dossier
+personnel. La suppression Auth déclenche ensuite le détachement des recettes
+publiques et les cascades des données privées.
 Ces opérations ne sont pas atomiques : une erreur peut survenir après le retrait
 de photos. Voir le [guide Auth](AUTH.md#suppression-définitive-du-compte) pour
 la configuration, les données supprimées et les limites. L’export OpenAPI
@@ -318,6 +332,12 @@ le mobile calcule ce badge avec le même seuil de 30 minutes que le filtre,
 cuisson comprise. Économique est une indication de l’auteur, pas un coût calculé.
 Les recettes initiales conservent une difficulté non précisée et aucune
 étiquette personnelle. La migration requise est `0004_recipe_metadata`.
+
+Depuis le 5 novembre 2026, le formulaire mobile ne propose plus `difficulty`
+et ne l’envoie plus à la création ou à l’édition ; le détail ne l’affiche plus.
+Ce champ reste accepté par l’API pour compatibilité et ses anciennes valeurs
+sont conservées. Les autres utilisateurs évaluent la facilité via `ease_score` ;
+le filtre Faciles utilise cette moyenne courante, pas la métadonnée de l’auteur.
 
 ## Photos des produits
 
@@ -431,7 +451,10 @@ s’appliquent à `/api/v1/` ; les erreurs historiques restent inchangées.
 - Les quantités et montants sont des **chaînes décimales**, par exemple
   `"0.970"`, `"150"`, `"2.49"`. Les nombres JSON, virgules, exposants,
   valeurs négatives et valeurs non finies sont refusés par ces contrats.
-- Les ingrédients de recette utilisent `g`, `ml` ou `unit`. Les quantités
+- Les ingrédients de recette utilisent `g`, `ml`, `unit`, `cup` (tasse, 250 ml),
+  `tbsp` (cuillère à table, 15 ml) ou `tsp` (cuillère à thé, 5 ml).
+  Les unités choisies sont conservées sans conversion automatique. Appliquer `0014_recipe_kitchen_units`
+  avant d’enregistrer les nouvelles unités. Les quantités
   sont strictement positives ; `unit` désigne des pièces entières dans
   cette première version. Les portions sont un entier strictement positif.
 - Les durées sont des entiers en minutes. Le total est préparation +
@@ -532,4 +555,4 @@ résumés/détails ajoutent `is_owned` et `is_favorite`. Les métadonnées
 manuelles confirmées n’exigent pas la revue des recettes de démonstration.
 Voir [AUTH.md](AUTH.md) pour les corps, droits et codes de réponse.
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 5 novembre 2026*

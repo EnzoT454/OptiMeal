@@ -1,10 +1,11 @@
 import { ComponentProps, PropsWithChildren } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Image } from 'expo-image';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, Field, Screen } from './ui';
 
-export const recipeColors = { background: '#fafbf8', ink: '#192d23', muted: '#617068', green: '#216b48', light: '#edf5ec', border: '#e1e8df' };
+export const recipeColors = { background: '#fafbf8', ink: '#192d23', muted: '#617068', green: '#216b48', light: '#edf5ec', border: '#e1e8df', warning: '#9f2d20', warningBackground: '#fff4f1', warningBorder: '#e8b4aa' };
 const icons = {
   book: require('../assets/figma/book.svg'), search: require('../assets/figma/search.svg'),
   leaf: require('../assets/figma/leaf.svg'), back: require('../assets/figma/back.svg'),
@@ -32,7 +33,21 @@ export function RecipeButton({ variant = 'primary', ...props }: ComponentProps<t
   return <Button {...props} style={[recipeStyles.button, variant === 'neutral' && recipeStyles.neutralButton, props.style]}
     textStyle={[recipeStyles.buttonText, variant === 'neutral' && { color: recipeColors.ink }, props.textStyle]} />;
 }
-export function RecipeChip({ label, selected, onPress }: { label: string; selected?: boolean; onPress?: () => void }) {
+export function RecipeChip({ label, selected, onPress, icon }: {
+  label: string; selected?: boolean; onPress?: () => void;
+  icon?: ComponentProps<typeof MaterialCommunityIcons>['name'] | 'egg-pan';
+}) {
+  if (icon && onPress) return <Pressable accessibilityRole="button" accessibilityLabel={label}
+    accessibilityState={{ selected: !!selected }} onPress={onPress} style={recipeStyles.iconFilter}>
+    <View style={[recipeStyles.filterCircle, selected && { backgroundColor: recipeColors.green }]}>
+      {icon === 'egg-pan'
+        ? <Image source={require('../assets/icons/egg-pan.svg')} style={{ width: 28, height: 28 }}
+          contentFit="contain" tintColor={selected ? 'white' : recipeColors.green} accessible={false} />
+        : <MaterialCommunityIcons name={icon} size={28} color={selected ? 'white' : recipeColors.green} accessible={false} />}
+    </View>
+    <Text style={[recipeStyles.filterLabel, selected && { fontFamily: 'DMSans_700Bold', color: recipeColors.green }]}
+      numberOfLines={2} maxFontSizeMultiplier={1.3}>{label}</Text>
+  </Pressable>;
   const content = <Text style={[recipeStyles.chipText, selected && { color: 'white' }]}>{label}</Text>;
   return onPress ? <Pressable accessibilityRole="button" accessibilityState={{ selected: !!selected }}
     onPress={onPress} hitSlop={4} style={[recipeStyles.chip, selected && { backgroundColor: recipeColors.green }]}>{content}</Pressable>
@@ -63,6 +78,9 @@ export const recipeStyles = StyleSheet.create({
   chips: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
   chip: { padding: 10, minHeight: 36, borderRadius: 10, backgroundColor: recipeColors.light },
   chipText: { fontFamily: 'DMSans_500Medium', fontSize: 12, lineHeight: 16, color: recipeColors.green },
+  iconFilter: { width: 76, alignItems: 'center', gap: 6 },
+  filterCircle: { width: 60, height: 60, borderRadius: 30, alignItems: 'center', justifyContent: 'center', backgroundColor: recipeColors.light },
+  filterLabel: { fontFamily: 'DMSans_500Medium', fontSize: 12, lineHeight: 15, color: recipeColors.ink, textAlign: 'center' },
   count: { fontFamily: 'DMSans_700Bold', fontSize: 13, lineHeight: 18, color: recipeColors.green },
   label: { fontFamily: 'DMSans_700Bold', fontSize: 13, lineHeight: 18, color: recipeColors.ink, marginBottom: 7 },
   input: { fontFamily: 'DMSans_400Regular', fontSize: 15, lineHeight: 20, color: recipeColors.ink,
@@ -72,5 +90,9 @@ export const recipeStyles = StyleSheet.create({
   neutralButton: { backgroundColor: 'white', borderWidth: 1, borderColor: recipeColors.border },
   choice: { borderRadius: 16, backgroundColor: 'white', paddingHorizontal: 16, paddingVertical: 12, gap: 6 },
   notice: { backgroundColor: recipeColors.light, padding: 16, borderRadius: 14, gap: 5 },
+  requiredNotice: { backgroundColor: recipeColors.warningBackground, borderWidth: 1,
+    borderColor: recipeColors.warningBorder, borderRadius: 12, padding: 14, gap: 8 },
+  requiredTitle: { fontFamily: 'DMSans_700Bold', fontSize: 14, lineHeight: 20, color: recipeColors.warning },
+  requiredItem: { fontFamily: 'DMSans_400Regular', fontSize: 14, lineHeight: 20, color: recipeColors.warning },
   remove: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: recipeColors.green, paddingVertical: 8 },
 });

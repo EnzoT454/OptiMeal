@@ -19,7 +19,7 @@ def positive(value: str) -> str:
 DecimalText = Annotated[str, StringConstraints(pattern=r'^(0|[1-9][0-9]*)(\.[0-9]+)?$')]
 Quantity = Annotated[DecimalText, AfterValidator(positive)]
 IngredientId = Annotated[str, StringConstraints(pattern=r'^ing_[a-z0-9_]+$')]
-RecipeUnit = Literal['g', 'ml', 'unit']
+RecipeUnit = Literal['g', 'ml', 'unit', 'cup', 'tbsp', 'tsp']
 Retailer = Literal['maxi', 'metro', 'superc']
 
 

@@ -126,7 +126,7 @@ def test_version_is_required_strict_and_checked_under_lock(accounts, postgres, v
 def test_visibility_changes_keep_versions_and_private_history_is_not_shared(accounts):
     client, app = accounts
     recipe_id, payload = create_and_rate(accounts)
-    for visibility in ('private', 'public'):
+    for visibility in ('public',):
         login(app, ALICE)
         item = client.patch('/api/v1/recipes/' + recipe_id + '/visibility', json={'visibility': visibility}).json()['item']
         assert item['content_version'] == 1 and item['rating']['count'] == 1

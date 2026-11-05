@@ -42,6 +42,7 @@ function panel({ signedIn = true, owned = false, visibility = 'public', myRating
       },
     };
     if (name === 'react-native') return { Text: 'Text', View: 'View', Pressable: 'Pressable', Modal: 'Modal', ScrollView: 'ScrollView',
+      StyleSheet: { create: value => value },
       Alert: { alert: (...args) => alerts.push(args) } };
     if (name.includes('safe-area-context')) return { SafeAreaView: 'SafeAreaView' };
     if (name.includes('AuthContext')) return { useAuth: () => auth };
@@ -237,8 +238,17 @@ test('affichage français à une décimale sans exposer le score de classement',
     criteria: { taste: '4.8', reliability: '4.5', ease: '3' } } });
   const content = text(p.render());
   assert.match(content, /4,3\/5 · 3 évaluations/);
-  assert.match(content, /Goût :/); assert.match(content, /4,8\/5/);
+  assert.match(content, /Moyennes par critère/);
+  const averages = nodes(p.render()).filter(node => node.props?.accessible);
+  assert.deepEqual(averages.map(node => node.props.accessibilityLabel),
+    ['Goût : 4,8 sur 5', 'Fiabilité : 4,5 sur 5', 'Facilité : 3,0 sur 5']);
   assert.doesNotMatch(content, /Note globale|40 %|20 %|ranking_score|bayésien/);
+});
+
+test('un critère sans moyenne est signalé sans afficher de note zéro', () => {
+  const p = panel({ rating: { average: '4', count: 1, criteria: { taste: '4', reliability: null, ease: '4' } } });
+  assert.ok(nodes(p.render()).some(node => node.props?.accessibilityLabel === 'Fiabilité : non évaluée'));
+  assert.doesNotMatch(text(p.render()), /0,0|NaN/);
 });
 
 test('ancienne version : identifier les anciennes notes et proposer une réévaluation sans présélection', async () => {

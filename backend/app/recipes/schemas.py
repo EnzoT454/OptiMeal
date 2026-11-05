@@ -126,6 +126,8 @@ class RecipeRatingSummary(ContractModel):
 
 class RecipeSummary(ContractModel):
     id: str
+    ingredient_count: int = Field(ge=0)
+    step_count: int = Field(ge=0)
     content_version: int = Field(default=1, gt=0)
     name: str
     description: str

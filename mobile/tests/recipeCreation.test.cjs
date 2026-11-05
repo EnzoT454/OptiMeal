@@ -9,8 +9,8 @@ function editor({ localPhoto = null, savedPhoto = null, uploadFails = false, nam
   const calls = [], uploads = [], navigation = [], alerts = [], effects = [];
   let storedVisibility = visibility;
   const states = { 0: [{ id: 'ing_test', name: 'Ingrédient' }], 1: name,
-    8: savedPhoto, 9: localPhoto, 10: [{ ingredient_id: 'ing_test', quantity: '100', unit: 'g', preparation: null }],
-    11: ['Préparer.'], 16: false, 19: visibility, 20: visibility };
+    7: savedPhoto, 8: localPhoto, 9: [{ ingredient_id: 'ing_test', quantity: '100', unit: 'g', preparation: null }],
+    10: ['Préparer.'], 15: false, 18: visibility, 19: visibility };
   let cursor = 0;
   const exports = {};
   const jsx = (type, props) => ({ type, props: props ?? {} });
@@ -72,7 +72,7 @@ for (const name of ['', '   ']) {
       assert.equal(e.calls.length, 0);
       assert.equal(e.uploads.length, 0);
       assert.equal(e.navigation.length, 0);
-      assert.match(e.states[17], /Ajoute un nom/);
+      assert.match(e.states[16], /Ajoute un nom/);
     });
   }
 }
@@ -85,7 +85,7 @@ test('nouvelle recette sans photo : bouton désactivé et aucun envoi même en a
   await flush();
   assert.equal(e.calls.length, 0);
   assert.equal(e.uploads.length, 0);
-  assert.match(e.states[17], /Ajoute une photo/);
+  assert.match(e.states[16], /Ajoute une photo/);
 });
 
 test('photo choisie : envoyer l’image avant de créer avec son URL', async () => {
@@ -97,6 +97,7 @@ test('photo choisie : envoyer l’image avant de créer avec son URL', async () 
   assert.equal(e.calls.length, 1);
   assert.equal(e.calls[0][1].method, 'POST');
   assert.equal(JSON.parse(e.calls[0][1].body).image_url, 'https://example.supabase.co/photo.jpg');
+  assert.equal(Object.hasOwn(JSON.parse(e.calls[0][1].body), 'difficulty'), false);
   assert.equal(e.navigation.length, 1);
 });
 
@@ -105,7 +106,7 @@ test('échec Storage : ne pas créer, conserver la photo pour réessayer', async
   saveButton(e.tree).props.onPress();
   await flush();
   assert.equal(e.calls.length, 0);
-  assert.equal(e.states[9], 'file:///photo.jpg');
+  assert.equal(e.states[8], 'file:///photo.jpg');
   assert.equal(e.navigation.length, 0);
 });
 
@@ -129,12 +130,11 @@ test('une recette existante sans photo reste modifiable', async () => {
 
 test('sélection fixe de l’unité et saisie séparée : envoyer la quantité et l’unité choisies', async () => {
   const e = editor({ localPhoto: 'file:///photo.jpg' });
-  const options = nodes(e.tree).filter(n => n.props?.accessibilityRole === 'radio');
-  assert.equal(options.length, 3);
-  assert.equal(options.filter(n => n.props.accessibilityState.checked).length, 1);
-  options[1].props.onPress();
+  const picker = nodes(e.tree).find(n => n.props?.ingredientLabel);
+  assert.equal(picker.props.value, 'g');
+  picker.props.onChange('ml');
   let tree = e.render();
-  assert.equal(nodes(tree).filter(n => n.props?.accessibilityRole === 'radio')[1].props.accessibilityState.checked, true);
+  assert.equal(nodes(tree).find(n => n.props?.ingredientLabel).props.value, 'ml');
   nodes(tree).find(n => n.props?.label === 'Quantité').props.onChangeText('12,5');
   tree = e.render();
   saveButton(tree).props.onPress();
@@ -144,14 +144,27 @@ test('sélection fixe de l’unité et saisie séparée : envoyer la quantité e
   assert.equal(ingredient.unit, 'ml');
 });
 
+for (const [label, unit] of [['Tasse (250 millilitres)', 'cup'], ['Cuillère à table (15 millilitres)', 'tbsp'], ['Cuillère à thé (5 millilitres)', 'tsp']]) {
+  test(`sélectionner ${label} et enregistrer une demi-mesure`, async () => {
+    const e = editor({ localPhoto: 'file:///photo.jpg' });
+    nodes(e.tree).find(n => n.props?.ingredientLabel).props.onChange(unit);
+    nodes(e.render()).find(n => n.props?.label === 'Quantité').props.onChangeText('0,5');
+    saveButton(e.render()).props.onPress();
+    await flush();
+    const ingredient = JSON.parse(e.calls[0][1].body).ingredients[0];
+    assert.equal(ingredient.quantity, '0.5');
+    assert.equal(ingredient.unit, unit);
+  });
+}
+
 test('aucune unité choisie : bloquer avant tout envoi de photo ou de recette', async () => {
   const e = editor({ localPhoto: 'file:///photo.jpg' });
-  e.states[10][0].unit = null;
+  e.states[9][0].unit = null;
   saveButton(e.render()).props.onPress();
   await flush();
   assert.equal(e.calls.length, 0);
   assert.equal(e.uploads.length, 0);
-  assert.match(e.states[17], /Choisis une unité/);
+  assert.match(e.states[16], /Choisis une unité/);
 });
 
 const shareSwitch = tree => nodes(tree).find(n => n.type === 'Switch');
@@ -191,11 +204,11 @@ test('édition : charger la visibilité publique existante', async () => {
     image_url: null, visibility: 'public', ingredients: [], instructions: [], tags: [] } });
   e.effects[0]();
   await flush();
-  assert.equal(shareSwitch(e.render()).props.value, true);
-  assert.equal(e.states[20], 'public');
+  assert.equal(shareSwitch(e.render()), undefined);
+  assert.equal(e.states[19], 'public');
 });
 
-for (const current of ['private', 'public']) {
+for (const current of ['private']) {
   test(`édition ${current} : changement confirmé, ordre des requêtes et PUT sans visibilité`, async () => {
     const e = editor({ id: 'recipe_existing', visibility: current });
     shareSwitch(e.tree).props.onValueChange(current === 'private');
@@ -218,34 +231,16 @@ test('publication échouée après PUT : message de sauvegarde partielle et nouv
   saveButton(e.render()).props.onPress(); confirmSave(e);
   await flush();
   assert.equal(e.navigation.length, 0);
-  assert.match(e.states[17], /modifications sont enregistrées/);
+  assert.match(e.states[16], /modifications sont enregistrées/);
   saveButton(e.render()).props.onPress(); confirmSave(e);
   await flush();
   assert.deepEqual(e.calls.map(call => call[1].method), ['PUT', 'PATCH', 'PUT', 'PATCH']);
   assert.equal(e.navigation.length, 1);
 });
 
-test('retrait échoué : ne pas enregistrer les modifications destinées à une recette privée', async () => {
-  const e = editor({ id: 'recipe_existing', visibility: 'public', failures: { PATCH: 1 } });
-  shareSwitch(e.tree).props.onValueChange(false);
-  saveButton(e.render()).props.onPress(); confirmSave(e);
-  await flush();
-  assert.deepEqual(e.calls.map(call => call[1].method), ['PATCH']);
-  assert.equal(e.navigation.length, 0);
-});
-
-test('retrait réussi mais PUT échoué : conserver le statut privé confirmé et permettre de réessayer', async () => {
-  const e = editor({ id: 'recipe_existing', visibility: 'public', failures: { PUT: 1 } });
-  shareSwitch(e.tree).props.onValueChange(false);
-  saveButton(e.render()).props.onPress(); confirmSave(e);
-  await flush();
-  assert.match(e.states[17], /recette est privée/);
-  assert.equal(e.states[20], 'private');
-  assert.equal(e.navigation.length, 0);
-  saveButton(e.render()).props.onPress();
-  await flush();
-  assert.deepEqual(e.calls.map(call => call[1].method), ['PATCH', 'PUT', 'PUT']);
-  assert.equal(e.navigation.length, 1);
+test('édition publique : aucun interrupteur permettant de retirer la publication', () => {
+  const e = editor({ id: 'recipe_existing', visibility: 'public' });
+  assert.equal(shareSwitch(e.tree), undefined);
 });
 
 test('PUT échoué avant publication : ne pas rendre publique une ancienne version du contenu', async () => {
@@ -254,7 +249,7 @@ test('PUT échoué avant publication : ne pas rendre publique une ancienne versi
   saveButton(e.render()).props.onPress(); confirmSave(e);
   await flush();
   assert.deepEqual(e.calls.map(call => call[1].method), ['PUT']);
-  assert.equal(e.states[20], 'private');
+  assert.equal(e.states[19], 'private');
   assert.equal(e.navigation.length, 0);
 });
 

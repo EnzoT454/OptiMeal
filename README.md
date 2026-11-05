@@ -22,7 +22,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 Éléments réalisés :
 
 - Comptes, profil et mode visiteur.
-- Recettes personnelles, partage public/privé et favoris.
+- Recettes personnelles, recherche, filtres, partage public/privé et favoris.
 - Évaluations des recettes et classement par notes.
 - Calendrier hebdomadaire des repas.
 - Promotions et consultation des circulaires.
@@ -114,12 +114,19 @@ Le [guide du backend](backend/README.md) détaille les routes disponibles et les
 
 ## Lancer le frontend (Mobile)
 
-Installer **Node.js 22.13+ et npm**, puis, depuis la racine du projet :
+Installer **Node.js et npm**. La version Node retenue pour l’équipe est
+**22.23.3**, indiquée dans `mobile/.nvmrc` ; Expo exige une version compatible
+à partir de 22.13. Sélectionner Node 22 avant l’installation, puis, depuis la racine du projet :
 
 ```bash
 cd mobile
 npm ci
 ```
+
+`mobile/package.json` et `mobile/package-lock.json` sont suivis dans Git.
+Après récupération des changements de dépendances, utiliser `npm ci` pour
+réinstaller les versions du verrouillage. Chaque développeur conserve ses
+propres `node_modules/`, `.venv/` et fichiers `.env`, exclus de Git.
 
 Copier `mobile/.env.example` vers `mobile/.env` et renseigner l’adresse de
 l’API ainsi que les deux valeurs publiques Supabase. Sur un téléphone,
@@ -297,7 +304,9 @@ OptiMeal/
 │   │       ├── 0010_preserve_meals.py  # Conservation des repas après suppression de recette
 │   │       ├── 0011_recipe_ratings.py  # Évaluations des recettes
 │   │       ├── 0012_recipe_timestamps.py # Dates pour les tris des recettes
-│   │       └── 0013_rating_versions.py # Versions du contenu évalué
+│   │       ├── 0013_rating_versions.py # Versions du contenu évalué
+│   │       ├── 0014_recipe_kitchen_units.py # Tasses et cuillères
+│   │       └── 0015_permanent_public_recipes.py # Conservation des recettes publiques après suppression du compte
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express
@@ -346,6 +355,8 @@ OptiMeal/
 │   │   ├── RecipeImage.tsx           # Affichage des URL d’images et repli local
 │   │   ├── ProductImage.tsx          # Photos des produits et icône en cas d’erreur
 │   │   ├── IngredientPicker.tsx      # Recherche et sélection des ingrédients communs
+│   │   ├── RecipeUnitPicker.tsx      # Sélecteur compact des six unités de recette
+│   │   ├── RecipeRatingPanel.tsx     # Moyennes par critère et formulaire d’évaluation
 │   │   ├── AccountRequired.tsx       # Protection des écrans personnels
 │   │   ├── recipes.tsx               # Composants partagés du parcours Recettes
 │   │   └── promos.ts                 # Chargement des offres/circulaires et présentation
@@ -439,4 +450,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 2 novembre 2026*
+*Dernière mise à jour : 5 novembre 2026*

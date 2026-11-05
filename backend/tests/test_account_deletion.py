@@ -10,6 +10,7 @@ import pytest
 from backend.app.accounts.deletion import AccountDeletion
 from backend.app.config import Settings
 from backend.app.main import create_app
+from backend.app.database import get_db
 from backend.app.security import CurrentUser, optional_user
 
 USER = CurrentUser(UUID('11111111-1111-4111-8111-111111111111'), 'a@example.test')
@@ -21,6 +22,7 @@ SECRET = 'sb_secret_TEST_ONLY'
 def client_for(handler, *, authenticated=True, configured=True):
     app = create_app(settings=Settings(supabase_url='https://example.supabase.co',
                                       supabase_secret_key=SECRET if configured else None))
+    app.dependency_overrides[get_db] = lambda: None
     if authenticated:
         app.dependency_overrides[optional_user] = lambda: USER
     with TestClient(app) as client:

@@ -15,10 +15,12 @@ const initialImages: Record<string, ImageSourcePropType> = {
   recipe_yogourt_pomme_banane: require('../../data/recipes/images/recette10.png'),
 };
 
-export default function RecipeImage({ recipe }: { recipe: Pick<RecipeSummary, 'id' | 'name' | 'image_url'> }) {
+export default function RecipeImage({ recipe, aspectRatio = 4 / 3 }: {
+  recipe: Pick<RecipeSummary, 'id' | 'name' | 'image_url'>; aspectRatio?: number;
+}) {
   const source = recipe.image_url ? { uri: recipe.image_url } : initialImages[recipe.id];
   if (!source) return null;
-  return <View style={styles.frame}>
+  return <View style={[styles.frame, { aspectRatio }]}>
     <Image source={source} accessibilityLabel={recipe.name}
       resizeMode="cover" style={styles.image} />
   </View>;
