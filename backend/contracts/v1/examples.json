@@ -50,6 +50,8 @@
     "items": [
       {
         "id": "recipe_crepes_banane",
+        "ingredient_count": 6,
+        "step_count": 4,
         "content_version": 1,
         "name": "Crêpes à la banane",
         "description": "Des crêpes fines garnies de banane.",
@@ -77,6 +79,8 @@
       },
       {
         "id": "recipe_mijote_pois_chiches_haricots",
+        "ingredient_count": 7,
+        "step_count": 4,
         "content_version": 1,
         "name": "Mijoté de pois chiches et de haricots rouges",
         "description": "Un mijoté de légumineuses avec tomates et poivron.",
@@ -119,6 +123,8 @@
   "recipe-detail": {
     "item": {
       "id": "recipe_poulet_riz_brocoli",
+      "ingredient_count": 6,
+      "step_count": 4,
       "content_version": 1,
       "name": "Poulet, riz et brocoli",
       "description": "Une assiette de poulet à l’ail avec du riz et du brocoli.",

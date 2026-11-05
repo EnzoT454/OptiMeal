@@ -2,7 +2,7 @@
 
 Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il suit des actions concrètes : se connecter, enregistrer une recette avec une photo, consulter les promotions et ouvrir une circulaire.
 
-Il décrit le code et les confirmations disponibles au **2 novembre 2026**, y compris le mode visiteur, la connexion à la demande, la suppression du compte, la photo obligatoire à la création et les photos des produits dans Promos. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
+Il décrit le code et les confirmations disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
 ## 1. Les grandes parties de l’application
 
@@ -118,25 +118,30 @@ il ne choisit jamais librement l’identifiant du compte à supprimer.
 ```mermaid
 flowchart TD
     U[Paramètres : saisir SUPPRIMER et confirmer] --> A[FastAPI : vérifier la session et la confirmation]
-    A --> S[Retirer les photos de users/id dans recipes-images]
+    A --> P[Conserver les photos publiques sous community et actualiser leurs liens]
+    P --> S[Retirer les photos de users/id dans recipes-images]
     S --> D[Supabase Auth : supprimer définitivement le compte]
-    D --> C[PostgreSQL : cascades vers profil, recettes et favoris]
+    D --> C[PostgreSQL : détacher les recettes publiques puis supprimer les données privées]
     C --> R[Réponse 204]
     R --> M[Effacer la session locale et revenir à l’accueil visiteur]
 ```
 
 [accounts/deletion.py](backend/app/accounts/deletion.py) appelle Storage et
-Auth avec la clé serveur `SUPABASE_SECRET_KEY`. Les relations existantes
-suppriment le profil, les favoris, les repas planifiés et toutes les recettes
-du compte, privées comme publiques, par cascade. Les autres comptes, leurs
-recettes, les recettes initiales du catalogue et les circulaires sont conservés.
-Les repas des autres comptes liés à une recette supprimée restent dans leur
-calendrier avec la mention « Recette indisponible ». Les fichiers inutilisés
-du dossier photo sont aussi supprimés. En cas d’échec, des photos peuvent déjà
-avoir disparu : Storage et Auth ne partagent pas de transaction. La suppression
-du compte est confirmée sur iOS le 1er novembre ; les essais Android et les
-scénarios d’interruption restent à compléter. Les tests ordinaires
-utilisent des fournisseurs simulés. Voir le [guide Auth](backend/docs/AUTH.md#suppression-définitive-du-compte).
+Auth avec la clé serveur `SUPABASE_SECRET_KEY`. Les recettes publiques restent
+accessibles sans lien avec le compte supprimé : la migration `0015` détache
+leur propriétaire avant la suppression du profil. Leurs ingrédients, évaluations
+par les autres comptes, favoris et références dans les calendriers sont conservés.
+Les photos publiques du dossier personnel sont d’abord copiées dans `community/`
+avec une clé serveur, et leurs liens sont actualisés avant le nettoyage des originaux.
+Le profil, les recettes privées, les favoris, les repas et les évaluations du
+compte supprimé sont retirés. Les autres comptes et les circulaires sont conservés.
+La suppression bloque les créations et modifications de recettes du compte
+pendant son traitement. En cas d’échec, il faut relancer la suppression depuis
+Paramètres ; aucune photo publique source n’est effacée avant la sauvegarde
+de sa copie. Storage et Auth ne partagent pas de transaction. Les nouveaux
+parcours sont couverts par des tests locaux avec fournisseurs simulés ; les
+derniers ajustements sont confirmés globalement sur téléphone le 5 novembre,
+sans résultat individuel pour chaque scénario de suppression. Voir le [guide Auth](backend/docs/AUTH.md#suppression-définitive-du-compte).
 
 ### À quoi sert le jeton ?
 
@@ -189,13 +194,27 @@ Le mobile propose trois sections : Découvrir (`scope=discover`, recettes
 publiques), Mes recettes (`scope=mine`, créations du compte) et Favoris
 (`scope=favorites`, favoris accessibles). Découvrir est sélectionnée au départ.
 Les deux autres sections demandent une connexion. Recherche et filtres Toutes,
-Rapides et Petit budget restent dans la section active ; changer de section
+Rapides, Faciles et Petit budget restent dans la section active ; changer de section
 réinitialise la pagination. Les cartes indiquent Par vous, Par OptiMeal ou
 Par la communauté. Mes recettes affiche aussi le statut Privée/Publique.
-Les cartes affichent la note globale et le nombre d’évaluations, ou
-« Pas encore évaluée ». Découvrir et Favoris proposent Mieux notées (par
-défaut) et Plus récentes ; Mes recettes propose Modifiées récemment (par
-défaut) et Créées récemment. Le tri est conservé par section et au retour du
+Le filtre Faciles demande au serveur les recettes dont la moyenne du critère
+Facilité atteint au moins 4/5 pour la version courante. Les recettes sans
+évaluation courante sont exclues. Ce filtre s’applique avant le comptage et
+la pagination, dans la section choisie et avec la recherche active.
+Les cartes affichent la durée, les portions et les nombres d’ingrédients et
+d’étapes avec des icônes. Ces compteurs viennent directement de la liste API,
+sans charger le détail de chaque recette. La note globale et le nombre d’avis
+figurent en bas à droite, avec une étoile et le format « 4,5 (28) », ou
+« Non notée ». L’auteur et la visibilité dans Mes recettes sont à gauche ;
+le cœur en haut à droite de la photo permet d’ajouter ou retirer un favori
+sans ouvrir la recette. Il est en contour ou plein selon l’état confirmé et
+affiche un indicateur pendant l’enregistrement. Une erreur conserve la carte
+et son état ; sans compte, cette action propose la connexion. Dans Favoris,
+un retrait confirmé recharge les résultats et leur compteur. Le reste de
+la carte ouvre le détail.
+Découvrir et Favoris proposent Mieux notées (par
+défaut) et Plus récentes ; Mes recettes affiche les créations de la plus récente
+à la plus ancienne, sans choix de tri. Le tri est conservé par section et au retour du
 détail. Le changer ramène à la première page sans effacer recherche et filtres.
 Le serveur trie tous les résultats accessibles avant la pagination. Mieux
 notées tient compte du nombre de votes, sans remplacer la moyenne affichée
@@ -205,10 +224,11 @@ Une section vide propose une action adaptée : créer sa première recette,
 découvrir des recettes ou effacer la recherche et les filtres. Sans paramètre
 de section, le backend conserve la collection accessible pour les autres consommateurs. La création
 accepte `visibility`, privée par défaut ; le propriétaire peut ensuite envoyer
-`PATCH /api/v1/recipes/{id}/visibility` avec `public` ou `private`. Une ancienne
-modification de contenu ne change pas la visibilité. Le formulaire propose un interrupteur de partage, désactivé par défaut à la création, et charge le statut courant en édition. Le détail permet au propriétaire de publier ou rendre privée sa recette après confirmation. Le même bucket public de photos
+`PATCH /api/v1/recipes/{id}/visibility` avec `public` pour publier ; le retour
+au privé d’une recette publique est refusé. Une ancienne
+modification de contenu ne change pas la visibilité. Le formulaire propose un interrupteur de partage, désactivé par défaut à la création, et charge le statut courant en édition. Le détail permet au propriétaire de publier définitivement sa recette après confirmation. Une recette publique ne peut plus être supprimée ni rendue privée. Le même bucket public de photos
 est conservé pendant le prototype ; sa séparation privé/public est reportée après
-le prototype. Publier ou rendre privée une recette conserve le fichier et son URL.
+le prototype. Publier une recette conserve le fichier et son URL. La suppression du compte copie ensuite les photos publiques vers un dossier serveur avant le nettoyage du dossier personnel.
 Les règles détaillées sont dans les [contrats](backend/docs/CONTRACTS.md).
 
 ## 5. Créer une recette et enregistrer sa photo
@@ -236,8 +256,8 @@ flowchart TD
 
 Les responsabilités se répartissent ainsi :
 
-1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes, la difficulté et les étiquettes. Le nom est obligatoire : le bouton d’enregistrement reste désactivé s’il est vide ou ne contient que des espaces. À la création, une photo est également obligatoire ; les autres champs requis sont vérifiés avant l’enregistrement.
-2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. La quantité se saisit dans un champ numérique séparé ; l’unité se choisit parmi trois boutons visibles : g, ml et unité. Aucune unité n’est présélectionnée pour un nouvel ingrédient. Les quantités doivent être positives et les unités en pièces entières. `recipeForm.ts` regroupe ces validations et les règles des badges.
+1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes et les étiquettes. Le nom est obligatoire : le bouton d’enregistrement reste désactivé s’il est vide ou ne contient que des espaces. À la création, une photo est également obligatoire ; les autres champs requis sont vérifiés avant l’enregistrement. L’auteur ne choisit plus la difficulté : les autres utilisateurs évaluent la facilité avec le critère « Facilité ». L’ancienne difficulté n’est plus affichée dans le détail.
+2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. La quantité se saisit dans un champ numérique séparé ; l’unité se choisit dans un sélecteur compact ouvrant une liste en bas de l’écran : g, ml, unité, tasse (250 ml), cuillère à table (15 ml) et cuillère à thé (5 ml). Le choix courant porte une coche ; fermer la liste sans sélection conserve la valeur. Aucune unité n’est présélectionnée pour un nouvel ingrédient. Les quantités doivent être positives ; seules les pièces exigent un entier. Une demi-tasse se saisit avec `0,5`. L’unité choisie est conservée et affichée dans le détail. La migration `0014_recipe_kitchen_units` doit être appliquée avant d’enregistrer les nouvelles unités. `recipeForm.ts` regroupe ces validations et les règles des badges.
 3. La photo, obligatoire pour créer une recette, est préparée par `recipeImages.ts` : JPEG, côté maximal de 1 200 pixels et limite de 5 Mo. Son envoi intervient à l’enregistrement.
 4. `api.ts` transmet le formulaire à FastAPI avec le jeton.
 5. Le backend exige une URL de photo HTTPS valide à la création, valide les autres champs et vérifie que les ingrédients existent en base. Il déduit le propriétaire de l’identité authentifiée.
@@ -247,25 +267,21 @@ Les responsabilités se répartissent ainsi :
 
 Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les politiques Storage limitent les écritures à `users/<identifiant du compte>/`. En édition, retirer une photo enregistre `image_url: null` ; le fichier n’est pas automatiquement supprimé. Cette politique publique concerne les photos de recettes ; le futur parcours des reçus prévoit un stockage privé.
 
-### Choisir la visibilité et changer la publication
+### Choisir la visibilité et publier définitivement
 
-Le réglage « Partager avec la communauté » prépare le choix sans envoyer de
-requête. Le bouton Enregistrer valide d’abord les champs, puis demande une
-confirmation si la recette doit être publiée ou changer de visibilité. Annuler
-n’envoie ni photo ni recette. À la création, le statut choisi fait partie du
-POST ; il reste privé par défaut.
+Une recette est privée par défaut. Le réglage « Partager avec la communauté »
+prépare sa publication ; Enregistrer demande une confirmation qui explique
+qu’elle est définitive. Annuler n’envoie ni photo ni recette.
+Une fois publique, la recette ne peut plus être rendue privée ni supprimée.
+Elle reste dans Découvrir et accessible depuis les calendriers où elle a été
+ajoutée, même si son auteur supprime son compte.
 
-En édition, le contenu passe toujours par PUT et le changement de statut par
-PATCH. Pour rendre privée une recette publique, le retrait est confirmé par
-le serveur avant l’envoi des modifications de contenu. Pour publier une recette
-privée, le contenu est enregistré avant publication. Ces deux requêtes ne sont
-pas une transaction commune : si une seule réussit, le formulaire indique
-l’opération confirmée et celle à réessayer, sans quitter l’écran.
-
-Dans le détail, seules les recettes du propriétaire affichent « Publier la
-recette » ou « Rendre privée », avec une confirmation et le statut courant.
-Les actions sont bloquées pendant la requête et le statut est mis à jour à
-partir de la réponse du serveur. Une erreur conserve le dernier statut confirmé.
+Le propriétaire peut encore modifier le contenu d’une recette publique.
+En édition d’une recette privée, le contenu est enregistré par PUT avant
+la publication par PATCH. Si la publication échoue, le formulaire précise que
+le contenu a été enregistré et permet de réessayer. Une recette déjà publique
+n’affiche plus d’interrupteur de partage ni de bouton Supprimer ou Rendre privée.
+Le serveur refuse également ces opérations avec `409 PUBLIC_RECIPE_PERMANENT`.
 
 ### Modifier, supprimer et mettre en favori
 
@@ -273,8 +289,8 @@ partir de la réponse du serveur. Une erreur conserve le dernier statut confirm�
 | --- | --- | --- |
 | Créer | `POST /api/v1/recipes` | Associer au compte authentifié |
 | Modifier | `PUT /api/v1/recipes/{id}` | Vérifier le propriétaire |
-| Supprimer | `DELETE /api/v1/recipes/{id}` | Vérifier le propriétaire |
-| Publier ou rendre privée | `PATCH /api/v1/recipes/{id}/visibility` | Vérifier le propriétaire ; recettes initiales exclues |
+| Supprimer | `DELETE /api/v1/recipes/{id}` | Propriétaire ; recette privée uniquement |
+| Publier | `PATCH /api/v1/recipes/{id}/visibility` | Propriétaire ; publication définitive, recettes initiales exclues |
 | Ajouter un favori | `PUT /api/v1/recipes/{id}/favorite` | La recette doit être accessible au compte |
 | Retirer un favori | `DELETE /api/v1/recipes/{id}/favorite` | Retirer seulement le favori de ce compte |
 
@@ -488,7 +504,7 @@ Une recette contient plusieurs lignes `recipe_ingredient`. Chaque ligne relie la
 
 Les étapes sont conservées dans un champ JSON de `recipe`. Le lien `image_url` est une URL de fichier ; ce n’est pas une clé étrangère PostgreSQL vers Storage.
 
-Pour les recettes initiales, `owner_id` est nul et `seed_key` identifie la recette importée. Pour une recette personnelle, `owner_id` référence le profil du propriétaire.
+Pour les recettes publiques conservées après suppression du compte, `owner_id` et `seed_key` sont nuls. Pour les recettes initiales, `owner_id` est nul et `seed_key` identifie la recette importée. Pour une recette personnelle, `owner_id` référence le profil du propriétaire.
 
 Le catalogue et les circulaires disposent aussi de tables :
 
@@ -641,7 +657,7 @@ instantanés prévu pour les anciennes semaines. Les listes et le calcul
 économique restent à développer. Voir le [guide du calendrier](backend/docs/PLANNING.md)
 pour l’installation, les routes, les limites et les essais sur appareil.
 
-Si une recette publique ajoutée par un autre compte redevient privée, le backend
+Depuis le 5 novembre, une recette publique ne peut plus être rendue privée ni supprimée par son auteur et reste accessible après suppression de son compte. Pour une référence exceptionnellement devenue inaccessible, le backend
 conserve son repas mais renvoie un nom et une photo nuls. Il masque aussi cette
 recette dans les favoris du lecteur. Le mobile affiche « Recette indisponible » dans la carte et le menu.
 Les portions, le déplacement et le retrait restent possibles ; ouverture,
@@ -684,6 +700,8 @@ flowchart LR
 | `0011_recipe_ratings.py` | Table des évaluations avec trois notes, unicité par compte et recette, horodatages et cascades |
 | `0012_recipe_timestamps.py` | Dates de création et de modification pour les tris ; anciennes dates inconnues conservées à NULL |
 | `0013_rating_versions.py` | Votes conservés par version du contenu ; anciennes notes exclues des moyennes et du classement courants |
+| `0014_recipe_kitchen_units.py` | Tasses et cuillères acceptées comme unités de recette, sans conversion des quantités existantes ; appliquée sur Supabase le 5 novembre 2026 |
+| `0015_permanent_public_recipes.py` | Conservation des recettes publiques sans propriétaire après suppression du compte ; appliquée sur Supabase le 5 novembre 2026 |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -941,7 +959,17 @@ Cette configuration permet les appels API depuis ces deux origines locales. Un a
 
 ## 13. Ce qui fonctionne et le parcours encore à construire
 
-Les trois scénarios manuels de partage ont été validés le 1er novembre 2026 : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. 
+Les derniers ajustements de Recettes sont confirmés fonctionnels sur téléphone
+le 5 novembre 2026 : cartes ouvrant le détail, informations compactes avec
+compteurs, favoris sur la photo, filtres illustrés dont Faciles, retrait du
+choix de difficulté par l’auteur et ordre de création décroissant dans Mes
+recettes. La confirmation inclut également le formulaire simplifié, les six
+unités et leur sélecteur, le retour visuel des champs obligatoires, la
+publication définitive et les notes en trois colonnes avec icônes. La plateforme n’est pas précisée ; cette confirmation globale ne
+remplace pas des résultats distincts sur iOS et Android ou pour chaque erreur
+réseau.
+
+Avant la publication définitive du 5 novembre, les trois scénarios manuels de partage avaient été validés le 1er novembre 2026 : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire.
 
 Le nom obligatoire et la quantité séparée du choix de l’unité (g, ml ou unité) ont été validés sur iOS le 1er novembre 2026. Les essais Android de ces ajustements restent à effectuer.
 
@@ -1017,7 +1045,10 @@ demande une confirmation, puis recharge les moyennes. Si ce rechargement
 moyennes sans renvoyer la suppression.
 
 Le détail affiche la note globale, le nombre d’évaluations et les trois
-moyennes, ou « Pas encore évaluée ». La note globale pondère le goût à 40 %,
+moyennes, ou « Pas encore évaluée ». Les moyennes Goût, Fiabilité et Facilité
+occupent trois colonnes sur une même ligne, avec une icône, le libellé et
+une note sur 5 pour chaque critère. Chaque bloc possède aussi un libellé
+complet pour les lecteurs d’écran. La note globale pondère le goût à 40 %,
 la fiabilité à 40 % et la facilité à 20 %, sans afficher ces poids dans l’interface.
 Les fonctions backend calculent déjà les moyennes par critère, la note
 pondérée et un score de classement ajusté au nombre de votes. Elles sont
@@ -1032,7 +1063,7 @@ que les tests sur téléphone fonctionnent ; la plateforme n’est pas précisé
 recettes déjà présentes ; elle est appliquée sur Supabase. Les recettes
 sans note suivent les recettes évaluées dans Mieux notées. Le tri Plus récentes
 utilise la publication, ou la création en base si la publication manque ; dans
-Mes recettes, Créées récemment utilise seulement la création. Les dates
+Mes recettes, le tri utilise seulement la création. Les dates
 inconnues sont placées à la fin.
 
 Un changement d’ingrédients, d’étapes, de portions ou de durées ouvre une
@@ -1083,4 +1114,4 @@ Pour suivre les ajouts récents, partir des champs `ImageUrl` et `ImageSource` d
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 4 novembre 2026*
+*Dernière mise à jour : 5 novembre 2026*

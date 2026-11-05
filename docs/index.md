@@ -44,7 +44,7 @@ Les principaux objectifs sont les suivants :
 
 Lorsque les prix précis manquent, l’application affichera une fourchette estimée et signalera les articles dont le coût ne peut pas être estimé.
 
-La consultation est accessible sans compte ; les fonctions personnelles demandent une connexion. Les comptes, les recettes manuelles et la consultation des promotions et circulaires sont déjà intégrés. Le calendrier des repas et la notation des recettes sont intégrés. La notation porte sur le goût, la fiabilité et la facilité ; le classement tient compte de la moyenne et du nombre d’évaluations. Les tests sur téléphone sont confirmés réussis le 2 novembre. L’historique stable des plans, les listes d’épicerie, les modes IA et les estimations restent à développer. L’avancement est détaillé dans le [suivi de projet](suivi.md).
+La consultation est accessible sans compte ; les fonctions personnelles demandent une connexion. Les comptes, les recettes manuelles et la consultation des promotions et circulaires sont déjà intégrés. Le calendrier des repas et la notation des recettes sont intégrés. La notation porte sur le goût, la fiabilité et la facilité ; le classement tient compte de la moyenne et du nombre d’évaluations. Les derniers ajustements de Recettes sont confirmés fonctionnels sur téléphone le 5 novembre, sans plateforme précisée. La publication est désormais définitive : les recettes publiques restent accessibles après suppression du compte auteur. L’historique stable des plans, les listes d’épicerie, les modes IA et les estimations restent à développer. L’avancement est détaillé dans le [suivi de projet](suivi.md).
 
 ## Méthodologie
 
@@ -76,7 +76,7 @@ Les résultats, les limites observées et les fonctionnalités effectivement ré
 
 ## Échéancier
 
-Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md). Les statuts correspondent à l’état au 2 novembre 2026. Les prochaines priorités sont l’historique stable des plans, les listes d’épicerie et l’onglet Accueil ; leurs dates restent à planifier.
+Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md). Les statuts correspondent à l’état au 5 novembre 2026. Les prochaines priorités sont l’historique stable des plans, les listes d’épicerie et l’onglet Accueil ; leurs dates restent à planifier.
 
 | Activités | Début | Fin | Livrable | Statut |
 | --- | --- | --- | --- | --- |
@@ -97,4 +97,4 @@ Les périodes ci-dessous reprennent le travail présenté dans le [suivi de proj
 | Onglet Accueil | À planifier | À planifier | Écran d’accueil de l’application | ⏳ À développer |
 | Modes IA, estimations et contributions | À planifier | À planifier | Aide aux recettes, estimations de prix et contribution par reçu, puis évaluation et synthèse | ⏳ À développer |
 
-*Dernière mise à jour : 2 novembre 2026*
+*Dernière mise à jour : 5 novembre 2026*

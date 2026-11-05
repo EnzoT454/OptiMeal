@@ -1,12 +1,17 @@
-import { RecipeDifficulty, RecipeIngredient, RecipeUnit } from '../types/api';
-
-export const difficultyLabels: Record<RecipeDifficulty, string> = { easy: 'Facile', medium: 'Moyenne', hard: 'Difficile' };
+import { RecipeIngredient, RecipeUnit } from '../types/api';
 
 export const recipeUnits: { value: RecipeUnit; label: string; accessibilityLabel: string }[] = [
   { value: 'g', label: 'g', accessibilityLabel: 'Grammes' },
   { value: 'ml', label: 'ml', accessibilityLabel: 'Millilitres' },
   { value: 'unit', label: 'unité', accessibilityLabel: 'Unités (pièces entières)' },
+  { value: 'cup', label: 'tasse (250 ml)', accessibilityLabel: 'Tasse (250 millilitres)' },
+  { value: 'tbsp', label: 'cuillère à table (15 ml)', accessibilityLabel: 'Cuillère à table (15 millilitres)' },
+  { value: 'tsp', label: 'cuillère à thé (5 ml)', accessibilityLabel: 'Cuillère à thé (5 millilitres)' },
 ];
+
+export function recipeUnitLabel(unit: RecipeUnit): string {
+  return recipeUnits.find(option => option.value === unit)?.label ?? unit;
+}
 
 export function parseIngredientQuantity(value: string, unit: RecipeUnit | null): Pick<RecipeIngredient, 'quantity' | 'unit'> {
   if (!unit || !recipeUnits.some(option => option.value === unit)) throw new Error('Choisis une unité pour chaque ingrédient.');

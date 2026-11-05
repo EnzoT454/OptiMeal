@@ -63,7 +63,10 @@
           "enum": [
             "g",
             "ml",
-            "unit"
+            "unit",
+            "cup",
+            "tbsp",
+            "tsp"
           ],
           "title": "Unit",
           "type": "string"
@@ -172,6 +175,16 @@
         "id": {
           "title": "Id",
           "type": "string"
+        },
+        "ingredient_count": {
+          "minimum": 0,
+          "title": "Ingredient Count",
+          "type": "integer"
+        },
+        "step_count": {
+          "minimum": 0,
+          "title": "Step Count",
+          "type": "integer"
         },
         "content_version": {
           "default": 1,
@@ -339,6 +352,8 @@
       },
       "required": [
         "id",
+        "ingredient_count",
+        "step_count",
         "name",
         "description",
         "servings",

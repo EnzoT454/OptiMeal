@@ -22,7 +22,9 @@ def recipe_client(monkeypatch):
     app.dependency_overrides[recipe_db] = lambda: None
     def save(_db, body, _user):
         calls.append(body)
-        return RecipeRead(id='recipe_test', is_owned=True, **body.model_dump())
+        return RecipeRead(id='recipe_test', is_owned=True,
+                          ingredient_count=len(body.ingredients), step_count=len(body.instructions),
+                          **body.model_dump())
     monkeypatch.setattr(service, 'create_recipe', save)
     monkeypatch.setattr(service, 'update_recipe', lambda db, recipe_id, body, user: save(db, body, user))
     with TestClient(app) as client:
@@ -57,6 +59,19 @@ def test_uploaded_photo_url_allows_creation(recipe_client):
     assert response.status_code == 201, response.text
     assert response.json()['item']['image_url'] == url
     assert len(calls) == 1 and isinstance(calls[0], RecipeCreate)
+
+
+@pytest.mark.parametrize('unit', ['cup', 'tbsp', 'tsp'])
+def test_kitchen_units_survive_creation_and_editing(recipe_client, unit):
+    client, calls = recipe_client
+    body = {**payload(), 'image_url': 'https://example.test/photo.jpg'}
+    body['ingredients'][0].update(quantity='0.5', unit=unit)
+    for method, url in [('post', '/api/v1/recipes'), ('put', '/api/v1/recipes/recipe_test')]:
+        response = getattr(client, method)(url, json=body)
+        assert response.status_code in (200, 201), response.text
+        ingredient = response.json()['item']['ingredients'][0]
+        assert ingredient['quantity'] == '0.5' and ingredient['unit'] == unit
+    assert len(calls) == 2
 
 
 def test_legacy_recipe_can_still_be_edited_without_photo(recipe_client):

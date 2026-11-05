@@ -52,15 +52,16 @@ def test_delete_account_removes_its_vote_history_and_votes_on_its_recipes_only(a
     login(app, ALICE)
     assert client.request('DELETE', '/api/v1/me', json={'confirmation': 'SUPPRIMER'}).status_code == 204
     remaining = postgres.execute(select(RecipeRating.__table__)).mappings().all()
-    assert len(remaining) == 1
-    assert remaining[0]['user_id'] == BOB.id and remaining[0]['recipe_id'] == seed
-    assert postgres.scalar(select(func.count()).select_from(Recipe).where(Recipe.owner_id.is_(None))) == 10
+    assert len(remaining) == 3
+    assert all(row['user_id'] == BOB.id for row in remaining)
+    assert {row['recipe_id'] for row in remaining} == {seed, personal[ALICE.id]}
+    assert postgres.scalar(select(func.count()).select_from(Recipe).where(Recipe.owner_id.is_(None))) == 11
     login(app, BOB)
     assert client.get('/api/v1/me').status_code == 200
     assert client.get('/api/v1/recipes/' + personal[BOB.id]).json()['item']['rating']['count'] == 0
     assert client.get('/api/v1/recipes/' + seed).json()['item']['rating']['count'] == 1
-    assert client.get('/api/v1/recipes?scope=discover&sort=top').json()['items'][0]['id'] == seed
-    assert client.get('/api/v1/recipes/' + personal[ALICE.id]).status_code == 404
-    assert client.get('/api/v1/recipes?scope=favorites').json()['total'] == 0
+    assert client.get('/api/v1/recipes?scope=discover&sort=top').json()['items'][0]['rating']['count'] == 1
+    assert client.get('/api/v1/recipes/' + personal[ALICE.id]).status_code == 200
+    assert client.get('/api/v1/recipes?scope=favorites').json()['total'] == 1
     meals = client.get('/api/v1/plans?week=2026-11-02').json()['item']['entries']
-    assert len(meals) == 1 and meals[0]['recipe_name'] is None
+    assert len(meals) == 1 and meals[0]['recipe_name'] is not None

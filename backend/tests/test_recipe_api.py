@@ -49,6 +49,9 @@ def test_list_detail_references_and_pagination(api):
         response = api.get('/api/v1/recipes/' + recipe.id)
         assert response.status_code == 200
         actual = response.json()['item']
+        summary = next(item for item in all_recipes['items'] if item['id'] == recipe.id)
+        assert summary['ingredient_count'] == actual['ingredient_count'] == len(actual['ingredients'])
+        assert summary['step_count'] == actual['step_count'] == len(actual['instructions'])
         assert actual['created_at'] is not None and actual['updated_at'] is not None
         assert {**actual, 'created_at': None, 'updated_at': None} == recipe.model_dump(mode='json')
     assert api.get('/api/v1/recipes?offset=100').json()['items'] == []
@@ -57,7 +60,20 @@ def test_list_detail_references_and_pagination(api):
     assert quick and all(r['total_time_minutes'] <= 30 for r in quick)
 
 
-@pytest.mark.parametrize('query', ['limit=0', 'limit=101', 'offset=-1', 'quick=invalid', 'q=' + 'a' * 201])
+def test_card_counts_follow_current_ingredients_and_steps(api, postgres):
+    summary = api.get('/api/v1/recipes?limit=1').json()['items'][0]
+    recipe_id = summary['id']
+    detail = api.get('/api/v1/recipes/' + recipe_id).json()['item']
+    postgres.execute(RecipeIngredient.__table__.delete().where(
+        RecipeIngredient.recipe_id == recipe_id, RecipeIngredient.position == 1))
+    postgres.execute(Recipe.__table__.update().where(Recipe.id == recipe_id).values(
+        instructions=[*detail['instructions'], {'position': len(detail['instructions']) + 1, 'text': 'Servir.'}]))
+    changed = api.get('/api/v1/recipes?limit=1').json()['items'][0]
+    assert changed['ingredient_count'] == summary['ingredient_count'] - 1
+    assert changed['step_count'] == summary['step_count'] + 1
+
+
+@pytest.mark.parametrize('query', ['limit=0', 'limit=101', 'offset=-1', 'quick=invalid', 'easy=invalid', 'q=' + 'a' * 201])
 def test_invalid_filters_have_shared_errors(api, query):
     response = api.get('/api/v1/recipes?' + query)
     assert response.status_code == 422

@@ -145,9 +145,9 @@ def test_account_deletion_cascades_without_touching_other_users_or_shared_recipe
     assert client.request('DELETE', '/api/v1/me', json={'confirmation': 'SUPPRIMER'}).status_code == 204
     for table, column in [('profile', 'id'), ('recipe', 'owner_id'), ('favorite', 'user_id'), ('meal_plan_entry', 'user_id')]:
         assert postgres.scalar(text(f'SELECT count(*) FROM public.{table} WHERE {column}=:id'), {'id': ALICE.id}) == 0
-    assert postgres.scalar(text('SELECT count(*) FROM public.recipe WHERE owner_id IS NULL')) == 10
+    assert postgres.scalar(text('SELECT count(*) FROM public.recipe WHERE owner_id IS NULL')) == (11 if visibility == 'public' else 10)
     login(app, BOB)
     assert client.get('/api/v1/recipes/' + personal[BOB.id]).status_code == 200
     assert client.get('/api/v1/recipes?favorites=true').json()['total'] == 1
-    assert client.get('/api/v1/recipes/' + personal[ALICE.id]).status_code == 404
+    assert client.get('/api/v1/recipes/' + personal[ALICE.id]).status_code == (200 if visibility == 'public' else 404)
     assert len(client.get('/api/v1/plans?week=2026-11-02').json()['item']['entries']) == 1

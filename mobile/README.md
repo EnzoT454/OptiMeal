@@ -11,6 +11,14 @@ instantanés historiques restent à compléter.
 Les parcours comptes, recettes, photos et Promos sont confirmés sur iOS et
 Android au 27 octobre 2026. Aucune fonction IA n’est intégrée.
 
+Les ajustements de Recettes du 5 novembre sont confirmés fonctionnels sur
+téléphone : cartes compactes et cliquables, favoris directs, filtre Faciles,
+icônes, retrait de la difficulté saisie par l’auteur et tri par création dans
+Mes recettes. La confirmation inclut les derniers ajustements du formulaire,
+le sélecteur d’unités, la publication définitive et les moyennes par critère
+avec icônes. La plateforme n’est pas précisée ; la validation distincte iOS
+et Android et les scénarios d’erreur détaillés restent à compléter.
+
 ## Consultation sans compte
 
 L’application s’ouvre sur l’accueil sans imposer de connexion. Les visiteurs
@@ -49,6 +57,13 @@ globale et le nombre d’évaluations. Les pondérations restent internes au cal
 « Pas encore évaluée ». Un visiteur peut consulter les notes ; « Noter cette
 recette » propose la connexion. Le bouton n’est pas proposé pour sa propre
 recette ni pour une recette privée.
+
+Dans le détail, les moyennes Goût, Fiabilité et Facilité sont présentées
+sur une ligne à trois colonnes, avec icône, libellé et note sur 5. Les textes
+peuvent grandir sans être tronqués ; les lecteurs d’écran annoncent chaque
+critère avec sa moyenne. Goût utilise les couverts horizontaux pointant à
+droite ; Facilité reprend la poêle et l’œuf du filtre Faciles. Cet affichage
+est inclus dans la confirmation globale sur téléphone du 5 novembre.
 
 Le formulaire défilant conserve son introduction, puis présente chaque critère
 et sa question directement suivis de cinq étoiles accessibles, numérotées de
@@ -115,8 +130,8 @@ compte depuis Paramètres retire ses votes, y compris les anciennes versions.
 Les essais réels suivants constituent le protocole de référence ; la confirmation sur téléphone
 est globale, sans détail distinct par plateforme : noter depuis
 une carte Promos puis vérifier son actualisation au retour ; ouvrir les
-évaluations depuis Calendrier ; retirer le public depuis un autre compte puis
-vérifier l’indisponibilité de la fiche ; vérifier le retrait des contributions
+évaluations depuis Calendrier ; vérifier qu’une recette publiée reste publique
+et accessible après suppression du compte auteur ; vérifier le retrait des contributions
 après suppression d’un compte de test.
 
 ## Sections de l’onglet Recettes
@@ -127,32 +142,46 @@ les créations du compte, privées et publiques ; Favoris affiche les favoris
 encore accessibles. Les sections personnelles demandent une connexion. Les
 requêtes utilisent `scope=discover`, `scope=mine` ou `scope=favorites`, avec
 recherche, filtre Rapides et pagination de 20 recettes. Le backend doit être
-à la migration `0013_rating_versions` pour cette version ; les nouvelles
-migrations `0011` à `0013` sont appliquées sur Supabase depuis le 2 novembre.
+à la tête `0015_permanent_public_recipes` pour cette version. Les migrations
+`0014` et `0015` ont été appliquées sur Supabase le 5 novembre, après les
+migrations de notation du 2 novembre.
 
 Le choix de section est conservé tant que l’écran reste monté, y compris au
 retour d’un détail. Une connexion ou déconnexion réinitialise la navigation.
-Favoris est une section ; les filtres sont désormais Toutes, Rapides et Petit
+Favoris est une section ; les filtres sont désormais Toutes, Rapides, Faciles et Petit
 budget. Ce dernier conserve son message d’attente. Le formulaire et le détail proposent désormais le choix de publication.
 
-Chaque carte affiche « ★ 4,5/5 · 28 évaluations » ou « Pas encore évaluée ».
+Chaque carte affiche une photo au format 16:9, le titre, puis la durée, les
+portions et les nombres d’ingrédients et d’étapes avec des icônes. L’auteur et,
+dans Mes recettes, la visibilité figurent en bas à gauche. La note et le nombre
+d’évaluations sont alignés à droite : étoile, « 4,5 (28) », ou « Non notée ».
+Le cœur en haut à droite de la photo permet d’ajouter ou retirer un favori
+directement : contour pour ajouter, plein pour retirer. Sa zone tactile est
+de 48 × 48 et il reste accessible séparément de l’ouverture de la carte.
+Un indicateur remplace le cœur pendant l’enregistrement ; les doubles appuis
+sont bloqués. En cas d’échec, la carte conserve son état et affiche une erreur.
+Les visiteurs sont invités à se connecter. Retirer un favori dans Favoris
+recharge la liste et son compteur, avec retour à la page précédente si besoin.
+Le reste de la carte ouvre le détail.
 Découvrir et Favoris proposent Mieux notées (par défaut, `sort=top`) et Plus
-récentes (`sort=newest`). Mes recettes propose Modifiées récemment (par défaut,
-`sort=updated`) et Créées récemment (`sort=newest`). Le choix est conservé par
+récentes (`sort=newest`). Mes recettes affiche les créations de la plus récente
+à la plus ancienne (`sort=newest`), sans sélecteur de tri. Le choix est conservé par
 section et au retour du détail. Changer de tri ramène à la première page en
 conservant recherche et filtres. Le serveur trie l’ensemble des résultats
 avant pagination ; le mobile ne retrie pas les cartes chargées.
 
 Mieux notées tient compte de l’effectif sans modifier la moyenne affichée.
 Sans vote, une recette est placée après celles évaluées. Plus récentes utilise
-la publication, ou la création en base si elle manque ; Créées récemment de
+la publication, ou la création en base si elle manque ; le tri de
 Mes recettes utilise uniquement la création. Les dates des anciennes recettes
 peuvent être inconnues et vont à la fin. Sur téléphone, vérifier le changement
 de tri depuis une deuxième page, le retour du détail après un vote et les
 grandes polices des contrôles de tri.
 
 Les tests mobiles et TypeScript passent. Le lint n’est pas configuré.
-Essais sur téléphone à effectuer sur iOS et Android :
+Derniers ajustements confirmés globalement sur téléphone le 5 novembre, sans
+plateforme précisée. Le protocole suivant reste la référence pour les résultats
+distincts iOS/Android et les scénarios d’erreur non détaillés :
 
 1. Sans compte, consulter Découvrir puis annuler la connexion demandée par Mes recettes et Favoris ; Découvrir reste sélectionnée.
 2. Avec un compte, retrouver ses créations dans Mes recettes avec le badge Privée/Publique, puis ses favoris dans Favoris.
@@ -164,35 +193,30 @@ Essais sur téléphone à effectuer sur iOS et Android :
 
 ## Publication depuis le formulaire et le détail
 
-Le formulaire propose « Partager avec la communauté », désactivé pour une
-nouvelle recette et initialisé au statut courant en édition. Le changement de
-l’interrupteur prépare le choix ; seule la sauvegarde l’applique. Une nouvelle
-publication ou un changement de visibilité demande confirmation. Les exigences
-de nom, photo à la création, ingrédients et étapes restent en place.
+Le formulaire propose « Partager avec la communauté » pour une recette privée.
+L’interrupteur prépare le choix ; seule la sauvegarde le publie, après une
+confirmation expliquant que la publication est définitive. Une recette déjà
+publique ne propose plus d’interrupteur ni d’action Rendre privée ou Supprimer.
+Son propriétaire peut encore modifier son contenu.
 
-Le détail affiche le statut et une action Publier/Rendre privée uniquement
-pour le propriétaire. La réponse du serveur confirme le nouveau statut. Les
-boutons sont bloqués pendant l’appel ; une erreur laisse le statut confirmé
-affiché et permet de réessayer. Les recettes initiales et celles d’autrui
-n’affichent pas ces actions.
-
-En édition, le retrait du public précède le PUT du contenu ; une publication
-suit le PUT réussi. Une erreur entre les deux opérations affiche un message
-précis de sauvegarde partielle. Le même bucket public de photos est conservé,
-y compris pour les recettes privées, comme indiqué dans le formulaire.
+En édition, une publication suit le PUT réussi du contenu. Une erreur entre
+les deux opérations affiche un message de sauvegarde partielle.
+Après suppression du compte auteur, les recettes publiques et leurs photos
+restent dans Découvrir et les calendriers sans lien avec l’ancien compte.
+Le backend doit utiliser la migration `0015_permanent_public_recipes`.
 
 Scénarios à reproduire sur iOS et Android avec deux comptes :
 
 1. Créer une recette sans activer le partage : elle figure dans Mes recettes et reste inaccessible à l’autre compte.
 2. Activer le partage : aucune publication avant Enregistrer ; annuler la confirmation n’envoie aucune photo ni recette.
 3. Confirmer une création publique : elle figure dans Mes recettes et Découvrir, et devient consultable par un visiteur ou l’autre compte.
-4. Depuis le détail, annuler puis confirmer Publier/Rendre privée ; vérifier le statut après retour à la liste et réouverture.
-5. Modifier une recette privée pour la publier et une recette publique pour la rendre privée ; vérifier le statut chargé par le formulaire et le résultat après sauvegarde.
+4. Depuis le détail privé, annuler puis confirmer Publier ; vérifier le statut et l’absence des actions Rendre privée et Supprimer après publication.
+5. Publier une recette privée depuis le formulaire ; rouvrir une recette publique et vérifier que son contenu reste modifiable mais sa visibilité est fixe.
 6. Couper le réseau pendant l’enregistrement ou le changement de visibilité ; vérifier les messages, l’absence de faux succès et la possibilité de réessayer.
 7. Vérifier qu’une recette d’autrui ou initiale n’affiche aucune action de publication, modification ou suppression.
-8. Avec l’autre compte, vérifier la disparition de Découvrir et Favoris après retrait de publication ; les repas déjà créés restent conservés sans nom/photo dans l’API.
+8. Après suppression du compte auteur, vérifier avec l’autre compte que les recettes publiques et leurs photos restent dans Découvrir, ses favoris et ses repas planifiés.
 
-Le 1er novembre 2026, Hamza a confirmé les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
+Avant la publication définitive introduite le 5 novembre, Hamza avait confirmé le 1er novembre 2026 les trois scénarios manuels de partage : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire. La plateforme de cet essai n’a pas été précisée ; cette confirmation ne valide pas séparément iOS et Android ni les scénarios d’erreur réseau.
 
 ## Calendrier connecté
 
@@ -219,8 +243,9 @@ restent à compléter ; l’historique par instantanés reste à développer.
 
 Dans **Paramètres**, connecté à son compte, choisir **Supprimer mon compte**,
 saisir `SUPPRIMER`, puis **Confirmer la suppression**. Annuler ne modifie rien.
-La suppression est définitive : compte, profil, recettes personnelles,
-favoris, repas planifiés et photos du dossier utilisateur sont retirés. Après succès, la session
+La suppression est définitive : compte, profil, recettes privées, favoris et
+repas planifiés sont retirés. Les recettes publiques et leurs photos restent
+accessibles sans lien avec l’ancien compte. Après succès, la session
 locale est effacée et l’application revient à l’accueil visiteur.
 
 Le backend doit disposer de `SUPABASE_SECRET_KEY`, uniquement dans
@@ -249,9 +274,13 @@ npm run typecheck
 
 Le SDK Expo 58 demande Node 22.13+ compatible. Un Node 22 local est installé
 en dépendance de développement : les scripts `npm run …` l’utilisent sans
-modifier l’installation globale. `.nvmrc` indique également la version majeure.
+modifier l’installation globale. `.nvmrc` fixe la version retenue, 22.23.3.
 Le fichier `package-lock.json` fixe les dépendances. Pour installer avec Node
 22 dès le départ, sélectionner cette version dans votre gestionnaire Node.
+Le fichier `.nvmrc` ne l’installe pas automatiquement et exige nvm si l’on
+utilise `nvm install` ou `nvm use`. Sans gestionnaire, installer cette version
+de Node directement. Vérifier `node --version` avant `npm ci` : le Node local
+du projet ne remplace pas celui du terminal pour cette commande.
 
 ## 2. Configurer les seules valeurs publiques
 
@@ -483,7 +512,7 @@ des parcours intégrés a été confirmé sur iOS et Android le 27 octobre.
 ### Parcours Recettes et maquette
 
 Les éléments retenus de la maquette sont repris dans la liste (en-tête,
-sections Découvrir/Mes recettes/Favoris, recherche, filtres Toutes/Rapides/Petit budget, bouton d’ajout et collection), les deux écrans de
+sections Découvrir/Mes recettes/Favoris, recherche, filtres Toutes/Rapides/Faciles/Petit budget, bouton d’ajout et collection), les deux écrans de
 choix et le formulaire. Les grandes cartes avec photos restent présentes.
 La police DM Sans et les quatre pictogrammes des parcours sont inclus localement.
 `expo-image` affiche ces SVG ; recompiler l’application après installation
@@ -493,14 +522,27 @@ Le chemin fonctionnel est **Ajouter une recette → Entrer manuellement →
 Remplir un formulaire**. Trouver une idée, Cuisiner avec ce qu’on a et
 Structurer une idée affichent un message d’attente.
 Le formulaire présente le nom, la photo, les portions, la préparation,
-les ingrédients avec quantité séparée du choix d’unité, les étapes, la difficulté,
+les ingrédients avec quantité séparée du choix d’unité, les étapes,
 les étiquettes et le réglage de partage.
 Le choix d’un ingrédient ouvre une liste consultable avec recherche.
-Les unités acceptées sont `g`, `ml` et `unit` (pièces entières).
+Les unités acceptées sont `g`, `ml`, `unit` (pièces entières), `cup` (tasse, 250 ml),
+`tbsp` (cuillère à table, 15 ml) et `tsp` (cuillère à thé, 5 ml).
+Le formulaire utilise un sélecteur compact à côté de la quantité. Il ouvre
+une liste en bas de l’écran avec le choix actuel coché, six options et un
+bouton Fermer ; le retour Android ferme sans modifier le choix. La liste
+défile sur les petits écrans ou avec de grandes polices. Aucune unité
+n’est présélectionnée pour un nouvel ingrédient.
+Le formulaire et le détail affichent les libellés français, avec le volume
+des tasses et des cuillères. Les demi-mesures se saisissent avec une décimale, par exemple
+`0,5`. Le backend et la base doivent être à jour jusqu’à la migration
+`0014_recipe_kitchen_units` pour sauvegarder ces nouvelles unités.
 Description et cuisson restent accessibles dans « Autres informations » ;
 les valeurs existantes sont conservées lors d’une modification.
 
-La difficulté est facultative et enregistrée avec les étiquettes. Rapide
+La difficulté n’est plus choisie par l’auteur dans le formulaire ni affichée
+comme métadonnée dans le détail. Les autres utilisateurs évaluent la facilité
+avec le critère « Facilité » de la notation. Les anciennes valeurs restent
+conservées côté backend pour compatibilité. Rapide
 est calculé jusqu’à 30 minutes au total ; Économique est une étiquette de
 l’auteur, sans calcul de prix. Appliquer `0004_recipe_metadata` au backend.
 
@@ -510,9 +552,9 @@ aussi été contrôlée sans débordement des champs et boutons ; elle utilise
 React Native Web avec des services simulés et ne remplace pas un essai natif.
 
 Pour les vérifications détaillées sur téléphone : les trois sections, les
-filtres Toutes/Rapides/Petit budget, les
+filtres Toutes/Rapides/Faciles/Petit budget, les
 messages d’attente, le retour entre les choix, le clavier dans le formulaire,
-l’ajout avec photo/difficulté/étiquettes, puis la modification et la reconnexion.
+l’ajout avec photo et étiquettes, puis la modification et la reconnexion.
 La confirmation générale ne valide pas séparément tous ces scénarios ;
 les essais d’erreur et d’affichage sur différentes tailles restent à compléter.
 Le fonctionnement du parcours Recettes sur iOS et Android a été confirmé
@@ -563,10 +605,10 @@ envoi. Sans photo choisie ou URL déjà obtenue, le bouton d’enregistrement es
 Vérifier sur téléphone : créer avec une photo, relancer l’application,
 remplacer la photo, annuler le sélecteur, retirer la sélection avant création et vérifier le blocage,
 vérifier que la création sans photo est bloquée, et essayer un envoi sans connexion. Les photos sont
-publiques dans ce prototype même si les recettes sont personnelles ; le
-formulaire le précise. Retirer la photo enlève son lien à la recette ; le
+publiques dans ce prototype même si les recettes sont personnelles. Retirer la photo enlève son lien à la recette ; le
 nettoyage courant des fichiers Storage inutilisés après remplacement ou retrait
-reste à développer. La suppression du compte nettoie déjà tout son dossier photo.
+reste à développer. La suppression du compte conserve d’abord les photos des
+recettes publiques sous `community/`, puis nettoie le dossier personnel.
 
 ```bash
 npm run test:images
@@ -629,4 +671,4 @@ Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visite
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native)
 et [React Navigation](https://reactnavigation.org/docs/getting-started/).
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 5 novembre 2026*

@@ -50,7 +50,7 @@ def test_calendar_accepts_public_and_own_private_recipes_only(accounts):
     }).status_code == 422
 
 
-def test_delete_recipe_keeps_both_users_meals_and_leftovers(accounts):
+def test_admin_delete_recipe_keeps_both_users_meals_and_leftovers(accounts, postgres):
     client, app = accounts
     recipe_id = create_recipe(client, app)
     saved = {}
@@ -62,7 +62,7 @@ def test_delete_recipe_keeps_both_users_meals_and_leftovers(accounts):
             assert response.status_code == 201
             saved[user.id].append(response.json()['item']['id'])
     login(app, ALICE)
-    assert client.delete('/api/v1/recipes/' + recipe_id).status_code == 204
+    postgres.execute(text('DELETE FROM public.recipe WHERE id=:id'), {'id': recipe_id})
     for user in (ALICE, BOB):
         login(app, user)
         meals = entries(client)
@@ -78,7 +78,7 @@ def test_delete_recipe_keeps_both_users_meals_and_leftovers(accounts):
         assert len(entries(client)) == 1
 
 
-def test_account_deletion_preserves_other_users_meals_without_recipe_content(accounts, postgres):
+def test_account_deletion_preserves_other_users_meals_with_public_recipe(accounts, postgres):
     client, app = accounts
     recipe_id = create_recipe(client, app)
     for user in (ALICE, BOB):
@@ -100,7 +100,7 @@ def test_account_deletion_preserves_other_users_meals_without_recipe_content(acc
     assert postgres.scalar(text('SELECT count(*) FROM public.meal_plan_entry WHERE user_id=:id'), {'id': ALICE.id}) == 0
     login(app, BOB)
     meals = entries(client)
-    assert len(meals) == 1 and meals[0]['recipe_id'] is None and meals[0]['recipe_name'] is None
+    assert len(meals) == 1 and meals[0]['recipe_id'] == recipe_id and meals[0]['recipe_name'] is not None
 
 
 def test_migration_preserves_existing_recipes_notes_and_restores_constraints(accounts, postgres):
@@ -116,7 +116,7 @@ def test_migration_preserves_existing_recipes_notes_and_restores_constraints(acc
     foreign_key = next(fk for fk in inspect(postgres).get_foreign_keys('meal_plan_entry') if fk['constrained_columns'] == ['recipe_id'])
     assert foreign_key['options']['ondelete'] == 'SET NULL'
     command.check(config)
-    assert client.delete('/api/v1/recipes/' + recipe_id).status_code == 204
+    postgres.execute(text('DELETE FROM public.recipe WHERE id=:id'), {'id': recipe_id})
     with pytest.raises(DBAPIError), postgres.begin_nested():
         command.downgrade(config, '0009_recipe_visibility')
     assert len(entries(client)) == 2

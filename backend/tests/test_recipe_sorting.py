@@ -111,15 +111,66 @@ def test_newest_uses_publication_or_creation_and_unknown_dates_last(accounts, po
     assert [row['id'] for row in rows] == ['recipe_sort_a', 'recipe_sort_b', 'recipe_sort_c', 'recipe_sort_d']
 
 
-def test_mine_defaults_to_updates_and_newest_uses_creation_not_publication(accounts, postgres):
+def test_mine_defaults_to_creation_newest_first_not_update_or_publication(accounts, postgres):
     client, app = accounts
     login(app, ALICE)
     ids = [client.post('/api/v1/recipes', json={**body(), 'visibility': 'public'}).json()['item']['id'] for _ in range(2)]
     early, later = datetime(2020, 1, 1, tzinfo=timezone.utc), datetime(2021, 1, 1, tzinfo=timezone.utc)
     postgres.execute(update(Recipe).where(Recipe.id == ids[0]).values(created_at=later, updated_at=early, published_at=early))
     postgres.execute(update(Recipe).where(Recipe.id == ids[1]).values(created_at=early, updated_at=later, published_at=later))
-    assert [r['id'] for r in client.get('/api/v1/recipes?scope=mine').json()['items']] == list(reversed(ids))
+    assert [r['id'] for r in client.get('/api/v1/recipes?scope=mine').json()['items']] == ids
     assert [r['id'] for r in client.get('/api/v1/recipes?scope=mine&sort=newest').json()['items']] == ids
+
+
+@pytest.mark.parametrize('sort', ['top', 'newest', 'updated'])
+def test_easy_uses_current_ease_average_before_count_and_pagination(accounts, postgres, sort):
+    client, app = accounts
+    voters = add_voters(postgres, 2)
+    examples = {
+        'boundary': [3, 5], 'high': [5, 5], 'below': [3, 4],
+        'stale': [5, 5], 'unrated': [],
+    }
+    for name, scores in examples.items():
+        recipe_id = f'recipe_easy_{name}'
+        add_recipe(postgres, recipe_id, name='Facilité test', difficulty='easy')
+        if scores:
+            add_votes(postgres, recipe_id, voters, scores)
+    # La note globale n'est pas le critère du filtre.
+    postgres.execute(update(RecipeRating).where(RecipeRating.recipe_id == 'recipe_easy_high')
+                     .values(taste_score=1, reliability_score=1))
+    postgres.execute(update(Recipe).where(Recipe.id == 'recipe_easy_stale').values(content_version=2))
+    url = f'/api/v1/recipes?easy=true&q=Facilité test&sort={sort}'
+    result = client.get(url + '&limit=100').json()
+    assert result['total'] == 2
+    assert {r['id'] for r in result['items']} == {'recipe_easy_boundary', 'recipe_easy_high'}
+    assert all(Decimal(r['rating']['criteria']['ease']) >= 4 for r in result['items'])
+    pages = [client.get(url + f'&limit=1&offset={offset}').json() for offset in range(3)]
+    assert all(page['total'] == 2 for page in pages)
+    assert pages[0]['items'] + pages[1]['items'] == result['items']
+    assert pages[2]['items'] == []
+    assert client.get('/api/v1/recipes?easy=false&q=Facilité test').json()['total'] == 5
+
+
+def test_easy_preserves_visibility_sections_search_and_quick(accounts, postgres):
+    client, app = accounts
+    voter = add_voters(postgres, 1)
+    postgres.execute(insert(Profile).values(id=ALICE.id))
+    for name, changes in [('public', {'total_time_minutes': 20, 'prep_time_minutes': 20, 'cook_time_minutes': 0}),
+                          ('private', {'owner_id': ALICE.id, 'seed_key': None, 'visibility': 'private'}),
+                          ('slow', {'total_time_minutes': 60, 'prep_time_minutes': 60, 'cook_time_minutes': 0})]:
+        recipe_id = f'recipe_easy_{name}'
+        add_recipe(postgres, recipe_id, name='Facilité test', **changes)
+        add_votes(postgres, recipe_id, voter, [4])
+    assert client.get('/api/v1/recipes?easy=true&q=introuvable').json()['total'] == 0
+    public = client.get('/api/v1/recipes?easy=true&quick=true').json()['items']
+    assert [r['id'] for r in public] == ['recipe_easy_public']
+    login(app, ALICE)
+    own = client.get('/api/v1/recipes?easy=true&scope=mine').json()['items']
+    assert [r['id'] for r in own] == ['recipe_easy_private']
+    login(app, BOB)
+    assert client.put('/api/v1/recipes/recipe_easy_public/favorite').status_code == 204
+    favorites = client.get('/api/v1/recipes?easy=true&scope=favorites').json()['items']
+    assert [r['id'] for r in favorites] == ['recipe_easy_public']
 
 
 def test_timestamp_migration_preserves_existing_unknown_dates_and_new_mutations(accounts, postgres):

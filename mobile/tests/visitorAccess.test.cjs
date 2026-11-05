@@ -19,7 +19,7 @@ function screen(file, { session = null, states = {}, apiFailure = false } = {}) 
   const ui = new Proxy({}, { get: (_, name) => name === '__esModule' ? true : String(name) });
   const requireMock = name => {
     if (name === 'react/jsx-runtime') return { jsx, jsxs: jsx, Fragment: 'Fragment' };
-    if (name === 'react') return { useCallback: fn => fn,
+    if (name === 'react') return { useCallback: fn => fn, useRef: current => ({ current }),
       useState: initial => [Object.hasOwn(states, stateIndex) ? states[stateIndex++] : (stateIndex++, initial), () => {}] };
     if (name.includes('AuthContext')) return { useAuth: () => auth, AuthProvider: 'AuthProvider' };
     if (name.endsWith('services/api')) return { api: (...args) => {

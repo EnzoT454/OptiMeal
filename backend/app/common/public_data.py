@@ -123,5 +123,7 @@ def load_recipes(path: Path, catalog: PublicCatalog) -> PublicRecipes:
     for seed in source.recipes:
         if any(i.ingredient_id not in ids for i in seed.ingredients):
             raise ValueError(f'Ingrédient inconnu dans la recette {seed.seed_key}.')
-        recipes.append(RecipeRead(id='recipe_' + seed.seed_key, **seed.model_dump(exclude={'seed_key'})))
+        recipes.append(RecipeRead(id='recipe_' + seed.seed_key,
+                                  ingredient_count=len(seed.ingredients), step_count=len(seed.instructions),
+                                  **seed.model_dump(exclude={'seed_key'})))
     return PublicRecipes(recipes)

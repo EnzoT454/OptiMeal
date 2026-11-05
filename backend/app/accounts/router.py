@@ -37,6 +37,6 @@ def update_profile(body: ProfilePatch, user: CurrentUser = Depends(current_user)
 @router.delete('/api/v1/me', status_code=204,
                responses={401: {'description': 'Connexion requise'},
                           503: {'description': 'Suppression indisponible ou interrompue'}})
-def delete_account(body: AccountDelete, request: Request, user: CurrentUser = Depends(current_user)):
-    request.app.state.account_deletion.delete(user.id)
+def delete_account(body: AccountDelete, request: Request, user: CurrentUser = Depends(current_user), db: Session = Depends(get_db)):
+    request.app.state.account_deletion.delete(user.id, db)
     return Response(status_code=204)

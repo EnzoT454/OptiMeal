@@ -7,7 +7,23 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
-La tête courante est `0013_rating_versions`, qui versionne les évaluations.
+La tête courante est `0015_permanent_public_recipes`. Elle ajoute l’état interne
+`profile.deletion_pending` pour bloquer les mutations de recettes pendant la
+suppression du compte, et permet les recettes publiques sans propriétaire ni
+clé de recette initiale. Un déclencheur avant suppression du profil détache
+ses recettes publiques ; les recettes privées restent supprimées par cascade.
+Le retour à `0014` est refusé si des recettes publiques sans auteur existent.
+Elle a été appliquée sur Supabase le 5 novembre 2026 dans une transaction ;
+la révision après commit, la conformité du schéma et les comptages ont été vérifiés.
+
+`0014_recipe_kitchen_units` autorise `cup`, `tbsp`
+et `tsp` dans les ingrédients des recettes, en plus de `g`, `ml` et `unit`.
+Les quantités décimales sont acceptées pour ces trois nouvelles unités.
+Cette migration ne modifie aucune quantité existante et refuse le retour
+à `0013` si des recettes utilisent les nouvelles unités. Elle a été appliquée
+sur Supabase le 5 novembre 2026 ; la révision `0014_recipe_kitchen_units` et
+la contrainte autorisant les six unités ont été vérifiées après application.
+`0013_rating_versions` versionne les évaluations.
 `0012_recipe_timestamps` ajoute les dates pour les tris.
 `0011_recipe_ratings` ajoute la table des évaluations
 (voir les sections ci-dessous). La révision
@@ -105,8 +121,9 @@ Le retour à `0010` supprime la table seulement si elle est vide ; il échoue
 si des évaluations existent afin de ne pas perdre les contributions.
 Cette migration est appliquée sur Supabase depuis le 2 novembre 2026.
 Les routes de notation et les lectures de recettes
-exigent cette table ; le formulaire mobile est intégré, avec essais sur appareil
-à effectuer. Voir
+exigent cette table ; le formulaire mobile est intégré et son fonctionnement
+sur téléphone a été confirmé globalement les 2 et 5 novembre, sans plateforme
+précisée. Voir
 [RATINGS.md](RATINGS.md).
 
 ## Dates et tris des recettes
@@ -127,8 +144,10 @@ car aucun déclencheur SQL n’est ajouté.
 
 Ces dates sont des métadonnées de lecture, refusées dans les corps de création
 et d’édition. Le tri public récent utilise la publication, ou la création en
-base si la publication manque ; Mes recettes utilise la création pour le tri
-« Créées récemment » et la modification pour « Modifiées récemment ».
+base si la publication manque. Depuis le 5 novembre 2026, Mes recettes utilise
+par défaut la création décroissante (`sort=newest`), sans sélecteur dans le
+mobile. Le tri explicite `sort=updated` reste disponible dans l’API pour ses
+autres consommateurs.
 Les dates inconnues restent à la fin, avec départage stable par identifiant.
 
 Appliquer `upgrade head` avant de redémarrer cette version : les lectures

@@ -2,7 +2,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, MetaData, Table, Text, Uuid, func
+from sqlalchemy import Boolean, CheckConstraint, Column, DateTime, ForeignKey, MetaData, Table, Text, Uuid, func, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.app.database import Base
@@ -17,4 +17,5 @@ class Profile(Base):
                                     name='display_name_valid'),)
     id: Mapped[UUID] = mapped_column(Uuid, ForeignKey(auth_users.c.id, ondelete='CASCADE'), primary_key=True)
     display_name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    deletion_pending: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text('false'))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=func.now())

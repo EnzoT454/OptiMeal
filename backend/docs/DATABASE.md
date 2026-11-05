@@ -1,6 +1,6 @@
 # Catalogue et prix — évaluation et modèle de données proposé
 
-**Conception initiale : 28 septembre 2026. Mise à jour : 1er novembre 2026. Statut : ingrédients, recettes, profils, favoris, catégories, offres et circulaires implémentés ; historique des prix, reçus et estimations proposés.**
+**Conception initiale : 28 septembre 2026. Mise à jour : 5 novembre 2026. Statut : ingrédients, recettes, profils, favoris, catégories, offres et circulaires implémentés ; historique des prix, reçus et estimations proposés.**
 
 Ce document évalue la structure transmise par l’équipe : un ingrédient canonique contient des produits commerciaux, chacun contenant ses offres. Il couvre le catalogue, les sources de prix et l’intégration des reçus. Les comptes, recettes, plans et listes sont décrits uniquement aux endroits où ils touchent ces données.
 
@@ -24,7 +24,7 @@ La proposition étendue nécessite surtout six ajustements avant son implémenta
 | Composant | Disponible aujourd’hui | Conséquence pour la conception |
 | --- | --- | --- |
 | `app/database.py` et configuration | Moteur SQLAlchemy/Psycopg, sessions par requête et contrôle `/health/db` | Voir le [guide Supabase](SUPABASE.md) ; les recettes lisent PostgreSQL ; ingrédients sur JSON, offres sur JSON ou PostgreSQL selon `OFFERS_SOURCE` |
-| Modèles et `alembic/env.py` | Treize migrations (tête `0013_rating_versions`) : ingrédients, recettes, profils, favoris, catégories, offres, circulaires, photos de produits, calendrier, visibilité, conservation des repas, évaluations, dates et versions évaluées ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous à développer |
+| Modèles et `alembic/env.py` | Quinze migrations (tête `0015_permanent_public_recipes`) : ingrédients, recettes, profils, favoris, catégories, offres, circulaires, photos de produits, calendrier, visibilité, conservation des repas, évaluations, dates, versions évaluées, unités de cuisine et conservation des recettes publiques sans auteur ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous à développer |
 | `app/catalog/apify_ingestion.py` et `apify_batch.py` | Normalisation des captures Apify, produits, formats, prix et avertissements | Prévoir l’insertion des données vérifiées ; Metro/Super C web IA restent à développer |
 | `app/receipts/schemas.py` | Contrat `receipt-1.1`, OCR local, articles, ajustements et contrôles | Stocker d’abord une extraction privée à vérifier |
 | Comptes | Supabase Auth, profil minimal et droits sur recettes/favoris | Voir [AUTH.md](AUTH.md) ; préférences détaillées à développer |
@@ -42,13 +42,17 @@ et `product_offer` ; `0006_circulars` crée `circular`.
 `0009_recipe_visibility` ajoute la publication volontaire des recettes ;
 `0010_preserve_meals` conserve les repas après suppression de leur recette ;
 `0011_recipe_ratings` ajoute les évaluations, `0012_recipe_timestamps` les dates
-des recettes, et `0013_rating_versions` les versions évaluées. Les migrations sont
+des recettes, et `0013_rating_versions` les versions évaluées.
+`0014_recipe_kitchen_units` ajoute tasse et cuillères ;
+`0015_permanent_public_recipes` conserve les recettes publiques sans propriétaire
+après suppression du compte et ajoute `profile.deletion_pending`. Les migrations sont
 la référence exécutable du schéma ; ce document ne les remplace pas.
 
 La suppression du compte est maintenant exposée par `DELETE /api/v1/me`.
 Après nettoyage du dossier photo, l’API administrative Supabase supprime le
-compte Auth ; les cascades de `0003_accounts` retirent profil, recettes
-personnelles et favoris. La nouvelle obligation de photo à la création est
+compte Auth. Depuis `0015`, ses recettes publiques sont détachées avant la
+cascade et restent accessibles avec leurs photos sous `community/`. Le profil,
+les recettes privées et les favoris du compte sont supprimés. La nouvelle obligation de photo à la création est
 validée par `RecipeCreate`, sans modifier les colonnes nullables existantes.
 Voir le [guide Auth](AUTH.md#suppression-définitive-du-compte) et les
 [contrats](CONTRACTS.md).

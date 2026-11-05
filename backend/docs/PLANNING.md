@@ -23,9 +23,11 @@ sur Supabase et le fonctionnement du calendrier sur iOS. Pour une nouvelle
 installation, appliquer les migrations reste nécessaire.
 
 La révision `0009_recipe_visibility` ajoute la visibilité des recettes.
-La tête courante `0010_preserve_meals` conserve les repas après suppression
+La révision `0010_preserve_meals` conserve les repas après suppression
 d’une recette grâce à une référence `ON DELETE SET NULL`. Elle a été appliquée
 et contrôlée sur Supabase le 1er novembre, sans modifier les comptages existants.
+La tête courante est `0015_permanent_public_recipes`, appliquée le 5 novembre ;
+elle conserve aussi les recettes publiques lorsque leur auteur supprime son compte.
 
 ## Parcours mobile
 
@@ -98,13 +100,12 @@ corps invalide : 422 ; base ou schéma indisponible : 503.
 ## Conservation et limites
 
 Une recette publique peut être ajoutée au calendrier d’un autre compte.
-Si son auteur la rend privée, le repas reste présent, mais `recipe_name`
-et `recipe_image_url` deviennent nuls pour ce compte. `recipe_id` est conservé
-comme référence déjà connue ; le détail renvoie 404 et aucun nouveau repas
-ne peut être créé avec cette recette. Les portions et le déplacement du repas
-existant restent modifiables, et son retrait reste possible. Une republication
-restaure le nom et la photo courants. Les notes libres et les recettes du
-propriétaire ne sont pas affectées. Le mobile affiche « Recette indisponible » dans la carte et le menu. Il
+Sa publication est définitive : son auteur ne peut plus la rendre privée ni
+la supprimer. Après suppression du compte auteur, `0015_permanent_public_recipes`
+conserve la recette sans propriétaire ; les repas des autres comptes gardent
+leur nom, photo et référence. Les repas du compte supprimé disparaissent.
+Une référence devenue inaccessible par une intervention administrative reste
+masquée : nom et photo sont nuls et le repas reste modifiable ou supprimable. Le mobile affiche « Recette indisponible » dans la carte et le menu. Il
 conserve les portions, le déplacement et le retrait, mais ne propose plus
 l’ouverture, la duplication ou de nouveaux restes. Le calendrier recharge
 les accès au retour dans l’onglet et à chaque changement de semaine.
@@ -144,4 +145,4 @@ Les essais Android restent à effectuer. Compléter les scénarios détaillés d
 persistance après réouverture, isolation de deux comptes, actions du menu,
 changement de semaine, suppression d’une recette planifiée et erreurs réseau.
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 5 novembre 2026*

@@ -21,7 +21,7 @@ class Recipe(Base):
                         name='publication_consistent'),
         CheckConstraint("id ~ '^recipe_[a-z0-9_]+$'", name='id_format'),
         CheckConstraint("seed_key ~ '^[a-z0-9_]+$'", name='seed_key_format'),
-        CheckConstraint('(owner_id IS NULL AND seed_key IS NOT NULL) OR (owner_id IS NOT NULL AND seed_key IS NULL)',
+        CheckConstraint("(owner_id IS NULL AND visibility = 'public') OR (owner_id IS NOT NULL AND seed_key IS NULL)",
                         name='ownership'),
         CheckConstraint("btrim(name) <> ''", name='name_not_blank'),
         CheckConstraint("btrim(description) <> ''", name='description_not_blank'),
@@ -63,7 +63,7 @@ class RecipeIngredient(Base):
         CheckConstraint('position > 0', name='position_positive'),
         # NUMERIC sans échelle fixe conserve les décimales sans arrondi implicite.
         CheckConstraint("quantity > 0 AND quantity < 'Infinity'::numeric", name='quantity_positive_finite'),
-        CheckConstraint("unit IN ('g', 'ml', 'unit')", name='unit_supported'),
+        CheckConstraint("unit IN ('g', 'ml', 'unit', 'cup', 'tbsp', 'tsp')", name='unit_supported'),
         CheckConstraint("unit <> 'unit' OR quantity = trunc(quantity)", name='whole_units'),
     )
 

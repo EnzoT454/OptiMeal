@@ -15,17 +15,19 @@ Aucune migration de fichiers ou de colonnes d’image n’est nécessaire pour
 cette étape : les dix illustrations restent à leur emplacement et les photos
 personnelles restent sous `users/<identifiant du compte>/`.
 
-Publier ou rendre privée une recette modifie uniquement ses droits de lecture
-FastAPI et sa date de publication. Cela ne copie, ne déplace ni ne supprime sa
-photo et ne change pas son URL. Une recette privée reste inaccessible aux autres
-comptes par l’API, mais sa photo reste consultable par une personne qui possède
-déjà son URL. Le formulaire explique cette distinction avant l’enregistrement.
+La publication d’une recette est définitive et ne change pas sa photo ni son
+URL. Une recette privée reste inaccessible aux autres comptes par l’API, mais
+sa photo reste consultable par une personne qui possède déjà son URL.
 
-Les écritures et suppressions Storage restent limitées au propriétaire, même
-pour une recette publiée. Le statut public ne donne aucun droit de modification
-aux autres utilisateurs. La suppression de compte nettoie le dossier personnel
-quel que soit le statut des recettes ; les illustrations initiales et les
-photos des autres comptes sont conservées. Le nettoyage des photos détachées
+Lors de la suppression d’un compte, le serveur conserve les photos de ses
+recettes publiques en les copiant sous `community/<recipe_id>/` avec la clé
+serveur. Les destinations ne contiennent pas l’identifiant du compte. Les URL
+sont sauvegardées avant le nettoyage du dossier personnel ; un échec de copie
+interrompt la suppression avant l’effacement des originaux. Les nouvelles
+photos ne sont pas la propriété du compte supprimé. Les recettes publiques
+restent accessibles sans auteur. Les écritures mobiles restent limitées au
+dossier personnel : elles ne peuvent pas modifier le dossier `community/`.
+Le nettoyage des photos détachées
 après remplacement ou suppression d’une recette reste à développer.
 
 ## Configuration
@@ -107,4 +109,4 @@ Le 1er novembre 2026, Hamza a confirmé sur iOS le parcours de création
 avec photo obligatoire. Cette nouvelle règle reste à vérifier sur Android ;
 les scénarios d’erreur réseau détaillés restent à compléter.
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 5 novembre 2026*

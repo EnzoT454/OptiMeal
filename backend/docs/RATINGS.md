@@ -1,6 +1,18 @@
 # Notation des recettes
 
-## État — 2 novembre 2026
+## Affichage courant — 5 novembre 2026
+
+Les moyennes Goût, Fiabilité et Facilité s’affichent sur une ligne à trois
+colonnes, avec une icône, le libellé et la note sur 5. Goût utilise les couverts
+horizontaux pointant à droite ; Facilité reprend l’œuf et la poêle de Faciles.
+Les lecteurs d’écran disposent du critère et de sa moyenne dans un même libellé.
+Les derniers ajustements sont confirmés globalement sur téléphone le 5 novembre,
+sans plateforme ni résultats individuels par scénario précisés.
+La tête courante est `0015_permanent_public_recipes`. Une recette publique ne
+peut plus être retirée ni supprimée ; après suppression du compte auteur, les
+votes des autres comptes sur la recette conservée restent présents.
+
+## Validation historique — 2 novembre 2026
 
 La notation est intégrée à l’API et au mobile : trois critères, note pondérée,
 classement ajusté avant pagination, versions évaluées et accès depuis Promos
@@ -44,7 +56,12 @@ En modification, charger les trois notes déjà enregistrées.
 
 La fiabilité exprime l’expérience rapportée par la personne ; elle ne garantit
 pas la réussite de la recette. La facilité évaluée par la communauté reste
-distincte de la difficulté Facile/Moyenne/Difficile renseignée par l’auteur.
+la seule évaluation de facilité présentée dans le mobile depuis le 5 novembre
+2026. L’auteur ne renseigne plus de difficulté dans le formulaire. Le champ
+historique `difficulty` reste accepté côté API pour compatibilité ; il n’est
+ni affiché dans le détail ni utilisé pour le filtre Faciles. Ce filtre utilise
+la moyenne Facilité de la version courante, supérieure ou égale à 4/5, avant
+pagination ; les recettes sans évaluation courante sont exclues.
 
 Le formulaire proposera « Enregistrer mon évaluation » et « Annuler ».
 Une évaluation existante proposera aussi « Supprimer mon évaluation », avec
@@ -245,7 +262,9 @@ R = 0,40 × moyenne Goût + 0,40 × moyenne Fiabilité + 0,20 × moyenne Facilit
 Ces poids sont une hypothèse de conception à évaluer. Afficher la vraie note
 pondérée avec le nombre d’évaluations complètes, par exemple
 « ★ 4,5 · 28 évaluations ». Sans évaluation, la moyenne vaut null et l’interface
-affiche « Pas encore évaluée ». Arrondir seulement pour l’affichage.
+affiche « Pas encore évaluée » dans le détail, ou « Non notée » sur les cartes
+de Recettes. Ces cartes affichent la note et l’effectif à droite au format
+étoile et « 4,5 (28) ». Arrondir seulement pour l’affichage.
 
 Le tri « Mieux notées » utilise un score distinct :
 

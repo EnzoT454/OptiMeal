@@ -114,9 +114,10 @@ def test_authorship_visibility_and_anonymous_mutations(accounts):
     login(app, BOB)
     assert vote(client, own).status_code == 200
     login(app, ALICE)
-    client.patch('/api/v1/recipes/' + own + '/visibility', json={'visibility': 'private'})
+    assert client.patch('/api/v1/recipes/' + own + '/visibility', json={'visibility': 'private'}).status_code == 409
+    private = client.post('/api/v1/recipes', json=body()).json()['item']['id']
     login(app, BOB)
-    for inaccessible in (own, 'recipe_missing'):
+    for inaccessible in (private, 'recipe_missing'):
         response = vote(client, inaccessible)
         assert response.status_code == 404 and response.json()['error']['code'] == 'RECIPE_NOT_FOUND'
         assert client.get('/api/v1/recipes/' + inaccessible).status_code == 404
@@ -146,7 +147,7 @@ def test_delete_is_personal_idempotent_and_allowed_after_losing_access(accounts,
     login(app, BOB)
     vote(client, own)
     login(app, ALICE)
-    client.patch('/api/v1/recipes/' + own + '/visibility', json={'visibility': 'private'})
+    assert client.patch('/api/v1/recipes/' + own + '/visibility', json={'visibility': 'private'}).status_code == 409
     login(app, BOB)
     assert client.delete('/api/v1/recipes/' + own + '/rating').status_code == 204
     assert client.delete('/api/v1/recipes/recipe_missing/rating').status_code == 204

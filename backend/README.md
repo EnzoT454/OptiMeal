@@ -3,14 +3,16 @@
 Le backend contient l’API FastAPI, la collecte Apify pour Maxi et l’extraction locale des reçus. Le code est organisé par fonction, avec des commandes et des guides séparés.
 
 Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
-privées par défaut, publication volontaire et retrait par le propriétaire.
-Appliquer les migrations jusqu’à la tête courante `0013_rating_versions` avant
+privées par défaut et publication volontaire définitive. Une recette publique
+ne peut plus être rendue privée ni supprimée par son auteur.
+Appliquer les migrations jusqu’à la tête courante `0015_permanent_public_recipes` avant
 de démarrer cette version : `0009_recipe_visibility` ajoute le partage et
 `0010_preserve_meals` conserve les repas après suppression de leur recette. Les
 [contrats](docs/CONTRACTS.md#visibilité-et-sections-de-recettes--étape-backend)
 décrivent `scope` et `PATCH /api/v1/recipes/{id}/visibility`, ainsi que le
-masquage des favoris et du calendrier après retrait. Les sections mobiles et le choix de publication dans le formulaire et le
-détail sont intégrés ; leurs nouveaux parcours restent à vérifier sur appareil. Le bucket public `recipes-images` est conservé pendant le
+maintien des recettes publiques dans les favoris et les calendriers après
+suppression du compte auteur. Les derniers ajustements mobiles sont confirmés
+fonctionnels sur téléphone le 5 novembre, sans plateforme précisée. Le bucket public `recipes-images` est conservé pendant le
 prototype ; sa séparation privé/public est reportée après le prototype.
 
 Les routes `PUT` et `DELETE /api/v1/recipes/{id}/rating` permettent désormais
@@ -139,10 +141,11 @@ des identifiants partagés et des prix décimaux en chaînes.
 Le [guide des contrats](docs/CONTRACTS.md) détaille les filtres, dates et limites.
 Les [schémas et exemples](contracts/v1/README.md) peuvent être régénérés avec
 `python -m backend.cli.export_shared_contracts`. La connexion PostgreSQL/Supabase
-est disponible avec treize migrations couvrant ingrédients, recettes, profils,
+est disponible avec quinze migrations couvrant ingrédients, recettes, profils,
 favoris, catégories, offres, circulaires, photos de produits, repas planifiés,
-visibilité des recettes, conservation des repas après suppression de leur recette
-évaluations, dates des recettes et versions des votes. La révision
+visibilité des recettes, conservation des repas après suppression de leur recette,
+évaluations, dates des recettes, versions des votes, unités de cuisine et
+conservation des recettes publiques après suppression du compte. La révision
 `0007_product_images` ajoute les champs facultatifs `image_url` et
 `image_source` dans `product_offer`. Appliquer `upgrade head`, reconstruire
 le catalogue commun et relancer `import_offers` pour remplir ces champs.
@@ -168,8 +171,10 @@ recettes sont encore lues dans leur version courante, sans instantanés.
 
 `DELETE /api/v1/me`, avec une session valide et
 `{"confirmation":"SUPPRIMER"}`, supprime le compte connecté. Configurer
-`SUPABASE_SECRET_KEY` uniquement côté serveur ; les photos du dossier personnel
-sont retirées avant la suppression Auth et les cascades des données métier.
+`SUPABASE_SECRET_KEY` uniquement côté serveur. Les photos des recettes publiques
+sont conservées sous `community/` avant le nettoyage du dossier personnel.
+La suppression Auth détache les recettes publiques, qui restent accessibles
+sans propriétaire, et supprime les recettes privées et les données du compte.
 Le mobile expose ce parcours dans Paramètres. Voir le
 [guide Auth](docs/AUTH.md#suppression-définitive-du-compte) pour les erreurs,
 les limites en cas d’interruption et les essais sur compte de test.
@@ -287,4 +292,4 @@ l’historique des prix et les contributions par reçus. Compléter les fichiers
 
 Le [guide des données](docs/DATA.md) décrit les fichiers locaux. Le [guide de la base](docs/DATABASE.md) distingue les tables actuelles du modèle étendu proposé pour l’historique, les reçus et les estimations.
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 5 novembre 2026*
