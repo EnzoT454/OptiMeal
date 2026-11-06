@@ -123,7 +123,12 @@ def test_promotion_dates_are_inclusive_and_never_invented(declared, start, end, 
 def test_promotion_filter_rejects_expired_and_unverifiable(client):
     today = client.get('/api/v1/offers?promotion_only=true&on_date=2099-01-01').json()
     assert today['total'] == 0
-    historical = client.get('/api/v1/offers?promotion_only=true&on_date=2026-10-06&limit=100').json()
+        # Une date où une promo des données est active (prise dans les données : le test ne casse plus chaque jeudi).
+    offers = client.get('/api/v1/offers?limit=100').json()['items']
+    dated = [o for o in offers if o['promo_price'] and o['promotion']['valid_from']]
+    assert dated, 'Le catalogue doit contenir au moins une promo datée.'
+    day = dated[0]['promotion']['valid_from']
+    historical = client.get(f'/api/v1/offers?promotion_only=true&on_date={day}&limit=100').json()
     assert historical['items']
     assert all(o['promotion']['declared'] is True and o['promotion']['status'] == 'active'
                for o in historical['items'])
