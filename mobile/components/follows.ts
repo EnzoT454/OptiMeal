@@ -1,21 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { Offer } from '../types/api';
+import type { Offer, Retailer } from '../types/api';
 import { isOnPromo } from './search';
 
-// Ingrédients suivis : l'utilisateur est prévenu quand l'un des 3 magasins les met en promo.
-// On suit l'ingrédient (« Bœuf haché »), pas un produit précis : peu importe la marque ou le magasin.
+// Produits suivis : l'utilisateur est prévenu quand CE produit, dans CE magasin, passe en promo
+// (demande du prof : suivre un seul produit, pas toute la catégorie ni l'ingrédient dans les 3 magasins).
+// On garde l'identifiant de l'offre (ex. « maxi:8661:20325029_EA ») : il reste le même d'une semaine à l'autre.
 //
 // ÉTAPE 1 (maintenant) : la liste est enregistrée sur le téléphone (AsyncStorage).
 // ÉTAPE 2 (backend) : seul l'intérieur de ces fonctions changera pour appeler /api/v1/me/follows ;
 // les écrans qui les utilisent ne bougeront pas.
 
 export interface Follow {
-  ingredient_id: string;
-  name: string;   // nom affiché si la liste des ingrédients ne se charge pas
+  offer_id: string;
+  retailer: Retailer;
+  name: string;   // nom affiché si le produit n'est plus vendu
   since: string;  // date du suivi (AAAA-MM-JJ…)
 }
 
-const KEY = 'optimeal.follows.v1';
+// « v2 » : l'ancienne liste « v1 » (par ingrédient) est ignorée.
+const KEY = 'optimeal.follows.v2';
 
 export async function getFollows(): Promise<Follow[]> {
   try {
@@ -31,27 +34,22 @@ async function save(list: Follow[]) {
   await AsyncStorage.setItem(KEY, JSON.stringify(list));
 }
 
-export async function follow(ingredient_id: string, name: string) {
+export async function unfollow(offerId: string) {
   const list = await getFollows();
-  if (list.some(f => f.ingredient_id === ingredient_id)) return;
-  await save([...list, { ingredient_id, name, since: new Date().toISOString() }]);
+  await save(list.filter(f => f.offer_id !== offerId));
+  return getFollows();
 }
 
-export async function unfollow(ingredient_id: string) {
-  const list = await getFollows();
-  await save(list.filter(f => f.ingredient_id !== ingredient_id));
-}
-
-// Nombre d'ingrédients suivis qui sont en promo dans au moins un magasin (le chiffre de l'onglet « Suivis »).
-export function followedOnPromo(follows: Follow[], offers: Offer[]) {
-  const ids = new Set(follows.map(f => f.ingredient_id));
-  return new Set(offers.filter(o => ids.has(o.ingredient_id) && isOnPromo(o)).map(o => o.ingredient_id)).size;
-}
-
-// Suivre ou ne plus suivre l'ingrédient d'un produit (bouton cloche). Renvoie la nouvelle liste.
+// Suivre ou ne plus suivre un produit (cloche ou bouton de la fiche). Renvoie la nouvelle liste.
 export async function toggleFollow(offer: Offer): Promise<Follow[]> {
   const list = await getFollows();
-  if (list.some(f => f.ingredient_id === offer.ingredient_id)) await unfollow(offer.ingredient_id);
-  else await follow(offer.ingredient_id, offer.product_name);
+  if (list.some(f => f.offer_id === offer.id)) return unfollow(offer.id);
+  await save([...list, { offer_id: offer.id, retailer: offer.retailer, name: offer.product_name, since: new Date().toISOString() }]);
   return getFollows();
+}
+
+// Nombre de produits suivis en promo cette semaine (la pastille rouge de l'onglet « Suivis »).
+export function followedOnPromo(follows: Follow[], offers: Offer[]) {
+  const ids = new Set(follows.map(f => f.offer_id));
+  return offers.filter(o => ids.has(o.id) && isOnPromo(o)).length;
 }

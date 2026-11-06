@@ -23,19 +23,19 @@ export default function PromoDetailScreen({ navigation, route }: NativeStackScre
     : valid_to ? `Valide jusqu’au ${longDate(valid_to)}` : 'Dates de validité non indiquées';
   const url = offer.source.url;
 
-  // Suivi de l'ingrédient de ce produit : prévenir quand un des 3 magasins le met en promo.
+  // Suivi de CE produit dans CE magasin : prévenir quand il passe en promo.
   const [followed, setFollowed] = useState(false);
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     let active = true;
-    getFollows().then(list => { if (active) setFollowed(list.some(f => f.ingredient_id === offer.ingredient_id)); });
+    getFollows().then(list => { if (active) setFollowed(list.some(f => f.offer_id === offer.id)); });
     return () => { active = false; };
-  }, [offer.ingredient_id]);
+  }, [offer.id]);
   const onFollowPress = async () => {
     setBusy(true);
     try {
       const list = await toggleFollow(offer);
-      setFollowed(list.some(f => f.ingredient_id === offer.ingredient_id));
+      setFollowed(list.some(f => f.offer_id === offer.id));
     } finally {
       setBusy(false);
     }
@@ -75,8 +75,8 @@ export default function PromoDetailScreen({ navigation, route }: NativeStackScre
         </Text>
       </Pressable>
       <Text style={[recipeStyles.body, { textAlign: 'center' }]}>
-        {followed ? 'Dans les 3 magasins · touche pour ne plus suivre'
-          : 'On te prévient dès que Maxi, Metro ou Super C le met en promo.'}
+        {followed ? `Ce produit chez ${store} · touche pour ne plus suivre`
+          : `On te prévient dès que ce produit est en promo chez ${store}.`}
       </Text>
     </View>
 

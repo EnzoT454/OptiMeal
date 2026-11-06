@@ -1,55 +1,56 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Message } from '../components/ui';
 import { RecipeButton, RecipeChip, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
 import { discount, storeName } from '../components/promos';
-import { fetchAllOffers, fetchIngredients, isOnPromo } from '../components/search';
-import { Follow, getFollows, unfollow } from '../components/follows';
-import { PromoCard, sectionStyle } from '../components/PromoCard';
+import { fetchAllOffers, isOnPromo } from '../components/search';
+import { Follow, getFollows, toggleFollow, unfollow } from '../components/follows';
+import { PromoList, PromoView, ViewToggle, sectionStyle } from '../components/PromoCard';
 import { FollowsChip } from '../components/FollowsChip';
 import type { Offer } from '../types/api';
 import { PromoStackParams } from '../types/navigation';
 
-// Onglet « Suivis » : les ingrédients que l'utilisateur suit.
-// En haut, ceux en promo cette semaine (cartes colorées) ; en dessous, ceux qui ne le sont pas encore.
+// Onglet « Suivis » : les produits que l'utilisateur suit (un produit précis dans un magasin précis).
+// En haut, ceux en promo cette semaine ; en dessous, ceux qui ne le sont pas encore.
 export default function FollowsScreen({ navigation }: NativeStackScreenProps<PromoStackParams, 'Follows'>) {
   const [follows, setFollows] = useState<Follow[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
-  const [names, setNames] = useState<Record<string, string>>({}); // nom commun de chaque ingrédient
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [retry, setRetry] = useState(0);
+  const [view, setView] = useState<PromoView>('list');
+
+  // Même présentation (grille ou liste) que la page Promos.
+  useEffect(() => { AsyncStorage.getItem(VIEW_KEY).then(v => { if (v === 'list' || v === 'grid') setView(v); }).catch(() => {}); }, []);
+  const changeView = (v: PromoView) => { setView(v); AsyncStorage.setItem(VIEW_KEY, v).catch(() => {}); };
 
   useFocusEffect(useCallback(() => {
     let active = true;
     setLoading(true); setError('');
-    Promise.all([getFollows(), fetchAllOffers(), fetchIngredients().catch(() => [])]).then(([list, items, ingredients]) => {
+    Promise.all([getFollows(), fetchAllOffers()]).then(([list, items]) => {
       if (!active) return;
       setFollows(list);
       setOffers(items);
-      setNames(Object.fromEntries(ingredients.map(i => [i.id, i.name])));
     }).catch(e => {
       if (active) setError(e instanceof Error ? e.message : 'Impossible de charger tes produits suivis.');
     }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [retry]));
 
-  // Pour chaque ingrédient suivi : ses produits en promo (du plus gros rabais au plus petit) et ses magasins.
-  const groups = useMemo(() => follows.map(f => {
-    const all = offers.filter(o => o.ingredient_id === f.ingredient_id);
-    const promos = all.filter(isOnPromo).sort((a, b) => (discount(b) ?? 0) - (discount(a) ?? 0));
-    return { follow: f, name: names[f.ingredient_id] ?? f.name, all, promos };
-  }), [follows, offers, names]);
-  const onPromo = groups.filter(g => g.promos.length > 0);
-  const waiting = groups.filter(g => g.promos.length === 0);
+  const byId = useMemo(() => new Map(offers.map(o => [o.id, o])), [offers]);
+  const followed = follows.map(f => byId.get(f.offer_id)).filter((o): o is Offer => !!o);
+  const onPromo = followed.filter(isOnPromo).sort((a, b) => (discount(b) ?? 0) - (discount(a) ?? 0));
+  const waiting = followed.filter(o => !isOnPromo(o));
+  const gone = follows.filter(f => !byId.has(f.offer_id)); // produit retiré du catalogue
+  const ids = new Set(follows.map(f => f.offer_id));
 
-  const stop = async (ingredientId: string) => {
-    await unfollow(ingredientId);
-    setFollows(list => list.filter(f => f.ingredient_id !== ingredientId));
-  };
+  const list = (items: Offer[]) => <PromoList offers={items} view={view}
+    onOpen={o => navigation.navigate('Detail', { offer: o })}
+    isFollowed={o => ids.has(o.id)} onToggleFollow={o => { toggleFollow(o).then(setFollows); }} />;
 
   return <RecipeScreen>
     <RecipeTitle>Promos</RecipeTitle>
@@ -69,67 +70,47 @@ export default function FollowsScreen({ navigation }: NativeStackScreenProps<Pro
         <Ionicons name="notifications-outline" size={32} color={recipeColors.green} />
         <Text style={recipeStyles.sectionTitle}>Tu ne suis aucun produit</Text>
         <Text style={recipeStyles.body}>
-          Ouvre un produit et touche « Me prévenir quand il est en promo ». Il apparaîtra ici dès qu’un des 3 magasins le met en promo.
+          Touche la cloche d’un produit : il apparaîtra ici, et tu verras tout de suite quand il passe en promo dans son magasin.
         </Text>
         <RecipeButton title="Voir les promos" onPress={() => navigation.navigate('List')} />
       </View>
       : <>
-        <Text style={recipeStyles.body}>
-          {onPromo.length ? `${onPromo.length} de tes ${follows.length} produits suivis ${onPromo.length > 1 ? 'sont' : 'est'} en promo cette semaine.`
-            : `Aucun de tes ${follows.length} produits suivis n’est en promo cette semaine.`}
-        </Text>
+        <View style={styles.titleRow}>
+          <Text style={[recipeStyles.body, { flex: 1 }]}>
+            {onPromo.length ? `${onPromo.length} de tes ${follows.length} produits suivis ${onPromo.length > 1 ? 'sont' : 'est'} en promo cette semaine.`
+              : `Aucun de tes ${follows.length} produits suivis n’est en promo cette semaine.`}
+          </Text>
+          <ViewToggle value={view} onChange={changeView} />
+        </View>
 
-        {/* Section 1 : en promo cette semaine, avec les cartes colorées de chaque magasin. */}
         {onPromo.length > 0 && <Text style={sectionStyle}>EN PROMO CETTE SEMAINE · {onPromo.length}</Text>}
-        {onPromo.map(g => <View key={g.follow.ingredient_id} style={styles.group}>
-          <GroupTitle name={g.name} onStop={() => stop(g.follow.ingredient_id)} />
-          {g.promos.map(o => <PromoCard key={o.id} offer={o} followed onToggleFollow={() => stop(g.follow.ingredient_id)}
-            onPress={() => navigation.navigate('Detail', { offer: o })} />)}
-        </View>)}
+        {list(onPromo)}
 
-        {/* Section 2 : pas encore en promo (carte sobre). */}
         {waiting.length > 0 && <Text style={sectionStyle}>PAS ENCORE EN PROMO · {waiting.length}</Text>}
-        {waiting.map(g => <Pressable key={g.follow.ingredient_id} accessibilityRole="button" style={styles.waiting}
-          disabled={!g.all.length} onPress={() => g.all[0] && navigation.navigate('Detail', { offer: g.all[0] })}>
+        {list(waiting)}
+
+        {/* Produits suivis qui ne sont plus dans le catalogue : on propose simplement de les retirer. */}
+        {gone.map(f => <View key={f.offer_id} style={styles.gone}>
           <View style={{ flex: 1, gap: 2 }}>
-            <Text style={styles.waitingName}>{g.name}</Text>
-            <Text style={recipeStyles.body}>
-              {g.all.length ? `Prix régulier chez ${listStores(g.all)}` : 'Plus vendu dans les 3 magasins'}
-            </Text>
+            <Text style={styles.goneName}>{f.name}</Text>
+            <Text style={recipeStyles.body}>Plus disponible chez {storeName(f.retailer)}</Text>
           </View>
-          <Pressable accessibilityRole="button" accessibilityLabel={`Ne plus suivre ${g.name}`} hitSlop={8}
-            onPress={() => stop(g.follow.ingredient_id)} style={styles.stopButton}>
+          <Pressable accessibilityRole="button" accessibilityLabel={`Ne plus suivre ${f.name}`} hitSlop={8}
+            onPress={() => { unfollow(f.offer_id).then(setFollows); }}>
             <Text style={styles.stopText}>Ne plus suivre</Text>
           </Pressable>
-        </Pressable>)}
+        </View>)}
 
         <Text style={recipeStyles.note}>Les promos sont mises à jour chaque jeudi, avec les nouvelles circulaires.</Text>
       </>}
   </RecipeScreen>;
 }
 
-function GroupTitle({ name, onStop }: { name: string; onStop: () => void }) {
-  return <View style={styles.groupTitle}>
-    <Ionicons name="notifications" size={18} color={recipeColors.green} />
-    <Text style={styles.groupName}>{name}</Text>
-    <Pressable accessibilityRole="button" accessibilityLabel={`Ne plus suivre ${name}`} hitSlop={8} onPress={onStop}>
-      <Text style={styles.stopText}>Ne plus suivre</Text>
-    </Pressable>
-  </View>;
-}
-
-// « Maxi, Metro et Super C » : les magasins qui vendent cet ingrédient.
-function listStores(offers: Offer[]) {
-  const names = [...new Set(offers.map(o => storeName(o.retailer)))];
-  return names.length > 1 ? `${names.slice(0, -1).join(', ')} et ${names[names.length - 1]}` : names[0];
-}
+const VIEW_KEY = 'optimeal.promosView';
 
 const styles = StyleSheet.create({
-  group: { gap: 10 },
-  groupTitle: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4 },
-  groupName: { flex: 1, fontFamily: 'DMSans_700Bold', fontSize: 17, lineHeight: 22, color: recipeColors.ink },
-  waiting: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: 'white', borderRadius: 16, padding: 16 },
-  waitingName: { fontFamily: 'DMSans_700Bold', fontSize: 17, lineHeight: 22, color: recipeColors.ink },
-  stopButton: { paddingVertical: 8, paddingHorizontal: 4 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  gone: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: 'white', borderRadius: 16, padding: 16 },
+  goneName: { fontFamily: 'DMSans_700Bold', fontSize: 17, lineHeight: 22, color: recipeColors.ink },
   stopText: { fontFamily: 'DMSans_500Medium', fontSize: 14, lineHeight: 19, color: recipeColors.muted, textDecorationLine: 'underline' },
 });

@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Message } from '../components/ui';
@@ -8,7 +9,7 @@ import {
 } from '../components/recipes';
 import { ON_DATE, RETAILERS, discount, longDate } from '../components/promos';
 import { fetchAllOffers, fetchKeywords, isOnPromo, searchScore, searchWords } from '../components/search';
-import { PromoCard, sectionStyle } from '../components/PromoCard';
+import { PromoList, PromoView, ViewToggle, sectionStyle } from '../components/PromoCard';
 import { Follow, followedOnPromo, getFollows, toggleFollow } from '../components/follows';
 import { FollowsChip } from '../components/FollowsChip';
 import { CATEGORIES, CategoryRow } from '../components/categories';
@@ -25,7 +26,12 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
   const [retailer, setRetailer] = useState<Retailer | null>(null);
   const [category, setCategory] = useState<number | null>(null);
   const [keywords, setKeywords] = useState<Record<string, string>>({});       // alias de chaque ingrédient
-  const [follows, setFollows] = useState<Follow[]>([]);                         // ingrédients suivis
+  const [follows, setFollows] = useState<Follow[]>([]);                         // produits suivis
+  const [view, setView] = useState<PromoView>('grid');                          // présentation : grille ou liste
+
+  // L'app se souvient de la dernière présentation choisie.
+  useEffect(() => { AsyncStorage.getItem(VIEW_KEY).then(v => { if (v === 'list' || v === 'grid') setView(v); }).catch(() => {}); }, []);
+  const changeView = (v: PromoView) => { setView(v); AsyncStorage.setItem(VIEW_KEY, v).catch(() => {}); };
 
   // Recharge à chaque ouverture de l'onglet (même principe que RecipeListScreen).
   useFocusEffect(useCallback(() => {
@@ -68,13 +74,12 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
     found.forEach(({ o }) => { if (o.category_id != null) result[o.category_id] = (result[o.category_id] ?? 0) + 1; });
     return result;
   }, [found]);
-  // Nombre d'ingrédients suivis en promo cette semaine (affiché sur l'onglet « Suivis »).
+  // Nombre de produits suivis en promo cette semaine (pastille rouge de l'onglet « Suivis »).
   const alerts = useMemo(() => followedOnPromo(follows, offers), [follows, offers]);
-  const followedIds = useMemo(() => new Set(follows.map(f => f.ingredient_id)), [follows]);
-  const bell = (o: Offer) => ({
-    followed: followedIds.has(o.ingredient_id),
-    onToggleFollow: () => { toggleFollow(o).then(setFollows); },
-  });
+  const followedIds = useMemo(() => new Set(follows.map(f => f.offer_id)), [follows]);
+  const list = (items: Offer[]) => <PromoList offers={items} view={view}
+    onOpen={o => navigation.navigate('Detail', { offer: o })}
+    isFollowed={o => followedIds.has(o.id)} onToggleFollow={o => { toggleFollow(o).then(setFollows); }} />;
   const categoryName = CATEGORIES.find(c => c.id === category)?.name;
 
   return <RecipeScreen>
@@ -97,7 +102,10 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
     </View>
 
     <View style={{ gap: 4 }}>
-      <Text style={recipeStyles.sectionTitle}>{categoryName ?? 'Cette semaine'}</Text>
+      <View style={styles.titleRow}>
+        <Text style={[recipeStyles.sectionTitle, { flex: 1 }]}>{categoryName ?? 'Cette semaine'}</Text>
+        <ViewToggle value={view} onChange={changeView} />
+      </View>
       <Text style={recipeStyles.body}>
         {loading || error ? (evaluatedOn ? `Promos en cours le ${longDate(evaluatedOn)}` : 'Promos en cours')
           : searching ? `${promos.length} en promo · ${regular.length} au prix régulier`
@@ -121,12 +129,12 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
       : <>
         {/* Section 1 : les promos (cartes colorées). Sans recherche, c'est la seule section. */}
         {searching && promos.length > 0 && <Text style={sectionStyle}>EN PROMO · {promos.length}</Text>}
-        {promos.map(o => <PromoCard key={o.id} offer={o} {...bell(o)} onPress={() => navigation.navigate('Detail', { offer: o })} />)}
+        {list(promos)}
         {/* Section 2 (seulement avec une recherche) : les produits au prix régulier (cartes sobres). */}
         {regular.length > 0 && <>
           <Text style={sectionStyle}>PRIX RÉGULIER · {regular.length}</Text>
           {!promos.length && <Text style={recipeStyles.body}>Pas en promo cette semaine.</Text>}
-          {regular.map(o => <PromoCard key={o.id} offer={o} {...bell(o)} onPress={() => navigation.navigate('Detail', { offer: o })} />)}
+          {list(regular)}
         </>}
         <RecipeButton title="Cuisiner avec les promos" variant="neutral" style={styles.cookButton}
           textStyle={{ color: recipeColors.green }} onPress={() => navigation.navigate('Cook')} />
@@ -139,6 +147,9 @@ function plural(count: number, word: string) {
   return `${count} ${word}${count > 1 ? 's' : ''}`;
 }
 
+const VIEW_KEY = 'optimeal.promosView';
+
 const styles = StyleSheet.create({
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   cookButton: { backgroundColor: recipeColors.light, borderWidth: 0 },
 });
