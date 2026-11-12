@@ -31,6 +31,8 @@ function screen(file, { states = {}, reply = { item: { entries: [] } } } = {}) {
         if (name.endsWith('services/api')) return { api };
         if (name.endsWith('/planning')) return load('components/planning.ts');
         if (name.endsWith('/MonthGrid')) return load('components/MonthGrid.tsx');
+                // Liste d'épicerie : fausse version vide (ces tests vérifient le calendrier, pas la liste)
+        if (name.endsWith('/useShoppingList')) return { useListeAchats: () => ({ aAcheter: [], recharger() {} }) };
         if (name === '@react-navigation/native') return { useNavigation: () => ({ navigate: (...args) => navigations.push(args) }), useFocusEffect: fn => effects.push(fn) };
         if (name === 'react-native-safe-area-context') return { SafeAreaView: 'SafeAreaView' };
         if (name.endsWith('/recipes')) return new Proxy({ recipeColors: new Proxy({}, { get: (_, color) => '#' + String(color) }), recipeStyles: new Proxy({}, { get: () => ({}) }) }, { get: (object, key) => object[key] ?? String(key) });
