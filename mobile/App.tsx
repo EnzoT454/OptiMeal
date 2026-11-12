@@ -75,9 +75,10 @@ function PromoNavigator() {
     <Promos.Screen name="Follows" component={FollowsScreen} />
   </Promos.Navigator>;
 }
-function Calendar() {
+// route.params.vue = "epicerie" quand l'Accueil ouvre directement la liste d'épicerie
+function Calendar({ route }: { route?: { params?: { vue?: 'repas' | 'epicerie' } } } = {}) {
   return <AccountRequired reason="Connecte-toi pour planifier tes repas dans ton calendrier.">
-    <CalendarScreen />
+    <CalendarScreen vue={route?.params?.vue} />
   </AccountRequired>;
 }
 function Content() {

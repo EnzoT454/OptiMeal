@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import type { MealPlanEntry, MealType, RecipeSummary } from "../types/api";
 import AddMealSheet from "../components/AddMealSheet";
@@ -48,21 +48,9 @@ function semaineRelative(lundi: Date): string {
   return ecart > 0 ? `Dans ${ecart} semaines` : `Il y a ${-ecart} semaines`;
 }
 
-export default function CalendarScreen() {
+// vue : envoyée par App.tsx quand l'Accueil ouvre le Calendrier sur l'Épicerie
+export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "epicerie" } = {}) {
   const navigation = useNavigation<any>();
-  const route = useRoute<any>();
-
-  // ---- Repas | Épicerie ----
-  const [vue, setVue] = useState<"repas" | "epicerie">("repas");
-  const liste = useListeAchats();
-
-  // L'Accueil peut ouvrir directement l'Épicerie : navigate("Calendrier", { vue: "epicerie" })
-  useEffect(() => {
-    if (route.params?.vue) {
-      setVue(route.params.vue);
-      navigation.setParams({ vue: undefined }); // pour que ça remarche la prochaine fois
-    }
-  }, [route.params?.vue]);
 
   // ---- L'état de l'écran ----
   const [lundi, setLundi] = useState(() => mondayOf(new Date()));    // la semaine affichée
@@ -89,6 +77,19 @@ export default function CalendarScreen() {
       .finally(() => { if (!annule) setChargement(false); });
     return () => { annule = true; };
   }, [mois.getFullYear(), mois.getMonth()]));
+
+  // ---- Repas | Épicerie ----
+  // (déclaré APRÈS l'état du calendrier : les tests repèrent les useState par leur ordre)
+  const [vue, setVue] = useState<"repas" | "epicerie">("repas");
+  const liste = useListeAchats();
+
+  // L'Accueil peut ouvrir directement l'Épicerie : navigate("Calendrier", { vue: "epicerie" })
+  useEffect(() => {
+    if (vueDemandee) {
+      setVue(vueDemandee);
+      navigation.setParams?.({ vue: undefined }); // pour que ça remarche la prochaine fois
+    }
+  }, [vueDemandee]);
 
   // ---- Quand les repas changent (ajout, retrait, portions, déplacement), la liste suit ----
   const signature = entries.map((e) => `${e.id}:${e.date}:${e.servings}:${e.is_leftover}`).join("|");
