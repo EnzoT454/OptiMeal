@@ -11,7 +11,8 @@ export type PromoStackParams = {
 export type MainTabParams = {
   Accueil: undefined;
   Recettes: undefined;
-  Calendrier: undefined;
+  // vue = "epicerie" pour ouvrir directement la liste d'achats (depuis l'Accueil)
+  Calendrier: { vue?: "repas" | "epicerie" } | undefined;
   Promos: undefined;
   Paramètres: undefined;
 };
