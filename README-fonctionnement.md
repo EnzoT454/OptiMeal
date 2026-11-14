@@ -2,7 +2,7 @@
 
 Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il suit des actions concrètes : se connecter, enregistrer une recette avec une photo, consulter les promotions et ouvrir une circulaire.
 
-Il décrit le code et les confirmations disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
+Il décrit le code au **10 novembre 2026** et les confirmations sur téléphone disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
 ## 1. Les grandes parties de l’application
 
@@ -256,12 +256,13 @@ flowchart TD
 
 Les responsabilités se répartissent ainsi :
 
-1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes et les étiquettes. Le nom est obligatoire : le bouton d’enregistrement reste désactivé s’il est vide ou ne contient que des espaces. À la création, une photo est également obligatoire ; les autres champs requis sont vérifiés avant l’enregistrement. L’auteur ne choisit plus la difficulté : les autres utilisateurs évaluent la facilité avec le critère « Facilité ». L’ancienne difficulté n’est plus affichée dans le détail.
+1. Le formulaire recueille le nom, les portions, les ingrédients, les étapes et les étiquettes. Chaque étape demande une durée entière en minutes, 0 étant accepté pour une étape immédiate. Le total affiché est la somme de ces durées ; les champs de préparation et de cuisson séparés sont retirés. Le nom est obligatoire : le bouton d’enregistrement reste désactivé s’il est vide ou ne contient que des espaces. À la création, une photo est également obligatoire ; les autres champs requis sont vérifiés avant l’enregistrement. L’auteur ne choisit plus la difficulté : les autres utilisateurs évaluent la facilité avec le critère « Facilité ». L’ancienne difficulté n’est plus affichée dans le détail.
 2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. La quantité se saisit dans un champ numérique séparé ; l’unité se choisit dans un sélecteur compact ouvrant une liste en bas de l’écran : g, ml, unité, tasse (250 ml), cuillère à table (15 ml) et cuillère à thé (5 ml). Le choix courant porte une coche ; fermer la liste sans sélection conserve la valeur. Aucune unité n’est présélectionnée pour un nouvel ingrédient. Les quantités doivent être positives ; seules les pièces exigent un entier. Une demi-tasse se saisit avec `0,5`. L’unité choisie est conservée et affichée dans le détail. La migration `0014_recipe_kitchen_units` doit être appliquée avant d’enregistrer les nouvelles unités. `recipeForm.ts` regroupe ces validations et les règles des badges.
 3. La photo, obligatoire pour créer une recette, est préparée par `recipeImages.ts` : JPEG, côté maximal de 1 200 pixels et limite de 5 Mo. Son envoi intervient à l’enregistrement.
 4. `api.ts` transmet le formulaire à FastAPI avec le jeton.
 5. Le backend exige une URL de photo HTTPS valide à la création, valide les autres champs et vérifie que les ingrédients existent en base. Il déduit le propriétaire de l’identité authentifiée.
-6. Le service enregistre la recette et ses liens vers les ingrédients dans une transaction PostgreSQL, puis renvoie le résultat.
+6. Le backend recalcule la somme des durées des étapes. Les anciennes recettes conservent leur total en consultation ; en modification, leurs durées manquantes doivent être renseignées sans répartition automatique. Les durées sont conservées dans le JSON des étapes, sans migration. Les cartes, le détail et Rapides utilisent le total enregistré. Changer une durée d’étape ouvre une nouvelle version évaluée, même si le total reste identique. Les essais sur appareil de cet ajout restent à effectuer.
+7. Le service enregistre la recette et ses liens vers les ingrédients dans une transaction PostgreSQL, puis renvoie le résultat.
 
 **L’image et la recette sont enregistrées dans deux services différents.** Storage reçoit le fichier ; PostgreSQL conserve son URL dans `recipe.image_url`. Si l’envoi de l’image réussit mais que la recette ne peut pas être enregistrée, un fichier inutilisé peut rester dans Storage.
 
@@ -1114,4 +1115,4 @@ Pour suivre les ajouts récents, partir des champs `ImageUrl` et `ImageSource` d
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 5 novembre 2026*
+*Dernière mise à jour : 10 novembre 2026*

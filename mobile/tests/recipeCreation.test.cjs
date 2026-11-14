@@ -9,8 +9,8 @@ function editor({ localPhoto = null, savedPhoto = null, uploadFails = false, nam
   const calls = [], uploads = [], navigation = [], alerts = [], effects = [];
   let storedVisibility = visibility;
   const states = { 0: [{ id: 'ing_test', name: 'Ingrédient' }], 1: name,
-    7: savedPhoto, 8: localPhoto, 9: [{ ingredient_id: 'ing_test', quantity: '100', unit: 'g', preparation: null }],
-    10: ['Préparer.'], 15: false, 18: visibility, 19: visibility };
+    5: savedPhoto, 6: localPhoto, 7: [{ ingredient_id: 'ing_test', quantity: '100', unit: 'g', preparation: null }],
+    8: [{ text: 'Préparer.', duration: '10' }], 13: false, 16: visibility, 17: visibility };
   let cursor = 0;
   const exports = {};
   const jsx = (type, props) => ({ type, props: props ?? {} });
@@ -72,7 +72,7 @@ for (const name of ['', '   ']) {
       assert.equal(e.calls.length, 0);
       assert.equal(e.uploads.length, 0);
       assert.equal(e.navigation.length, 0);
-      assert.match(e.states[16], /Ajoute un nom/);
+      assert.match(e.states[14], /Ajoute un nom/);
     });
   }
 }
@@ -85,7 +85,7 @@ test('nouvelle recette sans photo : bouton désactivé et aucun envoi même en a
   await flush();
   assert.equal(e.calls.length, 0);
   assert.equal(e.uploads.length, 0);
-  assert.match(e.states[16], /Ajoute une photo/);
+  assert.match(e.states[14], /Ajoute une photo/);
 });
 
 test('photo choisie : envoyer l’image avant de créer avec son URL', async () => {
@@ -106,7 +106,7 @@ test('échec Storage : ne pas créer, conserver la photo pour réessayer', async
   saveButton(e.tree).props.onPress();
   await flush();
   assert.equal(e.calls.length, 0);
-  assert.equal(e.states[8], 'file:///photo.jpg');
+  assert.equal(e.states[6], 'file:///photo.jpg');
   assert.equal(e.navigation.length, 0);
 });
 
@@ -159,12 +159,12 @@ for (const [label, unit] of [['Tasse (250 millilitres)', 'cup'], ['Cuillère à 
 
 test('aucune unité choisie : bloquer avant tout envoi de photo ou de recette', async () => {
   const e = editor({ localPhoto: 'file:///photo.jpg' });
-  e.states[9][0].unit = null;
+  e.states[7][0].unit = null;
   saveButton(e.render()).props.onPress();
   await flush();
   assert.equal(e.calls.length, 0);
   assert.equal(e.uploads.length, 0);
-  assert.match(e.states[16], /Choisis une unité/);
+  assert.match(e.states[14], /Choisis une unité/);
 });
 
 const shareSwitch = tree => nodes(tree).find(n => n.type === 'Switch');
@@ -205,7 +205,7 @@ test('édition : charger la visibilité publique existante', async () => {
   e.effects[0]();
   await flush();
   assert.equal(shareSwitch(e.render()), undefined);
-  assert.equal(e.states[19], 'public');
+  assert.equal(e.states[17], 'public');
 });
 
 for (const current of ['private']) {
@@ -231,7 +231,7 @@ test('publication échouée après PUT : message de sauvegarde partielle et nouv
   saveButton(e.render()).props.onPress(); confirmSave(e);
   await flush();
   assert.equal(e.navigation.length, 0);
-  assert.match(e.states[16], /modifications sont enregistrées/);
+  assert.match(e.states[14], /modifications sont enregistrées/);
   saveButton(e.render()).props.onPress(); confirmSave(e);
   await flush();
   assert.deepEqual(e.calls.map(call => call[1].method), ['PUT', 'PATCH', 'PUT', 'PATCH']);
@@ -249,7 +249,7 @@ test('PUT échoué avant publication : ne pas rendre publique une ancienne versi
   saveButton(e.render()).props.onPress(); confirmSave(e);
   await flush();
   assert.deepEqual(e.calls.map(call => call[1].method), ['PUT']);
-  assert.equal(e.states[19], 'private');
+  assert.equal(e.states[17], 'private');
   assert.equal(e.navigation.length, 0);
 });
 
@@ -260,4 +260,63 @@ test('édition publique sans changement de statut : conserver la publication san
   assert.deepEqual(e.calls.map(call => call[1].method), ['PUT']);
   assert.equal(e.alerts.length, 0);
   assert.equal(e.navigation.length, 1);
+});
+
+test('temps par étape : calculer le total, conserver les durées après déplacement et retrait', async () => {
+  const e = editor({ localPhoto: 'file:///photo.jpg' });
+  assert.equal(nodes(e.tree).some(n => /^(Préparation|Cuisson) \(minutes\)$/.test(n.props?.label)), false);
+  nodes(e.tree).find(n => n.props?.title === '+ Ajouter une étape').props.onPress();
+  let tree = e.render();
+  nodes(tree).find(n => n.props?.label === 'Étape 2').props.onChangeText('Cuire.');
+  tree = e.render();
+  nodes(tree).find(n => n.props?.accessibilityLabel === 'Durée de l’étape 2 en minutes, obligatoire').props.onChangeText('25');
+  tree = e.render();
+  assert.ok(nodes(tree).some(n => Array.isArray(n.props?.children) && n.props.children.join('') === 'Durée totale : 35 min'));
+  nodes(tree).find(n => n.props?.accessibilityLabel === 'Monter l’étape 2').props.onPress();
+  tree = e.render();
+  saveButton(tree).props.onPress();
+  await flush();
+  const body = JSON.parse(e.calls[0][1].body);
+  assert.equal(body.total_time_minutes, 35);
+  assert.deepEqual(body.instructions, [
+    { position: 1, text: 'Cuire.', duration_minutes: 25 },
+    { position: 2, text: 'Préparer.', duration_minutes: 10 },
+  ]);
+  nodes(tree).find(n => n.props?.accessibilityLabel === 'Retirer l’étape 1').props.onPress();
+  assert.ok(nodes(e.render()).some(n => Array.isArray(n.props?.children) && n.props.children.join('') === 'Durée totale : 10 min'));
+});
+
+for (const duration of ['', '-1', '1,5', 'abc']) {
+  test(`durée invalide ${JSON.stringify(duration)} : bloquer avant tout envoi`, async () => {
+    const e = editor({ localPhoto: 'file:///photo.jpg' });
+    nodes(e.tree).find(n => n.props?.label === 'Durée (min)').props.onChangeText(duration);
+    saveButton(e.render()).props.onPress();
+    await flush();
+    assert.equal(e.calls.length, 0);
+    assert.equal(e.uploads.length, 0);
+    assert.match(e.states[14], /durée de l’étape 1/);
+  });
+}
+
+test('édition : charger les durées enregistrées sans les perdre', async () => {
+  const e = editor({ id: 'recipe_existing', loadedRecipe: { is_owned: true,
+    name: 'Soupe', description: 'Soupe', servings: 2, image_url: null, visibility: 'private',
+    ingredients: [], instructions: [{ position: 1, text: 'Cuire.', duration_minutes: 20 }], tags: [] } });
+  e.effects[0]();
+  await flush();
+  assert.equal(nodes(e.render()).find(n => n.props?.label === 'Durée (min)').props.value, '20');
+});
+
+test('ancienne recette : demander les durées sans répartir le total existant', async () => {
+  const e = editor({ id: 'recipe_existing', loadedRecipe: { is_owned: true,
+    name: 'Soupe', description: 'Soupe', servings: 2, total_time_minutes: 30, image_url: null,
+    visibility: 'private', ingredients: [{ ingredient_id: 'ing_test', quantity: '100', unit: 'g', preparation: null }],
+    instructions: [{ position: 1, text: 'Cuire.' }], tags: [] } });
+  e.effects[0]();
+  await flush();
+  const tree = e.render();
+  assert.equal(nodes(tree).find(n => n.props?.label === 'Durée (min)').props.value, '');
+  saveButton(tree).props.onPress();
+  await flush();
+  assert.equal(e.calls.filter(call => call[1]?.method === 'PUT').length, 0);
 });

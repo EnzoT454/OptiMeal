@@ -457,8 +457,23 @@ s’appliquent à `/api/v1/` ; les erreurs historiques restent inchangées.
   avant d’enregistrer les nouvelles unités. Les quantités
   sont strictement positives ; `unit` désigne des pièces entières dans
   cette première version. Les portions sont un entier strictement positif.
-- Les durées sont des entiers en minutes. Le total est préparation +
-  cuisson. Les étapes sont numérotées de 1 à N sans trou ni doublon.
+- Chaque étape peut porter `duration_minutes`, entier positif ou nul en minutes.
+  Dès qu’une étape porte une durée, toutes doivent en avoir une. FastAPI calcule
+  `total_time_minutes` comme leur somme et remplace les totaux fournis par le
+  client. Les trois anciens champs de durée peuvent alors être omis. Pour
+  conserver le schéma existant, `prep_time_minutes` reçoit le total et
+  `cook_time_minutes` vaut 0 : ces colonnes ne décrivent plus une ventilation.
+  Une durée et le total ne peuvent dépasser 2 147 483 647 minutes.
+- Les anciennes recettes sans durée par étape conservent leur total et leurs
+  trois champs historiques ; ces champs restent requis ensemble pour ce format.
+  Le détail expose une durée nulle pour leurs étapes. Aucun temps n’est inventé
+  ni réparti automatiquement. Les imports initiaux restent rejouables sans
+  modification des JSON d’étapes existants. Aucune migration n’est nécessaire.
+- Le formulaire demande une durée entière pour chaque étape, autorise 0 pour
+  une étape immédiate et affiche le total en lecture seule. Le détail affiche
+  les temps connus des étapes ; les cartes et Rapides utilisent le total.
+  Modifier une durée d’étape ouvre une nouvelle version évaluée, même à total
+  inchangé. Les étapes sont numérotées de 1 à N sans trou ni doublon.
 - Une quantité s’applique à la préparation indiquée (sec, pelé, égoutté…).
   La quantité entière de la recette est donnée pour `servings` portions.
 - `format.quantity` et `format.unit_raw` conservent le format marchand

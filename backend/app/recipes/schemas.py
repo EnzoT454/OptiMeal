@@ -37,15 +37,16 @@ class RecipeIngredient(ContractModel):
 class RecipeStep(ContractModel):
     position: int = Field(ge=1, strict=True)
     text: NonEmpty
+    duration_minutes: int | None = Field(default=None, ge=0, le=2147483647, strict=True)
 
 
 class RecipeWrite(ContractModel):
     name: NonEmpty
     description: NonEmpty
     servings: int = Field(gt=0, strict=True)
-    prep_time_minutes: int = Field(ge=0, strict=True)
-    cook_time_minutes: int = Field(ge=0, strict=True)
-    total_time_minutes: int = Field(ge=0, strict=True)
+    prep_time_minutes: int = Field(default=0, ge=0, le=2147483647, strict=True)
+    cook_time_minutes: int = Field(default=0, ge=0, le=2147483647, strict=True)
+    total_time_minutes: int = Field(default=0, ge=0, le=2147483647, strict=True)
     image_url: str | None
     difficulty: Difficulty | None = None
     tags: list[Tag] = Field(default_factory=list, max_length=10)
@@ -68,6 +69,20 @@ class RecipeWrite(ContractModel):
 
     @model_validator(mode='after')
     def coherent_recipe(self):
+        durations = [step.duration_minutes for step in self.instructions]
+        if any(duration is not None for duration in durations):
+            if any(duration is None for duration in durations):
+                raise ValueError('Indique une durée pour chaque étape.')
+            total = sum(durations)
+            if total > 2147483647:
+                raise ValueError('Durée totale trop grande.')
+            # Les anciennes colonnes restent compatibles ; aucune ventilation
+            # préparation/cuisson n'est déduite des descriptions des étapes.
+            self.prep_time_minutes = total
+            self.cook_time_minutes = 0
+            self.total_time_minutes = total
+        elif not {'prep_time_minutes', 'cook_time_minutes', 'total_time_minutes'} <= self.model_fields_set:
+            raise ValueError('Indique les durées des étapes.')
         if self.total_time_minutes != self.prep_time_minutes + self.cook_time_minutes:
             raise ValueError('Durée totale incohérente.')
         if [s.position for s in self.instructions] != list(range(1, len(self.instructions) + 1)):

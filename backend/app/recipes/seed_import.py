@@ -32,6 +32,7 @@ def recipe_rows(seed: RecipeSeed) -> tuple[dict, list[dict]]:
     recipe_id = 'recipe_' + seed.seed_key
     recipe = dict(id=recipe_id, owner_id=None, review_required=True, visibility='public', published_at=None,
                   **seed.model_dump(exclude={'ingredients'}))
+    recipe['instructions'] = [step.model_dump(exclude_none=True) for step in seed.instructions]
     ingredients = [
         dict(recipe_id=recipe_id, position=position,
              **ingredient.model_dump(exclude={'quantity'}), quantity=Decimal(ingredient.quantity))

@@ -8,27 +8,29 @@ import RecipeImage from '../components/RecipeImage';
 import RecipeUnitPicker from '../components/RecipeUnitPicker';
 import { api } from '../services/api';
 import { chooseRecipeImage, uploadRecipeImage } from '../services/recipeImages';
-import { parseIngredientQuantity } from '../services/recipeForm';
+import { parseIngredientQuantity, prepareRecipeSteps, recipeStepTotal, stepDuration, RecipeStepDraft } from '../services/recipeForm';
 import { Detail, Ingredient, Page, Recipe, RecipeUnit, RecipeVisibility, RecipeWrite } from '../types/api';
 import { RecipeStackParams } from '../types/navigation';
 
 type IngredientDraft = { ingredient_id: string; quantity: string; unit: RecipeUnit | null; preparation: string | null };
+const emptyStep = (): RecipeStepDraft => ({ text: '', duration: '' });
 const emptyIngredient = (): IngredientDraft => ({ ingredient_id: '', quantity: '', unit: null, preparation: null });
 
 export default function RecipeEditorScreen({ route, navigation }: NativeStackScreenProps<RecipeStackParams, 'Editor'>) {
   const id = route.params?.id;
   const [catalog, setCatalog] = useState<Ingredient[]>([]);
   const [name, setName] = useState(''); const [description, setDescription] = useState('');
-  const [servings, setServings] = useState('2'); const [prep, setPrep] = useState('25'); const [cook, setCook] = useState('0');
+  const [servings, setServings] = useState('2');
   const [tags, setTags] = useState('');
   const [image, setImage] = useState<string | null>(null); const [localImage, setLocalImage] = useState<string | null>(null);
   const [ingredients, setIngredients] = useState<IngredientDraft[]>([emptyIngredient()]);
-  const [steps, setSteps] = useState(['']); const [extra, setExtra] = useState(false);
+  const [steps, setSteps] = useState<RecipeStepDraft[]>([emptyStep()]); const [extra, setExtra] = useState(false);
   const [pickerIndex, setPickerIndex] = useState<number | null>(null);
   const [busy, setBusy] = useState(false); const [picking, setPicking] = useState(false);
   const [loading, setLoading] = useState(true); const [error, setError] = useState(''); const [retry, setRetry] = useState(0);
   const [visibility, setVisibility] = useState<RecipeVisibility>('private');
   const [initialVisibility, setInitialVisibility] = useState<RecipeVisibility>('private');
+  const [attempted, setAttempted] = useState(false);
   useEffect(() => {
     let active = true;
     setLoading(true); setError('');
@@ -39,16 +41,17 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
           const r = detail.item;
           if (!r.is_owned) throw new Error('Cette recette partagée ne peut pas être modifiée.');
           setName(r.name); setDescription(r.description); setServings(String(r.servings));
-          setPrep(String(r.prep_time_minutes)); setCook(String(r.cook_time_minutes)); setImage(r.image_url);
+          setImage(r.image_url);
           setTags((r.tags ?? []).join(', '));
           setIngredients(r.ingredients.map(i => ({ ingredient_id: i.ingredient_id, quantity: i.quantity, unit: i.unit, preparation: i.preparation })));
-          setSteps(r.instructions.map(step => step.text));
+          setSteps(r.instructions.map(step => ({ text: step.text, duration: step.duration_minutes == null ? '' : String(step.duration_minutes) })));
           setVisibility(r.visibility); setInitialVisibility(r.visibility);
         }
         setCatalog(data.items);
       }).catch(e => { if (active) setError(e.message); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [id, retry]);
+  const totalMinutes = recipeStepTotal(steps);
   function change(index: number, fields: Partial<IngredientDraft>) {
     setIngredients(items => items.map((item, position) => position === index ? { ...item, ...fields } : item));
   }
@@ -62,6 +65,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
   }
   async function save(confirmed = false) {
     if (busy || picking) return;
+    setAttempted(true);
     let body: RecipeWrite;
     try {
       if (!name.trim()) {
@@ -71,17 +75,19 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
         throw new Error('Ajoute une photo pour créer la recette.');
       }
       const integer = (value: string) => /^\d+$/.test(value) && Number.isSafeInteger(Number(value));
-      if (!integer(servings) || Number(servings) < 1 || !integer(prep) || !integer(cook) ||
-          !ingredients.length || ingredients.some(i => !i.ingredient_id) || !steps.length || steps.some(step => !step.trim())) {
-        throw new Error('Complète le nom, les portions, les durées, au moins un ingrédient et les étapes.');
+      if (!integer(servings) || Number(servings) < 1 ||
+          !ingredients.length || ingredients.some(i => !i.ingredient_id)) {
+        throw new Error('Complète les portions et ajoute au moins un ingrédient.');
       }
+      const instructions = prepareRecipeSteps(steps);
+      if (totalMinutes === null) throw new Error('Vérifie la durée totale des étapes.');
       const labels = tags.split(',').map(tag => tag.trim()).filter(Boolean);
       if (labels.length > 10 || labels.some(tag => tag.length > 40)) throw new Error('Ajoute au maximum 10 étiquettes de 40 caractères chacune.');
       body = { name: name.trim(), description: description.trim() || name.trim(), servings: Number(servings),
-        prep_time_minutes: Number(prep), cook_time_minutes: Number(cook), total_time_minutes: Number(prep) + Number(cook),
+        prep_time_minutes: totalMinutes, cook_time_minutes: 0, total_time_minutes: totalMinutes,
         image_url: image, tags: labels,
         ingredients: ingredients.map(i => ({ ingredient_id: i.ingredient_id, ...parseIngredientQuantity(i.quantity, i.unit), preparation: i.preparation?.trim() || null })),
-        instructions: steps.map((text, index) => ({ position: index + 1, text: text.trim() })) };
+        instructions };
     } catch (e) { setError((e as Error).message); Alert.alert('Vérifie la recette', (e as Error).message); return; }
     if (!confirmed && visibility === 'public' && initialVisibility !== 'public') {
       Alert.alert('Publier définitivement cette recette ?',
@@ -130,7 +136,6 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
             {(localImage || image) && <Pressable accessibilityRole="button" onPress={() => { setLocalImage(null); setImage(null); }}><Text style={recipeStyles.remove}>Retirer la photo</Text></Pressable>}
           </View>
           <RecipeField label="Portions" keyboardType="number-pad" value={servings} onChangeText={setServings} />
-          <RecipeField label="Préparation (minutes)" keyboardType="number-pad" value={prep} onChangeText={setPrep} />
           <Text accessibilityRole="header" style={recipeStyles.sectionTitle}>Ingrédients</Text>
           {ingredients.map((item, index) => <View key={index} style={{ gap: 6 }}>
             <View style={{ flexDirection: 'row', gap: 8, alignItems: 'flex-start' }}>
@@ -159,21 +164,30 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
           <RecipeButton title="+ Ajouter un ingrédient" variant="neutral" onPress={() => setIngredients([...ingredients, emptyIngredient()])} />
           <Text style={recipeStyles.note}>Pour une demi-tasse ou une demi-cuillère, saisis 0,5.</Text>
           <Text accessibilityRole="header" style={recipeStyles.sectionTitle}>Préparation</Text>
-          {steps.map((text, index) => <View key={index} style={{ gap: 6 }}>
-            <RecipeField label={`Étape ${index + 1}`} placeholder="Décrivez cette étape…" value={text} multiline onChangeText={value => setSteps(steps.map((step, p) => p === index ? value : step))} />
+          <Text style={recipeStyles.note}>Indique la durée de chaque étape, cuisson et attente comprises. Le total est la somme des étapes. Saisis 0 pour une étape immédiate.</Text>
+          {id && steps.some(step => !step.duration.trim()) && <Text style={recipeStyles.note}>Les anciennes recettes n’ont pas toujours de durée par étape. Complète ces durées avant d’enregistrer.</Text>}
+          {steps.map((step, index) => <View key={index} style={{ gap: 12, padding: 16, borderWidth: 1, borderColor: recipeColors.border, borderRadius: 16 }}>
+            <RecipeField label={`Étape ${index + 1}`} placeholder="Décrivez cette étape…" value={step.text} multiline onChangeText={text => setSteps(steps.map((item, p) => p === index ? { ...item, text } : item))} />
+            <RecipeField label="Durée (min)" accessibilityLabel={`Durée de l’étape ${index + 1} en minutes, obligatoire`} placeholder="Ex. : 5" keyboardType="number-pad"
+              value={step.duration} style={(attempted || !!step.duration.trim()) && stepDuration(step.duration) === null ? { borderColor: recipeColors.warning } : undefined}
+              onChangeText={duration => setSteps(steps.map((item, p) => p === index ? { ...item, duration } : item))} />
+            {(attempted || !!step.duration.trim()) && stepDuration(step.duration) === null &&
+              <Text style={[recipeStyles.note, { color: recipeColors.warning }]} accessibilityLiveRegion="polite">Indique un nombre entier de minutes, 0 ou plus.</Text>}
             <View style={[recipeStyles.row, { justifyContent: 'space-between' }]}>
-              {index > 0 && <Pressable accessibilityRole="button" onPress={() => { const next = [...steps]; [next[index - 1], next[index]] = [next[index], next[index - 1]]; setSteps(next); }}><Text style={recipeStyles.remove}>Monter</Text></Pressable>}
-              <Pressable accessibilityRole="button" accessibilityLabel={`Retirer l’étape ${index + 1}`} onPress={() => setSteps(steps.filter((_, p) => p !== index))}><Text style={recipeStyles.remove}>Retirer</Text></Pressable>
+              {index > 0 && <Pressable accessibilityRole="button" accessibilityLabel={`Monter l’étape ${index + 1}`} style={{ minHeight: 48, justifyContent: 'center' }} onPress={() => { const next = [...steps]; [next[index - 1], next[index]] = [next[index], next[index - 1]]; setSteps(next); }}><Text style={recipeStyles.remove}>Monter</Text></Pressable>}
+              <Pressable accessibilityRole="button" accessibilityLabel={`Retirer l’étape ${index + 1}`} disabled={steps.length === 1} style={{ minHeight: 48, justifyContent: 'center', opacity: steps.length === 1 ? 0.4 : 1 }} onPress={() => setSteps(steps.filter((_, p) => p !== index))}><Text style={recipeStyles.remove}>Retirer</Text></Pressable>
             </View>
           </View>)}
-          <RecipeButton title="+ Ajouter une étape" variant="neutral" onPress={() => setSteps([...steps, ''])} />
+          <RecipeButton title="+ Ajouter une étape" variant="neutral" onPress={() => setSteps([...steps, emptyStep()])} />
+          <View style={recipeStyles.notice} accessible>
+            <Text style={recipeStyles.sectionTitle}>Durée totale{totalMinutes !== null ? ` : ${totalMinutes} min` : ' : à compléter'}</Text>
+            <Text style={recipeStyles.note}>{totalMinutes === null ? 'Renseigne une durée valide pour chaque étape pour calculer le total.' : 'Calculée automatiquement à partir des étapes.'}</Text>
+          </View>
           <RecipeField label="Étiquettes (facultatif)" placeholder="Rapide, économique…" value={tags} onChangeText={setTags} />
           <RecipeButton title={extra ? 'Masquer les autres informations' : 'Autres informations (facultatif)'} variant="neutral" onPress={() => setExtra(!extra)} />
           {extra && <>
             <RecipeField label="Description (facultatif)" multiline value={description} onChangeText={setDescription} />
-            <RecipeField label="Cuisson (minutes)" keyboardType="number-pad" value={cook} onChangeText={setCook} />
           </>}
-          {Number(cook) > 0 && <Text style={recipeStyles.note}>Durée totale : {Number(prep) + Number(cook)} min, dont {cook} min de cuisson.</Text>}
           <View style={recipeStyles.notice}>
             <View style={[recipeStyles.row, { justifyContent: 'space-between' }]}>
               <Text style={[recipeStyles.sectionTitle, { flex: 1 }]}>Partager avec la communauté</Text>

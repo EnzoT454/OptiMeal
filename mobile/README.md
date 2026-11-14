@@ -521,8 +521,8 @@ des dépendances, comme pour les modules photo.
 Le chemin fonctionnel est **Ajouter une recette → Entrer manuellement →
 Remplir un formulaire**. Trouver une idée, Cuisiner avec ce qu’on a et
 Structurer une idée affichent un message d’attente.
-Le formulaire présente le nom, la photo, les portions, la préparation,
-les ingrédients avec quantité séparée du choix d’unité, les étapes,
+Le formulaire présente le nom, la photo, les portions,
+les ingrédients avec quantité séparée du choix d’unité, les étapes et leur durée en minutes,
 les étiquettes et le réglage de partage.
 Le choix d’un ingrédient ouvre une liste consultable avec recherche.
 Les unités acceptées sont `g`, `ml`, `unit` (pièces entières), `cup` (tasse, 250 ml),
@@ -536,8 +536,17 @@ Le formulaire et le détail affichent les libellés français, avec le volume
 des tasses et des cuillères. Les demi-mesures se saisissent avec une décimale, par exemple
 `0,5`. Le backend et la base doivent être à jour jusqu’à la migration
 `0014_recipe_kitchen_units` pour sauvegarder ces nouvelles unités.
-Description et cuisson restent accessibles dans « Autres informations » ;
-les valeurs existantes sont conservées lors d’une modification.
+La description reste accessible dans « Autres informations ». Les champs de
+préparation et de cuisson séparés sont retirés : chaque étape demande un temps
+entier en minutes (0 accepté pour une étape immédiate), cuisson et attente
+comprises. La somme apparaît automatiquement et est recalculée côté serveur.
+Une durée absente ou invalide empêche l’envoi de la photo et de la recette.
+En modification d’une ancienne recette, renseigner les durées manquantes ;
+aucune répartition du total existant n’est inventée. La consultation des
+anciennes recettes conserve leur total. Le détail affiche les durées connues
+des étapes, les cartes et Rapides utilisent la somme enregistrée.
+Cette évolution du 10 novembre 2026 ne nécessite aucune migration ; les essais
+sur appareil restent à effectuer.
 
 La difficulté n’est plus choisie par l’auteur dans le formulaire ni affichée
 comme métadonnée dans le détail. Les autres utilisateurs évaluent la facilité

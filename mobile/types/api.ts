@@ -11,7 +11,7 @@ export interface RecipeWrite {
   prep_time_minutes: number; cook_time_minutes: number; total_time_minutes: number;
   image_url: string | null; ingredients: RecipeIngredient[];
   difficulty?: RecipeDifficulty | null; tags: string[];
-  instructions: { position: number; text: string }[];
+  instructions: { position: number; text: string; duration_minutes?: number | null }[];
 }
 export type RecipeCreate = RecipeWrite & { image_url: string; visibility?: RecipeVisibility };
 export interface RecipeVisibilityUpdate { visibility: RecipeVisibility; }

@@ -192,19 +192,23 @@
       "instructions": [
         {
           "position": 1,
-          "text": "Faire cuire le riz dans l’eau selon les indications du paquet."
+          "text": "Faire cuire le riz dans l’eau selon les indications du paquet.",
+          "duration_minutes": null
         },
         {
           "position": 2,
-          "text": "Cuire le brocoli à la vapeur jusqu’à ce qu’il soit tendre."
+          "text": "Cuire le brocoli à la vapeur jusqu’à ce qu’il soit tendre.",
+          "duration_minutes": null
         },
         {
           "position": 3,
-          "text": "Chauffer l’huile dans une poêle. Ajouter le poulet et cuire en remuant jusqu’à ce qu’il soit entièrement cuit à cœur."
+          "text": "Chauffer l’huile dans une poêle. Ajouter le poulet et cuire en remuant jusqu’à ce qu’il soit entièrement cuit à cœur.",
+          "duration_minutes": null
         },
         {
           "position": 4,
-          "text": "Ajouter l’ail et le sel, poursuivre brièvement la cuisson et servir avec le riz et le brocoli."
+          "text": "Ajouter l’ail et le sel, poursuivre brièvement la cuisson et servir avec le riz et le brocoli.",
+          "duration_minutes": null
         }
       ],
       "my_rating": null

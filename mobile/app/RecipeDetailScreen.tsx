@@ -8,7 +8,7 @@ import { Detail, Ingredient, Page, Recipe, RecipeVisibility } from '../types/api
 import { RecipeStackParams } from '../types/navigation';
 import RecipeImage from '../components/RecipeImage';
 import RecipeRatingPanel from '../components/RecipeRatingPanel';
-import { RecipeChip, recipeStyles } from '../components/recipes';
+import { RecipeChip, recipeStyles, recipeColors } from '../components/recipes';
 import { recipeBadges, recipeUnitLabel } from '../services/recipeForm';
 import { useAuth } from '../context/AuthContext';
 
@@ -71,7 +71,13 @@ export default function RecipeDetailScreen({ route, navigation }: NativeStackScr
       {recipe.tags?.includes('Économique') && <Text style={recipeStyles.note}>Économique : étiquette choisie par l’auteur, coût non calculé.</Text>}
       <Heading>Ingrédients</Heading>
       {recipe.ingredients.map(i => <Text key={i.ingredient_id}>{i.quantity} {recipeUnitLabel(i.unit)} · {names[i.ingredient_id] ?? i.ingredient_id}{i.preparation ? ' · ' + i.preparation : ''}</Text>)}
-      <Heading>Préparation</Heading>{recipe.instructions.map(step => <Text key={step.position}>{step.position}. {step.text}</Text>)}
+      <Heading>Préparation</Heading>{recipe.instructions.map(step => <View key={step.position} style={{ gap: 8, paddingVertical: 8 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 12 }}>
+          <Text style={[recipeStyles.sectionTitle, { fontSize: 16 }]}>Étape {step.position}</Text>
+          {step.duration_minutes != null && <Text style={recipeStyles.note}>{step.duration_minutes} min</Text>}
+        </View>
+        <Text style={[recipeStyles.body, { color: recipeColors.ink }]}>{step.text}</Text>
+      </View>)}
       <RecipeRatingPanel key={recipe.id + ':' + (session?.user.id ?? 'visitor')} recipe={recipe} disabled={busy}
         onChange={setRecipe} onBusyChange={setRatingBusy}
         onUnavailable={() => { setRecipe(null); setRatingBusy(false); setError('Cette recette n’est plus accessible.'); }} />
