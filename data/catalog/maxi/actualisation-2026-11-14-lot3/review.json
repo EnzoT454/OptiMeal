@@ -1,0 +1,968 @@
+{
+  "schema_version": "catalog-review-1.0",
+  "status": "pending_human_review",
+  "note": "Suggestions uniquement. Modifier ce fichier n’approuve pas un prix ni une succursale.",
+  "matches": [
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_454207cd479583cb021a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:breaded"
+      ]
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_0a0d375723f8e15ad0ed",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:shrimp",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_2026932ccccb443b9b44",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:shrimp",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_e3d09d60e62f3117f130",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:tempura"
+      ]
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_4ea8166fd3c921f624a9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:shrimp",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_ef10ad12d9050cf23881",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:shrimp",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_6f6c077ecc369169b991",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:shrimp",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_f59fb94be106bdd82323",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:shrimp",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_8845ef6baf12505d5e0c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:shrimp",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_crevettes",
+      "product_id": "apify_product_cf1b0615d9f2a4cd8fbb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:shrimp",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_fromage_cheddar",
+      "product_id": "apify_product_d6103b97873d8c60bae8",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:cheddar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_fromage_cheddar",
+      "product_id": "apify_product_23a61c9fbe602552237c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:cheddar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_fromage_cheddar",
+      "product_id": "apify_product_eae7926ad5a94d93bd75",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:cheddar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_fromage_cheddar",
+      "product_id": "apify_product_db1e7d6244ab8dc3d659",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:cheddar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_fromage_cheddar",
+      "product_id": "apify_product_7db60da310df4a9fdafb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:cheddar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_fromage_cheddar",
+      "product_id": "apify_product_238786c09d78227e65e4",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:cheddar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_fromage_cheddar",
+      "product_id": "apify_product_c14f849d39f752de7924",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:flavoured",
+        "excluded_term:chips"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_a48ee492272724628771",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:yogurt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_e60dedda3130ef401f1a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:yogurt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_530d51479b413f14233a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:frozen"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_c962b4a97d9e79a0b4bc",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:yogurt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_8ebd3e55489212deec1f",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_16b2a508f266fcd9fa9e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:vanilla"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_c9799be8caf2f14359e7",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:yogurt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_4331915c268a463b4e1a",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "required_attribute_missing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_cf6514eb1a7a29c6a152",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:yogurt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_yogourt_nature",
+      "product_id": "apify_product_ab57fb5ec02dee215ac3",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:peach"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_d8ddd3a13e2ec41480f0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_58ddfb01054ffa11e1e4",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_d0dc7518f2505760f57a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_3084139ff920dda7bf94",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_a881fe23d84d4f0bfe21",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_f0636f956f6c11f7563b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_6eaf89d03b0e352524ca",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_ea9a16471fdb9caaed68",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_3ab13e147c718baaa3d2",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_beurre",
+      "product_id": "apify_product_de699ef28ecfb12c1e13",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:butter",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pates_seches",
+      "product_id": "apify_product_3730dcee7ed37a3cd41e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:pasta",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pates_seches",
+      "product_id": "apify_product_ef7dc72ad62e83a807b5",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:pasta",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pates_seches",
+      "product_id": "apify_product_c8d8a2695772492e66d0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:fusilli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pates_seches",
+      "product_id": "apify_product_025cb77893be228fbcb1",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:fusilli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pates_seches",
+      "product_id": "apify_product_a7931765c8d001b234dd",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:pasta",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pates_seches",
+      "product_id": "apify_product_4a7af9ef75688a676e52",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:pasta",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pates_seches",
+      "product_id": "apify_product_c8d843f6e312b6a7d174",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:pasta",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "product_id": "apify_product_c6c86305f2a51735349a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:kidney beans",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "product_id": "apify_product_e717777716ecdd885315",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:kidney beans",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "product_id": "apify_product_a338c1e6c7688a7d2167",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:kidney beans",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "product_id": "apify_product_7c2fede7a55cf2ddbc19",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:kidney beans",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "product_id": "apify_product_753b008f9fd78edd35a9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:kidney beans",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "product_id": "apify_product_753b008f9fd78edd35a9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "product_id": "apify_product_77feea945841e91a0e32",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:kidney beans",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "product_id": "apify_product_6e0b0a3d4f5134936ba6",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:kidney beans",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "product_id": "apify_product_3fd59953faf92c9f21ed",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:kidney beans",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_haricots_rouges_conserve",
+      "product_id": "apify_product_d4fa3c003d6c096d37f9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:kidney beans",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomates_conserve",
+      "product_id": "apify_product_6443efb1226b3d109e4f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomates_conserve",
+      "product_id": "apify_product_a369d3f5cb50a04bc67f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomates_conserve",
+      "product_id": "apify_product_2eb88286735a9edf7264",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomates_conserve",
+      "product_id": "apify_product_05b9df1a6db606faf39e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomates_conserve",
+      "product_id": "apify_product_c715f998044bf1e56993",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomates_conserve",
+      "product_id": "apify_product_d34e1fcabb0769e5fd25",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "product_id": "apify_product_d34e1fcabb0769e5fd25",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomates_conserve",
+      "product_id": "apify_product_321fbb8454e48df06f7f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomates_conserve",
+      "product_id": "apify_product_11bb4571cfb64b190317",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_9019596477fa6d8fc066",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_e517a3856423738ab2f7",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_4c7d87ba50804bfd75d1",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_b74624a2f4929ab758e8",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_7bf29b5beffc5b2cac78",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_b09b0a0951f35ae9878a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_66d3ed93aba84f3d5170",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_859bdbe3535fb80e2efa",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_a2df5bcd74370cff27c3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_farine",
+      "product_id": "apify_product_d7aed7b609fec60b7038",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:flour",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_f4634852b188d85fe4fe",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sugar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_2325e0fa266572d3448e",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:icing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_beafa49b2f571752a2ba",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sugar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_a4d4e678578c066ac2b4",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sugar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_5f56ae94a2dcd96704b0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sugar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_ca110ddc98460d6259d0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sugar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_9d3c97b03bc6c5a548b8",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:icing"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_20327c47d8fb242ed225",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sugar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_9295f1bbfa8c4a1cc1a0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sugar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_a3056919b55fbf5ce4e8",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:substitute"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "product_id": "apify_product_f31ad442775cdfe09f0e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "product_id": "apify_product_6ea5a46910c424f4f554",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "product_id": "apify_product_eb586c8492a9694c8abe",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "product_id": "apify_product_f6de9324af2ffa2a5c30",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "product_id": "apify_product_81dbe230c0a873e4d2c0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "product_id": "apify_product_0d61dbaa0ecf7a998be6",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sel",
+      "product_id": "apify_product_23cdb6231790a5358eb7",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salt",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pain_tranche",
+      "product_id": "apify_product_ccae543b8553cad3f4f2",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:bread",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_fromage_cheddar",
+      "product_id": "apify_product_81c94642e1f957cd36b4",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:cheddar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pain_tranche",
+      "product_id": "apify_product_0568414cd915f949b127",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:bread",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pain_tranche",
+      "product_id": "apify_product_a6f273a33cac6f415ceb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:bread",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pain_tranche",
+      "product_id": "apify_product_20af3998d5942ef365b7",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:bread",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_sucre",
+      "product_id": "apify_product_f9966020897619329003",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sugar",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pain_tranche",
+      "product_id": "apify_product_f9966020897619329003",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:bread",
+        "manual_approval_required"
+      ]
+    }
+  ],
+  "search_rejections": []
+}

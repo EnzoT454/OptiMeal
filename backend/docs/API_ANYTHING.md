@@ -446,10 +446,18 @@ Utiliser des décimaux exacts pour les calculs Python. Un prix inconnu n’est p
 zéro. Une quantité ou unité illisible reste inconnue et exclut les conversions
 non justifiées. Ne pas comparer directement 3,99 $ pour 500 g à 5,49 $ pour 1 kg.
 
-Les prix membre, coupons, achats multiples et limites ne sont pas représentés
-complètement par le modèle actuel. Les conserver dans la capture et un rapport
-de vérification ; ne pas les importer comme promotions ordinaires en perdant
-les conditions. Décider d’une évolution des contrats avant leur prise en charge.
+Les limites simples sont désormais représentables : `LimiteQuantite` et
+`PrixApresLimite` dans les fichiers marchands, puis `quantity_limit` et
+`price_after_limit` dans les contrats, depuis la migration `0016`.
+L’huile d’olive Maxi sert d’exemple : 7,77 $ pour les quatre premières unités,
+puis 10 $ chacune, avec des dates du 12 au 18 novembre confirmées par
+l’utilisateur après la collecte. Voir [CONTRACTS.md](CONTRACTS.md#prix-promotionnel-avec-limite-de-quantité).
+
+Les prix membre, coupons et offres d’achat multiple restent à modéliser selon
+leurs règles propres. Les conserver dans la capture et un rapport de
+vérification ; ne pas les importer comme promotions ordinaires en perdant
+leurs conditions. Cette extension du modèle ne valide pas une intégration
+API Anything ni une extraction automatique de toutes ces conditions.
 
 Le modèle courant conserve une offre actualisée, pas une série historique de
 prix. Le nouvel outil ne résout pas à lui seul cet historique ni les futurs

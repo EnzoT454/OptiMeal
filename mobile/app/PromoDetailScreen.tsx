@@ -3,7 +3,7 @@ import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles, showRecipeComingSoon } from '../components/recipes';
-import { currentPrice, discount, formatText, longDate, money, storeName, unitPrice } from '../components/promos';
+import { currentPrice, discount, formatText, longDate, money, quantityPriceCondition, storeName, unitPrice } from '../components/promos';
 import { ProductImage } from '../components/ProductImage';
 import { deal, perWeight, saving } from '../components/deal';
 import { getFollows, toggleFollow } from '../components/follows';
@@ -60,9 +60,10 @@ export default function PromoDetailScreen({ navigation, route }: NativeStackScre
 
     <View style={styles.priceBox}>
       <Text style={styles.price}>{money(currentPrice(offer))}{perWeight(offer)}</Text>
+      {quantityPriceCondition(offer) && <Text style={recipeStyles.body}>{quantityPriceCondition(offer)}</Text>}
       {perUnit && <Text style={styles.unitPrice}>{perUnit}</Text>}
       {saved != null && <Text style={[styles.saving, { color: level?.text ?? recipeColors.green }]}>Économisez {money(saved)}{perWeight(offer)}</Text>}
-      {offer.promo_price && <Text style={recipeStyles.body}>Prix régulier : {money(offer.price.amount)}{perWeight(offer)}</Text>}
+      {offer.promo_price && offer.price.amount != null && <Text style={recipeStyles.body}>Prix régulier : {money(offer.price.amount)}{perWeight(offer)}</Text>}
     </View>
 
     {/* Bouton « Suivre » : contour vert si non suivi, plein vert une fois suivi. */}

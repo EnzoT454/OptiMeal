@@ -7,7 +7,21 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
-La tête courante est `0015_permanent_public_recipes`. Elle ajoute l’état interne
+La tête courante est `0016_offer_quantity_limits`. Elle ajoute deux colonnes
+facultatives à `product_offer` : `quantity_limit` et `price_after_limit`, avec
+une contrainte de cohérence. Les lignes existantes restent valides avec des
+valeurs nulles. Appliquer cette migration avant de redémarrer le backend
+mis à jour ou d’importer les offres avec limite. Voir les
+[contrats de prix conditionnels](CONTRACTS.md#prix-promotionnel-avec-limite-de-quantité).
+La procédure d’import reste inchangée. Un retour à `0015` supprime uniquement
+ces deux colonnes et perd les conditions enregistrées.
+
+`0016` a été appliquée sur Supabase le 14 novembre 2026, après essais sur
+PostgreSQL local. La conformité du schéma, les comptages des tables et les
+quatre promotions Maxi corrigées ont été vérifiés. Les 62 autres offres
+ont été conservées.
+
+`0015_permanent_public_recipes` ajoute l’état interne
 `profile.deletion_pending` pour bloquer les mutations de recettes pendant la
 suppression du compte, et permet les recettes publiques sans propriétaire ni
 clé de recette initiale. Un déclencheur avant suppression du profil détache
@@ -426,4 +440,4 @@ Sans cette variable, les tests PostgreSQL restent volontairement ignorés :
 ils ne doivent jamais utiliser automatiquement la base Supabase du projet.
 L’option `-rs` affiche la raison de chaque test ignoré.
 
-*Dernière mise à jour : 1er novembre 2026*
+*Dernière mise à jour : 14 novembre 2026*

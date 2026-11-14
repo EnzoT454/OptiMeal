@@ -6,6 +6,17 @@ Il décrit le code au **10 novembre 2026** et les confirmations sur téléphone 
 
 ## 1. Les grandes parties de l’application
 
+**Complément du 14 novembre 2026 :** les offres peuvent conserver un prix
+promotionnel limité aux premières unités, avec un prix distinct après limite.
+L’exemple Maxi de l’huile d’olive est enregistré à 7,77 $ pour les quatre
+premières unités, puis 10 $ par unité supplémentaire, du 12 au 18 novembre
+inclusivement. Les dates sont confirmées par l’utilisateur ; Apify ne les
+fournit pas. La migration `0016_offer_quantity_limits` est appliquée sur Supabase.
+Les conditions sont affichées avec les prix dans le mobile ; les essais de
+cet affichage sur téléphone restent à effectuer. Les
+[contrats](backend/docs/CONTRACTS.md#prix-promotionnel-avec-limite-de-quantité)
+décrivent les champs et les calculs, distincts du futur moteur complet des listes.
+
 Le **frontend** est l’application mobile : il affiche les écrans et reçoit les actions de l’utilisateur. Le **backend** est le serveur : il répond aux demandes du mobile, vérifie les droits et lit ou enregistre les données.
 
 Supabase fournit trois services utilisés par OptiMeal : **Auth** pour les comptes, **PostgreSQL** pour les données et **Storage** pour les images.
@@ -1115,4 +1126,4 @@ Pour suivre les ajouts récents, partir des champs `ImageUrl` et `ImageSource` d
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 10 novembre 2026*
+*Dernière mise à jour : 14 novembre 2026*

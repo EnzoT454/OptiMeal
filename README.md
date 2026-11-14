@@ -306,7 +306,8 @@ OptiMeal/
 │   │       ├── 0012_recipe_timestamps.py # Dates pour les tris des recettes
 │   │       ├── 0013_rating_versions.py # Versions du contenu évalué
 │   │       ├── 0014_recipe_kitchen_units.py # Tasses et cuillères
-│   │       └── 0015_permanent_public_recipes.py # Conservation des recettes publiques après suppression du compte
+│   │       ├── 0015_permanent_public_recipes.py # Conservation des recettes publiques après suppression du compte
+│   │       └── 0016_offer_quantity_limits.py # Prix promotionnels limités aux premières unités
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express
@@ -415,6 +416,7 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Comprendre le fonctionnement de l’application et du dépôt](README-fonctionnement.md)
 - [Structure et utilisation des données locales](backend/docs/DATA.md)
 - [Catalogue pilote : utilisation et résultats](backend/docs/CATALOG.md)
+- [Évaluer API Anything pour les prix et promotions](backend/docs/API_ANYTHING.md)
 - [Extraction locale des reçus](backend/docs/RECEIPTS.md)
 - [État et modèle de données](backend/docs/DATABASE.md)
 - [Contrats communs Recettes et Promos](backend/docs/CONTRACTS.md)
@@ -450,4 +452,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 5 novembre 2026*
+*Dernière mise à jour : 14 novembre 2026*

@@ -2,10 +2,14 @@
 
 Le backend contient l’API FastAPI, la collecte Apify pour Maxi et l’extraction locale des reçus. Le code est organisé par fonction, avec des commandes et des guides séparés.
 
+Le [guide d’évaluation d’API Anything](docs/API_ANYTHING.md) prépare les futurs
+essais de récupération des prix sur les sites marchands et Glouton. Cette
+piste reste expérimentale et ne remplace pas les sources actuelles.
+
 Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
 privées par défaut et publication volontaire définitive. Une recette publique
 ne peut plus être rendue privée ni supprimée par son auteur.
-Appliquer les migrations jusqu’à la tête courante `0015_permanent_public_recipes` avant
+Appliquer les migrations jusqu’à la tête courante `0016_offer_quantity_limits` avant
 de démarrer cette version : `0009_recipe_visibility` ajoute le partage et
 `0010_preserve_meals` conserve les repas après suppression de leur recette. Les
 [contrats](docs/CONTRACTS.md#visibilité-et-sections-de-recettes--étape-backend)
@@ -79,6 +83,7 @@ backend/
 ├── config/storage/              # Configuration du bucket public recipes-images
 ├── docs/
 │   ├── APIFY.md                 # Installation et utilisation d’Apify
+│   ├── API_ANYTHING.md          # Analyse et protocole des futurs essais API Anything
 │   ├── CATALOG.md               # Contrat et limites du catalogue
 │   ├── RECEIPTS.md              # Installation OCR, essais et limites
 │   ├── DATA.md                  # Organisation des données locales
@@ -211,6 +216,12 @@ applicatif reste géré par les migrations Alembic.
 
 ## Promos et circulaires de la semaine
 
+Les offres peuvent aussi conserver un prix limité aux premières unités
+(`LimiteQuantite`, `PrixApresLimite`). Le prix après limite est distinct du
+prix régulier. La migration `0016_offer_quantity_limits` est requise ; les
+[contrats](docs/CONTRACTS.md#prix-promotionnel-avec-limite-de-quantité)
+décrivent la validation, le calcul par quantité et l’affichage.
+
 Les offres (prix de base `Prix`, prix promo `PrixPromo`, dates de promotion et
 `DateRecuperation`) viennent des fichiers `produits.json` de chaque magasin. Les
 circulaires (PDF des magasins) sont découpées en images JPEG et envoyées dans le
@@ -292,4 +303,4 @@ l’historique des prix et les contributions par reçus. Compléter les fichiers
 
 Le [guide des données](docs/DATA.md) décrit les fichiers locaux. Le [guide de la base](docs/DATABASE.md) distingue les tables actuelles du modèle étendu proposé pour l’historique, les reçus et les estimations.
 
-*Dernière mise à jour : 5 novembre 2026*
+*Dernière mise à jour : 14 novembre 2026*

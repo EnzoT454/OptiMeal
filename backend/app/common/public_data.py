@@ -49,7 +49,11 @@ def offer(ingredient_id: str, product: SourceProduct, on_date: date,
           category_id: int | None = None) -> OfferRead:
     # La photo ne fait pas partie de l'identité de l'offre : ajouter ou changer
     # une photo ne change pas l'id (mêmes id qu'avant l'ajout des photos).
-    identity = product.model_dump_json(exclude={'image_url', 'image_source'})
+    excluded = {'image_url', 'image_source'}
+    # Les anciens produits sans condition gardent leur identité publique.
+    if product.quantity_limit is None:
+        excluded.update({'quantity_limit', 'price_after_limit'})
+    identity = product.model_dump_json(exclude=excluded)
     fingerprint = hashlib.sha256((ingredient_id + '\n' + identity).encode()).hexdigest()[:24]
     return OfferRead(
         id='offer_' + fingerprint, product_id=product.id, ingredient_id=ingredient_id,
@@ -61,6 +65,7 @@ def offer(ingredient_id: str, product: SourceProduct, on_date: date,
         # Ajouts page Promos
         promo_price=(None if product.promo_price is None
                      else {'kind': 'commercial', 'amount': product.promo_price}),
+        quantity_limit=product.quantity_limit, price_after_limit=product.price_after_limit,
         category_id=category_id, retrieved_at=product.retrieved_at,
         image_url=product.image_url, image_source=product.image_source,
         promotion=promotion(product, on_date),
@@ -91,6 +96,7 @@ def offers_from_database(db: Session, on_date: date) -> list[OfferRead]:
             id=row.id, retailer=row.retailer, store_id=row.store_id,
             external_product_id=row.external_product_id, name=row.name,
             price=text_or_none(row.price), promo_price=text_or_none(row.promo_price),
+            quantity_limit=row.quantity_limit, price_after_limit=text_or_none(row.price_after_limit),
             currency=row.currency, unit=row.unit, quantity=text_or_none(row.quantity),
             valid_from=row.valid_from, valid_to=row.valid_to, retrieved_at=row.retrieved_at,
             is_promotion=row.is_promotion, source=row.source, url=row.url,

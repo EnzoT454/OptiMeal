@@ -505,7 +505,7 @@ Une offre est un relevé de prix, même hors promotion. `price.amount` contient
 le prix de base ; `promo_price` contient un objet monétaire si un prix promo
 est renseigné, sinon `null`. `retrieved_at` conserve la date de récupération
 et `category_id` identifie le rayon lorsqu’il est connu. Le mobile affiche
-le prix promo lorsqu’il existe, sinon le prix de base. `promotion.declared`
+le prix promo seulement lorsque la promotion est active, sinon le prix de base. `promotion.declared`
 reprend le booléen source ; les dates d’origine restent nulles si inconnues.
 Le statut calculé distingue :
 
@@ -518,6 +518,44 @@ Le statut calculé distingue :
 `promotion_only=true` conserve uniquement `active`. Une liste vide ne prouve
 donc pas qu’aucune promotion n’existe en magasin ; elle décrit les données
 de la capture. Une période inversée est refusée au chargement.
+
+### Prix promotionnel avec limite de quantité
+
+Depuis la migration `0016_offer_quantity_limits`, une offre peut porter
+`quantity_limit` (entier strictement positif) et `price_after_limit` (montant
+décimal en texte). Ces deux champs sont facultatifs et doivent être fournis
+ensemble. Ils exigent une promotion déclarée, un `promo_price` connu et un prix
+après limite supérieur ou égal au prix promotionnel. Les anciens fichiers
+sans ces champs restent compatibles.
+
+Exemple : `promo_price.amount = "7.77"`, `quantity_limit = 4`,
+`price_after_limit = "10.00"`. Les quatre premières unités de vente coûtent
+7,77 $ chacune ; les suivantes coûtent 10 $ chacune. Le prix après limite
+n’est pas un prix régulier : `price.amount` reste nul si ce dernier est inconnu.
+Aucun pourcentage d’économie n’est déduit du prix après limite.
+
+Dans les fichiers marchands, les champs correspondants sont `LimiteQuantite`
+et `PrixApresLimite`. Ils sont conservés par l’assemblage, l’import PostgreSQL,
+la liste et le détail HTTP. La paire absente ou nulle efface une ancienne
+condition lors de l’import. Ne pas conserver une ancienne limite lorsque
+la nouvelle offre n’en comporte plus.
+
+Le mobile affiche « Limite de 4 unités, puis 10,00 $ par unité » avec le prix,
+dans Promos, le détail et la liste d’achats. Une promotion sans prix régulier
+connu reste présentée comme une promotion, sans prix barré ni faux rabais.
+L’affichage des nouveaux champs doit être vérifié sur appareil.
+
+`catalog/pricing.py::purchase_total` calcule en Decimal le coût d’un nombre
+entier d’unités de vente : 4 unités = 31,08 $, 5 unités = 41,08 $. Ce calcul
+respecte les bornes inclusives de validité ; hors période, il utilise uniquement
+le prix régulier connu, sinon retourne un montant inconnu. Il ne calcule pas
+les paquets nécessaires à une recette et ne constitue pas le futur moteur
+complet des listes. La liste mobile actuelle additionne encore un paquet
+par ligne ; elle ne prétend pas gérer une quantité de paquets arbitraire.
+
+Pour les quatre promotions Maxi relevées le 14 novembre 2026, les dates
+du 12 au 18 novembre sont confirmées par l’utilisateur, et non extraites
+par Apify. Voir le rapport dans `data/catalog/maxi/actualisation-2026-11-14/`.
 
 ## Circulaires
 
@@ -570,4 +608,4 @@ résumés/détails ajoutent `is_owned` et `is_favorite`. Les métadonnées
 manuelles confirmées n’exigent pas la revue des recettes de démonstration.
 Voir [AUTH.md](AUTH.md) pour les corps, droits et codes de réponse.
 
-*Dernière mise à jour : 5 novembre 2026*
+*Dernière mise à jour : 14 novembre 2026*

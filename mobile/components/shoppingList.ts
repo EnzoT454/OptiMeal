@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../services/api";
+import { currentOfferPrice, hasActivePromotion } from "../services/offerPricing";
 import { ON_DATE } from "./promos";
 import { dayName, fromISODate, getPlan, mondayOf, toISODate } from "./planning";
 import type { Detail, Ingredient, MealPlanEntry, Offer, Page, Recipe, RecipeUnit, Retailer } from "../types/api";
@@ -45,7 +46,7 @@ export const RAYON_AUTRES = "Autres";
 
 // Une promo compte seulement si elle est valide aujourd'hui
 export function enPromo(o: Offer): boolean {
-  return o.promotion.status === "active" && o.promo_price?.amount != null;
+  return hasActivePromotion(o);
 }
 
 function nombreOuNull(texte: string | null | undefined): number | null {
@@ -56,7 +57,7 @@ function nombreOuNull(texte: string | null | undefined): number | null {
 
 // Prix payé aujourd'hui (promo valide, sinon prix de base). null = prix inconnu (jamais 0 $)
 export function prixOffre(o: Offer): number | null {
-  return nombreOuNull(enPromo(o) ? o.promo_price!.amount : o.price.amount);
+  return nombreOuNull(currentOfferPrice(o));
 }
 
 export function prixRegulier(o: Offer): number | null {

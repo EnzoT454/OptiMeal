@@ -2,7 +2,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { recipeColors as c } from "./recipes";
-import { money, storeName } from "./promos";
+import { money, quantityPriceCondition, storeName } from "./promos";
 import { enPromo, offreChoisie, prixOffre, texteProduit, type LigneListe } from "./shoppingList";
 import type { ListeAchats } from "./useShoppingList";
 
@@ -72,6 +72,7 @@ export default function ArticleSheet({ ligne, liste, quantite, onClose }: {
                         {storeName(o.retailer)}{o.retailer === liste.magasin ? " · ton magasin" : ""}
                       </Text>
                       <Text style={styles.produit} numberOfLines={1}>{texteProduit(o)}</Text>
+                      {quantityPriceCondition(o) && <Text style={styles.produit}>{quantityPriceCondition(o)}</Text>}
                     </View>
                     <View style={{ alignItems: "flex-end" }}>
                       <Text style={[styles.prix, promo && styles.promo]}>{money(prix)}</Text>

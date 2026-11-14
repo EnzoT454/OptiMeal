@@ -254,6 +254,8 @@
           "basis": "source_unspecified"
         },
         "promo_price": null,
+        "quantity_limit": null,
+        "price_after_limit": null,
         "category_id": 1,
         "retrieved_at": "2026-10-04",
         "image_url": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",
@@ -294,6 +296,8 @@
           "basis": "source_unspecified"
         },
         "promo_price": null,
+        "quantity_limit": null,
+        "price_after_limit": null,
         "category_id": 1,
         "retrieved_at": "2026-10-06",
         "image_url": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",
@@ -351,6 +355,8 @@
         "basis": "source_unspecified"
       },
       "promo_price": null,
+      "quantity_limit": null,
+      "price_after_limit": null,
       "category_id": 1,
       "retrieved_at": "2026-10-04",
       "image_url": "https://product-images.metro.ca/images/hb1/h6e/10444305399838.jpg",

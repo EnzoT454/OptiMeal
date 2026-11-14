@@ -54,6 +54,8 @@ export interface Offer {
   format: { quantity: string | null; unit_raw: string | null };
   price: Price;              // prix de base
   promo_price: Price | null; // prix en promotion
+  quantity_limit?: number | null; // premières unités admissibles au prix promo
+  price_after_limit?: string | null; // prix par unité supplémentaire, distinct du prix régulier
   category_id: number | null;
   retrieved_at: string | null;
   image_url: string | null;    // lien de la photo du produit (null si aucune)

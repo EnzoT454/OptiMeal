@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { recipeColors, recipeStyles } from './recipes';
-import { currentPrice, discount, formatText, longDate, money, storeName } from './promos';
+import { currentPrice, discount, formatText, longDate, money, quantityPriceCondition, storeName } from './promos';
+import { hasActivePromotion } from '../services/offerPricing';
 import { deal, perWeight, saving } from './deal';
 import type { Offer } from '../types/api';
 
@@ -55,7 +56,7 @@ export function PromoCard({ offer, onPress, followed, onToggleFollow }: CardProp
       {saved != null && <Text style={[styles.dealLine, { color: level?.text ?? recipeColors.muted }]}>
         Économisez {money(saved)}{perWeight(offer)}
       </Text>}
-      {!level && <RegularTag small />}
+      {!level && <RegularTag small promotional={hasActivePromotion(offer)} />}
       {!!end && <Text style={styles.endDate}>Jusqu’au {end}</Text>}
     </View>
   </Pressable>;
@@ -83,7 +84,7 @@ export function PromoTile({ offer, onPress, followed, onToggleFollow }: CardProp
       numberOfLines={1} adjustsFontSizeToFit maxFontSizeMultiplier={1.2}>
       Économisez {money(saved)}{perWeight(offer)}
     </Text>}
-    {!level && <RegularTag small />}
+    {!level && <RegularTag small promotional={hasActivePromotion(offer)} />}
   </Pressable>;
 }
 
@@ -100,13 +101,16 @@ export function ViewToggle({ value, onChange }: { value: PromoView; onChange: (v
 
 // Nouveau prix (grand, vert) et, en promo, l'ancien prix barré à côté (petit, gris).
 function PriceLine({ offer, small }: { offer: Offer; small?: boolean }) {
-  const onPromo = offer.promo_price?.amount != null;
-  return <View style={styles.priceLine}>
-    <Text style={[small ? styles.tilePrice : styles.price, !onPromo && styles.regularPrice]} maxFontSizeMultiplier={1.2}>
-      {money(currentPrice(offer))}{perWeight(offer)}
-    </Text>
-    {onPromo && <Text style={styles.oldPrice} maxFontSizeMultiplier={1.2}
-      accessibilityLabel={`au lieu de ${money(offer.price.amount)}`}>{money(offer.price.amount)}</Text>}
+  const onPromo = hasActivePromotion(offer);
+  return <View>
+    <View style={styles.priceLine}>
+      <Text style={[small ? styles.tilePrice : styles.price, !onPromo && styles.regularPrice]} maxFontSizeMultiplier={1.2}>
+        {money(currentPrice(offer))}{perWeight(offer)}
+      </Text>
+      {onPromo && offer.price.amount != null && <Text style={styles.oldPrice} maxFontSizeMultiplier={1.2}
+        accessibilityLabel={`au lieu de ${money(offer.price.amount)}`}>{money(offer.price.amount)}</Text>}
+    </View>
+    {quantityPriceCondition(offer) && <Text style={recipeStyles.body}>{quantityPriceCondition(offer)}</Text>}
   </View>;
 }
 
@@ -127,9 +131,9 @@ function Bell({ offer, followed, onPress, round }: { offer: Offer; followed: boo
   </Pressable>;
 }
 
-function RegularTag({ small }: { small?: boolean }) {
+function RegularTag({ small, promotional }: { small?: boolean; promotional?: boolean }) {
   return <View style={[styles.regularTag, small && { alignSelf: 'flex-start' }]}>
-    <Text style={styles.regularTagText} maxFontSizeMultiplier={1.2}>Prix régulier</Text>
+    <Text style={styles.regularTagText} maxFontSizeMultiplier={1.2}>{promotional ? 'En promotion' : 'Prix régulier'}</Text>
   </View>;
 }
 

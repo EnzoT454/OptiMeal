@@ -18,6 +18,7 @@ PROMO_FIELDS = {'PrixPromo', 'DateRecuperation'}
 # Champs facultatifs pour la photo du produit : ImageUrl (lien de la photo) et
 # ImageSource (d'où vient la photo, ex. « superc »). ImageSource exige ImageUrl.
 IMAGE_FIELDS = {'ImageUrl', 'ImageSource'}
+LIMIT_FIELDS = {'LimiteQuantite', 'PrixApresLimite'}
 
 
 def image_url(value: object) -> str | None:
@@ -110,7 +111,9 @@ def build_common_catalog(root: Path, mapping_path: Path) -> dict:
                             'ingredient_id': row['Id'], 'name': row['NomProduit']})
             for product in row['Produits']:
                 image_fields = set(product) & IMAGE_FIELDS
-                if set(product) - image_fields not in (PRODUCT_FIELDS, PRODUCT_FIELDS | PROMO_FIELDS) \
+                limit_fields = set(product) & LIMIT_FIELDS
+                if (limit_fields and limit_fields != LIMIT_FIELDS) or \
+                        set(product) - image_fields - limit_fields not in (PRODUCT_FIELDS, PRODUCT_FIELDS | PROMO_FIELDS) \
                         or image_fields == {'ImageSource'}:
                     raise ValueError(f'Champs produit modifiés dans {retailer}/{row["Id"]}.')
                 if not isinstance(product['Id'], str) or not product['Id']:
@@ -128,6 +131,8 @@ def build_common_catalog(root: Path, mapping_path: Path) -> dict:
                     'external_product_id': product['Id'], 'name': product['Description'],
                     'price': decimal_text(product['Prix']),
                     'promo_price': decimal_text(product.get('PrixPromo')),
+                    'quantity_limit': product.get('LimiteQuantite'),
+                    'price_after_limit': decimal_text(product.get('PrixApresLimite')),
                     'currency': 'CAD',
                     'unit': product['Unité'], 'quantity': decimal_text(product['Quantité']),
                     'valid_from': product['DateDebut'], 'valid_to': product['DateFin'],

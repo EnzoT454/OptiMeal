@@ -680,4 +680,18 @@ Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visite
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native)
 et [React Navigation](https://reactnavigation.org/docs/getting-started/).
 
-*Dernière mise à jour : 5 novembre 2026*
+## Prix promotionnels avec limite de quantité
+
+Une offre peut indiquer un prix pour les premières unités, puis un autre prix
+au-delà : par exemple 7,77 $ pour les quatre premières unités et 10 $ par unité
+supplémentaire. Les cartes Promos, leur détail et les articles de la liste
+affichent la condition avec le prix. Le prix après limite ne devient pas un
+prix régulier et ne sert pas à inventer un pourcentage de rabais.
+
+Les champs `quantity_limit` et `price_after_limit` sont facultatifs pour
+compatibilité. Le backend doit avoir reçu la migration `0016_offer_quantity_limits`
+avant son redémarrage. Le prix promotionnel est utilisé uniquement pendant
+une période confirmée active. Les contrôles automatisés couvrent cet affichage ;
+les essais sur appareil restent à effectuer.
+
+*Dernière mise à jour : 14 novembre 2026*

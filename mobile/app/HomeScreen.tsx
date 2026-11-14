@@ -4,7 +4,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useAuth } from "../context/AuthContext";
 import { RecipeScreen, recipeColors as c, recipeStyles } from "../components/recipes";
-import { money, storeName } from "../components/promos";
+import { money, quantityPriceCondition, storeName } from "../components/promos";
 import { MEALS, MEAL_COLORS, MEAL_LABELS, dayFullName, getPlan, mealName, mondayOf, toISODate } from "../components/planning";
 import { useListeAchats } from "../components/useShoppingList";
 import AddItemField from "../components/AddItemField";
@@ -141,7 +141,10 @@ function TableauDeBord() {
           <EnTete titre="En promo dans ta liste" />
           {lignesEnPromo.map(({ ligne, offre }) => (
             <View key={ligne.ingredient_id} style={styles.promoLigne}>
-              <Text style={styles.promoNom} numberOfLines={1}>{ligne.nom}</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.promoNom} numberOfLines={1}>{ligne.nom}</Text>
+                {quantityPriceCondition(offre!) && <Text style={recipeStyles.body}>{quantityPriceCondition(offre!)}</Text>}
+              </View>
               <Text style={styles.promoPrix}>{money(prixOffre(offre!))}</Text>
               <View style={styles.etiquette}>
                 <Text style={styles.etiquetteTexte}>{storeName(offre!.retailer)}</Text>

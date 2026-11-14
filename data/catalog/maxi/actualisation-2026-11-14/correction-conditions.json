@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-14",
+  "validity_source": "Dates confirmées par l’utilisateur dans la conversation du 14 novembre 2026, et non fournies par Apify.",
+  "valid_from": "2026-11-12",
+  "valid_to": "2026-11-18",
+  "products": [
+    "20600927001_EA",
+    "20105368_EA",
+    "20601017001_EA",
+    "20521648_EA"
+  ],
+  "quantity_pricing": {
+    "product_id": "20105368_EA",
+    "promo_price": "7.77",
+    "quantity_limit": 4,
+    "price_after_limit": "10.00",
+    "regular_price": null
+  },
+  "migration": "0016_offer_quantity_limits",
+  "supabase_verified": true,
+  "offers_updated": 4,
+  "total_offers": 93,
+  "other_offers_unchanged": 62,
+  "boundary_checks": {
+    "2026-11-11": 0,
+    "2026-11-12": 4,
+    "2026-11-18": 4,
+    "2026-11-19": 0
+  },
+  "schema_matches_models": true,
+  "row_counts_preserved": true
+}

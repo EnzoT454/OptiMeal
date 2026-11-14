@@ -11,6 +11,7 @@ import {
 } from "./shoppingList";
 import type { ListeAchats } from "./useShoppingList";
 import type { Retailer } from "../types/api";
+import { quantityPriceCondition } from '../services/offerPricing';
 
 // =====================================================================
 // Le contenu de l'Épicerie (dans le Calendrier) :
@@ -265,6 +266,7 @@ function Ligne({ ligne, liste, coche, premier, onCocher, onOuvrir }: {
         </Text>
         {!coche && sousTitre.length > 0 && <Text style={styles.sousTitre} numberOfLines={1}>{sousTitre}</Text>}
         {!coche && offre && <Text style={styles.produit} numberOfLines={1}>{texteProduit(offre)}</Text>}
+        {!coche && offre && quantityPriceCondition(offre) && <Text style={styles.produit}>{quantityPriceCondition(offre)}</Text>}
       </Pressable>
 
       {!coche && (

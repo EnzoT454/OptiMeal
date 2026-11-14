@@ -1,0 +1,11 @@
+{
+  "processed": 31,
+  "changed": 31,
+  "total": 93,
+  "other_offers_unchanged": 62,
+  "api_verified": true,
+  "known_amounts": 30,
+  "conditional_price_excluded": [
+    "20105368_EA"
+  ]
+}

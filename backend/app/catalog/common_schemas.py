@@ -1,5 +1,6 @@
 """Données communes sur disque et ressources publiques de l'API v1."""
 from datetime import date
+from decimal import Decimal
 from typing import Literal
 from urllib.parse import quote
 
@@ -31,6 +32,8 @@ class SourceProduct(ContractModel):
     price: DecimalText | None
     # Ajout page Promos : price = prix de base, promo_price = prix en promotion (null sinon)
     promo_price: DecimalText | None = None
+    quantity_limit: int | None = Field(default=None, strict=True, gt=0)
+    price_after_limit: DecimalText | None = None
     currency: Literal['CAD']
     unit: str | None
     quantity: DecimalText | None
@@ -47,6 +50,13 @@ class SourceProduct(ContractModel):
 
     @model_validator(mode='after')
     def coherent_dates(self):
+        if (self.quantity_limit is None) != (self.price_after_limit is None):
+            raise ValueError('Limite de quantité et prix après limite doivent être fournis ensemble.')
+        if self.quantity_limit is not None:
+            if self.is_promotion is not True or self.promo_price is None:
+                raise ValueError('Un prix limité exige une promotion et son prix explicite.')
+            if Decimal(self.price_after_limit) < Decimal(self.promo_price):
+                raise ValueError('Le prix après limite ne peut pas être inférieur au prix promotionnel.')
         expected_id = ':'.join(quote(value, safe='') for value in
                                (self.retailer, self.store_id or '', self.external_product_id))
         if self.id != expected_id:
@@ -131,6 +141,8 @@ class OfferRead(ContractModel):
     price: Price
     # Ajouts page Promos : price = prix de base, promo_price = prix en promotion (null sinon)
     promo_price: Price | None = None
+    quantity_limit: int | None = Field(default=None, strict=True, gt=0)
+    price_after_limit: DecimalText | None = None
     category_id: int | None = Field(default=None, strict=True)
     retrieved_at: date | None = None
     # Ajout page Promos : photo du produit (null si aucune)

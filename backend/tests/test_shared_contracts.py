@@ -39,7 +39,11 @@ def test_offers_namespace_raw_format_and_exact_prices(client):
     assert result['total'] == 93
     for offer in result['items']:
         assert offer['price']['currency'] == 'CAD'
-        assert isinstance(offer['price']['amount'], str)
+        if offer['price']['amount'] is None:
+            assert offer['price']['kind'] == 'unknown'
+        else:
+            assert isinstance(offer['price']['amount'], str)
+            assert offer['price']['kind'] == 'commercial'
         assert offer['store_id'] == offer['retailer'] + ':' + offer['external_store_id']
         detail = client.get('/api/v1/offers/' + offer['id'] + '?on_date=2026-10-06').json()
         assert detail['item'] == offer
