@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,6 +8,7 @@ import { Message } from '../components/ui';
 import { RecipeButton, RecipeChip, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
 import { discount, storeName } from '../components/promos';
 import { fetchAllOffers, isOnPromo } from '../components/search';
+import { followKey, followsOffer } from '../components/follows';
 import { useFollows } from '../components/useFollows';
 import { PromoList, PromoView, ViewToggle, sectionStyle } from '../components/PromoCard';
 import { FollowsChip } from '../components/FollowsChip';
@@ -31,7 +32,9 @@ export default function FollowsScreen({ navigation }: NativeStackScreenProps<Pro
   useFocusEffect(useCallback(() => {
     let active = true;
     setLoading(true); setError('');
-    Promise.all([reloadFollows(), fetchAllOffers()]).then(([, items]) => {
+    Promise.all([reloadFollows(), fetchAllOffers()]).then(async ([, items]) => {
+      if (!active) return;
+      await reloadFollows(items);
       if (!active) return;
       setOffers(items);
     }).catch(e => {
@@ -40,16 +43,14 @@ export default function FollowsScreen({ navigation }: NativeStackScreenProps<Pro
     return () => { active = false; };
   }, [retry, reloadFollows]));
 
-  const byId = useMemo(() => new Map(offers.map(o => [o.id, o])), [offers]);
-  const followed = follows.map(f => byId.get(f.offer_id)).filter((o): o is Offer => !!o);
+  const followed = offers.filter(o => follows.some(f => followsOffer(f, o)));
   const onPromo = followed.filter(isOnPromo).sort((a, b) => (discount(b) ?? 0) - (discount(a) ?? 0));
   const waiting = followed.filter(o => !isOnPromo(o));
-  const gone = follows.filter(f => !byId.has(f.offer_id)); // produit retiré du catalogue
-  const ids = new Set(follows.map(f => f.offer_id));
+  const gone = follows.filter(f => !offers.some(o => followsOffer(f, o))); // produit retiré du catalogue
 
   const list = (items: Offer[]) => <PromoList offers={items} view={view}
     onOpen={o => navigation.navigate('Detail', { offer: o })}
-    isFollowed={o => ids.has(o.id)} onToggleFollow={toggleFollow} />;
+    isFollowed={o => follows.some(f => followsOffer(f, o))} onToggleFollow={toggleFollow} />;
 
   return <RecipeScreen>
     <RecipeTitle>Promos</RecipeTitle>
@@ -90,13 +91,13 @@ export default function FollowsScreen({ navigation }: NativeStackScreenProps<Pro
         {list(waiting)}
 
         {/* Produits suivis qui ne sont plus dans le catalogue : on propose simplement de les retirer. */}
-        {gone.map(f => <View key={f.offer_id} style={styles.gone}>
+        {gone.map(f => <View key={followKey(f)} style={styles.gone}>
           <View style={{ flex: 1, gap: 2 }}>
             <Text style={styles.goneName}>{f.name}</Text>
-            <Text style={recipeStyles.body}>Plus disponible chez {storeName(f.retailer)}</Text>
+            <Text style={recipeStyles.body}>{f.product_id ? `Plus disponible chez ${storeName(f.retailer)}` : `Ancien suivi à réassocier chez ${storeName(f.retailer)} : retrouve ce produit dans Promos et suis-le à nouveau.`}</Text>
           </View>
           <Pressable accessibilityRole="button" accessibilityLabel={`Ne plus suivre ${f.name}`} hitSlop={8}
-            onPress={() => { void unfollow(f.offer_id); }}>
+            onPress={() => { void unfollow(followKey(f)); }}>
             <Text style={styles.stopText}>Ne plus suivre</Text>
           </Pressable>
         </View>)}

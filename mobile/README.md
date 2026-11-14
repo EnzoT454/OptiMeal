@@ -725,6 +725,44 @@ simulés. Pour une vérification manuelle sur appareil :
 6. Changer de compte après une écriture échouée : vérifier qu’aucune reprise
    de l’ancien compte n’est proposée ou exécutée pour le nouveau.
 
+## Identité des produits suivis et choisis
+
+Les suivis et les choix manuels enregistrent `Offer.product_id`, la clé
+commerciale déjà fournie par l’API : enseigne, magasin et référence marchand.
+Ils n’enregistrent plus l’empreinte `Offer.id`, qui peut changer avec le prix
+ou la date du relevé. Les cloches, la liste Suivis, le détail du produit et le
+compteur de promotions comparent cette clé stable. Un produit absent du
+catalogue garde son suivi ; il réapparaît si la même référence revient.
+
+Dans l’Épicerie, toucher un produit conserve ce choix, même s’il est actuellement
+le moins cher. « Choisir automatiquement le moins cher » efface la préférence.
+Si le produit choisi est absent, la référence reste enregistrée, un avertissement
+invite à vérifier le choix et le produit calculé par défaut est affiché en attendant.
+Les choix restent séparés par compte et par semaine.
+
+Les données existantes sont converties lors du chargement du catalogue, dans
+les mêmes clés privées du compte. Une ancienne empreinte est convertie seulement
+si elle correspond exactement à une offre encore connue. Les conversions et
+les actions sur les cloches passent par la même file d’écritures ; elles ne
+remplacent pas une modification concurrente. Les doublons identifiés sont réunis.
+Les noms et dates de suivi sont conservés.
+
+Une empreinte déjà périmée ne permet pas de retrouver avec certitude sa référence
+marchand. Le suivi est conservé et affiché comme « Ancien suivi à réassocier » ;
+l’utilisateur peut retrouver le produit dans Promos, le suivre à nouveau puis
+retirer l’ancien suivi. Aucun rapprochement par nom ou prix n’est tenté. Un ancien
+choix introuvable reste conservé avec un avertissement dans l’Épicerie : choisir
+à nouveau le produit ou activer le choix automatique permet de le remplacer.
+Les anciennes clés communes sans propriétaire restent ignorées.
+
+Tests : `productIdentity.test.cjs` et `backend/tests/test_product_identity.py`.
+Pour tester sur appareil : suivre un produit et en choisir un dans l’Épicerie,
+actualiser ses prix et sa date dans le catalogue, puis recharger Promos, Suivis
+et l’Épicerie. Vérifier les cloches, le compteur, le choix conservé et le nouveau
+prix. Redémarrer l’application et vérifier à nouveau. Tester aussi deux références
+de même nom, deux magasins, un produit retiré puis réintroduit, les anciennes
+données convertibles et non convertibles, et un changement de compte.
+
 ## Données locales par compte
 
 Les articles ajoutés à la liste d’achats, les coches, les ingrédients déjà

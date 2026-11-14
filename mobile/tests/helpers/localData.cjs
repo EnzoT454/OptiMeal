@@ -36,7 +36,7 @@ function runtime(options = {}) {
         mondayOf: d => d, toISODate: () => week, fromISODate: d => new Date(d), dayName: () => 'lundi',
       };
       if (name.endsWith('/promos')) return { ON_DATE: undefined };
-      if (name.endsWith('/search')) return { isOnPromo: () => false };
+      if (name.endsWith('/search')) return { isOnPromo: o => options.isOnPromo?.(o) ?? false };
       if (name.startsWith('.')) return load(path.normalize(path.join(path.dirname(relative), name)) + '.ts');
       throw new Error('Unexpected import: ' + name);
     } });

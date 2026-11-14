@@ -150,6 +150,17 @@ chargement. Un ajout échoué conserve le texte saisi ; une lecture réussie ne
 vaut pas confirmation de sauvegarde. Le [guide mobile](mobile/README.md#liste-dachats--chargement-incomplet-et-erreurs-locales)
 détaille les comportements, les tests automatisés et les essais manuels.
 
+### Identité commerciale des produits
+
+Les suivis et les choix manuels utilisent `product_id`, la référence stable du
+produit pour une enseigne et un magasin. Le prix, les dates et les promotions
+peuvent changer sans perdre ces préférences. `offer.id` reste l’identifiant du
+relevé courant. Les anciens suivis sont convertis si l’offre d’origine est
+encore identifiable ; sinon ils restent visibles comme suivis à réassocier.
+Les anciens choix non identifiables déclenchent un avertissement. Le
+[guide mobile](mobile/README.md#identité-des-produits-suivis-et-choisis)
+décrit la conversion et les essais à réaliser.
+
 ### Supprimer son compte depuis Paramètres
 
 L’utilisateur connecté peut choisir « Supprimer mon compte », saisir

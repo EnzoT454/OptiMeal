@@ -10,7 +10,7 @@ import {
 import { ON_DATE, RETAILERS, discount, longDate } from '../components/promos';
 import { fetchAllOffers, fetchKeywords, isOnPromo, searchScore, searchWords } from '../components/search';
 import { PromoList, PromoView, ViewToggle, sectionStyle } from '../components/PromoCard';
-import { followedOnPromo } from '../components/follows';
+import { followedOnPromo, followsOffer } from '../components/follows';
 import { useFollows } from '../components/useFollows';
 import { FollowsChip } from '../components/FollowsChip';
 import { CATEGORIES, CategoryRow } from '../components/categories';
@@ -39,7 +39,9 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
     let active = true;
     setLoading(true); setError('');
     void reloadFollows();
-    Promise.all([fetchAllOffers(), fetchKeywords()]).then(([items, aliases]) => {
+    Promise.all([fetchAllOffers(), fetchKeywords()]).then(async ([items, aliases]) => {
+      if (!active) return;
+      await reloadFollows(items);
       if (!active) return;
       setOffers(items);
       setKeywords(aliases);
@@ -77,10 +79,9 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
   }, [found]);
   // Nombre de produits suivis en promo cette semaine (pastille rouge de l'onglet « Suivis »).
   const alerts = useMemo(() => followedOnPromo(follows, offers), [follows, offers]);
-  const followedIds = useMemo(() => new Set(follows.map(f => f.offer_id)), [follows]);
   const list = (items: Offer[]) => <PromoList offers={items} view={view}
     onOpen={o => navigation.navigate('Detail', { offer: o })}
-    isFollowed={o => followedIds.has(o.id)} onToggleFollow={toggleFollow} />;
+    isFollowed={o => follows.some(f => followsOffer(f, o))} onToggleFollow={toggleFollow} />;
   const categoryName = CATEGORIES.find(c => c.id === category)?.name;
 
   return <RecipeScreen>

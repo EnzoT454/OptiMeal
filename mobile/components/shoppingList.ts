@@ -71,13 +71,13 @@ export function offreChoisie(ligne: LigneListe, magasin: Retailer): Offer | unde
     .sort((a, b) => prixOffre(a)! - prixOffre(b)!)[0];
 }
 
-// Produits choisis à la main dans la fiche : { id de la ligne → id de l'offre }
+// Produits choisis à la main dans la fiche : { id de la ligne → product_id stable }
 export type ChoixProduits = Record<string, string>;
 
 // Le produit de la ligne : celui choisi dans la fiche, sinon le moins cher du magasin
 export function offreDeLigne(ligne: LigneListe, magasin: Retailer, choix: ChoixProduits = {}): Offer | undefined {
   const choisi = choix[ligne.ingredient_id];
-  const offre = choisi ? ligne.offres.find((o) => o.id === choisi && prixOffre(o) !== null) : undefined;
+  const offre = choisi ? ligne.offres.find((o) => (o.product_id === choisi || o.id === choisi) && prixOffre(o) !== null) : undefined;
   return offre ?? offreChoisie(ligne, magasin);
 }
 
@@ -372,16 +372,23 @@ export const definirToujoursStocke = (userId: LocalAccount, id: string, present:
 
 // Produits choisis dans la fiche : pour cette semaine
 const cleChoix = () => `shoppingList.choix.${lundiDeLaSemaine()}`;
-export async function lireChoix(userId: LocalAccount): Promise<ChoixProduits> {
-  return readAccountJSON(userId, cleChoix(), {});
+export async function lireChoix(userId: LocalAccount, offres: Offer[] = []): Promise<ChoixProduits> {
+  const cle = cleChoix();
+  const convertir = (avant: ChoixProduits) => Object.fromEntries(Object.entries(avant).map(([ligne, id]) => {
+    const produit = offres.find(o => o.id === id);
+    return [ligne, produit?.product_id ?? id];
+  }));
+  const avant = await readAccountJSON<ChoixProduits>(userId, cle, {});
+  if (JSON.stringify(convertir(avant)) === JSON.stringify(avant)) return avant;
+  return updateAccountJSON<ChoixProduits>(userId, cle, {}, convertir);
 }
 export async function ecrireChoix(userId: LocalAccount, choix: ChoixProduits) {
   await writeAccountJSON(userId, cleChoix(), choix);
 }
-export async function modifierChoix(userId: LocalAccount, ligneId: string, offreId: string | null): Promise<ChoixProduits> {
+export async function modifierChoix(userId: LocalAccount, ligneId: string, produitId: string | null): Promise<ChoixProduits> {
   return updateAccountJSON<ChoixProduits>(userId, cleChoix(), {}, (avant) => {
     const next = { ...avant };
-    if (offreId) next[ligneId] = offreId;
+    if (produitId) next[ligneId] = produitId;
     else delete next[ligneId];
     return next;
   });

@@ -5,6 +5,7 @@ import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles, sh
 import { currentPrice, discount, formatText, longDate, money, quantityPriceCondition, storeName, unitPrice } from '../components/promos';
 import { ProductImage } from '../components/ProductImage';
 import { deal, perWeight, saving } from '../components/deal';
+import { followsOffer } from '../components/follows';
 import { useFollows } from '../components/useFollows';
 import { PromoStackParams } from '../types/navigation';
 
@@ -24,7 +25,7 @@ export default function PromoDetailScreen({ navigation, route }: NativeStackScre
 
   // Suivi de CE produit dans CE magasin : prévenir quand il passe en promo.
   const { follows, busy, toggle, error: followError } = useFollows();
-  const followed = follows.some(f => f.offer_id === offer.id);
+  const followed = follows.some(f => followsOffer(f, offer));
   const onFollowPress = () => { void toggle(offer); };
 
   return <RecipeScreen>

@@ -47,6 +47,8 @@ def promotion(product: SourceProduct, on_date: date) -> Promotion:
 
 def offer(ingredient_id: str, product: SourceProduct, on_date: date,
           category_id: int | None = None) -> OfferRead:
+    # product.id est l’identité commerciale stable (enseigne, magasin, référence).
+    # L’empreinte offer_ identifie le relevé : ne pas la persister comme suivi ou choix produit.
     # La photo ne fait pas partie de l'identité de l'offre : ajouter ou changer
     # une photo ne change pas l'id (mêmes id qu'avant l'ajout des photos).
     excluded = {'image_url', 'image_source'}

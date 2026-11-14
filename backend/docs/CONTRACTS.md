@@ -383,6 +383,19 @@ les photos de recettes dans Supabase Storage.
 | Succursale API | Identifiant qualifié, par exemple `metro:178` ; le code marchand seul reste dans `external_store_id` |
 | Offre | `offer_…`, empreinte de l’ingrédient et de la fiche source ; stable à données identiques ; les champs de photo sont exclus de l’empreinte |
 
+`product_id` est l’identité commerciale à conserver pour suivre ou choisir un
+produit : enseigne, succursale (vide si non connue) et référence marchand,
+encodées dans le catalogue. Un changement de prix, de promotion, de date de
+relevé, de libellé ou de photo ne modifie pas cette clé. Un autre magasin ou
+une autre référence constitue un autre produit. Un changement de référence
+chez le marchand nécessite une réassociation explicite.
+
+`id` (`offer_…`) identifie l’offre issue d’une fiche et d’un ingrédient. Son
+empreinte peut changer à chaque mise à jour des prix ou dates ; elle sert aux
+lectures de détail de l’offre courante, jamais à une préférence durable. La
+correction mobile utilise le `product_id` déjà renvoyé par les deux sources
+JSON et PostgreSQL : aucun changement de schéma SQL n’est nécessaire.
+
 Le mobile traite les identifiants comme des chaînes opaques. Il n’en extrait
 pas des codes par découpage. Les `Id` numériques propres aux trois fichiers
 sources ne deviennent pas des références communes. Les éventuels UUID SQL

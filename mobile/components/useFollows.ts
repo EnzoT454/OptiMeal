@@ -25,11 +25,15 @@ export function useFollows() {
     });
   }, [scope]);
 
-  const recharger = useCallback(async () => {
+  const recharger = useCallback(async (offers: Offer[] = []) => {
     if (scopeRef.current !== scope) return;
     const number = ++request.current;
-    const follows = await getFollows(userId);
-    if (number === request.current) update({ follows, error: '' });
+    try {
+      const follows = await getFollows(userId, offers);
+      if (number === request.current) update({ follows, error: '' });
+    } catch {
+      if (number === request.current) update({ error: 'Impossible de charger ou convertir tes suivis. Réessaie.' });
+    }
   }, [scope, userId, update]);
 
   useEffect(() => {

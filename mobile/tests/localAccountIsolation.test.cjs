@@ -2,8 +2,8 @@ const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const { runtime } = require('./helpers/localData.cjs');
 const A = 'compte-a', B = 'compte-b';
-const oil = { id: 'offer-oil', retailer: 'maxi', product_name: 'Huile' };
-const rice = { id: 'offer-rice', retailer: 'metro', product_name: 'Riz' };
+const oil = { id: 'offer-oil', product_id: 'maxi::oil', retailer: 'maxi', product_name: 'Huile' };
+const rice = { id: 'offer-rice', product_id: 'metro::rice', retailer: 'metro', product_name: 'Riz' };
 const tick = () => new Promise(resolve => setImmediate(resolve));
 function deferred() {
   let resolve;
@@ -16,7 +16,7 @@ async function snapshot(s, f, account) {
     manuels: (await s.lireManuels(account)).map(x => x.nom),
     coches: [...await s.lireCoches(account)], dejaLa: [...await s.lireDejaLa(account)],
     toujours: [...await s.lireToujours(account)], choix: await s.lireChoix(account),
-    magasin: await s.lireMagasin(account), follows: (await f.getFollows(account)).map(x => x.offer_id),
+    magasin: await s.lireMagasin(account), follows: (await f.getFollows(account)).map(x => x.product_id),
   }));
 }
 const empty = { manuels: [], coches: [], dejaLa: [], toujours: [], choix: {}, magasin: 'auto', follows: [] };
@@ -35,17 +35,17 @@ test('A → B → visiteur → A : isoler tous les articles, états, choix et su
   await s.ecrireMagasin(B, 'metro'); await f.toggleFollow(B, rice);
   assert.deepEqual(await snapshot(s, f, A), savedA);
   assert.deepEqual((await snapshot(s, f, B)).manuels, ['Article B']);
-  assert.deepEqual((await snapshot(s, f, B)).follows, ['offer-rice']);
+  assert.deepEqual((await snapshot(s, f, B)).follows, ['metro::rice']);
 });
 
 test('les suppressions et bascules du compte B ne changent pas A', async () => {
   const r = runtime(), s = r.load('components/shoppingList.ts'), f = r.load('components/follows.ts');
   const [manual] = await s.ajouterManuel(A, 'Article A');
   await f.toggleFollow(A, oil); await s.basculerCocheStockee(A, 'riz');
-  await s.retirerManuel(B, manual.id); await f.unfollow(B, oil.id);
+  await s.retirerManuel(B, manual.id); await f.unfollow(B, oil.product_id);
   await s.basculerCocheStockee(B, 'riz'); await s.basculerCocheStockee(B, 'riz');
   assert.equal((await s.lireManuels(A))[0].nom, 'Article A');
-  assert.equal((await f.getFollows(A))[0].offer_id, oil.id);
+  assert.equal((await f.getFollows(A))[0].product_id, oil.product_id);
   assert.deepEqual([...await s.lireCoches(A)], ['riz']); assert.deepEqual([...await s.lireCoches(B)], []);
 });
 
@@ -82,7 +82,7 @@ test('redémarrage : chaque compte retrouve uniquement ses données', async () =
   assert.equal((await reopened.load('components/shoppingList.ts').lireManuels(A))[0].nom, 'Article A');
   assert.equal((await reopened.load('components/shoppingList.ts').lireManuels(B)).length, 0);
   assert.equal((await reopened.load('components/follows.ts').getFollows(A)).length, 0);
-  assert.equal((await reopened.load('components/follows.ts').getFollows(B))[0].offer_id, rice.id);
+  assert.equal((await reopened.load('components/follows.ts').getFollows(B))[0].product_id, rice.product_id);
 });
 
 test('écriture A en retard : reste dans A même après passage à B', async () => {
@@ -101,8 +101,8 @@ test('écriture A en retard : reste dans A même après passage à B', async () 
 test('modifications concurrentes : conserver les deux suivis de A et isoler B', async () => {
   const r = runtime(), f = r.load('components/follows.ts');
   await Promise.all([f.toggleFollow(A, oil), f.toggleFollow(A, rice), f.toggleFollow(B, oil)]);
-  assert.deepEqual(Array.from(await f.getFollows(A), x => x.offer_id).sort(), ['offer-oil', 'offer-rice']);
-  assert.deepEqual(Array.from(await f.getFollows(B), x => x.offer_id), ['offer-oil']);
+  assert.deepEqual(Array.from(await f.getFollows(A), x => x.product_id).sort(), ['maxi::oil', 'metro::rice']);
+  assert.deepEqual(Array.from(await f.getFollows(B), x => x.product_id), ['maxi::oil']);
 });
 
 test('une erreur d’écriture ne bloque pas les opérations suivantes', async () => {
@@ -190,13 +190,13 @@ test('hook suivis : une lecture A tardive reste masquée, visiteur demande la co
   const h = r.hook('components/useFollows.ts', 'useFollows');
   h.render(A); h.flush(); await entered.promise;
   assert.equal(h.render(B).follows.length, 0); h.flush(); await tick();
-  assert.deepEqual(Array.from(h.render(B).follows, x => x.offer_id), [rice.id]);
+  assert.deepEqual(Array.from(h.render(B).follows, x => x.product_id), [rice.product_id]);
   release.resolve(); await tick();
-  assert.deepEqual(Array.from(h.render(B).follows, x => x.offer_id), [rice.id]);
+  assert.deepEqual(Array.from(h.render(B).follows, x => x.product_id), [rice.product_id]);
   const visitor = h.render(null); h.flush(); assert.equal(visitor.follows.length, 0);
   const before = r.writes.length; await visitor.toggle(oil);
   assert.equal(r.writes.length, before); assert.equal(r.prompts.length, 1);
-  assert.deepEqual(Array.from((await h.settled(A)).follows, x => x.offer_id), [oil.id]); h.unmount();
+  assert.deepEqual(Array.from((await h.settled(A)).follows, x => x.product_id), [oil.product_id]); h.unmount();
 });
 
 test('hook suivis : une écriture A tardive ne remplace pas les suivis B', async () => {
@@ -208,6 +208,6 @@ test('hook suivis : une écriture A tardive ne remplace pas les suivis B', async
   const h = r.hook('components/useFollows.ts', 'useFollows'); const a = await h.settled(A); armed = true;
   const pending = a.toggle(oil); await entered.promise; await h.settled(B);
   release.resolve(); await pending; await tick();
-  assert.deepEqual(Array.from(h.render(B).follows, x => x.offer_id), [rice.id]);
-  assert.deepEqual(Array.from((await h.settled(A)).follows, x => x.offer_id), [oil.id]); h.unmount();
+  assert.deepEqual(Array.from(h.render(B).follows, x => x.product_id), [rice.product_id]);
+  assert.deepEqual(Array.from((await h.settled(A)).follows, x => x.product_id), [oil.product_id]); h.unmount();
 });

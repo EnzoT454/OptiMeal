@@ -38,7 +38,7 @@ export function useListeAchats() {
   const data = stored.userId === userId ? stored : emptyData(userId);
   const { lignes, contexte, coches, dejaLa, toujours, magasinChoisi, choix, chargement, erreurChargement, erreurEnregistrement, nbRepasExclus } = data;
   const erreur = erreurEnregistrement ?? erreurChargement;
-  const avertissement = nbRepasExclus > 0
+  const avertissementRepas = nbRepasExclus > 0
     ? `Liste partielle : ${nbRepasExclus} repas sans recette accessible. Leurs ingrédients ne sont pas inclus.` : null;
 
   const update = useCallback((change: (previous: ShoppingData) => ShoppingData) => {
@@ -55,10 +55,11 @@ export function useListeAchats() {
     if (!userId) { update(() => emptyData(null)); return; }
     update(previous => ({ ...previous, chargement: true }));
     try {
-      const [liste, cochesLus, dejaLaLus, toujoursLus, magasinLu, choixLu] = await Promise.all([
+      const [liste, cochesLus, dejaLaLus, toujoursLus, magasinLu] = await Promise.all([
         chargerListe(userId), lireCoches(userId), lireDejaLa(userId),
-        lireToujours(userId), lireMagasin(userId), lireChoix(userId),
+        lireToujours(userId), lireMagasin(userId),
       ]);
+      const choixLu = await lireChoix(userId, [...liste.contexte.offresParIngredient.values()].flat());
       if (numero !== dernierAppel.current) return;
       update(previous => ({ ...previous, lignes: liste.lignes, contexte: liste.contexte,
         chargee: true, erreurChargement: null, nbRepasExclus: liste.nbRepasExclus, coches: cochesLus, dejaLa: dejaLaLus, toujours: toujoursLus, magasinChoisi: magasinLu, choix: choixLu }));
@@ -112,8 +113,8 @@ export function useListeAchats() {
     () => definirDejaLaStocke(userId, id, !dejaLa.has(id)), (previous, dejaLa) => ({ ...previous, dejaLa }));
   const basculerToujours = (id: string) => modifier(`toujours:${id}`,
     () => definirToujoursStocke(userId, id, !toujours.has(id)), (previous, toujours) => ({ ...previous, toujours }));
-  const choisirProduit = (ligneId: string, offreId: string | null) => modifier(`choix:${ligneId}`,
-    () => modifierChoix(userId, ligneId, offreId), (previous, choix) => ({ ...previous, choix }));
+  const choisirProduit = (ligneId: string, produitId: string | null) => modifier(`choix:${ligneId}`,
+    () => modifierChoix(userId, ligneId, produitId), (previous, choix) => ({ ...previous, choix }));
 
   function remplacerManuels(previous: ShoppingData, manuels: ArticleManuel[]): ShoppingData {
     return { ...previous, lignes: trier([
@@ -127,6 +128,12 @@ export function useListeAchats() {
     if (!ligne.manuel) return;
     await modifier(`retrait:${ligne.ingredient_id}`, () => retirerManuel(userId, ligne.ingredient_id.replace('manuel:', '')), remplacerManuels);
   };
+
+  const nbChoixAbsents = lignes.filter(l => choix[l.ingredient_id] &&
+    !l.offres.some(o => o.product_id === choix[l.ingredient_id] || o.id === choix[l.ingredient_id])).length;
+  const avertissement = [avertissementRepas, nbChoixAbsents > 0
+    ? `${nbChoixAbsents} choix de produit à vérifier : référence absente du catalogue actuel. Le produit proposé par défaut est affiché.` : null]
+    .filter(Boolean).join(' ') || null;
 
   const aToujours = (l: LigneListe) => l.catalogue_id !== null && toujours.has(l.catalogue_id);
   const chezMoi = lignes.filter(l => aToujours(l) || dejaLa.has(l.ingredient_id));
