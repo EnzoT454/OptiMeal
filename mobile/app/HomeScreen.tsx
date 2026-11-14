@@ -7,6 +7,7 @@ import { RecipeScreen, recipeColors as c, recipeStyles } from "../components/rec
 import { money, quantityPriceCondition, storeName } from "../components/promos";
 import { MEALS, MEAL_COLORS, MEAL_LABELS, dayFullName, getPlan, mealName, mondayOf, toISODate } from "../components/planning";
 import { useListeAchats } from "../components/useShoppingList";
+import ShoppingListStatus from "../components/ShoppingListStatus";
 import AddItemField from "../components/AddItemField";
 import { enPromo, prixOffre } from "../components/shoppingList";
 import type { MealPlanEntry } from "../types/api";
@@ -121,12 +122,12 @@ function TableauDeBord() {
         </Pressable>
 
         {chargementListe && liste.lignes.length === 0 && <ActivityIndicator color={c.green} />}
-        {!chargementListe && liste.erreur && <Text style={recipeStyles.body}>{liste.erreur}</Text>}
+        <ShoppingListStatus liste={liste} />
 
         {!liste.erreur && (!chargementListe || liste.lignes.length > 0) && (
           <Pressable accessibilityRole="button" onPress={ouvrirEpicerie} style={styles.tuiles}>
             <Tuile valeur={String(nbAAcheter)} label="à acheter" />
-            <Tuile valeur={aAcheter.length > 0 ? `≈ ${money(totaux.total)}` : "–"} label={`chez ${storeName(magasin)}`} />
+            <Tuile valeur={aAcheter.length > 0 ? `≈ ${money(totaux.total)}` : "–"} label={liste.nbRepasExclus > 0 ? "sous-total accessible" : `chez ${storeName(magasin)}`} />
             <Tuile valeur={String(totaux.nbPromo)} label="en promo" promo />
           </Pressable>
         )}
@@ -135,7 +136,7 @@ function TableauDeBord() {
       </View>
 
       {/* ---- 3. En promo dans ta liste (seulement s'il y en a) ---- */}
-      {lignesEnPromo.length > 0 && (
+      {!liste.erreurChargement && lignesEnPromo.length > 0 && (
         <Pressable accessibilityRole="button" accessibilityLabel="En promo dans ta liste, ouvrir la liste"
           onPress={ouvrirEpicerie} style={({ pressed }) => [styles.carte, pressed && styles.appuye]}>
           <EnTete titre="En promo dans ta liste" />

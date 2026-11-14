@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import type { Retailer } from "../types/api";
 import {
   ajouterManuel, chargerListe, comparerMagasins, ecrireMagasin,
-  basculerCocheStockee, basculerDejaLaStocke, basculerToujoursStocke, modifierChoix,
+  definirCocheStockee, definirDejaLaStocke, definirToujoursStocke, modifierChoix,
   ligneManuelle, lireChoix, lireCoches, lireDejaLa, lireMagasin, lireToujours,
   offreDeLigne, meilleureOffre, retirerManuel, totalMagasin, trier,
   type ArticleManuel, type ChoixProduits, type Contexte, type LigneListe, type Magasin,
@@ -14,12 +14,13 @@ type ShoppingData = {
   lignes: LigneListe[]; contexte: Contexte | null;
   coches: Set<string>; dejaLa: Set<string>; toujours: Set<string>;
   magasinChoisi: Magasin; choix: ChoixProduits;
-  chargement: boolean; erreur: string | null;
+  chargement: boolean; chargee: boolean; nbRepasExclus: number;
+  erreurChargement: string | null; erreurEnregistrement: string | null;
 };
 
 function emptyData(userId: string | null): ShoppingData {
   return { userId, lignes: [], contexte: null, coches: new Set(), dejaLa: new Set(), toujours: new Set(),
-    magasinChoisi: 'auto', choix: {}, chargement: userId !== null, erreur: null };
+    magasinChoisi: 'auto', choix: {}, chargement: userId !== null, chargee: false, nbRepasExclus: 0, erreurChargement: null, erreurEnregistrement: null };
 }
 
 // Les clés et les résultats asynchrones appartiennent au compte qui a lancé l'action.
@@ -31,10 +32,14 @@ export function useListeAchats() {
   const scope = scopeRef.current;
   const mounted = useRef(true);
   const dernierAppel = useRef(0);
+  const echec = useRef<{ scope: typeof scope; key: string; run: () => Promise<boolean> } | null>(null);
   const [stored, setStored] = useState(() => emptyData(userId));
   // Masquer l'ancien compte dès le rendu, avant l'exécution des effets.
   const data = stored.userId === userId ? stored : emptyData(userId);
-  const { lignes, contexte, coches, dejaLa, toujours, magasinChoisi, choix, chargement, erreur } = data;
+  const { lignes, contexte, coches, dejaLa, toujours, magasinChoisi, choix, chargement, erreurChargement, erreurEnregistrement, nbRepasExclus } = data;
+  const erreur = erreurEnregistrement ?? erreurChargement;
+  const avertissement = nbRepasExclus > 0
+    ? `Liste partielle : ${nbRepasExclus} repas sans recette accessible. Leurs ingrédients ne sont pas inclus.` : null;
 
   const update = useCallback((change: (previous: ShoppingData) => ShoppingData) => {
     if (!mounted.current || scopeRef.current !== scope) return;
@@ -48,7 +53,7 @@ export function useListeAchats() {
     if (scopeRef.current !== scope) return;
     const numero = ++dernierAppel.current;
     if (!userId) { update(() => emptyData(null)); return; }
-    update(previous => ({ ...previous, chargement: true, erreur: null }));
+    update(previous => ({ ...previous, chargement: true }));
     try {
       const [liste, cochesLus, dejaLaLus, toujoursLus, magasinLu, choixLu] = await Promise.all([
         chargerListe(userId), lireCoches(userId), lireDejaLa(userId),
@@ -56,10 +61,12 @@ export function useListeAchats() {
       ]);
       if (numero !== dernierAppel.current) return;
       update(previous => ({ ...previous, lignes: liste.lignes, contexte: liste.contexte,
-        coches: cochesLus, dejaLa: dejaLaLus, toujours: toujoursLus, magasinChoisi: magasinLu, choix: choixLu }));
+        chargee: true, erreurChargement: null, nbRepasExclus: liste.nbRepasExclus, coches: cochesLus, dejaLa: dejaLaLus, toujours: toujoursLus, magasinChoisi: magasinLu, choix: choixLu }));
     } catch {
       if (numero === dernierAppel.current) update(previous => ({ ...previous,
-        erreur: "Impossible de charger ta liste. Vérifie ta connexion et réessaie." }));
+        erreurChargement: previous.chargee
+          ? "Actualisation impossible. La dernière liste chargée est conservée ; elle peut différer du calendrier actuel. Réessaie."
+          : "Impossible de charger une liste complète. Vérifie ta connexion et réessaie." }));
     } finally {
       if (numero === dernierAppel.current) update(previous => ({ ...previous, chargement: false }));
     }
@@ -71,28 +78,41 @@ export function useListeAchats() {
     return () => { mounted.current = false; dernierAppel.current++; };
   }, [recharger]);
 
-  async function modifier<T>(operation: () => Promise<T>, change: (previous: ShoppingData, result: T) => ShoppingData) {
-    if (!userId || !mounted.current || scopeRef.current !== scope) return;
-    // Un chargement commencé avant la mutation ne doit pas rétablir l'ancien état.
+  async function modifier<T>(key: string, operation: () => Promise<T>, change: (previous: ShoppingData, result: T) => ShoppingData): Promise<boolean> {
+    if (!userId || !mounted.current || scopeRef.current !== scope) return false;
     dernierAppel.current++;
     try {
       const result = await operation();
-      update(previous => ({ ...change(previous, result), chargement: false, erreur: null }));
+      if (!mounted.current || scopeRef.current !== scope) return false;
+      const memeEchec = echec.current?.scope === scope && echec.current.key === key;
+      if (memeEchec) echec.current = null;
+      update(previous => ({ ...change(previous, result), chargement: false,
+        erreurEnregistrement: memeEchec ? null : previous.erreurEnregistrement }));
       if (chargement) void recharger();
+      return true;
     } catch {
-      update(previous => ({ ...previous, chargement: false, erreur: "Impossible d’enregistrer ta liste. Réessaie." }));
+      if (!mounted.current || scopeRef.current !== scope) return false;
+      echec.current = { scope, key, run: () => modifier(key, operation, change) };
+      update(previous => ({ ...previous, chargement: false,
+        erreurEnregistrement: "Modification non enregistrée. Réessaie l’enregistrement." }));
+      return false;
     }
   }
+  const reessayerEnregistrement = async () => {
+    const tentative = echec.current;
+    if (tentative?.scope === scope && scopeRef.current === scope) return tentative.run();
+    return false;
+  };
 
-  const choisirMagasin = (magasinChoisi: Retailer) => modifier(
+  const choisirMagasin = (magasinChoisi: Retailer) => modifier("magasin",
     () => ecrireMagasin(userId, magasinChoisi), previous => ({ ...previous, magasinChoisi }));
-  const basculerCoche = (id: string) => modifier(
-    () => basculerCocheStockee(userId, id), (previous, coches) => ({ ...previous, coches }));
-  const basculerDejaLa = (id: string) => modifier(
-    () => basculerDejaLaStocke(userId, id), (previous, dejaLa) => ({ ...previous, dejaLa }));
-  const basculerToujours = (id: string) => modifier(
-    () => basculerToujoursStocke(userId, id), (previous, toujours) => ({ ...previous, toujours }));
-  const choisirProduit = (ligneId: string, offreId: string | null) => modifier(
+  const basculerCoche = (id: string) => modifier(`coches:${id}`,
+    () => definirCocheStockee(userId, id, !coches.has(id)), (previous, coches) => ({ ...previous, coches }));
+  const basculerDejaLa = (id: string) => modifier(`dejaLa:${id}`,
+    () => definirDejaLaStocke(userId, id, !dejaLa.has(id)), (previous, dejaLa) => ({ ...previous, dejaLa }));
+  const basculerToujours = (id: string) => modifier(`toujours:${id}`,
+    () => definirToujoursStocke(userId, id, !toujours.has(id)), (previous, toujours) => ({ ...previous, toujours }));
+  const choisirProduit = (ligneId: string, offreId: string | null) => modifier(`choix:${ligneId}`,
     () => modifierChoix(userId, ligneId, offreId), (previous, choix) => ({ ...previous, choix }));
 
   function remplacerManuels(previous: ShoppingData, manuels: ArticleManuel[]): ShoppingData {
@@ -101,11 +121,11 @@ export function useListeAchats() {
       ...manuels.map(a => ligneManuelle(a, previous.contexte ?? undefined)),
     ]) };
   }
-  const ajouter = (nom: string, ingredientId: string | null = null) => modifier(
+  const ajouter = (nom: string, ingredientId: string | null = null) => modifier(`ajout:${ingredientId}:${nom}`,
     () => ajouterManuel(userId, nom, ingredientId), remplacerManuels);
   const supprimer = async (ligne: LigneListe) => {
     if (!ligne.manuel) return;
-    await modifier(() => retirerManuel(userId, ligne.ingredient_id.replace('manuel:', '')), remplacerManuels);
+    await modifier(`retrait:${ligne.ingredient_id}`, () => retirerManuel(userId, ligne.ingredient_id.replace('manuel:', '')), remplacerManuels);
   };
 
   const aToujours = (l: LigneListe) => l.catalogue_id !== null && toujours.has(l.catalogue_id);
@@ -121,8 +141,8 @@ export function useListeAchats() {
   const totaux = totalMagasin(aAcheter, magasin, choix);
 
   return { lignes, contexte, coches, dejaLa, toujours, choix, magasin, magasinAuto: magasinChoisi === 'auto', offreDe,
-    chargement, erreur, aAcheter, pasIci, cochees, chezMoi, totaux, nbAAcheter: aAcheterTout.length,
-    recharger, choisirMagasin, choisirProduit, basculerCoche, basculerDejaLa, basculerToujours, ajouter, supprimer };
+    chargement, erreur, erreurChargement, erreurEnregistrement, avertissement, nbRepasExclus, aAcheter, pasIci, cochees, chezMoi, totaux, nbAAcheter: aAcheterTout.length,
+    recharger, reessayerEnregistrement, choisirMagasin, choisirProduit, basculerCoche, basculerDejaLa, basculerToujours, ajouter, supprimer };
 }
 
 export type ListeAchats = ReturnType<typeof useListeAchats>;

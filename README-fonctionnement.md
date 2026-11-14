@@ -136,6 +136,20 @@ décrit cette transition et les essais avec deux comptes. Les contrôles
 automatisés passent ; les essais de cette correction sur iOS et Android
 restent à effectuer.
 
+### Erreurs de chargement et d’enregistrement de la liste d’achats
+
+Une panne pendant la lecture d’une recette bloque l’actualisation entière de
+la liste : les dernières données chargées restent affichées avec un message
+explicite. Seules les recettes introuvables (`404`) sont exclues, avec un
+avertissement « Liste partielle » et un nombre de repas concernés. Le montant
+accessible est alors présenté comme un sous-total et aucune confirmation de
+courses terminées n’est affichée.
+
+Les erreurs locales d’enregistrement disposent d’une reprise distincte du
+chargement. Un ajout échoué conserve le texte saisi ; une lecture réussie ne
+vaut pas confirmation de sauvegarde. Le [guide mobile](mobile/README.md#liste-dachats--chargement-incomplet-et-erreurs-locales)
+détaille les comportements, les tests automatisés et les essais manuels.
+
 ### Supprimer son compte depuis Paramètres
 
 L’utilisateur connecté peut choisir « Supprimer mon compte », saisir

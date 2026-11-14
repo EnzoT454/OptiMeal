@@ -680,6 +680,51 @@ Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visite
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native)
 et [React Navigation](https://reactnavigation.org/docs/getting-started/).
 
+## Liste d’achats : chargement incomplet et erreurs locales
+
+Le chargement publie la liste seulement après la réussite de toutes les lectures :
+planning, recettes, catalogue, offres et données personnelles locales. Une panne
+réseau, une erreur serveur, une erreur d’authentification ou une réponse de
+recette invalide interrompt ce chargement. La dernière liste chargée dans cet
+écran est conservée avec un avertissement ; elle peut différer du calendrier
+actuel. Il ne s’agit pas d’un cache persistant utilisable après redémarrage.
+Sans chargement préalable réussi, l’écran affiche une erreur plutôt qu’une liste
+vide présentée comme complète. « Réessayer le chargement » relance ces lectures.
+
+Seul un HTTP `404` de recette autorise son exclusion. Chaque repas concerné,
+y compris un repas dont la recette supprimée a laissé une référence nulle, est
+compté dans « Liste partielle ». Les notes libres et les restes ne sont pas
+comptés. Les ingrédients accessibles restent consultables, mais le montant est
+nommé « Sous-total des repas accessibles ». L’écran n’annonce pas « Bonne
+épicerie » ou « Ta liste de la semaine est vide » lorsque des repas sont exclus.
+L’Accueil présente également cet avertissement.
+
+Une écriture locale échouée conserve l’état affiché avant la modification et
+signale « Modification non enregistrée ». Le champ d’ajout attend la confirmation
+avant d’effacer la saisie. « Réessayer l’enregistrement » relance la dernière
+modification échouée ; recharger les données ou réussir une autre modification
+ne masque pas cet échec. Les reprises de coches fixent l’état demandé, sans
+inverser une deuxième fois une écriture qui aurait réussi avant de signaler une
+erreur. La reprise appartient au compte d’origine et devient inutilisable après
+un changement de compte.
+
+Les tests `shoppingListFailures.test.cjs` et `shoppingListStatus.test.cjs`
+couvrent ces scénarios avec services TypeScript réels, stockage et réseau
+simulés. Pour une vérification manuelle sur appareil :
+
+1. Planifier deux recettes contenant des ingrédients distincts et ouvrir l’Épicerie.
+2. Couper le réseau et actualiser : vérifier le message, les anciennes lignes
+   conservées et le libellé « Dernier montant chargé ».
+3. Rétablir le réseau et réessayer le chargement : vérifier la liste actualisée.
+4. Supprimer une recette planifiée, puis recharger : vérifier « Liste partielle »,
+   le nombre de repas exclus et l’absence de message de courses terminées.
+5. Avec un stockage simulant un rejet de `setItem`, ajouter un article, cocher une
+   ligne et modifier le garde-manger : vérifier les erreurs et l’état inchangé.
+   Rétablir le stockage et réessayer l’enregistrement ; vérifier la persistance
+   après rechargement et la conservation de la saisie tant que l’ajout échoue.
+6. Changer de compte après une écriture échouée : vérifier qu’aucune reprise
+   de l’ancien compte n’est proposée ou exécutée pour le nouveau.
+
 ## Données locales par compte
 
 Les articles ajoutés à la liste d’achats, les coches, les ingrédients déjà

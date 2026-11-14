@@ -1,5 +1,5 @@
 import { readAccountJSON, writeAccountJSON, updateAccountJSON, type LocalAccount } from '../services/accountStorage';
-import { api } from "../services/api";
+import { api, ApiError } from "../services/api";
 import { currentOfferPrice, hasActivePromotion } from "../services/offerPricing";
 import { ON_DATE } from "./promos";
 import { dayName, fromISODate, getPlan, mondayOf, toISODate } from "./planning";
@@ -217,9 +217,15 @@ export function trier(lignes: LigneListe[]): LigneListe[] {
 async function chargerRecette(id: string): Promise<Recipe | null> {
   try {
     const res = await api<Detail<Recipe>>(`/api/v1/recipes/${id}`);
+    if (!res?.item || res.item.id !== id || !Array.isArray(res.item.ingredients)) {
+      throw new Error('Réponse de recette invalide.');
+    }
     return res.item;
-  } catch {
-    return null; // recette supprimée ou inaccessible
+  } catch (error) {
+    // FastAPI masque les recettes absentes ou inaccessibles par 404.
+    // Une panne, une session expirée ou une réponse invalide bloque le chargement.
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
   }
 }
 
@@ -252,8 +258,11 @@ export async function chargerContexte(): Promise<Contexte> {
 }
 
 // La fonction que les écrans appellent : la liste complète de la semaine
-export async function chargerListe(userId: string, aujourdhui = new Date()): Promise<{ lignes: LigneListe[]; contexte: Contexte }> {
-  const repas = await repasDeLaSemaine(aujourdhui);
+export async function chargerListe(userId: string, aujourdhui = new Date()): Promise<{
+  lignes: LigneListe[]; contexte: Contexte; nbRepasExclus: number;
+}> {
+  const plan = await getPlan(lundiDeLaSemaine(aujourdhui));
+  const repas = plan.entries.filter(compteDansLaListe);
   const ids = [...new Set(repas.map((r) => r.recipe_id!))]; // chaque recette une seule fois
 
   const [recettesChargees, contexte, manuels] = await Promise.all([
@@ -269,7 +278,12 @@ export async function chargerListe(userId: string, aujourdhui = new Date()): Pro
     ...construireLignes(repas, recettes, contexte),
     ...manuels.map((a) => ligneManuelle(a, contexte)),
   ];
-  return { lignes: trier(lignes), contexte };
+  // Un repas dont la recette a été supprimée garde une référence nulle.
+  // Les notes libres et les restes ne créent aucun besoin d'achat.
+  const sansReference = plan.entries.filter(r =>
+    !r.is_leftover && r.recipe_id === null && r.free_text === null).length;
+  const nbRepasExclus = sansReference + repas.filter(r => !recettes.has(r.recipe_id!)).length;
+  return { lignes: trier(lignes), contexte, nbRepasExclus };
 }
 
 // =====================================================================
@@ -330,23 +344,31 @@ async function basculerIds(userId: LocalAccount, cle: string, id: string): Promi
     avant.includes(id) ? avant.filter(x => x !== id) : [...avant, id]));
 }
 
+async function definirIds(userId: LocalAccount, cle: string, id: string, present: boolean): Promise<Set<string>> {
+  return new Set(await updateAccountJSON<string[]>(userId, cle, [], (avant) =>
+    present ? [...new Set([...avant, id])] : avant.filter(x => x !== id)));
+}
+
 // Articles cochés (mis dans le panier au magasin) : une liste par semaine
 const cleCoches = () => `shoppingList.coches.${lundiDeLaSemaine()}`;
 export const lireCoches = (userId: LocalAccount) => lireIds(userId, cleCoches());
 export const ecrireCoches = (userId: LocalAccount, ids: Set<string>) => ecrireIds(userId, cleCoches(), ids);
 export const basculerCocheStockee = (userId: LocalAccount, id: string) => basculerIds(userId, cleCoches(), id);
+export const definirCocheStockee = (userId: LocalAccount, id: string, present: boolean) => definirIds(userId, cleCoches(), id, present);
 
 // « J'en ai déjà » : pour cette semaine seulement
 const cleDejaLa = () => `shoppingList.dejaLa.${lundiDeLaSemaine()}`;
 export const lireDejaLa = (userId: LocalAccount) => lireIds(userId, cleDejaLa());
 export const ecrireDejaLa = (userId: LocalAccount, ids: Set<string>) => ecrireIds(userId, cleDejaLa(), ids);
 export const basculerDejaLaStocke = (userId: LocalAccount, id: string) => basculerIds(userId, cleDejaLa(), id);
+export const definirDejaLaStocke = (userId: LocalAccount, id: string, present: boolean) => definirIds(userId, cleDejaLa(), id, present);
 
 // « J'en ai toujours » : ingrédients du catalogue qu'on a toujours à la maison (toutes les semaines)
 const CLE_TOUJOURS = "shoppingList.gardeManger"; // nom interne, préfixé par le compte dans accountStorage
 export const lireToujours = (userId: LocalAccount) => lireIds(userId, CLE_TOUJOURS);
 export const ecrireToujours = (userId: LocalAccount, ids: Set<string>) => ecrireIds(userId, CLE_TOUJOURS, ids);
 export const basculerToujoursStocke = (userId: LocalAccount, id: string) => basculerIds(userId, CLE_TOUJOURS, id);
+export const definirToujoursStocke = (userId: LocalAccount, id: string, present: boolean) => definirIds(userId, CLE_TOUJOURS, id, present);
 
 // Produits choisis dans la fiche : pour cette semaine
 const cleChoix = () => `shoppingList.choix.${lundiDeLaSemaine()}`;

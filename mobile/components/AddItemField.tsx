@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { recipeColors as c } from "./recipes";
@@ -14,16 +14,25 @@ import { enPromo, prixOffre, suggerer, type Contexte } from "./shoppingList";
 
 export default function AddItemField({ contexte, onAjouter, placeholder = "Ajouter à ma liste…" }: {
   contexte: Contexte | null;
-  onAjouter: (nom: string, ingredientId: string | null) => void;
+  onAjouter: (nom: string, ingredientId: string | null) => boolean | void | Promise<boolean | void>;
   placeholder?: string;
 }) {
   const [texte, setTexte] = useState("");
+  const enCours = useRef(false);
+  const [occupé, setOccupé] = useState(false);
+  const [erreur, setErreur] = useState<string | null>(null);
   const propre = texte.trim();
   const suggestions = propre.length >= 2 && contexte ? suggerer(propre, contexte) : [];
 
-  function choisir(nom: string, ingredientId: string | null) {
-    setTexte("");
-    onAjouter(nom, ingredientId);
+  async function choisir(nom: string, ingredientId: string | null) {
+    if (enCours.current) return;
+    enCours.current = true; setOccupé(true); setErreur(null);
+    try {
+      const ok = await onAjouter(nom, ingredientId);
+      if (ok !== false) setTexte("");
+    } catch {
+      setErreur("Article non enregistré. Ton texte est conservé ; réessaie.");
+    } finally { enCours.current = false; setOccupé(false); }
   }
 
   // Touche « Terminé » du clavier : la 1re suggestion s'il y en a, sinon le texte tel quel
@@ -40,6 +49,7 @@ export default function AddItemField({ contexte, onAjouter, placeholder = "Ajout
         <MaterialCommunityIcons name="plus" size={20} color={propre ? c.green : c.muted} />
         <TextInput
           value={texte}
+          editable={!occupé}
           onChangeText={setTexte}
           onSubmitEditing={valider}
           placeholder={placeholder}
@@ -50,12 +60,13 @@ export default function AddItemField({ contexte, onAjouter, placeholder = "Ajout
           accessibilityLabel="Ajouter un article à ma liste"
         />
         {propre.length > 0 && (
-          <Pressable accessibilityRole="button" accessibilityLabel="Effacer" onPress={() => setTexte("")} hitSlop={10}>
+          <Pressable accessibilityRole="button" accessibilityLabel="Effacer" disabled={occupé} onPress={() => setTexte("")} hitSlop={10}>
             <MaterialCommunityIcons name="close-circle" size={18} color={c.muted} />
           </Pressable>
         )}
       </View>
 
+      {erreur && <Text accessibilityRole="alert" style={styles.magasin}>{erreur}</Text>}
       {propre.length >= 2 && (
         <View style={styles.suggestions}>
           {suggestions.map(({ ingredient, meilleure }, i) => {
@@ -69,6 +80,7 @@ export default function AddItemField({ contexte, onAjouter, placeholder = "Ajout
                 key={ingredient.id}
                 accessibilityRole="button"
                 accessibilityLabel={`Ajouter ${ingredient.name}`}
+                disabled={occupé}
                 onPress={() => choisir(ingredient.name, ingredient.id)}
                 style={[styles.suggestion, i > 0 && styles.separateur]}
               >
@@ -94,6 +106,7 @@ export default function AddItemField({ contexte, onAjouter, placeholder = "Ajout
           {/* Toujours possible : l'ajouter tel quel, hors catalogue */}
           <Pressable
             accessibilityRole="button"
+            disabled={occupé}
             onPress={() => choisir(propre, null)}
             style={[styles.suggestion, suggestions.length > 0 && styles.separateur]}
           >
