@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { readAccountJSON, writeAccountJSON, updateAccountJSON, type LocalAccount } from '../services/accountStorage';
 import { api } from "../services/api";
 import { currentOfferPrice, hasActivePromotion } from "../services/offerPricing";
 import { ON_DATE } from "./promos";
@@ -252,14 +252,14 @@ export async function chargerContexte(): Promise<Contexte> {
 }
 
 // La fonction que les écrans appellent : la liste complète de la semaine
-export async function chargerListe(aujourdhui = new Date()): Promise<{ lignes: LigneListe[]; contexte: Contexte }> {
+export async function chargerListe(userId: string, aujourdhui = new Date()): Promise<{ lignes: LigneListe[]; contexte: Contexte }> {
   const repas = await repasDeLaSemaine(aujourdhui);
   const ids = [...new Set(repas.map((r) => r.recipe_id!))]; // chaque recette une seule fois
 
   const [recettesChargees, contexte, manuels] = await Promise.all([
     Promise.all(ids.map(chargerRecette)),
     chargerContexte(),
-    lireManuels(),
+    lireManuels(userId),
   ]);
 
   const recettes = new Map<string, Recipe>();
@@ -317,48 +317,62 @@ export function suggerer(texte: string, contexte: Contexte, max = 5): Suggestion
 // Stockage sur le téléphone (AsyncStorage) — plus tard dans le backend
 // =====================================================================
 
-async function lireIds(cle: string): Promise<Set<string>> {
-  const texte = await AsyncStorage.getItem(cle);
-  return new Set(texte ? JSON.parse(texte) : []);
+async function lireIds(userId: LocalAccount, cle: string): Promise<Set<string>> {
+  return new Set(await readAccountJSON<string[]>(userId, cle, []));
 }
 
-async function ecrireIds(cle: string, ids: Set<string>) {
-  await AsyncStorage.setItem(cle, JSON.stringify([...ids]));
+async function ecrireIds(userId: LocalAccount, cle: string, ids: Set<string>) {
+  await writeAccountJSON(userId, cle, [...ids]);
+}
+
+async function basculerIds(userId: LocalAccount, cle: string, id: string): Promise<Set<string>> {
+  return new Set(await updateAccountJSON<string[]>(userId, cle, [], (avant) =>
+    avant.includes(id) ? avant.filter(x => x !== id) : [...avant, id]));
 }
 
 // Articles cochés (mis dans le panier au magasin) : une liste par semaine
 const cleCoches = () => `shoppingList.coches.${lundiDeLaSemaine()}`;
-export const lireCoches = () => lireIds(cleCoches());
-export const ecrireCoches = (ids: Set<string>) => ecrireIds(cleCoches(), ids);
+export const lireCoches = (userId: LocalAccount) => lireIds(userId, cleCoches());
+export const ecrireCoches = (userId: LocalAccount, ids: Set<string>) => ecrireIds(userId, cleCoches(), ids);
+export const basculerCocheStockee = (userId: LocalAccount, id: string) => basculerIds(userId, cleCoches(), id);
 
 // « J'en ai déjà » : pour cette semaine seulement
 const cleDejaLa = () => `shoppingList.dejaLa.${lundiDeLaSemaine()}`;
-export const lireDejaLa = () => lireIds(cleDejaLa());
-export const ecrireDejaLa = (ids: Set<string>) => ecrireIds(cleDejaLa(), ids);
+export const lireDejaLa = (userId: LocalAccount) => lireIds(userId, cleDejaLa());
+export const ecrireDejaLa = (userId: LocalAccount, ids: Set<string>) => ecrireIds(userId, cleDejaLa(), ids);
+export const basculerDejaLaStocke = (userId: LocalAccount, id: string) => basculerIds(userId, cleDejaLa(), id);
 
 // « J'en ai toujours » : ingrédients du catalogue qu'on a toujours à la maison (toutes les semaines)
-const CLE_TOUJOURS = "shoppingList.gardeManger"; // ancien nom de la clé gardé pour ne rien perdre
-export const lireToujours = () => lireIds(CLE_TOUJOURS);
-export const ecrireToujours = (ids: Set<string>) => ecrireIds(CLE_TOUJOURS, ids);
+const CLE_TOUJOURS = "shoppingList.gardeManger"; // nom interne, préfixé par le compte dans accountStorage
+export const lireToujours = (userId: LocalAccount) => lireIds(userId, CLE_TOUJOURS);
+export const ecrireToujours = (userId: LocalAccount, ids: Set<string>) => ecrireIds(userId, CLE_TOUJOURS, ids);
+export const basculerToujoursStocke = (userId: LocalAccount, id: string) => basculerIds(userId, CLE_TOUJOURS, id);
 
 // Produits choisis dans la fiche : pour cette semaine
 const cleChoix = () => `shoppingList.choix.${lundiDeLaSemaine()}`;
-export async function lireChoix(): Promise<ChoixProduits> {
-  const texte = await AsyncStorage.getItem(cleChoix());
-  return texte ? JSON.parse(texte) : {};
+export async function lireChoix(userId: LocalAccount): Promise<ChoixProduits> {
+  return readAccountJSON(userId, cleChoix(), {});
 }
-export async function ecrireChoix(choix: ChoixProduits) {
-  await AsyncStorage.setItem(cleChoix(), JSON.stringify(choix));
+export async function ecrireChoix(userId: LocalAccount, choix: ChoixProduits) {
+  await writeAccountJSON(userId, cleChoix(), choix);
+}
+export async function modifierChoix(userId: LocalAccount, ligneId: string, offreId: string | null): Promise<ChoixProduits> {
+  return updateAccountJSON<ChoixProduits>(userId, cleChoix(), {}, (avant) => {
+    const next = { ...avant };
+    if (offreId) next[ligneId] = offreId;
+    else delete next[ligneId];
+    return next;
+  });
 }
 
 // Magasin choisi (« auto » = le moins cher)
 const CLE_MAGASIN = "shoppingList.magasin";
-export async function lireMagasin(): Promise<Magasin> {
-  const m = await AsyncStorage.getItem(CLE_MAGASIN);
+export async function lireMagasin(userId: LocalAccount): Promise<Magasin> {
+  const m = await readAccountJSON<string | null>(userId, CLE_MAGASIN, null);
   return m === "maxi" || m === "metro" || m === "superc" ? m : "auto";
 }
-export async function ecrireMagasin(m: Magasin) {
-  await AsyncStorage.setItem(CLE_MAGASIN, m);
+export async function ecrireMagasin(userId: LocalAccount, m: Magasin) {
+  await writeAccountJSON(userId, CLE_MAGASIN, m);
 }
 
 // ---- Articles ajoutés à la main ----
@@ -371,34 +385,26 @@ export type ArticleManuel = {
 
 const CLE_MANUELS = "shoppingList.manuels";
 
-export async function lireManuels(): Promise<ArticleManuel[]> {
-  const texte = await AsyncStorage.getItem(CLE_MANUELS);
-  return texte ? JSON.parse(texte) : [];
-}
-
-async function ecrireManuels(articles: ArticleManuel[]) {
-  await AsyncStorage.setItem(CLE_MANUELS, JSON.stringify(articles));
+export async function lireManuels(userId: LocalAccount): Promise<ArticleManuel[]> {
+  return readAccountJSON(userId, CLE_MANUELS, []);
 }
 
 // Ajoute un article ; renvoie la nouvelle liste des articles manuels
-export async function ajouterManuel(nom: string, ingredientId: string | null = null): Promise<ArticleManuel[]> {
-  const articles = await lireManuels();
+export async function ajouterManuel(userId: LocalAccount, nom: string, ingredientId: string | null = null): Promise<ArticleManuel[]> {
   const propre = nom.trim();
-  if (!propre) return articles;
-  // Déjà dans la liste (même ingrédient, ou même texte) : on ne l'ajoute pas deux fois
-  const doublon = articles.some((a) =>
-    ingredientId ? a.ingredient_id === ingredientId : !a.ingredient_id && a.nom.toLowerCase() === propre.toLowerCase());
-  if (doublon) return articles;
-  const nouveau: ArticleManuel = { id: Date.now().toString(36), nom: propre, ingredient_id: ingredientId };
-  const liste = [...articles, nouveau];
-  await ecrireManuels(liste);
-  return liste;
+  if (!propre) return lireManuels(userId);
+  return updateAccountJSON<ArticleManuel[]>(userId, CLE_MANUELS, [], (articles) => {
+    // Déjà dans la liste (même ingrédient, ou même texte) : on ne l'ajoute pas deux fois
+    const doublon = articles.some((a) =>
+      ingredientId ? a.ingredient_id === ingredientId : !a.ingredient_id && a.nom.toLowerCase() === propre.toLowerCase());
+    if (doublon) return articles;
+    const nouveau: ArticleManuel = { id: Date.now().toString(36), nom: propre, ingredient_id: ingredientId };
+    return [...articles, nouveau];
+  });
 }
 
-export async function retirerManuel(id: string): Promise<ArticleManuel[]> {
-  const liste = (await lireManuels()).filter((a) => a.id !== id);
-  await ecrireManuels(liste);
-  return liste;
+export async function retirerManuel(userId: LocalAccount, id: string): Promise<ArticleManuel[]> {
+  return updateAccountJSON<ArticleManuel[]>(userId, CLE_MANUELS, [], articles => articles.filter(a => a.id !== id));
 }
 
 // Un article manuel devient une ligne comme les autres (avec ses prix s'il est au catalogue)

@@ -120,6 +120,22 @@ La connexion s’ouvre dans une fenêtre que l’on peut fermer avec « Continue
 
 [AccountRequired.tsx](mobile/components/AccountRequired.tsx) protège aussi les écrans d’ajout, de saisie et d’édition lorsqu’ils sont ouverts directement. Les paramètres visiteurs ne demandent pas le profil privé à l’API. Le calendrier est soumis à la connexion ; les instantanés historiques et les listes restent à développer.
 
+### Données personnelles conservées sur le téléphone
+
+La première liste d’achats mobile conserve localement les articles ajoutés,
+les coches, le garde-manger et les choix de produits. Les suivis de produits
+sont également locaux. Ces données sont désormais séparées par compte :
+changer de compte ou revenir au mode visiteur masque immédiatement les
+données du précédent utilisateur. Une réponse terminée après ce changement
+ne les réaffiche pas. Se reconnecter au même compte retrouve ses propres
+données sur ce téléphone, sans synchronisation entre appareils.
+
+Les anciennes données communes sans propriétaire sont conservées à part et
+ne sont pas réattribuées automatiquement. Le [guide mobile](mobile/README.md#données-locales-par-compte)
+décrit cette transition et les essais avec deux comptes. Les contrôles
+automatisés passent ; les essais de cette correction sur iOS et Android
+restent à effectuer.
+
 ### Supprimer son compte depuis Paramètres
 
 L’utilisateur connecté peut choisir « Supprimer mon compte », saisir

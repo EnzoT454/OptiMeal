@@ -44,6 +44,7 @@ function loadUI(relative) {
     if (name === 'react-native') return { View: 'View', Text: 'Text', Pressable: 'Pressable', Image: 'Image',
       StyleSheet: { create: x => x } };
     if (name.endsWith('/offerPricing')) return pricing;
+    if (name.endsWith('/useFollows')) return { useFollows: () => ({ follows: [], busy: false, error: '', toggle() {} }) };
     if (name.endsWith('/promos')) return loadUI('components/promos.ts');
     if (name.endsWith('/deal')) return loadUI('components/deal.ts');
     if (name.endsWith('/api')) return { api() {} };

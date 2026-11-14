@@ -1,10 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { readAccountJSON, updateAccountJSON, type LocalAccount } from '../services/accountStorage';
 import type { Offer, Retailer } from '../types/api';
 import { isOnPromo } from './search';
 
 // Produits suivis : l'utilisateur est prévenu quand CE produit, dans CE magasin, passe en promo
 // (demande du prof : suivre un seul produit, pas toute la catégorie ni l'ingrédient dans les 3 magasins).
-// On garde l'identifiant de l'offre (ex. « maxi:8661:20325029_EA ») : il reste le même d'une semaine à l'autre.
+// Les suivis conservent actuellement l'identifiant d'offre reçu de l'API.
 //
 // ÉTAPE 1 (maintenant) : la liste est enregistrée sur le téléphone (AsyncStorage).
 // ÉTAPE 2 (backend) : seul l'intérieur de ces fonctions changera pour appeler /api/v1/me/follows ;
@@ -20,32 +20,24 @@ export interface Follow {
 // « v2 » : l'ancienne liste « v1 » (par ingrédient) est ignorée.
 const KEY = 'optimeal.follows.v2';
 
-export async function getFollows(): Promise<Follow[]> {
+export async function getFollows(userId: LocalAccount): Promise<Follow[]> {
   try {
-    const saved = await AsyncStorage.getItem(KEY);
-    const list = saved ? JSON.parse(saved) : [];
+    const list = await readAccountJSON<Follow[]>(userId, KEY, []);
     return Array.isArray(list) ? list : [];
   } catch {
     return []; // stockage illisible : on repart d'une liste vide plutôt que de bloquer l'écran
   }
 }
 
-async function save(list: Follow[]) {
-  await AsyncStorage.setItem(KEY, JSON.stringify(list));
-}
-
-export async function unfollow(offerId: string) {
-  const list = await getFollows();
-  await save(list.filter(f => f.offer_id !== offerId));
-  return getFollows();
+export async function unfollow(userId: LocalAccount, offerId: string) {
+  return updateAccountJSON<Follow[]>(userId, KEY, [], list => list.filter(f => f.offer_id !== offerId));
 }
 
 // Suivre ou ne plus suivre un produit (cloche ou bouton de la fiche). Renvoie la nouvelle liste.
-export async function toggleFollow(offer: Offer): Promise<Follow[]> {
-  const list = await getFollows();
-  if (list.some(f => f.offer_id === offer.id)) return unfollow(offer.id);
-  await save([...list, { offer_id: offer.id, retailer: offer.retailer, name: offer.product_name, since: new Date().toISOString() }]);
-  return getFollows();
+export async function toggleFollow(userId: LocalAccount, offer: Offer): Promise<Follow[]> {
+  return updateAccountJSON<Follow[]>(userId, KEY, [], list => list.some(f => f.offer_id === offer.id)
+    ? list.filter(f => f.offer_id !== offer.id)
+    : [...list, { offer_id: offer.id, retailer: offer.retailer, name: offer.product_name, since: new Date().toISOString() }]);
 }
 
 // Nombre de produits suivis en promo cette semaine (la pastille rouge de l'onglet « Suivis »).

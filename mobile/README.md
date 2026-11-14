@@ -680,6 +680,45 @@ Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visite
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native)
 et [React Navigation](https://reactnavigation.org/docs/getting-started/).
 
+## Données locales par compte
+
+Les articles ajoutés à la liste d’achats, les coches, les ingrédients déjà
+disponibles, le garde-manger, les choix de produits, le magasin choisi et les
+produits suivis sont enregistrés sur le téléphone pour le compte connecté.
+Chaque compte possède ses propres clés AsyncStorage, préfixées par son
+identifiant Supabase. Les coches, « J’en ai déjà » et choix de produits restent
+également séparés par semaine.
+
+`services/accountStorage.ts` reçoit explicitement le compte propriétaire et
+ordonne les modifications d’une même clé. `useShoppingList` et `useFollows`
+masquent les anciennes données dès le changement de compte et ignorent les
+résultats asynchrones de la session précédente. Une écriture déjà commencée
+reste attachée à son compte d’origine. Les suivis passent par ce même contrôle
+dans Promos, Suivis et le détail d’un produit.
+
+Sans compte, aucune donnée personnelle locale n’est lue ou enregistrée.
+Toucher une cloche propose la connexion. Une reconnexion au même compte
+retrouve ses données sur ce téléphone ; cette correction n’ajoute pas de
+synchronisation entre appareils.
+
+Les anciennes clés communes, sans identifiant de propriétaire, sont conservées
+mais ignorées. Elles ne sont pas attribuées au premier compte qui se connecte :
+leur propriétaire ne peut pas être établi. Les anciens articles et suivis
+peuvent donc ne plus apparaître après la mise à jour ; aucune migration
+automatique ne les transmet à un autre utilisateur.
+
+Les tests `localAccountIsolation.test.cjs`, exécutés par `npm test`, couvrent
+deux comptes, le visiteur, une reconnexion, les anciennes clés, les erreurs de
+stockage, les écritures concurrentes et les réponses tardives. Les essais
+suivants restent à reproduire sur iOS et Android :
+
+1. Sous A, ajouter un article, cocher une ligne, choisir un produit et suivre une offre.
+2. Se déconnecter : vérifier que les suivis de A ne sont plus visibles.
+3. Sous B, vérifier l’absence des données de A, puis enregistrer des données différentes.
+4. Revenir sous A : retrouver ses données sans celles de B.
+5. Fermer puis relancer l’application et vérifier la même séparation.
+6. Sans compte, toucher une cloche et annuler la connexion : aucun suivi ne doit être créé.
+
 ## Prix promotionnels avec limite de quantité
 
 Une offre peut indiquer un prix pour les premières unités, puis un autre prix

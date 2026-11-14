@@ -8,7 +8,7 @@ import { Message } from '../components/ui';
 import { RecipeButton, RecipeChip, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
 import { discount, storeName } from '../components/promos';
 import { fetchAllOffers, isOnPromo } from '../components/search';
-import { Follow, getFollows, toggleFollow, unfollow } from '../components/follows';
+import { useFollows } from '../components/useFollows';
 import { PromoList, PromoView, ViewToggle, sectionStyle } from '../components/PromoCard';
 import { FollowsChip } from '../components/FollowsChip';
 import type { Offer } from '../types/api';
@@ -17,7 +17,7 @@ import { PromoStackParams } from '../types/navigation';
 // Onglet « Suivis » : les produits que l'utilisateur suit (un produit précis dans un magasin précis).
 // En haut, ceux en promo cette semaine ; en dessous, ceux qui ne le sont pas encore.
 export default function FollowsScreen({ navigation }: NativeStackScreenProps<PromoStackParams, 'Follows'>) {
-  const [follows, setFollows] = useState<Follow[]>([]);
+  const { follows, recharger: reloadFollows, toggle: toggleFollow, retirer: unfollow, error: followError } = useFollows();
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -31,15 +31,14 @@ export default function FollowsScreen({ navigation }: NativeStackScreenProps<Pro
   useFocusEffect(useCallback(() => {
     let active = true;
     setLoading(true); setError('');
-    Promise.all([getFollows(), fetchAllOffers()]).then(([list, items]) => {
+    Promise.all([reloadFollows(), fetchAllOffers()]).then(([, items]) => {
       if (!active) return;
-      setFollows(list);
       setOffers(items);
     }).catch(e => {
       if (active) setError(e instanceof Error ? e.message : 'Impossible de charger tes produits suivis.');
     }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [retry]));
+  }, [retry, reloadFollows]));
 
   const byId = useMemo(() => new Map(offers.map(o => [o.id, o])), [offers]);
   const followed = follows.map(f => byId.get(f.offer_id)).filter((o): o is Offer => !!o);
@@ -50,10 +49,11 @@ export default function FollowsScreen({ navigation }: NativeStackScreenProps<Pro
 
   const list = (items: Offer[]) => <PromoList offers={items} view={view}
     onOpen={o => navigation.navigate('Detail', { offer: o })}
-    isFollowed={o => ids.has(o.id)} onToggleFollow={o => { toggleFollow(o).then(setFollows); }} />;
+    isFollowed={o => ids.has(o.id)} onToggleFollow={toggleFollow} />;
 
   return <RecipeScreen>
     <RecipeTitle>Promos</RecipeTitle>
+    {!!followError && <Message text={followError} />}
 
     <View style={recipeStyles.chips}>
       <RecipeChip label="Promotions" onPress={() => navigation.navigate('List')} />
@@ -96,7 +96,7 @@ export default function FollowsScreen({ navigation }: NativeStackScreenProps<Pro
             <Text style={recipeStyles.body}>Plus disponible chez {storeName(f.retailer)}</Text>
           </View>
           <Pressable accessibilityRole="button" accessibilityLabel={`Ne plus suivre ${f.name}`} hitSlop={8}
-            onPress={() => { unfollow(f.offer_id).then(setFollows); }}>
+            onPress={() => { void unfollow(f.offer_id); }}>
             <Text style={styles.stopText}>Ne plus suivre</Text>
           </Pressable>
         </View>)}
