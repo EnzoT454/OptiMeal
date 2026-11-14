@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -7,6 +7,8 @@ import AddMealSheet from "../components/AddMealSheet";
 import MealActionsSheet, { type Placement } from "../components/MealActionsSheet";
 import MonthGrid, { semainesDuMois } from "../components/MonthGrid";
 import { RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from "../components/recipes";
+import { useListeAchats } from "../components/useShoppingList";
+import ShoppingListView from "../components/ShoppingListView";
 
 // Le texte du calendrier grandit au maximum de 20 % avec la taille de police du téléphone,
 // sinon les lignes deviennent énormes (on garde quand même un peu d'accessibilité).
@@ -46,7 +48,8 @@ function semaineRelative(lundi: Date): string {
   return ecart > 0 ? `Dans ${ecart} semaines` : `Il y a ${-ecart} semaines`;
 }
 
-export default function CalendarScreen() {
+// vue : envoyée par App.tsx quand l'Accueil ouvre le Calendrier sur l'Épicerie
+export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "epicerie" } = {}) {
   const navigation = useNavigation<any>();
 
   // ---- L'état de l'écran ----
@@ -74,6 +77,25 @@ export default function CalendarScreen() {
       .finally(() => { if (!annule) setChargement(false); });
     return () => { annule = true; };
   }, [mois.getFullYear(), mois.getMonth()]));
+
+  // ---- Repas | Épicerie ----
+  // (déclaré APRÈS l'état du calendrier : les tests repèrent les useState par leur ordre)
+  const [vue, setVue] = useState<"repas" | "epicerie">("repas");
+  const liste = useListeAchats();
+
+  // L'Accueil peut ouvrir directement l'Épicerie : navigate("Calendrier", { vue: "epicerie" })
+  useEffect(() => {
+    if (vueDemandee) {
+      setVue(vueDemandee);
+      navigation.setParams?.({ vue: undefined }); // pour que ça remarche la prochaine fois
+    }
+  }, [vueDemandee]);
+
+  // ---- Quand les repas changent (ajout, retrait, portions, déplacement), la liste suit ----
+  const signature = entries.map((e) => `${e.id}:${e.date}:${e.servings}:${e.is_leftover}`).join("|");
+  useEffect(() => {
+    if (!chargement) liste.recharger();
+  }, [signature, chargement]);
 
   // ---- Naviguer ----
   function allerSemaine(nouveauLundi: Date) {   // flèches de la semaine
@@ -192,6 +214,30 @@ export default function CalendarScreen() {
     <RecipeScreen compact>
       <RecipeTitle>Calendrier</RecipeTitle>
 
+      {/* ---- [ Repas | Épicerie · 14 ] ---- */}
+      <View style={styles.selecteur} accessibilityRole="tablist">
+        {(["repas", "epicerie"] as const).map((v) => {
+          const choisi = vue === v;
+          const nb = liste.aAcheter.length;
+          return (
+            <Pressable key={v} onPress={() => setVue(v)} accessibilityRole="tab" accessibilityState={{ selected: choisi }}
+              style={[styles.option, choisi && styles.optionChoisie]}>
+              <Text style={[styles.optionTexte, choisi && styles.optionTexteChoisi]} maxFontSizeMultiplier={MAX}>
+                {v === "repas" ? "Repas" : "Épicerie"}
+              </Text>
+              {v === "epicerie" && nb > 0 && (
+                <View style={[styles.compteur, choisi && { backgroundColor: recipeColors.green }]}>
+                  <Text style={[styles.compteurTexte, choisi && { color: "white" }]} maxFontSizeMultiplier={MAX}>{nb}</Text>
+                </View>
+              )}
+            </Pressable>
+          );
+        })}
+      </View>
+
+      {vue === "epicerie" && <ShoppingListView liste={liste} />}
+
+      {vue === "repas" && (<>
       {/* ---- ‹ Novembre ⌄ › (+ la grille quand elle est ouverte) ---- */}
       <MonthGrid
         mois={mois}
@@ -266,6 +312,7 @@ export default function CalendarScreen() {
 
         </View>
       )}
+      </>)}
 
       <AddMealSheet jour={jourAjout} onClose={() => setJourAjout(null)} onAdd={ajouter} />
       <MealActionsSheet
@@ -307,6 +354,14 @@ function CarteRepas({ repas, onPress }: { repas: MealPlanEntry; onPress: () => v
 
 const styles = StyleSheet.create({
   erreur: { fontFamily: "DMSans_500Medium", fontSize: 14, lineHeight: 19, color: "#b3261e" },
+  // Sélecteur Repas | Épicerie (style « segmented control »)
+  selecteur: { flexDirection: "row", padding: 3, borderRadius: 12, backgroundColor: recipeColors.light },
+  option: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, paddingVertical: 8, borderRadius: 10 },
+  optionChoisie: { backgroundColor: "white", borderWidth: 1, borderColor: recipeColors.border },
+  optionTexte: { fontFamily: "DMSans_500Medium", fontSize: 14, lineHeight: 19, color: recipeColors.muted },
+  optionTexteChoisi: { fontFamily: "DMSans_700Bold", color: recipeColors.ink },
+  compteur: { minWidth: 20, height: 20, paddingHorizontal: 6, borderRadius: 10, alignItems: "center", justifyContent: "center", backgroundColor: recipeColors.border },
+  compteurTexte: { fontFamily: "DMSans_700Bold", fontSize: 11, lineHeight: 14, color: recipeColors.muted },
   // marginHorizontal: -20 annule la marge de RecipeScreen : la liste va d'un bord à l'autre du téléphone
   liste: { backgroundColor: "white", marginHorizontal: -20, paddingHorizontal: 16 },
   semaine: { flexDirection: "row", alignItems: "center", gap: 8 },

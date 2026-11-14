@@ -27,6 +27,7 @@ import CircularScreen from './app/CircularScreen';
 import CookWithPromosScreen from './app/CookWithPromosScreen';
 import CalendarScreen from './app/CalendarScreen';
 import FollowsScreen from './app/FollowsScreen'; 
+import HomeScreen from './app/HomeScreen';
 import { MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
 
 const Tabs = createBottomTabNavigator<MainTabParams>();
@@ -74,10 +75,10 @@ function PromoNavigator() {
     <Promos.Screen name="Follows" component={FollowsScreen} />
   </Promos.Navigator>;
 }
-function Home() { return <Screen><Heading>Bienvenue dans OptiMeal</Heading><Text>Découvre les recettes, les promotions et les circulaires. Connecte-toi pour ajouter tes propres recettes et retrouver tes favoris.</Text></Screen>; }
-function Calendar() {
+// route.params.vue = "epicerie" quand l'Accueil ouvre directement la liste d'épicerie
+function Calendar({ route }: { route?: { params?: { vue?: 'repas' | 'epicerie' } } } = {}) {
   return <AccountRequired reason="Connecte-toi pour planifier tes repas dans ton calendrier.">
-    <CalendarScreen />
+    <CalendarScreen vue={route?.params?.vue} />
   </AccountRequired>;
 }
 function Content() {
@@ -89,7 +90,7 @@ function Content() {
     tabBarIcon: ({ focused, color, size }) => <Ionicons
       name={tabIcons[route.name][focused ? 'active' : 'inactive']} size={size} color={color} />,
   })}>
-    <Tabs.Screen name="Accueil" component={Home} />
+    <Tabs.Screen name="Accueil" component={HomeScreen} options={{ headerShown: false }} />
     <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Recettes" component={RecipeNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Calendrier" component={Calendar} options={{ headerShown: false }} />
