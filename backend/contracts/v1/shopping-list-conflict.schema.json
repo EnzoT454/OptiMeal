@@ -1,0 +1,106 @@
+{
+  "$defs": {
+    "ErrorField": {
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "message"
+      ],
+      "title": "ErrorField",
+      "type": "object"
+    },
+    "ShoppingConflict": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "LIST_REVISION_CONFLICT",
+            "IDEMPOTENCY_KEY_REUSED",
+            "CALENDAR_PREVIEW_STALE",
+            "ACCOUNT_DELETION_PENDING",
+            "LIST_STATE_CONFLICT"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "details": {
+          "items": {
+            "$ref": "#/$defs/ErrorField"
+          },
+          "title": "Details",
+          "type": "array"
+        },
+        "list_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "List Id"
+        },
+        "expected_revision": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Revision"
+        },
+        "current_revision": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Revision"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "ShoppingConflict",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "error": {
+      "$ref": "#/$defs/ShoppingConflict"
+    }
+  },
+  "required": [
+    "error"
+  ],
+  "title": "ShoppingConflictResponse",
+  "type": "object"
+}

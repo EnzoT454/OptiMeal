@@ -1,0 +1,669 @@
+{
+  "$defs": {
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "data_source": {
+          "default": "local_json",
+          "enum": [
+            "local_json",
+            "postgresql"
+          ],
+          "title": "Data Source",
+          "type": "string"
+        },
+        "dataset_kind": {
+          "enum": [
+            "source_snapshot",
+            "demo",
+            "user_content",
+            "mixed"
+          ],
+          "title": "Dataset Kind",
+          "type": "string"
+        },
+        "review_required": {
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dataset_kind"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    },
+    "ShoppingBaseQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "ml",
+            "unit"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingBaseQuantity",
+      "type": "object"
+    },
+    "ShoppingContributionRead": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "manual",
+            "calendar"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "original_quantity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ShoppingQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "normalized_quantity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ShoppingBaseQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "meal_entry_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Meal Entry Id"
+        },
+        "recipe_id": {
+          "anyOf": [
+            {
+              "pattern": "^recipe_[a-z0-9_]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recipe Id"
+        },
+        "recipe_name": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recipe Name"
+        },
+        "recipe_version": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recipe Version"
+        },
+        "recipe_servings": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recipe Servings"
+        },
+        "meal_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Meal Date"
+        },
+        "servings": {
+          "anyOf": [
+            {
+              "maximum": 50,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Servings"
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "original_quantity",
+        "normalized_quantity"
+      ],
+      "title": "ShoppingContributionRead",
+      "type": "object"
+    },
+    "ShoppingItemRead": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "anyOf": [
+            {
+              "pattern": "^ing_[a-z0-9_]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ingredient Id"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "category": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Category",
+          "type": "string"
+        },
+        "need_revision": {
+          "minimum": 1,
+          "title": "Need Revision",
+          "type": "integer"
+        },
+        "required": {
+          "items": {
+            "$ref": "#/$defs/ShoppingBaseQuantity"
+          },
+          "maxItems": 3,
+          "title": "Required",
+          "type": "array"
+        },
+        "owned": {
+          "items": {
+            "$ref": "#/$defs/ShoppingBaseQuantity"
+          },
+          "maxItems": 3,
+          "title": "Owned",
+          "type": "array"
+        },
+        "owned_unquantified_need_revision": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Owned Unquantified Need Revision"
+        },
+        "contributions": {
+          "items": {
+            "$ref": "#/$defs/ShoppingContributionRead"
+          },
+          "title": "Contributions",
+          "type": "array"
+        },
+        "removed": {
+          "default": false,
+          "title": "Removed",
+          "type": "boolean"
+        },
+        "coverage_status": {
+          "enum": [
+            "remaining",
+            "partial",
+            "purchased",
+            "owned"
+          ],
+          "title": "Coverage Status",
+          "type": "string"
+        },
+        "pricing_status": {
+          "enum": [
+            "unpriced",
+            "known",
+            "needs_review"
+          ],
+          "title": "Pricing Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "ingredient_id",
+        "name",
+        "category",
+        "need_revision",
+        "required",
+        "contributions",
+        "coverage_status",
+        "pricing_status"
+      ],
+      "title": "ShoppingItemRead",
+      "type": "object"
+    },
+    "ShoppingListRead": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "manual",
+            "calendar"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "active",
+            "completed",
+            "archived"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "period": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ShoppingPeriod"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "purchase_date": {
+          "format": "date",
+          "title": "Purchase Date",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/ShoppingItemRead"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "purchases": {
+          "items": {
+            "$ref": "#/$defs/ShoppingManualPurchaseRead"
+          },
+          "title": "Purchases",
+          "type": "array"
+        },
+        "totals": {
+          "$ref": "#/$defs/ShoppingTotals"
+        },
+        "warnings": {
+          "items": {
+            "$ref": "#/$defs/ShoppingWarning"
+          },
+          "title": "Warnings",
+          "type": "array"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "source",
+        "status",
+        "revision",
+        "period",
+        "purchase_date",
+        "items",
+        "purchases",
+        "totals",
+        "created_at",
+        "updated_at"
+      ],
+      "title": "ShoppingListRead",
+      "type": "object"
+    },
+    "ShoppingManualPurchaseRead": {
+      "additionalProperties": false,
+      "description": "Achat déclaratif du lot A, sans prix de caisse ou produit inventé.\n\nLe lot B étendra les achats avec une variante de produit et son instantané.\nUne confirmation sans quantité est liée à la révision du besoin consulté.",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "item_id": {
+          "format": "uuid",
+          "title": "Item Id",
+          "type": "string"
+        },
+        "kind": {
+          "const": "manual",
+          "default": "manual",
+          "title": "Kind",
+          "type": "string"
+        },
+        "purchased": {
+          "title": "Purchased",
+          "type": "boolean"
+        },
+        "coverage": {
+          "items": {
+            "$ref": "#/$defs/ShoppingBaseQuantity"
+          },
+          "maxItems": 3,
+          "title": "Coverage",
+          "type": "array"
+        },
+        "confirmed_need_revision": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confirmed Need Revision"
+        },
+        "product_id": {
+          "default": null,
+          "title": "Product Id",
+          "type": "null"
+        },
+        "estimated_amount": {
+          "default": null,
+          "title": "Estimated Amount",
+          "type": "null"
+        }
+      },
+      "required": [
+        "id",
+        "item_id",
+        "purchased"
+      ],
+      "title": "ShoppingManualPurchaseRead",
+      "type": "object"
+    },
+    "ShoppingPeriod": {
+      "additionalProperties": false,
+      "properties": {
+        "start_date": {
+          "format": "date",
+          "title": "Start Date",
+          "type": "string"
+        },
+        "end_date": {
+          "format": "date",
+          "title": "End Date",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start_date",
+        "end_date"
+      ],
+      "title": "ShoppingPeriod",
+      "type": "object"
+    },
+    "ShoppingQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "kg",
+            "ml",
+            "L",
+            "unit",
+            "cup",
+            "tbsp",
+            "tsp"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingQuantity",
+      "type": "object"
+    },
+    "ShoppingTotals": {
+      "additionalProperties": false,
+      "properties": {
+        "currency": {
+          "const": "CAD",
+          "default": "CAD",
+          "title": "Currency",
+          "type": "string"
+        },
+        "item_count": {
+          "minimum": 0,
+          "title": "Item Count",
+          "type": "integer"
+        },
+        "remaining_item_count": {
+          "minimum": 0,
+          "title": "Remaining Item Count",
+          "type": "integer"
+        },
+        "purchased_item_count": {
+          "minimum": 0,
+          "title": "Purchased Item Count",
+          "type": "integer"
+        },
+        "owned_item_count": {
+          "minimum": 0,
+          "title": "Owned Item Count",
+          "type": "integer"
+        },
+        "partial_item_count": {
+          "minimum": 0,
+          "title": "Partial Item Count",
+          "type": "integer"
+        },
+        "unpriced_item_count": {
+          "minimum": 0,
+          "title": "Unpriced Item Count",
+          "type": "integer"
+        },
+        "uncovered_item_count": {
+          "minimum": 0,
+          "title": "Uncovered Item Count",
+          "type": "integer"
+        },
+        "budget_known_amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Budget Known Amount",
+          "type": "string"
+        },
+        "remaining_known_amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Remaining Known Amount",
+          "type": "string"
+        },
+        "estimate_complete": {
+          "title": "Estimate Complete",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "item_count",
+        "remaining_item_count",
+        "purchased_item_count",
+        "owned_item_count",
+        "partial_item_count",
+        "unpriced_item_count",
+        "uncovered_item_count",
+        "budget_known_amount",
+        "remaining_known_amount",
+        "estimate_complete"
+      ],
+      "title": "ShoppingTotals",
+      "type": "object"
+    },
+    "ShoppingWarning": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "pattern": "^[A-Z][A-Z0-9_]+$",
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "item_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Item Id"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "ShoppingWarning",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "item": {
+      "$ref": "#/$defs/ShoppingListRead"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    }
+  },
+  "required": [
+    "item",
+    "meta"
+  ],
+  "title": "Detail[ShoppingListRead]",
+  "type": "object"
+}

@@ -1,0 +1,29 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "purchase_date": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Purchase Date"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "title": "ShoppingListCreate",
+  "type": "object"
+}

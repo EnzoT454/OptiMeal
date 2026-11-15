@@ -112,7 +112,7 @@ flowchart TD
 
 À l’inscription, l’utilisateur doit confirmer son courriel. Le retour dans l’application utilise le lien `optimeal://auth/callback` et un échange de code pour obtenir la session.
 
-Les cinq onglets sont visibles avec ou sans compte : Accueil, Promos, Recettes, Calendrier et Liste. Accueil présente les repas du jour et un aperçu des achats au compte connecté, ou un message de bienvenue aux visiteurs. Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine et conserve sa première liste d’épicerie. Le nouvel onglet Liste est volontairement vide pour le moment. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
+Les cinq onglets sont visibles avec ou sans compte : Accueil, Promos, Recettes, Calendrier et Liste. Accueil présente les repas du jour et un aperçu des achats au compte connecté, ou un message de bienvenue aux visiteurs. Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine et conserve sa première liste d’épicerie. Le nouvel onglet Liste permet de créer, compléter et reprendre des brouillons privés, manuellement ou depuis un aperçu du calendrier ; les prix et comparaisons restent à développer. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
 
 Une roue dentée en haut à droite de l’accueil ouvre Paramètres, avec une zone tactile de 48 × 48 et un libellé accessible. Cet écran présente le mode visiteur ou, après connexion, le profil et la déconnexion. Le bouton de retour ramène à l’accueil ; une connexion ou déconnexion réinitialise toujours la navigation.
 
@@ -757,6 +757,8 @@ flowchart LR
 | `0013_rating_versions.py` | Votes conservés par version du contenu ; anciennes notes exclues des moyennes et du classement courants |
 | `0014_recipe_kitchen_units.py` | Tasses et cuillères acceptées comme unités de recette, sans conversion des quantités existantes ; appliquée sur Supabase le 5 novembre 2026 |
 | `0015_permanent_public_recipes.py` | Conservation des recettes publiques sans propriétaire après suppression du compte ; appliquée sur Supabase le 5 novembre 2026 |
+| `0016_offer_quantity_limits.py` | Prix promotionnel limité et prix après limite ; appliquée sur Supabase le 14 novembre 2026 |
+| `0017_shopping_lists.py` | Huit tables privées de listes et historique ; vérifiée sur PostgreSQL local, non appliquée à Supabase dans cette étape |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -940,6 +942,11 @@ Les types TypeScript aident le développeur à utiliser les données correctemen
 
 ### Guides, configuration et vérifications
 
+Le [plan des listes d’épicerie](backend/docs/SHOPPING_LISTS.md) est la référence
+pour implémenter l’onglet Liste : parcours, calculs, données, API, étapes et
+critères de validation. Il décrit la cible à construire, distincte de la
+première liste locale actuellement accessible dans Calendrier.
+
 | Emplacement | Rôle |
 | --- | --- |
 | [README.md](README.md) | Présentation, état du projet, installation et structure |
@@ -962,7 +969,15 @@ Les types TypeScript aident le développeur à utiliser les données correctemen
 | `tools/` | Consignes, architecture, décisions et tâches locales, actuellement ignorées par Git |
 | [requirements.txt](requirements.txt) | Dépendances Python du backend, des tests et du site |
 
-Les fichiers `__init__.py` identifient les packages Python. Un fichier présent peut encore être un emplacement réservé : c’est notamment le cas des domaine des listes et de `backend/tests/conftest.py`.
+Les fichiers `__init__.py` identifient les packages Python. Un fichier présent
+peut encore être un emplacement réservé, comme `backend/tests/conftest.py`.
+Le domaine des listes expose désormais les routes privées du lot A, les copies
+indépendantes du calendrier et l’édition des brouillons dans le mobile. La
+migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis le
+14 novembre 2026. La normalisation des formats et bases tarifaires est disponible
+côté serveur ; le calcul des paniers vient à l’étape suivante. Le
+[suivi de l’étape 5](backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5)
+précise les fonctionnalités disponibles et leurs limites.
 
 ## 12. Configuration : comment les adresses relient les composants
 

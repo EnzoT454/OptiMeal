@@ -1,5 +1,13 @@
 # Contrats communs — Recettes et Promos v1
 
+Les [contrats des listes](SHOPPING_LISTS_CONTRACTS.md) sont définis
+séparément pour le lot A. Leurs schémas, exemples et routes sont exportés ; le lot A persistant et
+son parcours mobile sont raccordés. Les prix et comparaisons restent à développer.
+
+Les [formats de vente et bases tarifaires](SALE_NORMALIZATION.md) disposent de
+schémas de documents serveur séparés, sans changement des réponses HTTP de
+Promos ni certification implicite du catalogue actuel.
+
 Les contrats HTTP `1.0` couvrent les lectures et les écritures manuelles de recettes sous `/api/v1`. Ils
 sont utilisés par les deux onglets. Les recettes sont lues dans
 PostgreSQL/Supabase ; les ingrédients restent sur JSON. Les offres sont lues

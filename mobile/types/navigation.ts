@@ -21,3 +21,7 @@ export type MainTabParams = {
   Promos: undefined;
   Liste: undefined;
 };
+
+export type ListStackParams = {
+  Lists: undefined; CreateList: undefined; ShoppingDetail: { id: string };
+};

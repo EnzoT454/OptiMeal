@@ -90,20 +90,25 @@ def text_or_none(value) -> str | None:
     return None if value is None else str(value)
 
 
+def source_product_from_database(row: ProductOffer) -> SourceProduct:
+    """Même instantané commercial pour Promos et la normalisation des achats."""
+    return SourceProduct(
+        id=row.id, retailer=row.retailer, store_id=row.store_id,
+        external_product_id=row.external_product_id, name=row.name,
+        price=text_or_none(row.price), promo_price=text_or_none(row.promo_price),
+        quantity_limit=row.quantity_limit, price_after_limit=text_or_none(row.price_after_limit),
+        currency=row.currency, unit=row.unit, quantity=text_or_none(row.quantity),
+        valid_from=row.valid_from, valid_to=row.valid_to, retrieved_at=row.retrieved_at,
+        is_promotion=row.is_promotion, source=row.source, url=row.url,
+        image_url=row.image_url, image_source=row.image_source,
+    )
+
+
 def offers_from_database(db: Session, on_date: date) -> list[OfferRead]:
     """Mêmes offres que le JSON, lues dans public.product_offer, dans le même ordre."""
     result = []
     for row in db.scalars(select(ProductOffer).order_by(ProductOffer.position)):
-        product = SourceProduct(
-            id=row.id, retailer=row.retailer, store_id=row.store_id,
-            external_product_id=row.external_product_id, name=row.name,
-            price=text_or_none(row.price), promo_price=text_or_none(row.promo_price),
-            quantity_limit=row.quantity_limit, price_after_limit=text_or_none(row.price_after_limit),
-            currency=row.currency, unit=row.unit, quantity=text_or_none(row.quantity),
-            valid_from=row.valid_from, valid_to=row.valid_to, retrieved_at=row.retrieved_at,
-            is_promotion=row.is_promotion, source=row.source, url=row.url,
-            image_url=row.image_url, image_source=row.image_source,
-        )
+        product = source_product_from_database(row)
         result.append(offer(row.ingredient_id, product, on_date, row.category_id))
     return result
 

@@ -6,8 +6,8 @@ import { RecipeUnit } from '../types/api';
 import { recipeUnits } from '../services/recipeForm';
 import { RecipeButton, recipeColors, recipeStyles } from './recipes';
 
-export default function RecipeUnitPicker({ value, onChange, ingredientLabel, disabled = false }: {
-  value: RecipeUnit | null; onChange: (unit: RecipeUnit) => void; ingredientLabel: string; disabled?: boolean;
+export default function RecipeUnitPicker({ value, onChange, ingredientLabel, disabled = false, allowedUnits }: {
+  value: RecipeUnit | null; onChange: (unit: RecipeUnit) => void; ingredientLabel: string; disabled?: boolean; allowedUnits?: RecipeUnit[];
 }) {
   const [open, setOpen] = useState(false);
   const selected = recipeUnits.find(option => option.value === value);
@@ -32,7 +32,7 @@ export default function RecipeUnitPicker({ value, onChange, ingredientLabel, dis
           <Text style={recipeStyles.note}>{ingredientLabel}</Text>
           <ScrollView style={styles.list} keyboardShouldPersistTaps="handled">
             <View accessibilityRole="radiogroup" accessibilityLabel="Unités disponibles">
-              {recipeUnits.map(option => <Pressable key={option.value} accessibilityRole="radio"
+              {recipeUnits.filter(option => !allowedUnits || allowedUnits.includes(option.value)).map(option => <Pressable key={option.value} accessibilityRole="radio"
                 accessibilityLabel={option.accessibilityLabel} accessibilityState={{ checked: value === option.value }}
                 onPress={() => { onChange(option.value); close(); }}
                 style={({ pressed }) => [styles.option, value === option.value && styles.selected, pressed && styles.pressed]}>

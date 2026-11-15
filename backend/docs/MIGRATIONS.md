@@ -7,7 +7,29 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
-La tête courante est `0016_offer_quantity_limits`. Elle ajoute deux colonnes
+La tête du dépôt est `0017_shopping_lists`. Elle crée les huit tables privées
+du premier lot des listes : listes, articles, quantités, contributions, achats
+manuels, quantités achetées, révisions et commandes idempotentes. Les modèles
+sont enregistrés dans les métadonnées Alembic. RLS est activée sans accès mobile
+direct ; l’historique est protégé contre les mises à jour. Le retour à `0016`
+est refusé si une liste existe. Voir le
+[suivi de l’étape 3](SHOPPING_LISTS.md#25-persistance-et-services-privés--étape-3).
+
+`0017` a été appliquée sur Supabase le **14 novembre 2026**, après la livraison
+du lot A et à la demande de Hamza. Application transactionnelle depuis `0016`,
+révision contrôlée sur une nouvelle connexion après commit, schéma conforme aux
+modèles (`alembic check`), RLS active sans politique mobile sur les huit tables
+et deux déclencheurs d’immutabilité actifs. Les empreintes et comptages des dix
+tables applicatives préexistantes sont identiques avant/après, et le nombre de
+comptes Auth est conservé. Aucun import de données ou changement de prix.
+Les routes privées et le parcours mobile du lot A sont raccordés.
+
+Comptages conservés lors de cette application : 8 catégories, 3 circulaires,
+4 favoris, 31 ingrédients, 30 repas, 93 offres, 2 profils, 12 recettes,
+63 ingrédients de recettes et 5 évaluations. Les essais PostgreSQL locaux
+couvrent également contraintes, cascades, reprises et concurrence.
+
+`0016_offer_quantity_limits` ajoute deux colonnes
 facultatives à `product_offer` : `quantity_limit` et `price_after_limit`, avec
 une contrainte de cohérence. Les lignes existantes restent valides avec des
 valeurs nulles. Appliquer cette migration avant de redémarrer le backend
@@ -416,6 +438,8 @@ python -m backend.cli.export_shared_contracts --check
 Les tests ordinaires n’accèdent pas à Supabase. Pour les tests
 d’intégration, définir `OPTIMEAL_TEST_DATABASE_URL` vers un PostgreSQL local
 jetable dont le nom commence par `optimeal_test_`, puis relancer pytest.
+Créer cette base en UTF-8 ; un cluster initialisé sans locale peut sinon
+utiliser SQL_ASCII, incompatible avec les lectures textuelles du pilote du projet.
 Chaque test annule ses modifications de schéma et ses données. La CI fournit
 automatiquement ce PostgreSQL temporaire. Les contrôles couvrent migration,
 absence de divergence du modèle, import répété, mise à jour sans suppression,

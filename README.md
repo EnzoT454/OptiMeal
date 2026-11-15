@@ -221,17 +221,18 @@ OptiMeal/
 │   │   │   ├── schemas.py            # Repas, notes, portions et changements
 │   │   │   ├── models.py             # Table MealPlanEntry
 │   │   │   └── service.py            # Lecture par semaine et mutations privées
-│   │   ├── shopping_lists/           # Listes d’épicerie à développer
-│   │   │   ├── router.py             # Futures requêtes de gestion des listes
-│   │   │   ├── schemas.py            # Futurs formats des articles et totaux
-│   │   │   ├── models.py             # Futures tables des listes
-│   │   │   └── service.py            # Futurs calculs, remplacements et recalculs
+│   │   ├── shopping_lists/           # Listes privées persistantes, copies du calendrier et édition mobile
+│   │   │   ├── router.py             # Routes privées des listes et aperçus du calendrier
+│   │   │   ├── schemas.py            # Contrats des besoins, achats et révisions
+│   │   │   ├── contracts.py          # Registre et exemples exportés
+│   │   │   ├── models.py             # Tables privées des listes et de leur historique
+│   │   │   └── service.py            # Mutations manuelles, isolation et commandes rejouables
 │   │   ├── common/                   # Contrats et routes communs ; calculs à développer
 │   │   │   ├── public_router.py      # Routes ingrédients, offres et circulaires
 │   │   │   ├── public_data.py        # Prépare le catalogue JSON et les offres PostgreSQL
 │   │   │   ├── contracts.py          # Pagination, erreurs et conventions partagées
 │   │   │   ├── prices.py             # Futurs calculs de prix et de fourchettes
-│   │   │   └── units.py              # Futures conversions de quantités
+│   │   │   └── units.py              # Conversions certaines et fractions de portions
 │   │   ├── catalog/                  # Produits, prix et correspondances
 │   │   │   ├── router.py             # Permet de consulter le catalogue dans l’API
 │   │   │   ├── schemas.py            # Définit et vérifie le format du catalogue
@@ -307,7 +308,8 @@ OptiMeal/
 │   │       ├── 0013_rating_versions.py # Versions du contenu évalué
 │   │       ├── 0014_recipe_kitchen_units.py # Tasses et cuillères
 │   │       ├── 0015_permanent_public_recipes.py # Conservation des recettes publiques après suppression du compte
-│   │       └── 0016_offer_quantity_limits.py # Prix promotionnels limités aux premières unités
+│   │       ├── 0016_offer_quantity_limits.py # Prix promotionnels limités aux premières unités
+│   │       └── 0017_shopping_lists.py # Listes privées ; appliquée à Supabase le 14 novembre 2026
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express
@@ -426,6 +428,8 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Démarrer le mobile](mobile/README.md)
 - [Migrations et imports](backend/docs/MIGRATIONS.md)
 - [Calendrier des repas et limites actuelles](backend/docs/PLANNING.md)
+- [Listes d’épicerie : conception et étapes d’implémentation](backend/docs/SHOPPING_LISTS.md)
+- [Formats de vente et bases tarifaires vérifiables](backend/docs/SALE_NORMALIZATION.md)
 
 Le [site de suivi du projet](https://enzot454.github.io/OptiMeal/) regroupe nos objectifs, notre avancement et les références utilisées. Il reprend le [template du cours IFT3150](https://github.com/udem-diro/template-projet).
 

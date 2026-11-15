@@ -1,0 +1,72 @@
+{
+  "$defs": {
+    "ShoppingBaseQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "ml",
+            "unit"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingBaseQuantity",
+      "type": "object"
+    },
+    "ShoppingCoverage": {
+      "additionalProperties": false,
+      "description": "Couverture explicite, ou confirmation d'un besoin sans quantité.",
+      "properties": {
+        "quantities": {
+          "items": {
+            "$ref": "#/$defs/ShoppingBaseQuantity"
+          },
+          "maxItems": 3,
+          "title": "Quantities",
+          "type": "array"
+        },
+        "confirms_unquantified": {
+          "default": false,
+          "title": "Confirms Unquantified",
+          "type": "boolean"
+        }
+      },
+      "title": "ShoppingCoverage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "purchased": {
+      "title": "Purchased",
+      "type": "boolean"
+    },
+    "coverage": {
+      "$ref": "#/$defs/ShoppingCoverage"
+    }
+  },
+  "required": [
+    "expected_revision",
+    "purchased",
+    "coverage"
+  ],
+  "title": "ShoppingManualPurchaseWrite",
+  "type": "object"
+}

@@ -1,0 +1,16 @@
+{
+  "additionalProperties": false,
+  "description": "Valeur extraite de l'en-tête HTTP Idempotency-Key, pas du corps métier.",
+  "properties": {
+    "idempotency_key": {
+      "format": "uuid",
+      "title": "Idempotency Key",
+      "type": "string"
+    }
+  },
+  "required": [
+    "idempotency_key"
+  ],
+  "title": "ShoppingCommandHeaders",
+  "type": "object"
+}

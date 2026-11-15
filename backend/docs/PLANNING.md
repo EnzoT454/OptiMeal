@@ -5,6 +5,11 @@ les repas d’un compte dans PostgreSQL et de consulter une semaine à la fois.
 Il complète les recettes et les comptes déjà présents. Il reste distinct du
 futur moteur de listes d’épicerie et de l’historique par instantanés.
 
+Le [guide des listes d’épicerie](SHOPPING_LISTS.md) définit leur conception et
+leur ordre d’implémentation. La cible prévoit une création depuis une période
+explicite du calendrier, puis une liste indépendante ; elle ne décrit pas le
+comportement actuel de l’Épicerie locale.
+
 ## Installation
 
 Avec l’environnement Python activé et la connexion serveur configurée,
@@ -26,8 +31,9 @@ La révision `0009_recipe_visibility` ajoute la visibilité des recettes.
 La révision `0010_preserve_meals` conserve les repas après suppression
 d’une recette grâce à une référence `ON DELETE SET NULL`. Elle a été appliquée
 et contrôlée sur Supabase le 1er novembre, sans modifier les comptages existants.
-La tête courante est `0015_permanent_public_recipes`, appliquée le 5 novembre ;
-elle conserve aussi les recettes publiques lorsque leur auteur supprime son compte.
+`0015_permanent_public_recipes`, appliquée le 5 novembre, conserve aussi les
+recettes publiques lorsque leur auteur supprime son compte. La tête actuelle du
+dépôt et l’état des migrations sont décrits dans [MIGRATIONS.md](MIGRATIONS.md).
 
 ## Parcours mobile
 

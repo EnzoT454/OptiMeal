@@ -71,7 +71,9 @@ test('sans compte, les cinq onglets sont disponibles sans formulaire de connexio
   assert.equal(homeRoutes[1].props.component, './app/ProfileScreen');
   assert.equal(homeRoutes[1].props.options.headerBackTitle, 'Accueil');
   const liste = rendered.find(n => n.type === 'Route' && n.props.name === 'Liste');
-  assert.equal(liste.props.component, './app/ListScreen');
+  const listRoutes = nodes(liste.props.component()).filter(n => n.type === 'Route');
+  assert.deepEqual(listRoutes.map(n => n.props.name), ['Lists', 'CreateList', 'ShoppingDetail']);
+  assert.equal(listRoutes[0].props.component, './app/ListScreen');
 });
 
 test('fermer la connexion conserve la navigation visiteur, changer de compte la réinitialise', () => {

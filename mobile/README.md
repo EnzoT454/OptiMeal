@@ -3,14 +3,26 @@
 La barre de navigation contient Accueil, Promos, Recettes, Calendrier et Liste.
 Les paramètres s’ouvrent depuis la roue dentée en haut à droite de l’accueil,
 avec un retour vers celui-ci. Cet accès reste disponible sans compte.
-L’onglet Liste est volontairement vide pour le moment ; la première liste
-d’épicerie reste accessible dans Calendrier et depuis les cartes de l’accueil.
+L’onglet Liste permet de créer un brouillon manuel ou une copie indépendante
+d’une période du calendrier avec aperçu et confirmation des exclusions, puis
+de compléter et reprendre ses listes enregistrées. Les visiteurs voient la
+présentation et peuvent se connecter à la demande. Les réponses incertaines
+se reprennent avec la même commande, enregistrée localement par compte.
+Le serveur doit disposer de la migration `0017_shopping_lists` et des routes du
+lot A. Cette migration est appliquée et vérifiée sur la base Supabase configurée
+depuis le 14 novembre 2026. L’ancienne Épicerie reste accessible dans Calendrier et depuis Accueil
+pendant la transition. Les prix et comparaisons viennent aux étapes suivantes ;
+le nouveau détail affiche « Estimation indisponible ».
+Voir [le suivi de l’étape 5](../backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
+`expo-crypto`, compatible SDK 58, génère les UUID des commandes idempotentes ;
+il est inclus dans Expo Go. Un client de développement compilé avant son ajout
+doit être reconstruit pour inclure le module natif.
 
 Socle Expo/TypeScript avec React Navigation : inscription, confirmation de
 courriel, connexion, restauration et renouvellement de session, déconnexion,
 profil minimal et recettes manuelles avec photo obligatoire à la création, choisie dans la galerie.
 Les cinq onglets sont présents : Accueil, Promos, Recettes, Calendrier et
-Paramètres. Promos permet de consulter les offres, les circulaires et les
+Liste. Promos permet de consulter les offres, les circulaires et les
 recettes associées aux ingrédients en promotion. Calendrier permet de conserver
 et modifier les repas d’une semaine ; les essais sur appareil et les
 instantanés historiques restent à compléter.

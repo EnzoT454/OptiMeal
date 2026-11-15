@@ -1,6 +1,9 @@
 """Petits formats déterministes ; une plage ou un format ambigu reste inconnu."""
 import re
 from decimal import Decimal
+from fractions import Fraction
+
+from backend.app.common.units import decimal_quantity
 
 from .schemas import ProductFormat
 
@@ -36,5 +39,6 @@ def parse_format(raw: str | None) -> ProductFormat:
         factor, normalized_unit = ('1000' if unit == 'l' else '1'), 'ml'
     else:
         factor, normalized_unit = '1', 'unit'
-    return ProductFormat(raw=raw, kind='fixed', quantity=value * count * Decimal(factor),
+    quantity, _ = decimal_quantity(Fraction(value) * count * Fraction(Decimal(factor)))
+    return ProductFormat(raw=raw, kind='fixed', quantity=quantity,
                          unit=normalized_unit, package_count=count)
