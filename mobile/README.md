@@ -1,5 +1,11 @@
 # Mobile OptiMeal
 
+La barre de navigation contient Accueil, Promos, Recettes, Calendrier et Liste.
+Les paramètres s’ouvrent depuis la roue dentée en haut à droite de l’accueil,
+avec un retour vers celui-ci. Cet accès reste disponible sans compte.
+L’onglet Liste est volontairement vide pour le moment ; la première liste
+d’épicerie reste accessible dans Calendrier et depuis les cartes de l’accueil.
+
 Socle Expo/TypeScript avec React Navigation : inscription, confirmation de
 courriel, connexion, restauration et renouvellement de session, déconnexion,
 profil minimal et recettes manuelles avec photo obligatoire à la création, choisie dans la galerie.

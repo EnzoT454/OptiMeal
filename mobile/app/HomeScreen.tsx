@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import type { HomeStackParams } from "../types/navigation";
 import { useAuth } from "../context/AuthContext";
 import { RecipeScreen, recipeColors as c, recipeStyles } from "../components/recipes";
 import { money, quantityPriceCondition, storeName } from "../components/promos";
@@ -26,15 +28,26 @@ function salutation(d: Date) {
   return "Bonsoir";
 }
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: NativeStackScreenProps<HomeStackParams, 'Home'>) {
   const { session } = useAuth();
   const maintenant = new Date();
 
   return (
     <RecipeScreen>
-      <View>
-        <Text style={styles.date}>{dayFullName(maintenant)}</Text>
-        <Text accessibilityRole="header" style={styles.salut}>{salutation(maintenant)}</Text>
+      <View style={styles.header}>
+        <View style={styles.greeting}>
+          <Text style={styles.date}>{dayFullName(maintenant)}</Text>
+          <Text accessibilityRole="header" style={styles.salut}>{salutation(maintenant)}</Text>
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Paramètres"
+          accessibilityHint="Ouvre les paramètres et le profil du compte."
+          onPress={() => navigation.navigate('Paramètres')}
+          style={({ pressed }) => [styles.settingsButton, pressed && styles.appuye]}
+        >
+          <MaterialCommunityIcons name="cog-outline" size={26} color={c.green} accessible={false} />
+        </Pressable>
       </View>
 
       {session ? (
@@ -177,6 +190,9 @@ function Tuile({ valeur, label, promo = false }: { valeur: string; label: string
 }
 
 const styles = StyleSheet.create({
+  header: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  greeting: { flex: 1 },
+  settingsButton: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: c.light },
   date: { fontFamily: "DMSans_500Medium", fontSize: 14, lineHeight: 19, color: c.muted },
   salut: { fontFamily: "DMSans_700Bold", fontSize: 28, lineHeight: 36, color: c.ink },
 

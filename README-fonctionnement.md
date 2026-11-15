@@ -112,7 +112,9 @@ flowchart TD
 
 À l’inscription, l’utilisateur doit confirmer son courriel. Le retour dans l’application utilise le lien `optimeal://auth/callback` et un échange de code pour obtenir la session.
 
-Les cinq onglets sont visibles avec ou sans compte. Accueil affiche un message de bienvenue ; Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine ; Paramètres présente le mode visiteur ou, après connexion, le profil et la déconnexion. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
+Les cinq onglets sont visibles avec ou sans compte : Accueil, Promos, Recettes, Calendrier et Liste. Accueil présente les repas du jour et un aperçu des achats au compte connecté, ou un message de bienvenue aux visiteurs. Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine et conserve sa première liste d’épicerie. Le nouvel onglet Liste est volontairement vide pour le moment. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
+
+Une roue dentée en haut à droite de l’accueil ouvre Paramètres, avec une zone tactile de 48 × 48 et un libellé accessible. Cet écran présente le mode visiteur ou, après connexion, le profil et la déconnexion. Le bouton de retour ramène à l’accueil ; une connexion ou déconnexion réinitialise toujours la navigation.
 
 Le client [services/supabase.ts](mobile/services/supabase.ts) configure Supabase et conserve la session avec AsyncStorage. `AuthContext.tsx` écoute aussi les changements de connexion et gère le retour du lien de confirmation. La consultation est accessible sans session ; chaque demande protégée reste vérifiée par le serveur.
 
