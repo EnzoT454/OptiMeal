@@ -2,9 +2,20 @@
 
 Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il suit des actions concrètes : se connecter, enregistrer une recette avec une photo, consulter les promotions et ouvrir une circulaire.
 
-Il décrit le code et les confirmations disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
+Il décrit le code au **10 novembre 2026** et les confirmations sur téléphone disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
 ## 1. Les grandes parties de l’application
+
+**Complément du 14 novembre 2026 :** les offres peuvent conserver un prix
+promotionnel limité aux premières unités, avec un prix distinct après limite.
+L’exemple Maxi de l’huile d’olive est enregistré à 7,77 $ pour les quatre
+premières unités, puis 10 $ par unité supplémentaire, du 12 au 18 novembre
+inclusivement. Les dates sont confirmées par l’utilisateur ; Apify ne les
+fournit pas. La migration `0016_offer_quantity_limits` est appliquée sur Supabase.
+Les conditions sont affichées avec les prix dans le mobile ; les essais de
+cet affichage sur téléphone restent à effectuer. Les
+[contrats](backend/docs/CONTRACTS.md#prix-promotionnel-avec-limite-de-quantité)
+décrivent les champs et les calculs, distincts du futur moteur complet des listes.
 
 Le **frontend** est l’application mobile : il affiche les écrans et reçoit les actions de l’utilisateur. Le **backend** est le serveur : il répond aux demandes du mobile, vérifie les droits et lit ou enregistre les données.
 
@@ -101,13 +112,56 @@ flowchart TD
 
 À l’inscription, l’utilisateur doit confirmer son courriel. Le retour dans l’application utilise le lien `optimeal://auth/callback` et un échange de code pour obtenir la session.
 
-Les cinq onglets sont visibles avec ou sans compte. Accueil affiche un message de bienvenue ; Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine ; Paramètres présente le mode visiteur ou, après connexion, le profil et la déconnexion. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
+Les cinq onglets sont visibles avec ou sans compte : Accueil, Promos, Recettes, Calendrier et Liste. Accueil présente les repas du jour et un aperçu des achats au compte connecté, ou un message de bienvenue aux visiteurs. Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine et conserve sa première liste d’épicerie. Le nouvel onglet Liste permet de créer, compléter et reprendre des brouillons privés, manuellement ou depuis un aperçu du calendrier ; les prix et comparaisons restent à développer. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
+
+Une roue dentée en haut à droite de l’accueil ouvre Paramètres, avec une zone tactile de 48 × 48 et un libellé accessible. Cet écran présente le mode visiteur ou, après connexion, le profil et la déconnexion. Le bouton de retour ramène à l’accueil ; une connexion ou déconnexion réinitialise toujours la navigation.
 
 Le client [services/supabase.ts](mobile/services/supabase.ts) configure Supabase et conserve la session avec AsyncStorage. `AuthContext.tsx` écoute aussi les changements de connexion et gère le retour du lien de confirmation. La consultation est accessible sans session ; chaque demande protégée reste vérifiée par le serveur.
 
 La connexion s’ouvre dans une fenêtre que l’on peut fermer avec « Continuer sans compte » ou le retour Android. Annuler conserve la page consultée. Une connexion, une déconnexion ou un changement de compte réinitialise la navigation vers l’accueil, afin de retirer les écrans et données du compte précédent. Après connexion, l’utilisateur peut relancer l’action souhaitée.
 
 [AccountRequired.tsx](mobile/components/AccountRequired.tsx) protège aussi les écrans d’ajout, de saisie et d’édition lorsqu’ils sont ouverts directement. Les paramètres visiteurs ne demandent pas le profil privé à l’API. Le calendrier est soumis à la connexion ; les instantanés historiques et les listes restent à développer.
+
+### Données personnelles conservées sur le téléphone
+
+La première liste d’achats mobile conserve localement les articles ajoutés,
+les coches, le garde-manger et les choix de produits. Les suivis de produits
+sont également locaux. Ces données sont désormais séparées par compte :
+changer de compte ou revenir au mode visiteur masque immédiatement les
+données du précédent utilisateur. Une réponse terminée après ce changement
+ne les réaffiche pas. Se reconnecter au même compte retrouve ses propres
+données sur ce téléphone, sans synchronisation entre appareils.
+
+Les anciennes données communes sans propriétaire sont conservées à part et
+ne sont pas réattribuées automatiquement. Le [guide mobile](mobile/README.md#données-locales-par-compte)
+décrit cette transition et les essais avec deux comptes. Les contrôles
+automatisés passent ; les essais de cette correction sur iOS et Android
+restent à effectuer.
+
+### Erreurs de chargement et d’enregistrement de la liste d’achats
+
+Une panne pendant la lecture d’une recette bloque l’actualisation entière de
+la liste : les dernières données chargées restent affichées avec un message
+explicite. Seules les recettes introuvables (`404`) sont exclues, avec un
+avertissement « Liste partielle » et un nombre de repas concernés. Le montant
+accessible est alors présenté comme un sous-total et aucune confirmation de
+courses terminées n’est affichée.
+
+Les erreurs locales d’enregistrement disposent d’une reprise distincte du
+chargement. Un ajout échoué conserve le texte saisi ; une lecture réussie ne
+vaut pas confirmation de sauvegarde. Le [guide mobile](mobile/README.md#liste-dachats--chargement-incomplet-et-erreurs-locales)
+détaille les comportements, les tests automatisés et les essais manuels.
+
+### Identité commerciale des produits
+
+Les suivis et les choix manuels utilisent `product_id`, la référence stable du
+produit pour une enseigne et un magasin. Le prix, les dates et les promotions
+peuvent changer sans perdre ces préférences. `offer.id` reste l’identifiant du
+relevé courant. Les anciens suivis sont convertis si l’offre d’origine est
+encore identifiable ; sinon ils restent visibles comme suivis à réassocier.
+Les anciens choix non identifiables déclenchent un avertissement. Le
+[guide mobile](mobile/README.md#identité-des-produits-suivis-et-choisis)
+décrit la conversion et les essais à réaliser.
 
 ### Supprimer son compte depuis Paramètres
 
@@ -256,12 +310,13 @@ flowchart TD
 
 Les responsabilités se répartissent ainsi :
 
-1. Le formulaire recueille le nom, les portions, les durées, les ingrédients, les étapes et les étiquettes. Le nom est obligatoire : le bouton d’enregistrement reste désactivé s’il est vide ou ne contient que des espaces. À la création, une photo est également obligatoire ; les autres champs requis sont vérifiés avant l’enregistrement. L’auteur ne choisit plus la difficulté : les autres utilisateurs évaluent la facilité avec le critère « Facilité ». L’ancienne difficulté n’est plus affichée dans le détail.
+1. Le formulaire recueille le nom, les portions, les ingrédients, les étapes et les étiquettes. Chaque étape demande une durée entière en minutes, 0 étant accepté pour une étape immédiate. Le total affiché est la somme de ces durées ; les champs de préparation et de cuisson séparés sont retirés. Le nom est obligatoire : le bouton d’enregistrement reste désactivé s’il est vide ou ne contient que des espaces. À la création, une photo est également obligatoire ; les autres champs requis sont vérifiés avant l’enregistrement. L’auteur ne choisit plus la difficulté : les autres utilisateurs évaluent la facilité avec le critère « Facilité ». L’ancienne difficulté n’est plus affichée dans le détail.
 2. `IngredientPicker.tsx` aide à choisir un ingrédient du référentiel commun. La quantité se saisit dans un champ numérique séparé ; l’unité se choisit dans un sélecteur compact ouvrant une liste en bas de l’écran : g, ml, unité, tasse (250 ml), cuillère à table (15 ml) et cuillère à thé (5 ml). Le choix courant porte une coche ; fermer la liste sans sélection conserve la valeur. Aucune unité n’est présélectionnée pour un nouvel ingrédient. Les quantités doivent être positives ; seules les pièces exigent un entier. Une demi-tasse se saisit avec `0,5`. L’unité choisie est conservée et affichée dans le détail. La migration `0014_recipe_kitchen_units` doit être appliquée avant d’enregistrer les nouvelles unités. `recipeForm.ts` regroupe ces validations et les règles des badges.
 3. La photo, obligatoire pour créer une recette, est préparée par `recipeImages.ts` : JPEG, côté maximal de 1 200 pixels et limite de 5 Mo. Son envoi intervient à l’enregistrement.
 4. `api.ts` transmet le formulaire à FastAPI avec le jeton.
 5. Le backend exige une URL de photo HTTPS valide à la création, valide les autres champs et vérifie que les ingrédients existent en base. Il déduit le propriétaire de l’identité authentifiée.
-6. Le service enregistre la recette et ses liens vers les ingrédients dans une transaction PostgreSQL, puis renvoie le résultat.
+6. Le backend recalcule la somme des durées des étapes. Les anciennes recettes conservent leur total en consultation ; en modification, leurs durées manquantes doivent être renseignées sans répartition automatique. Les durées sont conservées dans le JSON des étapes, sans migration. Les cartes, le détail et Rapides utilisent le total enregistré. Changer une durée d’étape ouvre une nouvelle version évaluée, même si le total reste identique. Les essais sur appareil de cet ajout restent à effectuer.
+7. Le service enregistre la recette et ses liens vers les ingrédients dans une transaction PostgreSQL, puis renvoie le résultat.
 
 **L’image et la recette sont enregistrées dans deux services différents.** Storage reçoit le fichier ; PostgreSQL conserve son URL dans `recipe.image_url`. Si l’envoi de l’image réussit mais que la recette ne peut pas être enregistrée, un fichier inutilisé peut rester dans Storage.
 
@@ -702,6 +757,8 @@ flowchart LR
 | `0013_rating_versions.py` | Votes conservés par version du contenu ; anciennes notes exclues des moyennes et du classement courants |
 | `0014_recipe_kitchen_units.py` | Tasses et cuillères acceptées comme unités de recette, sans conversion des quantités existantes ; appliquée sur Supabase le 5 novembre 2026 |
 | `0015_permanent_public_recipes.py` | Conservation des recettes publiques sans propriétaire après suppression du compte ; appliquée sur Supabase le 5 novembre 2026 |
+| `0016_offer_quantity_limits.py` | Prix promotionnel limité et prix après limite ; appliquée sur Supabase le 14 novembre 2026 |
+| `0017_shopping_lists.py` | Huit tables privées de listes et historique ; vérifiée sur PostgreSQL local, non appliquée à Supabase dans cette étape |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -885,6 +942,11 @@ Les types TypeScript aident le développeur à utiliser les données correctemen
 
 ### Guides, configuration et vérifications
 
+Le [plan des listes d’épicerie](backend/docs/SHOPPING_LISTS.md) est la référence
+pour implémenter l’onglet Liste : parcours, calculs, données, API, étapes et
+critères de validation. Il décrit la cible à construire, distincte de la
+première liste locale actuellement accessible dans Calendrier.
+
 | Emplacement | Rôle |
 | --- | --- |
 | [README.md](README.md) | Présentation, état du projet, installation et structure |
@@ -907,7 +969,15 @@ Les types TypeScript aident le développeur à utiliser les données correctemen
 | `tools/` | Consignes, architecture, décisions et tâches locales, actuellement ignorées par Git |
 | [requirements.txt](requirements.txt) | Dépendances Python du backend, des tests et du site |
 
-Les fichiers `__init__.py` identifient les packages Python. Un fichier présent peut encore être un emplacement réservé : c’est notamment le cas des domaine des listes et de `backend/tests/conftest.py`.
+Les fichiers `__init__.py` identifient les packages Python. Un fichier présent
+peut encore être un emplacement réservé, comme `backend/tests/conftest.py`.
+Le domaine des listes expose désormais les routes privées du lot A, les copies
+indépendantes du calendrier et l’édition des brouillons dans le mobile. La
+migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis le
+14 novembre 2026. La normalisation des formats et bases tarifaires est disponible
+côté serveur ; le calcul des paniers vient à l’étape suivante. Le
+[suivi de l’étape 5](backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5)
+précise les fonctionnalités disponibles et leurs limites.
 
 ## 12. Configuration : comment les adresses relient les composants
 
@@ -1114,4 +1184,4 @@ Pour suivre les ajouts récents, partir des champs `ImageUrl` et `ImageSource` d
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 5 novembre 2026*
+*Dernière mise à jour : 14 novembre 2026*

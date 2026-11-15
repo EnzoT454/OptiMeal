@@ -26,6 +26,9 @@ from backend.app.recipes.router import router as recipes_router
 from backend.app.accounts.router import router as accounts_router
 from backend.app.accounts.deletion import AccountDeletion
 from backend.app.security import SupabaseAuth
+from backend.app.shopping_lists.router import router as shopping_lists_router
+from backend.app.shopping_lists.errors import ShoppingListError
+from fastapi.responses import JSONResponse
 
 
 class DatabaseHealth(BaseModel):
@@ -89,7 +92,12 @@ def create_app(*, settings: Settings | None = None, env_file: Path | None = ENV_
     app.include_router(recipes_router)
     app.include_router(planning_router)
     app.include_router(accounts_router)
+    app.include_router(shopping_lists_router)
     install_error_handlers(app)
+
+    @app.exception_handler(ShoppingListError)
+    async def shopping_list_error(_request, exc: ShoppingListError):
+        return JSONResponse(status_code=exc.status, content={'error': exc.error.model_dump(mode='json')})
 
     @app.get("/health", tags=["serveur"])
     async def health():

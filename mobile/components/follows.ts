@@ -1,55 +1,54 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { readAccountJSON, updateAccountJSON, type LocalAccount } from '../services/accountStorage';
 import type { Offer, Retailer } from '../types/api';
 import { isOnPromo } from './search';
 
-// Produits suivis : l'utilisateur est prévenu quand CE produit, dans CE magasin, passe en promo
-// (demande du prof : suivre un seul produit, pas toute la catégorie ni l'ingrédient dans les 3 magasins).
-// On garde l'identifiant de l'offre (ex. « maxi:8661:20325029_EA ») : il reste le même d'une semaine à l'autre.
-//
-// ÉTAPE 1 (maintenant) : la liste est enregistrée sur le téléphone (AsyncStorage).
-// ÉTAPE 2 (backend) : seul l'intérieur de ces fonctions changera pour appeler /api/v1/me/follows ;
-// les écrans qui les utilisent ne bougeront pas.
-
+// product_id = enseigne + magasin + référence marchand, indépendant du relevé.
+// offer_id n'est conservé que pour les anciens suivis à réassocier.
 export interface Follow {
-  offer_id: string;
+  product_id?: string;
+  offer_id?: string;
   retailer: Retailer;
-  name: string;   // nom affiché si le produit n'est plus vendu
-  since: string;  // date du suivi (AAAA-MM-JJ…)
+  name: string;
+  since: string;
+}
+const KEY = 'optimeal.follows.v2'; // garder les données existantes, séparées par compte
+export const followKey = (f: Follow): string => f.product_id ?? f.offer_id!;
+export const followsOffer = (f: Follow, o: Offer): boolean => f.retailer === o.retailer &&
+  (f.product_id ? f.product_id === o.product_id : f.offer_id === o.id);
+
+export function reconcileFollows(list: Follow[], offers: Offer[]): Follow[] {
+  const seen = new Set<string>();
+  return list.map(f => {
+    if (f.product_id) return f;
+    const offer = offers.find(o => followsOffer(f, o));
+    return offer ? { product_id: offer.product_id, retailer: f.retailer, name: f.name, since: f.since } : f;
+  }).filter(f => { const key = followKey(f); if (seen.has(key)) return false; seen.add(key); return true; });
 }
 
-// « v2 » : l'ancienne liste « v1 » (par ingrédient) est ignorée.
-const KEY = 'optimeal.follows.v2';
-
-export async function getFollows(): Promise<Follow[]> {
-  try {
-    const saved = await AsyncStorage.getItem(KEY);
-    const list = saved ? JSON.parse(saved) : [];
-    return Array.isArray(list) ? list : [];
-  } catch {
-    return []; // stockage illisible : on repart d'une liste vide plutôt que de bloquer l'écran
-  }
+export async function getFollows(userId: LocalAccount, offers: Offer[] = []): Promise<Follow[]> {
+  const list = await readAccountJSON<Follow[]>(userId, KEY, []);
+  if (!Array.isArray(list)) throw new Error('Données de suivi invalides.');
+  const next = reconcileFollows(list, offers);
+  if (JSON.stringify(next) === JSON.stringify(list)) return list;
+  // Recalculer dans la file d'écritures pour ne pas perdre une cloche touchée entre-temps.
+  return updateAccountJSON<Follow[]>(userId, KEY, [], current => reconcileFollows(current, offers));
 }
 
-async function save(list: Follow[]) {
-  await AsyncStorage.setItem(KEY, JSON.stringify(list));
+export async function unfollow(userId: LocalAccount, key: string) {
+  return updateAccountJSON<Follow[]>(userId, KEY, [], list => list.filter(f => followKey(f) !== key));
 }
 
-export async function unfollow(offerId: string) {
-  const list = await getFollows();
-  await save(list.filter(f => f.offer_id !== offerId));
-  return getFollows();
+export async function toggleFollow(userId: LocalAccount, offer: Offer): Promise<Follow[]> {
+  return updateAccountJSON<Follow[]>(userId, KEY, [], current => {
+    const list = reconcileFollows(current, [offer]);
+    return list.some(f => followsOffer(f, offer))
+      ? list.filter(f => !followsOffer(f, offer))
+      : [...list, { product_id: offer.product_id, retailer: offer.retailer,
+        name: offer.product_name, since: new Date().toISOString() }];
+  });
 }
 
-// Suivre ou ne plus suivre un produit (cloche ou bouton de la fiche). Renvoie la nouvelle liste.
-export async function toggleFollow(offer: Offer): Promise<Follow[]> {
-  const list = await getFollows();
-  if (list.some(f => f.offer_id === offer.id)) return unfollow(offer.id);
-  await save([...list, { offer_id: offer.id, retailer: offer.retailer, name: offer.product_name, since: new Date().toISOString() }]);
-  return getFollows();
-}
-
-// Nombre de produits suivis en promo cette semaine (la pastille rouge de l'onglet « Suivis »).
 export function followedOnPromo(follows: Follow[], offers: Offer[]) {
-  const ids = new Set(follows.map(f => f.offer_id));
-  return offers.filter(o => ids.has(o.id) && isOnPromo(o)).length;
+  return new Set(offers.filter(o => follows.some(f => followsOffer(f, o)) && isOnPromo(o))
+    .map(o => o.product_id)).size;
 }

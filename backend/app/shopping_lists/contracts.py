@@ -1,0 +1,113 @@
+"""Exports du lot A : schémas et exemples validés des routes de listes."""
+from backend.app.common.contracts import Detail, Page
+from .schemas import (
+    ShoppingCalendarPreviewRead, ShoppingCalendarPreviewWrite, ShoppingCommand,
+    ShoppingCommandHeaders, ShoppingConflictResponse, ShoppingFromCalendar,
+    ShoppingItemAdd, ShoppingItemUpdate, ShoppingListCreate, ShoppingListRead,
+    ShoppingListUpdate, ShoppingManualPurchaseWrite, ShoppingPossessionWrite,
+    ShoppingRevisionRead,
+)
+
+MODELS = {
+    'shopping-list-create': ShoppingListCreate,
+    'shopping-list-command-headers': ShoppingCommandHeaders,
+    'shopping-list-command': ShoppingCommand,
+    'shopping-list-update': ShoppingListUpdate,
+    'shopping-list-item-add': ShoppingItemAdd,
+    'shopping-list-item-update': ShoppingItemUpdate,
+    'shopping-list-manual-purchase-write': ShoppingManualPurchaseWrite,
+    'shopping-list-possession-write': ShoppingPossessionWrite,
+    'shopping-list-calendar-preview-write': ShoppingCalendarPreviewWrite,
+    'shopping-list-from-calendar': ShoppingFromCalendar,
+    'shopping-list-calendar-preview-detail': Detail[ShoppingCalendarPreviewRead],
+    'shopping-list-detail': Detail[ShoppingListRead],
+    'shopping-lists-page': Page[ShoppingListRead],
+    'shopping-list-revision-detail': Detail[ShoppingRevisionRead],
+    'shopping-list-conflict': ShoppingConflictResponse,
+}
+
+
+def examples() -> dict:
+    """Données fictives explicites, validées puis exportées ; aucun prix fabriqué."""
+    list_id = '00000000-0000-4000-8000-000000000001'
+    rice_id = '00000000-0000-4000-8000-000000000002'
+    paper_id = '00000000-0000-4000-8000-000000000003'
+    meta = {'data_source': 'postgresql', 'dataset_kind': 'user_content', 'review_required': False}
+    rice = {
+        'id': rice_id, 'ingredient_id': 'ing_riz_basmati_blanc', 'name': 'Riz', 'category': 'Épicerie',
+        'need_revision': 1, 'required': [{'amount': '2000', 'unit': 'g'}],
+        'owned': [{'amount': '200', 'unit': 'g'}],
+        'contributions': [{
+            'id': '00000000-0000-4000-8000-000000000004', 'source': 'manual',
+            'original_quantity': {'amount': '2', 'unit': 'kg'},
+            'normalized_quantity': {'amount': '2000', 'unit': 'g'},
+        }], 'coverage_status': 'partial', 'pricing_status': 'unpriced',
+    }
+    paper = {
+        'id': paper_id, 'ingredient_id': None, 'name': 'Papier cuisson', 'category': 'Autres',
+        'need_revision': 1, 'required': [], 'contributions': [{
+            'id': '00000000-0000-4000-8000-000000000005', 'source': 'manual',
+            'original_quantity': None, 'normalized_quantity': None,
+        }], 'coverage_status': 'purchased', 'pricing_status': 'unpriced',
+    }
+    resource = {
+        'id': list_id, 'name': 'Courses de démonstration', 'source': 'manual',
+        'status': 'active', 'revision': 4, 'period': None, 'purchase_date': '2026-11-15',
+        'items': [rice, paper], 'purchases': [{
+            'id': '00000000-0000-4000-8000-000000000006', 'item_id': rice_id,
+            'purchased': True, 'coverage': [{'amount': '500', 'unit': 'g'}],
+        }, {
+            'id': '00000000-0000-4000-8000-000000000007', 'item_id': paper_id,
+            'purchased': True, 'confirmed_need_revision': 1,
+        }],
+        'totals': {'item_count': 2, 'remaining_item_count': 1, 'purchased_item_count': 1,
+                   'owned_item_count': 0, 'partial_item_count': 1, 'unpriced_item_count': 2,
+                   'uncovered_item_count': 1, 'budget_known_amount': '0',
+                   'remaining_known_amount': '0', 'estimate_complete': False},
+        'warnings': [{'code': 'ESTIMATE_UNAVAILABLE', 'message': 'Prix non calculés dans le lot A.'}],
+        'created_at': '2026-11-14T18:00:00Z', 'updated_at': '2026-11-14T18:05:00Z',
+    }
+    calendar_rice = {**rice, 'owned': [], 'coverage_status': 'remaining', 'contributions': [{
+        **rice['contributions'][0], 'source': 'calendar',
+        'meal_entry_id': '00000000-0000-4000-8000-000000000008',
+        'recipe_id': 'recipe_demo_riz', 'recipe_name': 'Riz de démonstration',
+        'recipe_version': 1, 'recipe_servings': 4, 'meal_date': '2026-11-16', 'servings': 4,
+    }]}
+    preview_request = {'start_date': '2026-11-16', 'end_date': '2026-11-22', 'purchase_date': '2026-11-15'}
+    values = {
+        'shopping-list-create': {'name': 'Mes courses'},
+        'shopping-list-command-headers': {'idempotency_key': '00000000-0000-4000-8000-000000000009'},
+        'shopping-list-command': {'expected_revision': 4},
+        'shopping-list-update': {'expected_revision': 4, 'name': 'Courses du dimanche'},
+        'shopping-list-item-add': {'expected_revision': 4, 'ingredient_id': 'ing_riz_basmati_blanc',
+                                   'name': 'Riz', 'quantity': {'amount': '500', 'unit': 'g'}},
+        'shopping-list-item-update': {'expected_revision': 4, 'quantity': None},
+        'shopping-list-manual-purchase-write': {'expected_revision': 4, 'purchased': True,
+                                               'coverage': {'confirms_unquantified': True}},
+        'shopping-list-possession-write': {'expected_revision': 4,
+                                           'coverage': {'quantities': [{'amount': '200', 'unit': 'g'}]}},
+        'shopping-list-calendar-preview-write': preview_request,
+        'shopping-list-from-calendar': {**preview_request, 'name': 'Épicerie 16–22 nov. 2026',
+                                        'preview_fingerprint': 'a' * 64},
+        'shopping-list-calendar-preview-detail': {'item': {
+            'period': {k: preview_request[k] for k in ('start_date', 'end_date')},
+            'purchase_date': '2026-11-15', 'preview_fingerprint': 'a' * 64,
+            'included_meal_count': 1, 'skipped_note_count': 0, 'skipped_leftover_count': 1,
+            'excluded_meals': [], 'excluded_ingredient_ids': [], 'items': [calendar_rice],
+        }, 'meta': meta},
+        'shopping-list-detail': {'item': resource, 'meta': meta},
+        'shopping-lists-page': {'items': [resource], 'total': 1, 'limit': 20, 'offset': 0, 'meta': meta},
+        'shopping-list-revision-detail': {'item': {
+            'list_id': list_id, 'revision': 4,
+            'command_id': '00000000-0000-4000-8000-000000000009',
+            'recorded_at': '2026-11-14T18:05:00Z', 'snapshot': resource,
+        }, 'meta': meta},
+        'shopping-list-conflict': {'error': {'code': 'LIST_REVISION_CONFLICT',
+            'message': 'La liste a changé. Relis les modifications.', 'list_id': list_id,
+            'expected_revision': 3, 'current_revision': 4}},
+    }
+    responses = {'shopping-list-calendar-preview-detail', 'shopping-list-detail',
+                 'shopping-lists-page', 'shopping-list-revision-detail', 'shopping-list-conflict'}
+    # Un PATCH doit conserver la différence entre omission et null explicite.
+    return {name: MODELS[name].model_validate(value).model_dump(
+        mode='json', exclude_unset=name not in responses) for name, value in values.items()}

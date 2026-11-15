@@ -1,4 +1,5 @@
 import type { Offer } from '../types/api';
+import { hasActivePromotion } from '../services/offerPricing';
 
 // Couleur selon la force du rabais : du rouge foncé (gros rabais) au jaune (petit rabais).
 // background/color : l'étiquette « −50 % » ; text : couleur de « Économisez … » sur fond blanc
@@ -20,6 +21,7 @@ export function perWeight(offer: Offer) {
 
 // Économie en dollars : prix de base − prix promo (null s'il n'y a pas de vraie économie).
 export function saving(offer: Offer) {
+  if (!hasActivePromotion(offer)) return null;
   const regular = Number(offer.price.amount);
   const promo = Number(offer.promo_price?.amount);
   if (!regular || !promo || promo >= regular) return null;

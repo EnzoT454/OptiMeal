@@ -8,11 +8,20 @@ export type PromoStackParams = {
   List: undefined; Detail: { offer: Offer }; Circulars: undefined; Circular: { circular: Circular }; Cook: undefined; Follows: undefined;
 };
 
+export type HomeStackParams = {
+  Home: undefined;
+  Paramètres: undefined;
+};
+
 export type MainTabParams = {
   Accueil: undefined;
   Recettes: undefined;
   // vue = "epicerie" pour ouvrir directement la liste d'achats (depuis l'Accueil)
   Calendrier: { vue?: "repas" | "epicerie" } | undefined;
   Promos: undefined;
-  Paramètres: undefined;
+  Liste: undefined;
+};
+
+export type ListStackParams = {
+  Lists: undefined; CreateList: undefined; ShoppingDetail: { id: string };
 };

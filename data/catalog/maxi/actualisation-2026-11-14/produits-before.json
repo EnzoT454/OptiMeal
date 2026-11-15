@@ -1,0 +1,908 @@
+[
+  {
+    "Id": 1,
+    "NomProduit": "Ail frais",
+    "Categorie": "Légumes",
+    "alias": [
+      "ail",
+      "garlic"
+    ],
+    "Produits": [
+      {
+        "Id": "21004355001_EA",
+        "Description": "Garlic Bulbs, 3-count",
+        "Id_magasin": "8661",
+        "Prix": 1.0,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 90,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-29",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/garlic-bulbs-3-count/p/21004355001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/21004355001_EA/en/1/21004355001_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "NomProduit": "Oignon jaune",
+    "Categorie": "Légumes",
+    "alias": [
+      "oignon jaune",
+      "oignons jaunes",
+      "yellow onion",
+      "yellow onions"
+    ],
+    "Produits": [
+      {
+        "Id": "20811994001_EA",
+        "Description": "Yellow Onions, 3 lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 3.29,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 1360,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-27",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/yellow-onions-3-lb-bag/p/20811994001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20811994001_EA/en/1/20811994001_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 3,
+    "NomProduit": "Carotte fraîche",
+    "Categorie": "Légumes",
+    "alias": [
+      "carotte",
+      "carottes",
+      "carrot",
+      "carrots"
+    ],
+    "Produits": [
+      {
+        "Id": "20600927001_EA",
+        "Description": "Carrots, 3 lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 4.0,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 1362,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-27",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/carrots-3-lb-bag/p/20600927001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20600927001_EA/en/1/20600927001_en_front_v1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 4,
+    "NomProduit": "Banane fraîche",
+    "Categorie": "Fruits",
+    "alias": [
+      "banane",
+      "bananes",
+      "banana",
+      "bananas"
+    ],
+    "Produits": [
+      {
+        "Id": "20139509001_KG",
+        "Description": "Organic Bananas, Bunch",
+        "Id_magasin": "8661",
+        "Prix": 2.64,
+        "PrixPromo": null,
+        "Unité": null,
+        "Quantité": null,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-29",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/organic-bananas-bunch/p/20139509001_KG",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20139509001_KG/en/1/20139509001_enfr_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 5,
+    "NomProduit": "Poitrine de poulet fraîche",
+    "Categorie": "Viandes",
+    "alias": [
+      "poitrine",
+      "poitrines",
+      "chicken breast"
+    ],
+    "Produits": [
+      {
+        "Id": "20028450_KG",
+        "Description": "Chicken Breast Boneless Skinless Club Pack",
+        "Id_magasin": "8661",
+        "Prix": 18.14,
+        "PrixPromo": null,
+        "Unité": null,
+        "Quantité": null,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-29",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/chicken-breast-boneless-skinless-club-pack/p/20028450_KG",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20028450_KG/en/1/20028450_enfr_front_v1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 6,
+    "NomProduit": "Lait de vache 2 %",
+    "Categorie": "Produits laitiers",
+    "alias": [
+      "lait",
+      "milk"
+    ],
+    "Produits": [
+      {
+        "Id": "20020563_EA",
+        "Description": "Purfiltre Partially Skimmed Milk 2%",
+        "Id_magasin": "8661",
+        "Prix": 5.25,
+        "PrixPromo": null,
+        "Unité": "ml",
+        "Quantité": 2000,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-27",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/purfiltre-partially-skimmed-milk-2/p/20020563_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20020563_EA/en/1/20020563_en_1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 7,
+    "NomProduit": "Œufs gros",
+    "Categorie": "Œufs",
+    "alias": [
+      "oeufs",
+      "œufs",
+      "eggs"
+    ],
+    "Produits": [
+      {
+        "Id": "21435777001_EA",
+        "Description": "Large Size Eggs",
+        "Id_magasin": "8661",
+        "Prix": 10.19,
+        "PrixPromo": null,
+        "Unité": "un",
+        "Quantité": 30,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-27",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/large-size-eggs/p/21435777001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/21435777001_EA/en/1/21435777001_enfr_front_v1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 8,
+    "NomProduit": "Riz basmati blanc sec",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "basmati"
+    ],
+    "Produits": [
+      {
+        "Id": "20065191_EA",
+        "Description": "Pure Original Basmati Rice",
+        "Id_magasin": "8661",
+        "Prix": 7.49,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 907,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-27",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/pure-original-basmati-rice/p/20065191_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20065191_EA/en/1/72529903024_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 9,
+    "NomProduit": "Pois chiches en conserve",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "pois chiches",
+      "chickpeas"
+    ],
+    "Produits": [
+      {
+        "Id": "20325921001_EA",
+        "Description": "Chickpeas",
+        "Id_magasin": "8661",
+        "Prix": 1.5,
+        "PrixPromo": null,
+        "Unité": "ml",
+        "Quantité": 540,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/chickpeas/p/20325921001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20325921001_EA/en/1/20325921001_en_front_v1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 10,
+    "NomProduit": "Huile d’olive",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "huile olive",
+      "huile d olive",
+      "olive oil"
+    ],
+    "Produits": [
+      {
+        "Id": "20105368_EA",
+        "Description": "Extra Virgin Olive Oil",
+        "Id_magasin": "8661",
+        "Prix": 13.99,
+        "PrixPromo": null,
+        "Unité": "ml",
+        "Quantité": 1000,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-27",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/extra-virgin-olive-oil/p/20105368_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20105368_EA/en/1/6780000206_enfr_front_centre_marketing_A_1_GS1_Ecommerce_v2_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 11,
+    "NomProduit": "Tomate fraîche",
+    "Categorie": "Légumes",
+    "alias": [
+      "tomato",
+      "tomatoes",
+      "tomate",
+      "tomates"
+    ],
+    "Produits": [
+      {
+        "Id": "21367888001_EA",
+        "Description": "Grape Tomatoes",
+        "Id_magasin": "8661",
+        "Prix": 3.0,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 283,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/grape-tomatoes/p/21367888001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/21367888001_EA/en/1/21367888001_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 12,
+    "NomProduit": "Pomme de terre fraîche",
+    "Categorie": "Légumes",
+    "alias": [
+      "potato",
+      "potatoes",
+      "pomme de terre",
+      "pommes de terre"
+    ],
+    "Produits": [
+      {
+        "Id": "20601017001_EA",
+        "Description": "Yellow Potato, 10 lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 6.79,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 4540,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/yellow-potato-10-lb-bag/p/20601017001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20601017001_EA/en/1/20601017001_en_front_v1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 13,
+    "NomProduit": "Poivron frais",
+    "Categorie": "Légumes",
+    "alias": [
+      "bell pepper",
+      "bell peppers",
+      "sweet pepper",
+      "sweet peppers",
+      "poivron",
+      "poivrons"
+    ],
+    "Produits": [
+      {
+        "Id": "20921434001_EA",
+        "Description": "Naturally Imperfect Mixed Sweet Peppers 2.5lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 6.99,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 1113,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-27",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/naturally-imperfect-mixed-sweet-peppers-2-5lb-bag/p/20921434001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20921434001_EA/en/1/20921434001_en_front_v1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 14,
+    "NomProduit": "Brocoli frais",
+    "Categorie": "Légumes",
+    "alias": [
+      "broccoli",
+      "brocoli",
+      "brocolis"
+    ],
+    "Produits": [
+      {
+        "Id": "21121560001_EA",
+        "Description": "Broccoli Crown",
+        "Id_magasin": "8661",
+        "Prix": 0.95,
+        "PrixPromo": null,
+        "Unité": "un",
+        "Quantité": 1,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/broccoli-crown/p/21121560001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/21121560001_EA/en/1/21121560001_enfr_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 15,
+    "NomProduit": "Courgette fraîche",
+    "Categorie": "Légumes",
+    "alias": [
+      "zucchini",
+      "zucchinis",
+      "courgette",
+      "courgettes"
+    ],
+    "Produits": [
+      {
+        "Id": "20426596001_KG",
+        "Description": "Zucchini",
+        "Id_magasin": "8661",
+        "Prix": 1.41,
+        "PrixPromo": null,
+        "Unité": null,
+        "Quantité": null,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/zucchini/p/20426596001_KG",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20426596001_KG/en/1/20426596001_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 16,
+    "NomProduit": "Pomme fraîche",
+    "Categorie": "Fruits",
+    "alias": [
+      "apple",
+      "apples",
+      "pomme",
+      "pommes"
+    ],
+    "Produits": [
+      {
+        "Id": "20713211001_EA",
+        "Description": "McIntosh Apples, 4 lb Bag",
+        "Id_magasin": "8661",
+        "Prix": 6.99,
+        "PrixPromo": 3.49,
+        "Unité": "g",
+        "Quantité": 1810,
+        "DateDebut": "2026-11-05",
+        "DateFin": "2026-11-11",
+        "DateRecuperation": "2026-11-05",
+        "IsPromotion": true,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/mcintosh-apples-4-lb-bag/p/20713211001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20713211001_EA/en/1/20713211001_en_front_v1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 17,
+    "NomProduit": "Citron frais",
+    "Categorie": "Fruits",
+    "alias": [
+      "lemon",
+      "lemons",
+      "citron",
+      "citrons"
+    ],
+    "Produits": [
+      {
+        "Id": "20028593001_EA",
+        "Description": "Lemon",
+        "Id_magasin": "8661",
+        "Prix": 0.97,
+        "PrixPromo": null,
+        "Unité": "un",
+        "Quantité": 1,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/lemon/p/20028593001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20028593001_EA/en/1/20028593001_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 18,
+    "NomProduit": "Bœuf haché cru",
+    "Categorie": "Viandes",
+    "alias": [
+      "ground beef",
+      "minced beef",
+      "boeuf hache"
+    ],
+    "Produits": [
+      {
+        "Id": "21604443_EA",
+        "Description": "Lean Ground Beef",
+        "Id_magasin": "8661",
+        "Prix": 9.0,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 450,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/lean-ground-beef/p/21604443_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/21604443_EA/en/1/21604443_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 19,
+    "NomProduit": "Saumon nature",
+    "Categorie": "Poissons",
+    "alias": [
+      "salmon",
+      "saumon"
+    ],
+    "Produits": [
+      {
+        "Id": "21634491_EA",
+        "Description": "Atlantic Salmon Fillet",
+        "Id_magasin": "8661",
+        "Prix": 17.0,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 405,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/atlantic-salmon-fillet/p/21634491_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/21634491_EA/en/1/21634491_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 20,
+    "NomProduit": "Thon en conserve",
+    "Categorie": "Poissons",
+    "alias": [
+      "tuna",
+      "thon"
+    ],
+    "Produits": [
+      {
+        "Id": "20521648_EA",
+        "Description": "Flaked Light Tuna Packed in Water",
+        "Id_magasin": "8661",
+        "Prix": 1.39,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 170,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/flaked-light-tuna-packed-in-water/p/20521648_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20521648_EA/en/1/20521648_en_front_v1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 21,
+    "NomProduit": "Crevettes nature",
+    "Categorie": "Poissons",
+    "alias": [
+      "shrimp",
+      "shrimps",
+      "prawn",
+      "prawns",
+      "crevette",
+      "crevettes"
+    ],
+    "Produits": [
+      {
+        "Id": "20789931_EA",
+        "Description": "Peeled Raw Pacific White Shrimp",
+        "Id_magasin": "8661",
+        "Prix": 11.0,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 400,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/peeled-raw-pacific-white-shrimp/p/20789931_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20789931_EA/en/1/20789931_en_front_v1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 22,
+    "NomProduit": "Fromage cheddar",
+    "Categorie": "Produits laitiers",
+    "alias": [
+      "cheddar"
+    ],
+    "Produits": [
+      {
+        "Id": "20975873_EA",
+        "Description": "Old Cheddar Cheese",
+        "Id_magasin": "8661",
+        "Prix": 9.29,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 700,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/old-cheddar-cheese/p/20975873_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20975873_EA/en/1/20975873_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 23,
+    "NomProduit": "Yogourt nature",
+    "Categorie": "Produits laitiers",
+    "alias": [
+      "yogurt",
+      "yoghurt",
+      "yogourt",
+      "yogourts"
+    ],
+    "Produits": [
+      {
+        "Id": "20165226001_EA",
+        "Description": "Original Balkan Style Plain Yogurt 6%",
+        "Id_magasin": "8661",
+        "Prix": 3.49,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 750,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/original-balkan-style-plain-yogurt-6/p/20165226001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20165226001_EA/en/1/20165226001_en_1_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 24,
+    "NomProduit": "Beurre",
+    "Categorie": "Produits laitiers",
+    "alias": [
+      "butter",
+      "beurre"
+    ],
+    "Produits": [
+      {
+        "Id": "20325029_EA",
+        "Description": "Salted Butter",
+        "Id_magasin": "8661",
+        "Prix": 6.0,
+        "PrixPromo": 5.5,
+        "Unité": "g",
+        "Quantité": 454,
+        "DateDebut": "2026-11-05",
+        "DateFin": "2026-11-11",
+        "DateRecuperation": "2026-11-05",
+        "IsPromotion": true,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/salted-butter/p/20325029_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20325029_EA/en/1/20325029_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 25,
+    "NomProduit": "Pâtes alimentaires sèches",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "pasta",
+      "spaghetti",
+      "penne",
+      "fusilli",
+      "macaroni",
+      "rotini",
+      "linguine",
+      "fettuccine",
+      "pates"
+    ],
+    "Produits": [
+      {
+        "Id": "20315613006_EA",
+        "Description": "Penne Rigate Pasta",
+        "Id_magasin": "8661",
+        "Prix": 2.0,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 900,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/penne-rigate-pasta/p/20315613006_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20315613006_EA/en/1/20315613006_en_front_v3_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 26,
+    "NomProduit": "Haricots rouges en conserve",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "kidney beans",
+      "haricots rouges"
+    ],
+    "Produits": [
+      {
+        "Id": "20554593_EA",
+        "Description": "Dark Red Kidney Beans",
+        "Id_magasin": "8661",
+        "Prix": 1.5,
+        "PrixPromo": null,
+        "Unité": "ml",
+        "Quantité": 540,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/dark-red-kidney-beans/p/20554593_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20554593_EA/en/1/20554593_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 27,
+    "NomProduit": "Tomates en conserve",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "tomato",
+      "tomatoes",
+      "tomate",
+      "tomates"
+    ],
+    "Produits": [
+      {
+        "Id": "20314629001_EA",
+        "Description": "Diced Tomatoes",
+        "Id_magasin": "8661",
+        "Prix": 1.69,
+        "PrixPromo": null,
+        "Unité": "ml",
+        "Quantité": 796,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-27",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/diced-tomatoes/p/20314629001_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20314629001_EA/en/1/20314629001_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 28,
+    "NomProduit": "Farine de blé tout usage",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "flour",
+      "farine"
+    ],
+    "Produits": [
+      {
+        "Id": "20013256_EA",
+        "Description": "All-Purpose Flour",
+        "Id_magasin": "8661",
+        "Prix": 4.0,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 2500,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/all-purpose-flour/p/20013256_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20013256_EA/en/1/6038301375_en_front_centre_marketing_GS1_Ecommerce_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 29,
+    "NomProduit": "Sucre blanc granulé",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "sugar",
+      "sucre"
+    ],
+    "Produits": [
+      {
+        "Id": "20145033_EA",
+        "Description": "Granulated Sugar",
+        "Id_magasin": "8661",
+        "Prix": 2.99,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 2000,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-10-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/granulated-sugar/p/20145033_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20145033_EA/en/1/5889125222_enfr_front_centre_marketing_GS1_Ecommerce_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 30,
+    "NomProduit": "Sel de table",
+    "Categorie": "Épicerie / Garde-manger",
+    "alias": [
+      "salt",
+      "sel"
+    ],
+    "Produits": [
+      {
+        "Id": "20126203_EA",
+        "Description": "Iodized Table Salt",
+        "Id_magasin": "8661",
+        "Prix": 1.79,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 1000,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/iodized-table-salt/p/20126203_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20126203_EA/en/1/20126203_en_front_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  },
+  {
+    "Id": 31,
+    "NomProduit": "Pain tranché",
+    "Categorie": "Boulangerie",
+    "alias": [
+      "bread",
+      "pain"
+    ],
+    "Produits": [
+      {
+        "Id": "20038335_EA",
+        "Description": "Thick Slice Original White Bread",
+        "Id_magasin": "8661",
+        "Prix": 4.0,
+        "PrixPromo": null,
+        "Unité": "g",
+        "Quantité": 675,
+        "DateDebut": null,
+        "DateFin": null,
+        "DateRecuperation": "2026-09-30",
+        "IsPromotion": false,
+        "Source": "apify",
+        "Url": "https://www.maxi.ca/en/thick-slice-original-white-bread/p/20038335_EA",
+        "ImageUrl": "https://digital.loblaws.ca/PCX/20038335_EA/en/1/20038335_en_1_v2_1200.png",
+        "ImageSource": "maxi"
+      }
+    ]
+  }
+]

@@ -191,8 +191,8 @@ def rating_content_changed(db: Session, recipe_id: str, body: RecipeWrite) -> bo
     if (before.servings, before.prep_time_minutes, before.cook_time_minutes) != (
             body.servings, body.prep_time_minutes, body.cook_time_minutes):
         return True
-    if [(step['position'], step['text'].strip()) for step in before.instructions] != [
-            (step.position, step.text) for step in body.instructions]:
+    if [(step['position'], step['text'].strip(), step.get('duration_minutes')) for step in before.instructions] != [
+            (step.position, step.text, step.duration_minutes) for step in body.instructions]:
         return True
     ingredients = db.execute(select(RecipeIngredient.ingredient_id, RecipeIngredient.quantity,
                                    RecipeIngredient.unit, RecipeIngredient.preparation)
@@ -206,6 +206,11 @@ def update_recipe(db: Session, recipe_id: str, body: RecipeWrite, user: CurrentU
     owned_recipe(db, recipe_id, user)
     rows = ingredient_rows(db, body, recipe_id)
     values = body.model_dump(exclude={'ingredients'}, exclude_unset=True)
+    # Les durées calculées doivent être écrites même si le client ne fournit
+    # que les étapes (exclude_unset ne doit pas conserver l'ancien total).
+    values.update(prep_time_minutes=body.prep_time_minutes,
+                  cook_time_minutes=body.cook_time_minutes,
+                  total_time_minutes=body.total_time_minutes)
     if rating_content_changed(db, recipe_id, body):
         values['content_version'] = Recipe.content_version + 1
     db.execute(update(Recipe).where(Recipe.id == recipe_id, Recipe.owner_id == user.id)

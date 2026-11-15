@@ -1,10 +1,28 @@
 # Mobile OptiMeal
 
+La barre de navigation contient Accueil, Promos, Recettes, Calendrier et Liste.
+Les paramètres s’ouvrent depuis la roue dentée en haut à droite de l’accueil,
+avec un retour vers celui-ci. Cet accès reste disponible sans compte.
+L’onglet Liste permet de créer un brouillon manuel ou une copie indépendante
+d’une période du calendrier avec aperçu et confirmation des exclusions, puis
+de compléter et reprendre ses listes enregistrées. Les visiteurs voient la
+présentation et peuvent se connecter à la demande. Les réponses incertaines
+se reprennent avec la même commande, enregistrée localement par compte.
+Le serveur doit disposer de la migration `0017_shopping_lists` et des routes du
+lot A. Cette migration est appliquée et vérifiée sur la base Supabase configurée
+depuis le 14 novembre 2026. L’ancienne Épicerie reste accessible dans Calendrier et depuis Accueil
+pendant la transition. Les prix et comparaisons viennent aux étapes suivantes ;
+le nouveau détail affiche « Estimation indisponible ».
+Voir [le suivi de l’étape 5](../backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
+`expo-crypto`, compatible SDK 58, génère les UUID des commandes idempotentes ;
+il est inclus dans Expo Go. Un client de développement compilé avant son ajout
+doit être reconstruit pour inclure le module natif.
+
 Socle Expo/TypeScript avec React Navigation : inscription, confirmation de
 courriel, connexion, restauration et renouvellement de session, déconnexion,
 profil minimal et recettes manuelles avec photo obligatoire à la création, choisie dans la galerie.
 Les cinq onglets sont présents : Accueil, Promos, Recettes, Calendrier et
-Paramètres. Promos permet de consulter les offres, les circulaires et les
+Liste. Promos permet de consulter les offres, les circulaires et les
 recettes associées aux ingrédients en promotion. Calendrier permet de conserver
 et modifier les repas d’une semaine ; les essais sur appareil et les
 instantanés historiques restent à compléter.
@@ -521,8 +539,8 @@ des dépendances, comme pour les modules photo.
 Le chemin fonctionnel est **Ajouter une recette → Entrer manuellement →
 Remplir un formulaire**. Trouver une idée, Cuisiner avec ce qu’on a et
 Structurer une idée affichent un message d’attente.
-Le formulaire présente le nom, la photo, les portions, la préparation,
-les ingrédients avec quantité séparée du choix d’unité, les étapes,
+Le formulaire présente le nom, la photo, les portions,
+les ingrédients avec quantité séparée du choix d’unité, les étapes et leur durée en minutes,
 les étiquettes et le réglage de partage.
 Le choix d’un ingrédient ouvre une liste consultable avec recherche.
 Les unités acceptées sont `g`, `ml`, `unit` (pièces entières), `cup` (tasse, 250 ml),
@@ -536,8 +554,17 @@ Le formulaire et le détail affichent les libellés français, avec le volume
 des tasses et des cuillères. Les demi-mesures se saisissent avec une décimale, par exemple
 `0,5`. Le backend et la base doivent être à jour jusqu’à la migration
 `0014_recipe_kitchen_units` pour sauvegarder ces nouvelles unités.
-Description et cuisson restent accessibles dans « Autres informations » ;
-les valeurs existantes sont conservées lors d’une modification.
+La description reste accessible dans « Autres informations ». Les champs de
+préparation et de cuisson séparés sont retirés : chaque étape demande un temps
+entier en minutes (0 accepté pour une étape immédiate), cuisson et attente
+comprises. La somme apparaît automatiquement et est recalculée côté serveur.
+Une durée absente ou invalide empêche l’envoi de la photo et de la recette.
+En modification d’une ancienne recette, renseigner les durées manquantes ;
+aucune répartition du total existant n’est inventée. La consultation des
+anciennes recettes conserve leur total. Le détail affiche les durées connues
+des étapes, les cartes et Rapides utilisent la somme enregistrée.
+Cette évolution du 10 novembre 2026 ne nécessite aucune migration ; les essais
+sur appareil restent à effectuer.
 
 La difficulté n’est plus choisie par l’auteur dans le formulaire ni affichée
 comme métadonnée dans le détail. Les autres utilisateurs évaluent la facilité
@@ -671,4 +698,140 @@ Le 1er novembre 2026, Hamza a confirmé le fonctionnement sur iOS du mode visite
 Sources : [Supabase React Native](https://supabase.com/docs/guides/auth/quickstarts/react-native)
 et [React Navigation](https://reactnavigation.org/docs/getting-started/).
 
-*Dernière mise à jour : 5 novembre 2026*
+## Liste d’achats : chargement incomplet et erreurs locales
+
+Le chargement publie la liste seulement après la réussite de toutes les lectures :
+planning, recettes, catalogue, offres et données personnelles locales. Une panne
+réseau, une erreur serveur, une erreur d’authentification ou une réponse de
+recette invalide interrompt ce chargement. La dernière liste chargée dans cet
+écran est conservée avec un avertissement ; elle peut différer du calendrier
+actuel. Il ne s’agit pas d’un cache persistant utilisable après redémarrage.
+Sans chargement préalable réussi, l’écran affiche une erreur plutôt qu’une liste
+vide présentée comme complète. « Réessayer le chargement » relance ces lectures.
+
+Seul un HTTP `404` de recette autorise son exclusion. Chaque repas concerné,
+y compris un repas dont la recette supprimée a laissé une référence nulle, est
+compté dans « Liste partielle ». Les notes libres et les restes ne sont pas
+comptés. Les ingrédients accessibles restent consultables, mais le montant est
+nommé « Sous-total des repas accessibles ». L’écran n’annonce pas « Bonne
+épicerie » ou « Ta liste de la semaine est vide » lorsque des repas sont exclus.
+L’Accueil présente également cet avertissement.
+
+Une écriture locale échouée conserve l’état affiché avant la modification et
+signale « Modification non enregistrée ». Le champ d’ajout attend la confirmation
+avant d’effacer la saisie. « Réessayer l’enregistrement » relance la dernière
+modification échouée ; recharger les données ou réussir une autre modification
+ne masque pas cet échec. Les reprises de coches fixent l’état demandé, sans
+inverser une deuxième fois une écriture qui aurait réussi avant de signaler une
+erreur. La reprise appartient au compte d’origine et devient inutilisable après
+un changement de compte.
+
+Les tests `shoppingListFailures.test.cjs` et `shoppingListStatus.test.cjs`
+couvrent ces scénarios avec services TypeScript réels, stockage et réseau
+simulés. Pour une vérification manuelle sur appareil :
+
+1. Planifier deux recettes contenant des ingrédients distincts et ouvrir l’Épicerie.
+2. Couper le réseau et actualiser : vérifier le message, les anciennes lignes
+   conservées et le libellé « Dernier montant chargé ».
+3. Rétablir le réseau et réessayer le chargement : vérifier la liste actualisée.
+4. Supprimer une recette planifiée, puis recharger : vérifier « Liste partielle »,
+   le nombre de repas exclus et l’absence de message de courses terminées.
+5. Avec un stockage simulant un rejet de `setItem`, ajouter un article, cocher une
+   ligne et modifier le garde-manger : vérifier les erreurs et l’état inchangé.
+   Rétablir le stockage et réessayer l’enregistrement ; vérifier la persistance
+   après rechargement et la conservation de la saisie tant que l’ajout échoue.
+6. Changer de compte après une écriture échouée : vérifier qu’aucune reprise
+   de l’ancien compte n’est proposée ou exécutée pour le nouveau.
+
+## Identité des produits suivis et choisis
+
+Les suivis et les choix manuels enregistrent `Offer.product_id`, la clé
+commerciale déjà fournie par l’API : enseigne, magasin et référence marchand.
+Ils n’enregistrent plus l’empreinte `Offer.id`, qui peut changer avec le prix
+ou la date du relevé. Les cloches, la liste Suivis, le détail du produit et le
+compteur de promotions comparent cette clé stable. Un produit absent du
+catalogue garde son suivi ; il réapparaît si la même référence revient.
+
+Dans l’Épicerie, toucher un produit conserve ce choix, même s’il est actuellement
+le moins cher. « Choisir automatiquement le moins cher » efface la préférence.
+Si le produit choisi est absent, la référence reste enregistrée, un avertissement
+invite à vérifier le choix et le produit calculé par défaut est affiché en attendant.
+Les choix restent séparés par compte et par semaine.
+
+Les données existantes sont converties lors du chargement du catalogue, dans
+les mêmes clés privées du compte. Une ancienne empreinte est convertie seulement
+si elle correspond exactement à une offre encore connue. Les conversions et
+les actions sur les cloches passent par la même file d’écritures ; elles ne
+remplacent pas une modification concurrente. Les doublons identifiés sont réunis.
+Les noms et dates de suivi sont conservés.
+
+Une empreinte déjà périmée ne permet pas de retrouver avec certitude sa référence
+marchand. Le suivi est conservé et affiché comme « Ancien suivi à réassocier » ;
+l’utilisateur peut retrouver le produit dans Promos, le suivre à nouveau puis
+retirer l’ancien suivi. Aucun rapprochement par nom ou prix n’est tenté. Un ancien
+choix introuvable reste conservé avec un avertissement dans l’Épicerie : choisir
+à nouveau le produit ou activer le choix automatique permet de le remplacer.
+Les anciennes clés communes sans propriétaire restent ignorées.
+
+Tests : `productIdentity.test.cjs` et `backend/tests/test_product_identity.py`.
+Pour tester sur appareil : suivre un produit et en choisir un dans l’Épicerie,
+actualiser ses prix et sa date dans le catalogue, puis recharger Promos, Suivis
+et l’Épicerie. Vérifier les cloches, le compteur, le choix conservé et le nouveau
+prix. Redémarrer l’application et vérifier à nouveau. Tester aussi deux références
+de même nom, deux magasins, un produit retiré puis réintroduit, les anciennes
+données convertibles et non convertibles, et un changement de compte.
+
+## Données locales par compte
+
+Les articles ajoutés à la liste d’achats, les coches, les ingrédients déjà
+disponibles, le garde-manger, les choix de produits, le magasin choisi et les
+produits suivis sont enregistrés sur le téléphone pour le compte connecté.
+Chaque compte possède ses propres clés AsyncStorage, préfixées par son
+identifiant Supabase. Les coches, « J’en ai déjà » et choix de produits restent
+également séparés par semaine.
+
+`services/accountStorage.ts` reçoit explicitement le compte propriétaire et
+ordonne les modifications d’une même clé. `useShoppingList` et `useFollows`
+masquent les anciennes données dès le changement de compte et ignorent les
+résultats asynchrones de la session précédente. Une écriture déjà commencée
+reste attachée à son compte d’origine. Les suivis passent par ce même contrôle
+dans Promos, Suivis et le détail d’un produit.
+
+Sans compte, aucune donnée personnelle locale n’est lue ou enregistrée.
+Toucher une cloche propose la connexion. Une reconnexion au même compte
+retrouve ses données sur ce téléphone ; cette correction n’ajoute pas de
+synchronisation entre appareils.
+
+Les anciennes clés communes, sans identifiant de propriétaire, sont conservées
+mais ignorées. Elles ne sont pas attribuées au premier compte qui se connecte :
+leur propriétaire ne peut pas être établi. Les anciens articles et suivis
+peuvent donc ne plus apparaître après la mise à jour ; aucune migration
+automatique ne les transmet à un autre utilisateur.
+
+Les tests `localAccountIsolation.test.cjs`, exécutés par `npm test`, couvrent
+deux comptes, le visiteur, une reconnexion, les anciennes clés, les erreurs de
+stockage, les écritures concurrentes et les réponses tardives. Les essais
+suivants restent à reproduire sur iOS et Android :
+
+1. Sous A, ajouter un article, cocher une ligne, choisir un produit et suivre une offre.
+2. Se déconnecter : vérifier que les suivis de A ne sont plus visibles.
+3. Sous B, vérifier l’absence des données de A, puis enregistrer des données différentes.
+4. Revenir sous A : retrouver ses données sans celles de B.
+5. Fermer puis relancer l’application et vérifier la même séparation.
+6. Sans compte, toucher une cloche et annuler la connexion : aucun suivi ne doit être créé.
+
+## Prix promotionnels avec limite de quantité
+
+Une offre peut indiquer un prix pour les premières unités, puis un autre prix
+au-delà : par exemple 7,77 $ pour les quatre premières unités et 10 $ par unité
+supplémentaire. Les cartes Promos, leur détail et les articles de la liste
+affichent la condition avec le prix. Le prix après limite ne devient pas un
+prix régulier et ne sert pas à inventer un pourcentage de rabais.
+
+Les champs `quantity_limit` et `price_after_limit` sont facultatifs pour
+compatibilité. Le backend doit avoir reçu la migration `0016_offer_quantity_limits`
+avant son redémarrage. Le prix promotionnel est utilisé uniquement pendant
+une période confirmée active. Les contrôles automatisés couvrent cet affichage ;
+les essais sur appareil restent à effectuer.
+
+*Dernière mise à jour : 14 novembre 2026*

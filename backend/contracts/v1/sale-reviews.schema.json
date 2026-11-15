@@ -1,0 +1,200 @@
+{
+  "$defs": {
+    "SaleQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "SaleQuantity",
+      "type": "object"
+    },
+    "SaleReview": {
+      "additionalProperties": false,
+      "description": "Attestation explicite ; ne constitue jamais une vérification automatique.",
+      "properties": {
+        "product_id": {
+          "minLength": 1,
+          "title": "Product Id",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "pattern": "^ing_[a-z0-9_]+$",
+          "title": "Ingredient Id",
+          "type": "string"
+        },
+        "source_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Fingerprint",
+          "type": "string"
+        },
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "method": {
+          "enum": [
+            "source_document",
+            "manual_review"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "reference": {
+          "minLength": 1,
+          "title": "Reference",
+          "type": "string"
+        },
+        "format_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Format Raw"
+        },
+        "price_basis_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Price Basis Raw"
+        },
+        "price_basis": {
+          "default": "unknown",
+          "enum": [
+            "package",
+            "weight",
+            "count",
+            "unknown"
+          ],
+          "title": "Price Basis",
+          "type": "string"
+        },
+        "price_per_quantity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sale_increment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "minimum_sale": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "match_status": {
+          "default": "proposed",
+          "enum": [
+            "verified",
+            "proposed",
+            "rejected"
+          ],
+          "title": "Match Status",
+          "type": "string"
+        },
+        "scope": {
+          "default": "unknown",
+          "enum": [
+            "store",
+            "retailer",
+            "unknown"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "conditions": {
+          "default": "unknown",
+          "enum": [
+            "unconditional",
+            "member",
+            "coupon",
+            "multi_buy",
+            "unknown"
+          ],
+          "title": "Conditions",
+          "type": "string"
+        },
+        "zero_price_verified": {
+          "default": false,
+          "title": "Zero Price Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "product_id",
+        "ingredient_id",
+        "source_fingerprint",
+        "checked_at",
+        "method",
+        "reference"
+      ],
+      "title": "SaleReview",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "sale-reviews-1.0",
+      "default": "sale-reviews-1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "reviews": {
+      "items": {
+        "$ref": "#/$defs/SaleReview"
+      },
+      "title": "Reviews",
+      "type": "array"
+    }
+  },
+  "required": [
+    "reviews"
+  ],
+  "title": "SaleReviewDocument",
+  "type": "object"
+}

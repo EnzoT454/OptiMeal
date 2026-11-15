@@ -1,0 +1,52 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "start_date": {
+      "format": "date",
+      "title": "Start Date",
+      "type": "string"
+    },
+    "end_date": {
+      "format": "date",
+      "title": "End Date",
+      "type": "string"
+    },
+    "purchase_date": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Purchase Date"
+    },
+    "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "preview_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Preview Fingerprint",
+      "type": "string"
+    },
+    "accept_partial": {
+      "default": false,
+      "title": "Accept Partial",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "start_date",
+    "end_date",
+    "name",
+    "preview_fingerprint"
+  ],
+  "title": "ShoppingFromCalendar",
+  "type": "object"
+}

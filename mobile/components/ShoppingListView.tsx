@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-nati
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { recipeColors as c } from "./recipes";
 import { money, storeName } from "./promos";
+import ShoppingListStatus from "./ShoppingListStatus";
 import AddItemField from "./AddItemField";
 import ArticleSheet from "./ArticleSheet";
 import {
@@ -11,6 +12,7 @@ import {
 } from "./shoppingList";
 import type { ListeAchats } from "./useShoppingList";
 import type { Retailer } from "../types/api";
+import { quantityPriceCondition } from '../services/offerPricing';
 
 // =====================================================================
 // Le contenu de l'Épicerie (dans le Calendrier) :
@@ -63,7 +65,7 @@ export default function ShoppingListView({ liste }: { liste: ListeAchats }) {
         <View style={styles.total}>
           <View>
             <Text style={styles.totalLabel}>
-              Total estimé{autresMagasins.length > 0 ? ` · ${1 + autresMagasins.length} magasins` : ` chez ${storeName(magasin)}`}
+              {liste.erreurChargement ? "Dernier montant chargé" : liste.nbRepasExclus > 0 ? "Sous-total des repas accessibles" : "Total estimé"}{autresMagasins.length > 0 ? ` · ${1 + autresMagasins.length} magasins` : ` chez ${storeName(magasin)}`}
             </Text>
             <Text style={styles.totalValeur}>≈ {money(totaux.total)}</Text>
           </View>
@@ -97,16 +99,9 @@ export default function ShoppingListView({ liste }: { liste: ListeAchats }) {
       {/* ---- États ---- */}
       {chargement && lignes.length === 0 && <ActivityIndicator color={c.green} style={{ marginTop: 24 }} />}
 
-      {!chargement && erreur && (
-        <View style={styles.boite}>
-          <Text style={styles.texte}>{erreur}</Text>
-          <Pressable accessibilityRole="button" onPress={liste.recharger} hitSlop={10}>
-            <Text style={styles.lien}>Réessayer</Text>
-          </Pressable>
-        </View>
-      )}
+      <ShoppingListStatus liste={liste} />
 
-      {!chargement && !erreur && lignes.length === 0 && (
+      {!chargement && !erreur && !liste.avertissement && lignes.length === 0 && (
         <View style={styles.boite}>
           <MaterialCommunityIcons name="cart-outline" size={32} color={c.green} />
           <Text style={styles.texteFort}>Ta liste de la semaine est vide</Text>
@@ -116,7 +111,7 @@ export default function ShoppingListView({ liste }: { liste: ListeAchats }) {
         </View>
       )}
 
-      {!chargement && !erreur && lignes.length > 0 && aAcheter.length === 0 && pasIci.length === 0 && (
+      {!chargement && !erreur && !liste.avertissement && lignes.length > 0 && aAcheter.length === 0 && pasIci.length === 0 && (
         <View style={styles.boite}>
           <MaterialCommunityIcons name="check-circle-outline" size={32} color={c.green} />
           <Text style={styles.texteFort}>Rien d'autre à acheter</Text>
@@ -265,6 +260,7 @@ function Ligne({ ligne, liste, coche, premier, onCocher, onOuvrir }: {
         </Text>
         {!coche && sousTitre.length > 0 && <Text style={styles.sousTitre} numberOfLines={1}>{sousTitre}</Text>}
         {!coche && offre && <Text style={styles.produit} numberOfLines={1}>{texteProduit(offre)}</Text>}
+        {!coche && offre && quantityPriceCondition(offre) && <Text style={styles.produit}>{quantityPriceCondition(offre)}</Text>}
       </Pressable>
 
       {!coche && (

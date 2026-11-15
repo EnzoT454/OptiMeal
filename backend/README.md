@@ -2,11 +2,34 @@
 
 Le backend contient l’API FastAPI, la collecte Apify pour Maxi et l’extraction locale des reçus. Le code est organisé par fonction, avec des commandes et des guides séparés.
 
+Le [guide d’évaluation d’API Anything](docs/API_ANYTHING.md) prépare les futurs
+essais de récupération des prix sur les sites marchands et Glouton. Cette
+piste reste expérimentale et ne remplace pas les sources actuelles.
+
+Le [plan des listes d’épicerie](docs/SHOPPING_LISTS.md) décrit les parcours,
+calculs et validations. Le lot A est livré : routes privées sous
+`/api/v1/shopping-lists`, brouillons manuels, aperçu puis import indépendant du
+calendrier, édition, révisions et commandes idempotentes. Voir les
+[contrats](docs/SHOPPING_LISTS_CONTRACTS.md) et le
+[suivi de l’étape 5](docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
+La migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis
+le 14 novembre 2026. Les prix et comparaisons des nouveaux achats restent à développer. L’ancienne Épicerie
+fonctionne encore côté mobile pendant la transition.
+
+La [normalisation des ventes](docs/SALE_NORMALIZATION.md), étape 6, sépare contenu
+net, base du prix, contraintes de vente et fiabilité des correspondances. La
+commande `python -m backend.cli.normalize_sales --on-date 2026-11-14 --output /tmp/optimeal-sales.json`
+audite le JSON ; ajouter `--source database` pour une lecture seule PostgreSQL.
+Au contrôle du 14 novembre, les deux sources donnent les mêmes 93 références :
+90 formats candidats, 3 inconnus et aucune référence certifiée sans attestation.
+Le calcul des achats vient à l’étape 7.
+
 Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
 privées par défaut et publication volontaire définitive. Une recette publique
 ne peut plus être rendue privée ni supprimée par son auteur.
-Appliquer les migrations jusqu’à la tête courante `0015_permanent_public_recipes` avant
-de démarrer cette version : `0009_recipe_visibility` ajoute le partage et
+La tête du dépôt est `0017_shopping_lists`, pour les parcours de listes.
+Les autres routes utilisent les migrations jusqu’à `0016_offer_quantity_limits` :
+`0009_recipe_visibility` ajoute le partage et
 `0010_preserve_meals` conserve les repas après suppression de leur recette. Les
 [contrats](docs/CONTRACTS.md#visibilité-et-sections-de-recettes--étape-backend)
 décrivent `scope` et `PATCH /api/v1/recipes/{id}/visibility`, ainsi que le
@@ -79,6 +102,7 @@ backend/
 ├── config/storage/              # Configuration du bucket public recipes-images
 ├── docs/
 │   ├── APIFY.md                 # Installation et utilisation d’Apify
+│   ├── API_ANYTHING.md          # Analyse et protocole des futurs essais API Anything
 │   ├── CATALOG.md               # Contrat et limites du catalogue
 │   ├── RECEIPTS.md              # Installation OCR, essais et limites
 │   ├── DATA.md                  # Organisation des données locales
@@ -109,7 +133,9 @@ backend/
 
 Les fichiers `__init__.py` identifient les packages Python. Les comptes,
 recettes, calendrier et contrôles de sécurité sont fonctionnels ; les listes
-restent des squelettes et les instantanés historiques sont à développer. Dans chaque domaine, `router.py` traite les requêtes
+disposent des routes et services du lot A, avec import calendrier et révisions.
+Les instantanés des listes sont disponibles côté service ; ceux des plans restent
+à développer. Dans chaque domaine, `router.py` traite les requêtes
 HTTP, `schemas.py` définit les contrats, `models.py` les modèles persistants
 et `service.py` les règles métier, selon l’état d’avancement du domaine.
 
@@ -211,6 +237,12 @@ applicatif reste géré par les migrations Alembic.
 
 ## Promos et circulaires de la semaine
 
+Les offres peuvent aussi conserver un prix limité aux premières unités
+(`LimiteQuantite`, `PrixApresLimite`). Le prix après limite est distinct du
+prix régulier. La migration `0016_offer_quantity_limits` est requise ; les
+[contrats](docs/CONTRACTS.md#prix-promotionnel-avec-limite-de-quantité)
+décrivent la validation, le calcul par quantité et l’affichage.
+
 Les offres (prix de base `Prix`, prix promo `PrixPromo`, dates de promotion et
 `DateRecuperation`) viennent des fichiers `produits.json` de chaque magasin. Les
 circulaires (PDF des magasins) sont découpées en images JPEG et envoyées dans le
@@ -292,4 +324,4 @@ l’historique des prix et les contributions par reçus. Compléter les fichiers
 
 Le [guide des données](docs/DATA.md) décrit les fichiers locaux. Le [guide de la base](docs/DATABASE.md) distingue les tables actuelles du modèle étendu proposé pour l’historique, les reçus et les estimations.
 
-*Dernière mise à jour : 5 novembre 2026*
+*Dernière mise à jour : 14 novembre 2026*

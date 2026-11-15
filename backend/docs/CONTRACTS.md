@@ -1,5 +1,13 @@
 # Contrats communs — Recettes et Promos v1
 
+Les [contrats des listes](SHOPPING_LISTS_CONTRACTS.md) sont définis
+séparément pour le lot A. Leurs schémas, exemples et routes sont exportés ; le lot A persistant et
+son parcours mobile sont raccordés. Les prix et comparaisons restent à développer.
+
+Les [formats de vente et bases tarifaires](SALE_NORMALIZATION.md) disposent de
+schémas de documents serveur séparés, sans changement des réponses HTTP de
+Promos ni certification implicite du catalogue actuel.
+
 Les contrats HTTP `1.0` couvrent les lectures et les écritures manuelles de recettes sous `/api/v1`. Ils
 sont utilisés par les deux onglets. Les recettes sont lues dans
 PostgreSQL/Supabase ; les ingrédients restent sur JSON. Les offres sont lues
@@ -383,6 +391,19 @@ les photos de recettes dans Supabase Storage.
 | Succursale API | Identifiant qualifié, par exemple `metro:178` ; le code marchand seul reste dans `external_store_id` |
 | Offre | `offer_…`, empreinte de l’ingrédient et de la fiche source ; stable à données identiques ; les champs de photo sont exclus de l’empreinte |
 
+`product_id` est l’identité commerciale à conserver pour suivre ou choisir un
+produit : enseigne, succursale (vide si non connue) et référence marchand,
+encodées dans le catalogue. Un changement de prix, de promotion, de date de
+relevé, de libellé ou de photo ne modifie pas cette clé. Un autre magasin ou
+une autre référence constitue un autre produit. Un changement de référence
+chez le marchand nécessite une réassociation explicite.
+
+`id` (`offer_…`) identifie l’offre issue d’une fiche et d’un ingrédient. Son
+empreinte peut changer à chaque mise à jour des prix ou dates ; elle sert aux
+lectures de détail de l’offre courante, jamais à une préférence durable. La
+correction mobile utilise le `product_id` déjà renvoyé par les deux sources
+JSON et PostgreSQL : aucun changement de schéma SQL n’est nécessaire.
+
 Le mobile traite les identifiants comme des chaînes opaques. Il n’en extrait
 pas des codes par découpage. Les `Id` numériques propres aux trois fichiers
 sources ne deviennent pas des références communes. Les éventuels UUID SQL
@@ -457,8 +478,23 @@ s’appliquent à `/api/v1/` ; les erreurs historiques restent inchangées.
   avant d’enregistrer les nouvelles unités. Les quantités
   sont strictement positives ; `unit` désigne des pièces entières dans
   cette première version. Les portions sont un entier strictement positif.
-- Les durées sont des entiers en minutes. Le total est préparation +
-  cuisson. Les étapes sont numérotées de 1 à N sans trou ni doublon.
+- Chaque étape peut porter `duration_minutes`, entier positif ou nul en minutes.
+  Dès qu’une étape porte une durée, toutes doivent en avoir une. FastAPI calcule
+  `total_time_minutes` comme leur somme et remplace les totaux fournis par le
+  client. Les trois anciens champs de durée peuvent alors être omis. Pour
+  conserver le schéma existant, `prep_time_minutes` reçoit le total et
+  `cook_time_minutes` vaut 0 : ces colonnes ne décrivent plus une ventilation.
+  Une durée et le total ne peuvent dépasser 2 147 483 647 minutes.
+- Les anciennes recettes sans durée par étape conservent leur total et leurs
+  trois champs historiques ; ces champs restent requis ensemble pour ce format.
+  Le détail expose une durée nulle pour leurs étapes. Aucun temps n’est inventé
+  ni réparti automatiquement. Les imports initiaux restent rejouables sans
+  modification des JSON d’étapes existants. Aucune migration n’est nécessaire.
+- Le formulaire demande une durée entière pour chaque étape, autorise 0 pour
+  une étape immédiate et affiche le total en lecture seule. Le détail affiche
+  les temps connus des étapes ; les cartes et Rapides utilisent le total.
+  Modifier une durée d’étape ouvre une nouvelle version évaluée, même à total
+  inchangé. Les étapes sont numérotées de 1 à N sans trou ni doublon.
 - Une quantité s’applique à la préparation indiquée (sec, pelé, égoutté…).
   La quantité entière de la recette est donnée pour `servings` portions.
 - `format.quantity` et `format.unit_raw` conservent le format marchand
@@ -490,7 +526,7 @@ Une offre est un relevé de prix, même hors promotion. `price.amount` contient
 le prix de base ; `promo_price` contient un objet monétaire si un prix promo
 est renseigné, sinon `null`. `retrieved_at` conserve la date de récupération
 et `category_id` identifie le rayon lorsqu’il est connu. Le mobile affiche
-le prix promo lorsqu’il existe, sinon le prix de base. `promotion.declared`
+le prix promo seulement lorsque la promotion est active, sinon le prix de base. `promotion.declared`
 reprend le booléen source ; les dates d’origine restent nulles si inconnues.
 Le statut calculé distingue :
 
@@ -503,6 +539,44 @@ Le statut calculé distingue :
 `promotion_only=true` conserve uniquement `active`. Une liste vide ne prouve
 donc pas qu’aucune promotion n’existe en magasin ; elle décrit les données
 de la capture. Une période inversée est refusée au chargement.
+
+### Prix promotionnel avec limite de quantité
+
+Depuis la migration `0016_offer_quantity_limits`, une offre peut porter
+`quantity_limit` (entier strictement positif) et `price_after_limit` (montant
+décimal en texte). Ces deux champs sont facultatifs et doivent être fournis
+ensemble. Ils exigent une promotion déclarée, un `promo_price` connu et un prix
+après limite supérieur ou égal au prix promotionnel. Les anciens fichiers
+sans ces champs restent compatibles.
+
+Exemple : `promo_price.amount = "7.77"`, `quantity_limit = 4`,
+`price_after_limit = "10.00"`. Les quatre premières unités de vente coûtent
+7,77 $ chacune ; les suivantes coûtent 10 $ chacune. Le prix après limite
+n’est pas un prix régulier : `price.amount` reste nul si ce dernier est inconnu.
+Aucun pourcentage d’économie n’est déduit du prix après limite.
+
+Dans les fichiers marchands, les champs correspondants sont `LimiteQuantite`
+et `PrixApresLimite`. Ils sont conservés par l’assemblage, l’import PostgreSQL,
+la liste et le détail HTTP. La paire absente ou nulle efface une ancienne
+condition lors de l’import. Ne pas conserver une ancienne limite lorsque
+la nouvelle offre n’en comporte plus.
+
+Le mobile affiche « Limite de 4 unités, puis 10,00 $ par unité » avec le prix,
+dans Promos, le détail et la liste d’achats. Une promotion sans prix régulier
+connu reste présentée comme une promotion, sans prix barré ni faux rabais.
+L’affichage des nouveaux champs doit être vérifié sur appareil.
+
+`catalog/pricing.py::purchase_total` calcule en Decimal le coût d’un nombre
+entier d’unités de vente : 4 unités = 31,08 $, 5 unités = 41,08 $. Ce calcul
+respecte les bornes inclusives de validité ; hors période, il utilise uniquement
+le prix régulier connu, sinon retourne un montant inconnu. Il ne calcule pas
+les paquets nécessaires à une recette et ne constitue pas le futur moteur
+complet des listes. La liste mobile actuelle additionne encore un paquet
+par ligne ; elle ne prétend pas gérer une quantité de paquets arbitraire.
+
+Pour les quatre promotions Maxi relevées le 14 novembre 2026, les dates
+du 12 au 18 novembre sont confirmées par l’utilisateur, et non extraites
+par Apify. Voir le rapport dans `data/catalog/maxi/actualisation-2026-11-14/`.
 
 ## Circulaires
 
@@ -555,4 +629,4 @@ résumés/détails ajoutent `is_owned` et `is_favorite`. Les métadonnées
 manuelles confirmées n’exigent pas la revue des recettes de démonstration.
 Voir [AUTH.md](AUTH.md) pour les corps, droits et codes de réponse.
 
-*Dernière mise à jour : 5 novembre 2026*
+*Dernière mise à jour : 14 novembre 2026*

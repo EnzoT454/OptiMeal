@@ -138,6 +138,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+data/catalog/maxi/.env
 
 # Spyder project settings
 .spyderproject

@@ -164,6 +164,32 @@
           "default": null,
           "title": "Promo Price"
         },
+        "quantity_limit": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quantity Limit"
+        },
+        "price_after_limit": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Price After Limit"
+        },
         "currency": {
           "const": "CAD",
           "title": "Currency",

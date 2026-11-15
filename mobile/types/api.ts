@@ -11,7 +11,7 @@ export interface RecipeWrite {
   prep_time_minutes: number; cook_time_minutes: number; total_time_minutes: number;
   image_url: string | null; ingredients: RecipeIngredient[];
   difficulty?: RecipeDifficulty | null; tags: string[];
-  instructions: { position: number; text: string }[];
+  instructions: { position: number; text: string; duration_minutes?: number | null }[];
 }
 export type RecipeCreate = RecipeWrite & { image_url: string; visibility?: RecipeVisibility };
 export interface RecipeVisibilityUpdate { visibility: RecipeVisibility; }
@@ -54,6 +54,8 @@ export interface Offer {
   format: { quantity: string | null; unit_raw: string | null };
   price: Price;              // prix de base
   promo_price: Price | null; // prix en promotion
+  quantity_limit?: number | null; // premières unités admissibles au prix promo
+  price_after_limit?: string | null; // prix par unité supplémentaire, distinct du prix régulier
   category_id: number | null;
   retrieved_at: string | null;
   image_url: string | null;    // lien de la photo du produit (null si aucune)

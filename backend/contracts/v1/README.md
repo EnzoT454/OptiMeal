@@ -4,6 +4,14 @@ Le [guide des contrats communs](../../docs/CONTRACTS.md) décrit les routes,
 conventions et responsabilités. Ces fichiers sont générés depuis les modèles
 Pydantic et l’application FastAPI ; ne pas modifier les JSON à la main.
 
+Les fichiers `shopping-*.schema.json` et `shopping-list-examples.json` fixent
+les [contrats du lot A des listes](../../docs/SHOPPING_LISTS_CONTRACTS.md).
+Ils sont testés et consommés par le mobile ; les routes privées de listes
+apparaissent dans `openapi.json`. La migration `0017_shopping_lists` est requise.
+
+- `sale-reviews.schema.json` et `sale-normalization-report.schema.json` :
+  attestations et rapports serveur de [normalisation des ventes](../../docs/SALE_NORMALIZATION.md),
+  distincts des routes publiques de Promos.
 - `openapi.json` : description des routes et des ressources pour les clients.
 - `*-page.schema.json` et `*-detail.schema.json` : schémas JSON des réponses v1.
 - `error.schema.json` : erreur partagée.

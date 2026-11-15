@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
 import { Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles, showRecipeComingSoon } from '../components/recipes';
-import { currentPrice, discount, formatText, longDate, money, storeName, unitPrice } from '../components/promos';
+import { currentPrice, discount, formatText, longDate, money, quantityPriceCondition, storeName, unitPrice } from '../components/promos';
 import { ProductImage } from '../components/ProductImage';
 import { deal, perWeight, saving } from '../components/deal';
-import { getFollows, toggleFollow } from '../components/follows';
+import { followsOffer } from '../components/follows';
+import { useFollows } from '../components/useFollows';
 import { PromoStackParams } from '../types/navigation';
 
 export default function PromoDetailScreen({ navigation, route }: NativeStackScreenProps<PromoStackParams, 'Detail'>) {
@@ -24,22 +24,9 @@ export default function PromoDetailScreen({ navigation, route }: NativeStackScre
   const url = offer.source.url;
 
   // Suivi de CE produit dans CE magasin : prévenir quand il passe en promo.
-  const [followed, setFollowed] = useState(false);
-  const [busy, setBusy] = useState(false);
-  useEffect(() => {
-    let active = true;
-    getFollows().then(list => { if (active) setFollowed(list.some(f => f.offer_id === offer.id)); });
-    return () => { active = false; };
-  }, [offer.id]);
-  const onFollowPress = async () => {
-    setBusy(true);
-    try {
-      const list = await toggleFollow(offer);
-      setFollowed(list.some(f => f.offer_id === offer.id));
-    } finally {
-      setBusy(false);
-    }
-  };
+  const { follows, busy, toggle, error: followError } = useFollows();
+  const followed = follows.some(f => followsOffer(f, offer));
+  const onFollowPress = () => { void toggle(offer); };
 
   return <RecipeScreen>
     <RecipeTitle onBack={() => navigation.goBack()}>{offer.promo_price ? 'La bonne affaire' : 'Le produit'}</RecipeTitle>
@@ -60,13 +47,15 @@ export default function PromoDetailScreen({ navigation, route }: NativeStackScre
 
     <View style={styles.priceBox}>
       <Text style={styles.price}>{money(currentPrice(offer))}{perWeight(offer)}</Text>
+      {quantityPriceCondition(offer) && <Text style={recipeStyles.body}>{quantityPriceCondition(offer)}</Text>}
       {perUnit && <Text style={styles.unitPrice}>{perUnit}</Text>}
       {saved != null && <Text style={[styles.saving, { color: level?.text ?? recipeColors.green }]}>Économisez {money(saved)}{perWeight(offer)}</Text>}
-      {offer.promo_price && <Text style={recipeStyles.body}>Prix régulier : {money(offer.price.amount)}{perWeight(offer)}</Text>}
+      {offer.promo_price && offer.price.amount != null && <Text style={recipeStyles.body}>Prix régulier : {money(offer.price.amount)}{perWeight(offer)}</Text>}
     </View>
 
     {/* Bouton « Suivre » : contour vert si non suivi, plein vert une fois suivi. */}
     <View style={{ gap: 6 }}>
+      {!!followError && <Text style={recipeStyles.note}>{followError}</Text>}
       <Pressable accessibilityRole="button" accessibilityState={{ selected: followed, busy: busy }} disabled={busy}
         onPress={onFollowPress} style={[styles.follow, followed && styles.followOn]}>
         <Ionicons name={followed ? 'checkmark' : 'notifications-outline'} size={22} color={followed ? 'white' : recipeColors.green} />

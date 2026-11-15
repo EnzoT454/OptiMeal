@@ -6,12 +6,14 @@ from pathlib import Path
 import sys
 
 from backend.app.catalog.common_schemas import CommonCatalog, IngredientRead, OfferRead
+from backend.app.catalog.sales import SaleReviewDocument, SaleNormalizationReport
 from backend.app.common.contracts import Detail, ErrorResponse, Page
 from backend.app.common.public_data import DEFAULT_CATALOG, DEFAULT_RECIPES, ROOT, load_catalog, load_recipes
 from backend.app.common.public_router import meta, page
 from backend.app.main import create_app
 from backend.app.recipes.schemas import RecipeRead, RecipeSeedDocument, RecipeSummary, RecipeRatingWrite
 from backend.app.recipes.router import recipe_meta
+from backend.app.shopping_lists.contracts import MODELS as SHOPPING_MODELS, examples as shopping_examples
 
 OUTPUT = ROOT / 'backend/contracts/v1'
 
@@ -25,6 +27,8 @@ def artifacts() -> dict:
         'offer-detail': Detail[OfferRead], 'error': ErrorResponse,
         'common-catalog': CommonCatalog, 'recipe-seed': RecipeSeedDocument,
         'recipe-rating-write': RecipeRatingWrite,
+        **SHOPPING_MODELS,
+        'sale-reviews': SaleReviewDocument, 'sale-normalization-report': SaleNormalizationReport,
     }
     files = {name + '.schema.json': model.model_json_schema(mode='serialization')
              for name, model in models.items()}
@@ -44,6 +48,10 @@ def artifacts() -> dict:
         name: models[name].model_validate(value).model_dump(mode='json') for name, value in examples.items()
     }
     files['openapi.json'] = create_app().openapi()
+    # Routes du lot A disponibles ; achats chiffrés encore à développer.
+    files['shopping-list-examples.json'] = {
+        'status': 'lot_a_implemented', 'examples': shopping_examples(),
+    }
     return files
 
 

@@ -1,0 +1,780 @@
+{
+  "schema_version": "catalog-review-1.0",
+  "status": "pending_human_review",
+  "note": "Suggestions uniquement. Modifier ce fichier n’approuve pas un prix ni une succursale.",
+  "matches": [
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_4ffd10883abaa02f69a6",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_22fea82a9d3f5ad8d0b2",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_dee31f4e774dabf16a42",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_3b55748eb2cde9eee4eb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_c6937c49475996bdffe9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_17a827e816f34cfcfd6f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_2e4345699e35925f092f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_37c05cd7798b94c3a142",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_f5379ea572051b20c61c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tomatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_tomate_fraiche",
+      "product_id": "apify_product_6443efb1226b3d109e4f",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:diced"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_793451eb9d8856ae587d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_d63817fb43ea297db6e9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_a8ffe3f3c8c1eb0aa903",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_ecdab7af1ee58edc2247",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_c6e4143557ef3eaba327",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_481a05228528ed84457f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_c75292a69e63af8e9277",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potatoes",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_de_terre",
+      "product_id": "apify_product_f1d245b093d7c8a81154",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:potato",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_poivron_frais",
+      "product_id": "apify_product_9b714e79c0cbfb128570",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:sweet peppers",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_3f6101c5ef1bdc69b56a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:broccoli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_e2253a9541d791c27cc4",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:broccoli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_1b55498259b67ec6841d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:broccoli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_46e81fb6a88844852b66",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:frozen"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_91090abb2238108e1176",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:broccoli",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_brocoli_frais",
+      "product_id": "apify_product_448405083d732f36b312",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:frozen"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_3fce5521e7548a8be937",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_d6ae5d3d3f0dfb7e1399",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_86dcdafe3015dca6f1db",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_5889d03c1c85bf747bd9",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_courgette_fraiche",
+      "product_id": "apify_product_568cc0700f25c6ad6dbf",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:zucchini",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_5ba7424abcd270b4ed45",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_681f42cc0bd9f45ac355",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_c06d72a130267855dd1e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_e287800dd35b9e7b77e7",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_53738632b3022901b6d0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_c3adebb51de4eede4f2e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_1e4cf06053fe6b6ef6ac",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_ee3f6f3c4b1561476e5b",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_e366c68d916faaae8b78",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_pomme_fraiche",
+      "product_id": "apify_product_4130a78244a76ec5b759",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:apples",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_f6b0599bdb92bdece4f8",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_9a23fcfe1f94ef507770",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemons",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_261066f774ad86028052",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemons",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_b82864de02652eadf379",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:juice"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_27e54eb0ea0acaad4311",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:juice"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_ccb709e1c90265e8f1f1",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:juice"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_4325b00f3886c3fdd322",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:juice"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_c93dc806faf50f2e4f6d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_f85eb7671d62998d6a26",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_dd4897c67201bb78cf23",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_20bfffc50a9bafe3b6d0",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_b809821bb3983f052856",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_a039685de66f72c1f990",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_359831d790eec10a2724",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_db4b6490f2e4c8f74d0a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_5db41b970fde0e7e5596",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_boeuf_hache",
+      "product_id": "apify_product_8bac9fbedff7eb86955e",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:ground beef",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_e4cc98798d9d0f4e2d6a",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_5ce4b6c8c6e94cbfa3b2",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_0c8f71366b4d71b5d295",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_4be4a31a00d8ed1e02ae",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_2daebb1e6c8024173039",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_939628d4785742276dc8",
+      "status": "rejected",
+      "method": "alias_rules",
+      "reasons": [
+        "excluded_term:smoked"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_3f26ab237257fc449712",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_dd367d6eb71fdf5ada7d",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_bb5639b215587de88e8f",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_saumon",
+      "product_id": "apify_product_49d3a7ef04bcc929c09c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:salmon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_60075505eadf999f4c69",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_be46bd20b33ce447ccd3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_f89e07bba4c4394a72eb",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_bdcf739655a7095451c7",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_a6fcd229c7b970d1c569",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_c61dab345290ecda582c",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_02f9e6c38a59db2d26fe",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_fb7e7e1d73979c2b40e8",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_0939d1864f4d4cefabba",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_citron_frais",
+      "product_id": "apify_product_e1903d7f27a46bcc98e3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:lemon",
+        "manual_approval_required"
+      ]
+    },
+    {
+      "ingredient_id": "ing_thon_conserve",
+      "product_id": "apify_product_e1903d7f27a46bcc98e3",
+      "status": "suggested",
+      "method": "alias_rules",
+      "reasons": [
+        "alias:tuna",
+        "manual_approval_required"
+      ]
+    }
+  ],
+  "search_rejections": []
+}

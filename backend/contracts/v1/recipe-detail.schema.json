@@ -379,6 +379,20 @@
           "minLength": 1,
           "title": "Text",
           "type": "string"
+        },
+        "duration_minutes": {
+          "anyOf": [
+            {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Minutes"
         }
       },
       "required": [

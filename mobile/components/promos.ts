@@ -1,5 +1,7 @@
 import { api } from '../services/api';
 import type { Circular, Offer, Page, Retailer } from '../types/api';
+import { currentOfferPrice, hasActivePromotion } from '../services/offerPricing';
+export { quantityPriceCondition } from '../services/offerPricing';
 
 // Fonctions partagées par les écrans Promos (liste, détail, circulaires).
 
@@ -52,9 +54,10 @@ export function longDate(value: string | null | undefined) {
 }
 // Prix payé aujourd'hui : le prix promo s'il existe, sinon le prix de base.
 export function currentPrice(offer: Offer) {
-  return offer.promo_price?.amount ?? offer.price.amount;
+  return currentOfferPrice(offer);
 }
 export function discount(offer: Offer) {
+  if (!hasActivePromotion(offer)) return null;
   const regular = Number(offer.price.amount);
   const promo = Number(offer.promo_price?.amount);
   if (!regular || !promo || promo >= regular) return null;

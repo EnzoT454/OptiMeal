@@ -2,8 +2,8 @@ import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { recipeColors as c } from "./recipes";
-import { money, storeName } from "./promos";
-import { enPromo, offreChoisie, prixOffre, texteProduit, type LigneListe } from "./shoppingList";
+import { money, quantityPriceCondition, storeName } from "./promos";
+import { enPromo, prixOffre, texteProduit, type LigneListe } from "./shoppingList";
 import type { ListeAchats } from "./useShoppingList";
 
 // =====================================================================
@@ -52,6 +52,10 @@ export default function ArticleSheet({ ligne, liste, quantite, onClose }: {
         {produits.length > 0 ? (
           <View>
             <Text style={styles.section}>OÙ LE PRENDRE</Text>
+            {liste.choix[ligne.ingredient_id] && <Pressable accessibilityRole="button"
+              onPress={() => liste.choisirProduit(ligne.ingredient_id, null)}>
+              <Text style={styles.section}>Choisir automatiquement le moins cher</Text>
+            </Pressable>}
             <View style={styles.prixListe}>
               {produits.map((o, i) => {
                 const prix = prixOffre(o)!;
@@ -60,9 +64,7 @@ export default function ArticleSheet({ ligne, liste, quantite, onClose }: {
                 return (
                   <Pressable key={o.id} accessibilityRole="radio" accessibilityState={{ selected: choisi }}
                     onPress={() => {
-                      // Le produit par défaut du magasin : pas besoin de le retenir à part
-                      const parDefaut = offreChoisie(ligne, liste.magasin);
-                      liste.choisirProduit(ligne.ingredient_id, o.id === parDefaut?.id ? null : o.id);
+                      liste.choisirProduit(ligne.ingredient_id, o.product_id);
                     }}
                     style={[styles.prixLigne, i > 0 && styles.separateur, choisi && { backgroundColor: c.light }]}>
                     <MaterialCommunityIcons name={choisi ? "radiobox-marked" : "radiobox-blank"} size={20}
@@ -72,6 +74,7 @@ export default function ArticleSheet({ ligne, liste, quantite, onClose }: {
                         {storeName(o.retailer)}{o.retailer === liste.magasin ? " · ton magasin" : ""}
                       </Text>
                       <Text style={styles.produit} numberOfLines={1}>{texteProduit(o)}</Text>
+                      {quantityPriceCondition(o) && <Text style={styles.produit}>{quantityPriceCondition(o)}</Text>}
                     </View>
                     <View style={{ alignItems: "flex-end" }}>
                       <Text style={[styles.prix, promo && styles.promo]}>{money(prix)}</Text>

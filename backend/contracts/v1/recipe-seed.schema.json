@@ -65,16 +65,22 @@
           "type": "integer"
         },
         "prep_time_minutes": {
+          "default": 0,
+          "maximum": 2147483647,
           "minimum": 0,
           "title": "Prep Time Minutes",
           "type": "integer"
         },
         "cook_time_minutes": {
+          "default": 0,
+          "maximum": 2147483647,
           "minimum": 0,
           "title": "Cook Time Minutes",
           "type": "integer"
         },
         "total_time_minutes": {
+          "default": 0,
+          "maximum": 2147483647,
           "minimum": 0,
           "title": "Total Time Minutes",
           "type": "integer"
@@ -143,9 +149,6 @@
         "name",
         "description",
         "servings",
-        "prep_time_minutes",
-        "cook_time_minutes",
-        "total_time_minutes",
         "image_url",
         "ingredients",
         "instructions",
@@ -166,6 +169,20 @@
           "minLength": 1,
           "title": "Text",
           "type": "string"
+        },
+        "duration_minutes": {
+          "anyOf": [
+            {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Minutes"
         }
       },
       "required": [

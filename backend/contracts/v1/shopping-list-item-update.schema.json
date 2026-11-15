@@ -1,0 +1,84 @@
+{
+  "$defs": {
+    "ShoppingQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "kg",
+            "ml",
+            "L",
+            "unit",
+            "cup",
+            "tbsp",
+            "tsp"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingQuantity",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "maxLength": 120,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Name"
+    },
+    "quantity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ShoppingQuantity"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "removed": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Removed"
+    }
+  },
+  "required": [
+    "expected_revision"
+  ],
+  "title": "ShoppingItemUpdate",
+  "type": "object"
+}

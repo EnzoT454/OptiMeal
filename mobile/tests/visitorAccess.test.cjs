@@ -62,9 +62,18 @@ test('sans compte, les cinq onglets sont disponibles sans formulaire de connexio
   const app = screen('App.tsx');
   const rendered = nodes(app.render());
   assert.deepEqual(rendered.filter(n => n.type === 'Route').map(n => n.props.name),
-    ['Accueil', 'Promos', 'Recettes', 'Calendrier', 'Paramètres']);
+    ['Accueil', 'Promos', 'Recettes', 'Calendrier', 'Liste']);
   assert.equal(rendered.some(n => n.type === 'Modal'), false);
   assert.equal(rendered.find(n => n.type === 'NavigationContainer').key, 'visitor');
+  const accueil = rendered.find(n => n.type === 'Route' && n.props.name === 'Accueil');
+  const homeRoutes = nodes(accueil.props.component()).filter(n => n.type === 'Route');
+  assert.deepEqual(homeRoutes.map(n => n.props.name), ['Home', 'Paramètres']);
+  assert.equal(homeRoutes[1].props.component, './app/ProfileScreen');
+  assert.equal(homeRoutes[1].props.options.headerBackTitle, 'Accueil');
+  const liste = rendered.find(n => n.type === 'Route' && n.props.name === 'Liste');
+  const listRoutes = nodes(liste.props.component()).filter(n => n.type === 'Route');
+  assert.deepEqual(listRoutes.map(n => n.props.name), ['Lists', 'CreateList', 'ShoppingDetail']);
+  assert.equal(listRoutes[0].props.component, './app/ListScreen');
 });
 
 test('fermer la connexion conserve la navigation visiteur, changer de compte la réinitialise', () => {

@@ -28,19 +28,37 @@ import CookWithPromosScreen from './app/CookWithPromosScreen';
 import CalendarScreen from './app/CalendarScreen';
 import FollowsScreen from './app/FollowsScreen'; 
 import HomeScreen from './app/HomeScreen';
-import { MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
+import ListScreen from './app/ListScreen';
+import CreateListScreen from './app/CreateListScreen';
+import ShoppingListDetailScreen from './app/ShoppingListDetailScreen';
+import { HomeStackParams, ListStackParams, MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
 
 const Tabs = createBottomTabNavigator<MainTabParams>();
 const Recipes = createNativeStackNavigator<RecipeStackParams>();
 const Promos = createNativeStackNavigator<PromoStackParams>();
+const Home = createNativeStackNavigator<HomeStackParams>();
+const Lists = createNativeStackNavigator<ListStackParams>();
 type IconName = ComponentProps<typeof Ionicons>['name'];
 const tabIcons: Record<keyof MainTabParams, { active: IconName; inactive: IconName }> = {
   Accueil: { active: 'home', inactive: 'home-outline' },
   Recettes: { active: 'restaurant', inactive: 'restaurant-outline' },
   Calendrier: { active: 'calendar', inactive: 'calendar-outline' },
   Promos: { active: 'pricetag', inactive: 'pricetag-outline' },
-  Paramètres: { active: 'settings', inactive: 'settings-outline' },
+  Liste: { active: 'list', inactive: 'list-outline' },
 };
+function HomeNavigator() {
+  return <Home.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
+    <Home.Screen name="Home" component={HomeScreen} options={{ headerShown: false, title: 'Accueil' }} />
+    <Home.Screen name="Paramètres" component={ProfileScreen} options={{ headerBackTitle: 'Accueil' }} />
+  </Home.Navigator>;
+}
+function ListNavigator() {
+  return <Lists.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
+    <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Liste' }} />
+    <Lists.Screen name="CreateList" component={CreateListScreen} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="ShoppingDetail" component={ShoppingListDetailScreen} options={{ title: 'Ma liste', headerBackTitle: 'Liste' }} />
+  </Lists.Navigator>;
+}
 function ProtectedAdd(props: NativeStackScreenProps<RecipeStackParams, 'Add'>) {
   return <AccountRequired reason="Connecte-toi pour ajouter tes propres recettes." onCancel={() => props.navigation.popToTop()}>
     <AddRecipeScreen {...props} />
@@ -90,11 +108,11 @@ function Content() {
     tabBarIcon: ({ focused, color, size }) => <Ionicons
       name={tabIcons[route.name][focused ? 'active' : 'inactive']} size={size} color={color} />,
   })}>
-    <Tabs.Screen name="Accueil" component={HomeScreen} options={{ headerShown: false }} />
+    <Tabs.Screen name="Accueil" component={HomeNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Recettes" component={RecipeNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Calendrier" component={Calendar} options={{ headerShown: false }} />
-    <Tabs.Screen name="Paramètres" component={ProfileScreen} />
+    <Tabs.Screen name="Liste" component={ListNavigator} options={{ headerShown: false }} />
   </Tabs.Navigator></NavigationContainer>
     {!session && signInReason !== null && <Modal visible animationType="slide" onRequestClose={dismissSignIn}>
       <SafeAreaView style={{ flex: 1 }}><AuthScreen reason={signInReason} onCancel={dismissSignIn} /></SafeAreaView>

@@ -11,7 +11,7 @@ from .models import Category, Ingredient, ProductOffer
 
 OFFER_FIELDS = (
     'ingredient_id', 'category_id', 'position', 'retailer', 'store_id', 'external_product_id', 'name',
-    'price', 'promo_price', 'currency', 'unit', 'quantity', 'valid_from', 'valid_to', 'retrieved_at',
+    'price', 'promo_price', 'quantity_limit', 'price_after_limit', 'currency', 'unit', 'quantity', 'valid_from', 'valid_to', 'retrieved_at',
     'is_promotion', 'source', 'url', 'image_url', 'image_source',
 )
 
@@ -43,6 +43,8 @@ def read_offers(path: Path) -> tuple[list[dict], list[dict]]:
                 'position': len(offers) + 1, 'retailer': product.retailer, 'store_id': product.store_id,
                 'external_product_id': product.external_product_id, 'name': product.name,
                 'price': decimal_or_none(product.price), 'promo_price': decimal_or_none(product.promo_price),
+                'quantity_limit': product.quantity_limit,
+                'price_after_limit': decimal_or_none(product.price_after_limit),
                 'currency': product.currency, 'unit': product.unit, 'quantity': decimal_or_none(product.quantity),
                 'valid_from': product.valid_from, 'valid_to': product.valid_to,
                 'retrieved_at': product.retrieved_at, 'is_promotion': product.is_promotion,

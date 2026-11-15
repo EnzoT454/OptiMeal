@@ -2,11 +2,14 @@ import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import type { HomeStackParams } from "../types/navigation";
 import { useAuth } from "../context/AuthContext";
 import { RecipeScreen, recipeColors as c, recipeStyles } from "../components/recipes";
-import { money, storeName } from "../components/promos";
+import { money, quantityPriceCondition, storeName } from "../components/promos";
 import { MEALS, MEAL_COLORS, MEAL_LABELS, dayFullName, getPlan, mealName, mondayOf, toISODate } from "../components/planning";
 import { useListeAchats } from "../components/useShoppingList";
+import ShoppingListStatus from "../components/ShoppingListStatus";
 import AddItemField from "../components/AddItemField";
 import { enPromo, prixOffre } from "../components/shoppingList";
 import type { MealPlanEntry } from "../types/api";
@@ -25,15 +28,26 @@ function salutation(d: Date) {
   return "Bonsoir";
 }
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }: NativeStackScreenProps<HomeStackParams, 'Home'>) {
   const { session } = useAuth();
   const maintenant = new Date();
 
   return (
     <RecipeScreen>
-      <View>
-        <Text style={styles.date}>{dayFullName(maintenant)}</Text>
-        <Text accessibilityRole="header" style={styles.salut}>{salutation(maintenant)}</Text>
+      <View style={styles.header}>
+        <View style={styles.greeting}>
+          <Text style={styles.date}>{dayFullName(maintenant)}</Text>
+          <Text accessibilityRole="header" style={styles.salut}>{salutation(maintenant)}</Text>
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Paramètres"
+          accessibilityHint="Ouvre les paramètres et le profil du compte."
+          onPress={() => navigation.navigate('Paramètres')}
+          style={({ pressed }) => [styles.settingsButton, pressed && styles.appuye]}
+        >
+          <MaterialCommunityIcons name="cog-outline" size={26} color={c.green} accessible={false} />
+        </Pressable>
       </View>
 
       {session ? (
@@ -121,12 +135,12 @@ function TableauDeBord() {
         </Pressable>
 
         {chargementListe && liste.lignes.length === 0 && <ActivityIndicator color={c.green} />}
-        {!chargementListe && liste.erreur && <Text style={recipeStyles.body}>{liste.erreur}</Text>}
+        <ShoppingListStatus liste={liste} />
 
         {!liste.erreur && (!chargementListe || liste.lignes.length > 0) && (
           <Pressable accessibilityRole="button" onPress={ouvrirEpicerie} style={styles.tuiles}>
             <Tuile valeur={String(nbAAcheter)} label="à acheter" />
-            <Tuile valeur={aAcheter.length > 0 ? `≈ ${money(totaux.total)}` : "–"} label={`chez ${storeName(magasin)}`} />
+            <Tuile valeur={aAcheter.length > 0 ? `≈ ${money(totaux.total)}` : "–"} label={liste.nbRepasExclus > 0 ? "sous-total accessible" : `chez ${storeName(magasin)}`} />
             <Tuile valeur={String(totaux.nbPromo)} label="en promo" promo />
           </Pressable>
         )}
@@ -135,13 +149,16 @@ function TableauDeBord() {
       </View>
 
       {/* ---- 3. En promo dans ta liste (seulement s'il y en a) ---- */}
-      {lignesEnPromo.length > 0 && (
+      {!liste.erreurChargement && lignesEnPromo.length > 0 && (
         <Pressable accessibilityRole="button" accessibilityLabel="En promo dans ta liste, ouvrir la liste"
           onPress={ouvrirEpicerie} style={({ pressed }) => [styles.carte, pressed && styles.appuye]}>
           <EnTete titre="En promo dans ta liste" />
           {lignesEnPromo.map(({ ligne, offre }) => (
             <View key={ligne.ingredient_id} style={styles.promoLigne}>
-              <Text style={styles.promoNom} numberOfLines={1}>{ligne.nom}</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.promoNom} numberOfLines={1}>{ligne.nom}</Text>
+                {quantityPriceCondition(offre!) && <Text style={recipeStyles.body}>{quantityPriceCondition(offre!)}</Text>}
+              </View>
               <Text style={styles.promoPrix}>{money(prixOffre(offre!))}</Text>
               <View style={styles.etiquette}>
                 <Text style={styles.etiquetteTexte}>{storeName(offre!.retailer)}</Text>
@@ -173,6 +190,9 @@ function Tuile({ valeur, label, promo = false }: { valeur: string; label: string
 }
 
 const styles = StyleSheet.create({
+  header: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  greeting: { flex: 1 },
+  settingsButton: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: c.light },
   date: { fontFamily: "DMSans_500Medium", fontSize: 14, lineHeight: 19, color: c.muted },
   salut: { fontFamily: "DMSans_700Bold", fontSize: 28, lineHeight: 36, color: c.ink },
 

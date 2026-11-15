@@ -48,6 +48,13 @@ class ProductOffer(Base):
         CheckConstraint("currency = 'CAD'", name='currency_cad'),
         CheckConstraint('price IS NULL OR price >= 0', name='price_not_negative'),
         CheckConstraint('promo_price IS NULL OR promo_price >= 0', name='promo_price_not_negative'),
+        CheckConstraint(
+            '(quantity_limit IS NULL AND price_after_limit IS NULL) OR '
+            '(quantity_limit IS NOT NULL AND quantity_limit > 0 AND price_after_limit IS NOT NULL '
+            'AND promo_price IS NOT NULL AND is_promotion IS TRUE '
+            "AND price_after_limit >= promo_price AND price_after_limit < 'Infinity'::numeric)",
+            name='quantity_limit_pricing',
+        ),
         CheckConstraint('quantity IS NULL OR quantity > 0', name='quantity_positive'),
         CheckConstraint('valid_to IS NULL OR valid_from IS NULL OR valid_to >= valid_from', name='validity_ordered'),
         CheckConstraint('position > 0', name='position_positive'),
@@ -64,6 +71,8 @@ class ProductOffer(Base):
     name: Mapped[str] = mapped_column(Text, nullable=False)
     price: Mapped[Decimal | None] = mapped_column(Numeric)
     promo_price: Mapped[Decimal | None] = mapped_column(Numeric)
+    quantity_limit: Mapped[int | None] = mapped_column(Integer)
+    price_after_limit: Mapped[Decimal | None] = mapped_column(Numeric)
     currency: Mapped[str] = mapped_column(Text, nullable=False, server_default=text("'CAD'"))
     unit: Mapped[str | None] = mapped_column(Text)
     quantity: Mapped[Decimal | None] = mapped_column(Numeric)

@@ -1,154 +1,155 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useAuth } from '../context/AuthContext';
 import type { Retailer } from "../types/api";
 import {
-  ajouterManuel, chargerListe, comparerMagasins, ecrireChoix, ecrireCoches, ecrireDejaLa, ecrireMagasin,
-  ecrireToujours, ligneManuelle, lireChoix, lireCoches, lireDejaLa, lireMagasin, lireToujours,
+  ajouterManuel, chargerListe, comparerMagasins, ecrireMagasin,
+  definirCocheStockee, definirDejaLaStocke, definirToujoursStocke, modifierChoix,
+  ligneManuelle, lireChoix, lireCoches, lireDejaLa, lireMagasin, lireToujours,
   offreDeLigne, meilleureOffre, retirerManuel, totalMagasin, trier,
   type ArticleManuel, type ChoixProduits, type Contexte, type LigneListe, type Magasin,
 } from "./shoppingList";
 
-// =====================================================================
-// Hook de la liste d'épicerie de la semaine : données + actions au même
-// endroit. Utilisé par le Calendrier (vue Épicerie) et par l'Accueil.
-//
-// 3 façons de sortir un article de « À acheter » :
-//   - cocher           → mis dans le panier au magasin (cette semaine)
-//   - J'en ai déjà     → pas besoin de l'acheter (cette semaine)
-//   - J'en ai toujours → ne revient plus jamais (ingrédients du catalogue)
-// =====================================================================
+type ShoppingData = {
+  userId: string | null;
+  lignes: LigneListe[]; contexte: Contexte | null;
+  coches: Set<string>; dejaLa: Set<string>; toujours: Set<string>;
+  magasinChoisi: Magasin; choix: ChoixProduits;
+  chargement: boolean; chargee: boolean; nbRepasExclus: number;
+  erreurChargement: string | null; erreurEnregistrement: string | null;
+};
 
+function emptyData(userId: string | null): ShoppingData {
+  return { userId, lignes: [], contexte: null, coches: new Set(), dejaLa: new Set(), toujours: new Set(),
+    magasinChoisi: 'auto', choix: {}, chargement: userId !== null, chargee: false, nbRepasExclus: 0, erreurChargement: null, erreurEnregistrement: null };
+}
+
+// Les clés et les résultats asynchrones appartiennent au compte qui a lancé l'action.
 export function useListeAchats() {
-  const [lignes, setLignes] = useState<LigneListe[]>([]);
-  const [contexte, setContexte] = useState<Contexte | null>(null);
-  const [coches, setCoches] = useState<Set<string>>(new Set());
-  const [dejaLa, setDejaLa] = useState<Set<string>>(new Set());
-  const [toujours, setToujours] = useState<Set<string>>(new Set());
-  const [magasinChoisi, setMagasinChoisi] = useState<Magasin>("auto");
-  const [choix, setChoix] = useState<ChoixProduits>({}); // produit choisi dans la fiche, par article
-  const [chargement, setChargement] = useState(true);
-  const [erreur, setErreur] = useState<string | null>(null);
-
-  // Si on recharge 2 fois de suite, seule la réponse du dernier appel compte
+  const { session } = useAuth();
+  const userId = session?.user.id ?? null;
+  const scopeRef = useRef({ userId });
+  if (scopeRef.current.userId !== userId) scopeRef.current = { userId };
+  const scope = scopeRef.current;
+  const mounted = useRef(true);
   const dernierAppel = useRef(0);
+  const echec = useRef<{ scope: typeof scope; key: string; run: () => Promise<boolean> } | null>(null);
+  const [stored, setStored] = useState(() => emptyData(userId));
+  // Masquer l'ancien compte dès le rendu, avant l'exécution des effets.
+  const data = stored.userId === userId ? stored : emptyData(userId);
+  const { lignes, contexte, coches, dejaLa, toujours, magasinChoisi, choix, chargement, erreurChargement, erreurEnregistrement, nbRepasExclus } = data;
+  const erreur = erreurEnregistrement ?? erreurChargement;
+  const avertissementRepas = nbRepasExclus > 0
+    ? `Liste partielle : ${nbRepasExclus} repas sans recette accessible. Leurs ingrédients ne sont pas inclus.` : null;
+
+  const update = useCallback((change: (previous: ShoppingData) => ShoppingData) => {
+    if (!mounted.current || scopeRef.current !== scope) return;
+    setStored(previous => {
+      if (!mounted.current || scopeRef.current !== scope) return previous;
+      return change(previous.userId === scope.userId ? previous : emptyData(scope.userId));
+    });
+  }, [scope]);
 
   const recharger = useCallback(async () => {
+    if (scopeRef.current !== scope) return;
     const numero = ++dernierAppel.current;
-    setChargement(true);
-    setErreur(null);
+    if (!userId) { update(() => emptyData(null)); return; }
+    update(previous => ({ ...previous, chargement: true }));
     try {
-      const [{ lignes: liste, contexte: ctx }, cochesLus, dejaLaLus, toujoursLus, magasinLu, choixLu] = await Promise.all([
-        chargerListe(),
-        lireCoches(),
-        lireDejaLa(),
-        lireToujours(),
-        lireMagasin(),
-        lireChoix(),
+      const [liste, cochesLus, dejaLaLus, toujoursLus, magasinLu] = await Promise.all([
+        chargerListe(userId), lireCoches(userId), lireDejaLa(userId),
+        lireToujours(userId), lireMagasin(userId),
       ]);
-      if (numero !== dernierAppel.current) return; // un appel plus récent est en cours
-      setLignes(liste);
-      setContexte(ctx);
-      setCoches(cochesLus);
-      setDejaLa(dejaLaLus);
-      setToujours(toujoursLus);
-      setMagasinChoisi(magasinLu);
-      setChoix(choixLu);
+      const choixLu = await lireChoix(userId, [...liste.contexte.offresParIngredient.values()].flat());
+      if (numero !== dernierAppel.current) return;
+      update(previous => ({ ...previous, lignes: liste.lignes, contexte: liste.contexte,
+        chargee: true, erreurChargement: null, nbRepasExclus: liste.nbRepasExclus, coches: cochesLus, dejaLa: dejaLaLus, toujours: toujoursLus, magasinChoisi: magasinLu, choix: choixLu }));
     } catch {
-      if (numero === dernierAppel.current) setErreur("Impossible de charger ta liste. Vérifie ta connexion et réessaie.");
+      if (numero === dernierAppel.current) update(previous => ({ ...previous,
+        erreurChargement: previous.chargee
+          ? "Actualisation impossible. La dernière liste chargée est conservée ; elle peut différer du calendrier actuel. Réessaie."
+          : "Impossible de charger une liste complète. Vérifie ta connexion et réessaie." }));
     } finally {
-      if (numero === dernierAppel.current) setChargement(false);
+      if (numero === dernierAppel.current) update(previous => ({ ...previous, chargement: false }));
     }
-  }, []);
+  }, [scope, userId, update]);
 
   useEffect(() => {
-    recharger();
+    mounted.current = true;
+    void recharger();
+    return () => { mounted.current = false; dernierAppel.current++; };
   }, [recharger]);
 
-  // ---- Actions ----
-
-  function choisirMagasin(m: Retailer) {
-    setMagasinChoisi(m);
-    ecrireMagasin(m).catch(() => {});
-  }
-
-  // Ajoute ou enlève un id d'un ensemble, et l'enregistre
-  function basculer(setter: typeof setCoches, ecrire: (ids: Set<string>) => Promise<void>, id: string) {
-    setter((avant) => {
-      const nouveau = new Set(avant);
-      if (nouveau.has(id)) nouveau.delete(id);
-      else nouveau.add(id);
-      ecrire(nouveau).catch(() => {});
-      return nouveau;
-    });
-  }
-
-  const basculerCoche = (id: string) => basculer(setCoches, ecrireCoches, id);
-  const basculerDejaLa = (id: string) => basculer(setDejaLa, ecrireDejaLa, id);
-  // « J'en ai toujours » se retient par ingrédient du catalogue (pas par ligne)
-  const basculerToujours = (catalogueId: string) => basculer(setToujours, ecrireToujours, catalogueId);
-
-  // Choisir un produit précis pour un article (dans n'importe quel magasin). null = revenir au choix automatique
-  function choisirProduit(ligneId: string, offreId: string | null) {
-    setChoix((avant) => {
-      const nouveau = { ...avant };
-      if (offreId) nouveau[ligneId] = offreId;
-      else delete nouveau[ligneId];
-      ecrireChoix(nouveau).catch(() => {});
-      return nouveau;
-    });
-  }
-
-  // Remplacer les articles manuels affichés, sans tout recharger
-  function remplacerManuels(manuels: ArticleManuel[]) {
-    setLignes((avant) => trier([
-      ...avant.filter((l) => !l.manuel),
-      ...manuels.map((a) => ligneManuelle(a, contexte ?? undefined)),
-    ]));
-  }
-
-  // nom = ce qui est affiché ; ingredientId = l'ingrédient choisi dans les suggestions (null = hors catalogue)
-  async function ajouter(nom: string, ingredientId: string | null = null) {
+  async function modifier<T>(key: string, operation: () => Promise<T>, change: (previous: ShoppingData, result: T) => ShoppingData): Promise<boolean> {
+    if (!userId || !mounted.current || scopeRef.current !== scope) return false;
+    dernierAppel.current++;
     try {
-      remplacerManuels(await ajouterManuel(nom, ingredientId));
+      const result = await operation();
+      if (!mounted.current || scopeRef.current !== scope) return false;
+      const memeEchec = echec.current?.scope === scope && echec.current.key === key;
+      if (memeEchec) echec.current = null;
+      update(previous => ({ ...change(previous, result), chargement: false,
+        erreurEnregistrement: memeEchec ? null : previous.erreurEnregistrement }));
+      if (chargement) void recharger();
+      return true;
     } catch {
-      setErreur("Impossible d'ajouter cet article.");
+      if (!mounted.current || scopeRef.current !== scope) return false;
+      echec.current = { scope, key, run: () => modifier(key, operation, change) };
+      update(previous => ({ ...previous, chargement: false,
+        erreurEnregistrement: "Modification non enregistrée. Réessaie l’enregistrement." }));
+      return false;
     }
   }
+  const reessayerEnregistrement = async () => {
+    const tentative = echec.current;
+    if (tentative?.scope === scope && scopeRef.current === scope) return tentative.run();
+    return false;
+  };
 
-  async function supprimer(ligne: LigneListe) {
+  const choisirMagasin = (magasinChoisi: Retailer) => modifier("magasin",
+    () => ecrireMagasin(userId, magasinChoisi), previous => ({ ...previous, magasinChoisi }));
+  const basculerCoche = (id: string) => modifier(`coches:${id}`,
+    () => definirCocheStockee(userId, id, !coches.has(id)), (previous, coches) => ({ ...previous, coches }));
+  const basculerDejaLa = (id: string) => modifier(`dejaLa:${id}`,
+    () => definirDejaLaStocke(userId, id, !dejaLa.has(id)), (previous, dejaLa) => ({ ...previous, dejaLa }));
+  const basculerToujours = (id: string) => modifier(`toujours:${id}`,
+    () => definirToujoursStocke(userId, id, !toujours.has(id)), (previous, toujours) => ({ ...previous, toujours }));
+  const choisirProduit = (ligneId: string, produitId: string | null) => modifier(`choix:${ligneId}`,
+    () => modifierChoix(userId, ligneId, produitId), (previous, choix) => ({ ...previous, choix }));
+
+  function remplacerManuels(previous: ShoppingData, manuels: ArticleManuel[]): ShoppingData {
+    return { ...previous, lignes: trier([
+      ...previous.lignes.filter(l => !l.manuel),
+      ...manuels.map(a => ligneManuelle(a, previous.contexte ?? undefined)),
+    ]) };
+  }
+  const ajouter = (nom: string, ingredientId: string | null = null) => modifier(`ajout:${ingredientId}:${nom}`,
+    () => ajouterManuel(userId, nom, ingredientId), remplacerManuels);
+  const supprimer = async (ligne: LigneListe) => {
     if (!ligne.manuel) return;
-    try {
-      remplacerManuels(await retirerManuel(ligne.ingredient_id.replace("manuel:", "")));
-    } catch {
-      setErreur("Impossible de retirer cet article.");
-    }
-  }
+    await modifier(`retrait:${ligne.ingredient_id}`, () => retirerManuel(userId, ligne.ingredient_id.replace('manuel:', '')), remplacerManuels);
+  };
 
-  // ---- Ce qu'on affiche ----
+  const nbChoixAbsents = lignes.filter(l => choix[l.ingredient_id] &&
+    !l.offres.some(o => o.product_id === choix[l.ingredient_id] || o.id === choix[l.ingredient_id])).length;
+  const avertissement = [avertissementRepas, nbChoixAbsents > 0
+    ? `${nbChoixAbsents} choix de produit à vérifier : référence absente du catalogue actuel. Le produit proposé par défaut est affiché.` : null]
+    .filter(Boolean).join(' ') || null;
+
   const aToujours = (l: LigneListe) => l.catalogue_id !== null && toujours.has(l.catalogue_id);
-  const chezMoi = lignes.filter((l) => aToujours(l) || dejaLa.has(l.ingredient_id));
-  const restantes = lignes.filter((l) => !aToujours(l) && !dejaLa.has(l.ingredient_id));
-  const aAcheterTout = restantes.filter((l) => !coches.has(l.ingredient_id));
-  const cochees = restantes.filter((l) => coches.has(l.ingredient_id));
-
-  // Le magasin : celui choisi, sinon le moins cher pour toute la liste (un seul magasin à la fois)
-  const magasin: Retailer = magasinChoisi !== "auto"
-    ? magasinChoisi
-    : (comparerMagasins(aAcheterTout)[0]?.magasin ?? "superc");
-
-  // Le produit retenu pour une ligne (choisi dans la fiche, sinon le moins cher du magasin)
+  const chezMoi = lignes.filter(l => aToujours(l) || dejaLa.has(l.ingredient_id));
+  const restantes = lignes.filter(l => !aToujours(l) && !dejaLa.has(l.ingredient_id));
+  const aAcheterTout = restantes.filter(l => !coches.has(l.ingredient_id));
+  const cochees = restantes.filter(l => coches.has(l.ingredient_id));
+  const magasin: Retailer = magasinChoisi !== 'auto'
+    ? magasinChoisi : (comparerMagasins(aAcheterTout)[0]?.magasin ?? 'superc');
   const offreDe = (l: LigneListe) => offreDeLigne(l, magasin, choix);
-
-  // Articles vendus ailleurs, mais pas dans ce magasin (et pas choisis ailleurs) : section à part
-  const pasIci = aAcheterTout.filter((l) => !offreDe(l) && meilleureOffre(l));
-  const aAcheter = aAcheterTout.filter((l) => !pasIci.includes(l));
+  const pasIci = aAcheterTout.filter(l => !offreDe(l) && meilleureOffre(l));
+  const aAcheter = aAcheterTout.filter(l => !pasIci.includes(l));
   const totaux = totalMagasin(aAcheter, magasin, choix);
 
-  return {
-    lignes, contexte, coches, dejaLa, toujours, choix, magasin, magasinAuto: magasinChoisi === "auto", offreDe,
-    chargement, erreur,
-    aAcheter, pasIci, cochees, chezMoi, totaux, nbAAcheter: aAcheterTout.length,
-    recharger, choisirMagasin, choisirProduit, basculerCoche, basculerDejaLa, basculerToujours, ajouter, supprimer,
-  };
+  return { lignes, contexte, coches, dejaLa, toujours, choix, magasin, magasinAuto: magasinChoisi === 'auto', offreDe,
+    chargement, erreur, erreurChargement, erreurEnregistrement, avertissement, nbRepasExclus, aAcheter, pasIci, cochees, chezMoi, totaux, nbAAcheter: aAcheterTout.length,
+    recharger, reessayerEnregistrement, choisirMagasin, choisirProduit, basculerCoche, basculerDejaLa, basculerToujours, ajouter, supprimer };
 }
 
 export type ListeAchats = ReturnType<typeof useListeAchats>;
