@@ -29,6 +29,7 @@ import CalendarScreen from './app/CalendarScreen';
 import FollowsScreen from './app/FollowsScreen'; 
 import HomeScreen from './app/HomeScreen';
 import ListScreen from './app/ListScreen';
+import ShoppingRecoveryScreen from './app/ShoppingRecoveryScreen';
 import CreateListScreen from './app/CreateListScreen';
 import ShoppingListDetailScreen from './app/ShoppingListDetailScreen';
 import ShoppingTemplatesScreen from './app/ShoppingTemplatesScreen';
@@ -62,6 +63,7 @@ function ListNavigator() {
   return <Lists.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
     <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Liste' }} />
     <Lists.Screen name="CreateList" component={CreateListScreen} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="RecoverLocal" component={ShoppingRecoveryScreen} options={{ title: 'Anciennes données', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="Templates" component={ShoppingTemplatesScreen} options={{ title: 'Mes modèles', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="TemplateDetail" component={ShoppingTemplateDetailScreen} options={{ title: 'Mon modèle', headerBackTitle: 'Modèles' }} />
     <Lists.Screen name="ReuseList" component={ShoppingReuseScreen} options={{ title: 'Réutiliser', headerBackTitle: 'Liste' }} />

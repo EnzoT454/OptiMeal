@@ -1,5 +1,14 @@
 # Mobile OptiMeal
 
+La [récupération des anciennes données](../backend/docs/SHOPPING_RECOVERY.md)
+de l’étape 12 est accessible depuis Liste. Elle propose les ajouts manuels privés
+avec sélection et confirmation, puis un brouillon aux quantités à préciser.
+La conversion de « J’en ai toujours » en exclusions futures est facultative,
+désactivée par défaut. Le journal de reprise évite les doublons après interruption ;
+aucune ancienne donnée n’est effacée, aucune clé commune attribuée au compte.
+Le réseau est requis. Validation : 261 tests mobiles et TypeScript ; essais
+sur appareils à consigner. Accueil/Calendrier gardent leur ancien parcours.
+
 Le [mode courses hors connexion](../backend/docs/SHOPPING_OFFLINE.md) de l’étape 11
 conserve la liste complète, sa révision et une file de coches/décoches par compte.
 Dans Liste, **Ouvrir la liste enregistrée sur cet appareil** permet de la retrouver

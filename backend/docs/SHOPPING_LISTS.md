@@ -2,9 +2,9 @@
 
 **Date : 16 novembre 2026.**
 
-**Statut : étapes 1 à 11 réalisées dans le dépôt — listes, courses, réutilisation, historique et coches hors connexion ; étapes 12 à 15 à réaliser.**
+**Statut : étapes 1 à 12 réalisées dans le dépôt — listes, courses, réutilisation, historique, coches hors connexion et récupération locale ; étapes 13 à 15 à réaliser.**
 
-**Modèles, exclusions, copie et historique livrés dans le dépôt. Migration 0020 à appliquer sur Supabase, actuellement à 0019. Le cache et les coches hors connexion sont livrés dans le dépôt. Les essais sur appareils et les étapes 12–15 restent à réaliser.**
+**Modèles, exclusions, copie et historique livrés dans le dépôt. Migration 0020 à appliquer sur Supabase, actuellement à 0019. Le cache et les coches hors connexion sont livrés dans le dépôt. La récupération volontaire des anciennes données privées est livrée. Les essais sur appareils et les étapes 13–15 restent à réaliser.**
 
 Ce document est la référence de travail pour construire le nouvel onglet
 **Liste** d’OptiMeal. Il reprend les parcours demandés, les deux captures
@@ -842,8 +842,30 @@ Validation : **236 tests mobiles réussis**, TypeScript, bundles Expo iOS/Androi
 44 exports de contrats et documentation stricte vérifiés. Aucun lint mobile
 configuré. Les essais iOS/Android sur appareils restent à effectuer. Voir
 [le guide hors connexion](SHOPPING_OFFLINE.md) pour le fonctionnement, les limites
-et les scénarios. Prochaine étape : **12 — récupération volontaire des anciennes
-données locales privées**.
+et les scénarios. Le résultat de l’étape suivante est décrit ci-dessous.
+
+### 2.14. Récupération des anciennes données locales privées — étape 12
+
+**Étape réalisée dans le dépôt le 16 novembre 2026.** Liste propose un aperçu
+et une sélection explicites des anciens ajouts manuels du compte sur l’appareil.
+La confirmation crée un brouillon avec quantités à préciser ; les anciens
+« J’en ai toujours » deviennent des exclusions futures seulement si sélectionnés.
+Les coches, possessions hebdomadaires, choix et prix ne sont pas réinterprétés.
+Les anciennes clés communes sans propriétaire sont ignorées ; aucune source
+n’est effacée. Les identités déjà récupérées ne sont pas proposées deux fois.
+
+Un journal privé conserve consentement, progression et commande exacte. Les
+réponses perdues et échecs de stockage reprennent sans nouvelle liste ni nouvel
+article. Les refus explicites permettent une reprise ou un saut contrôlé ; les
+changements de compte masquent immédiatement le parcours et ses résultats.
+Les routes existantes sont réutilisées, sans migration ni contrat nouveau.
+
+Validation : **261 tests mobiles réussis**, TypeScript, bundles Expo iOS/Android,
+44 exports de contrats et documentation stricte vérifiés. Les contrats HTTP
+restent inchangés. Les essais sur appareils restent à consigner. Voir
+[le guide de récupération](SHOPPING_RECOVERY.md) pour la portée, les reprises
+et les limites. Prochaine étape : **13 — raccorder Accueil et Calendrier aux
+listes identifiées**.
 
 ## 3. Vocabulaire et cycle de vie
 
@@ -1505,7 +1527,7 @@ reste ouverte tant que ses critères nécessaires ne sont pas vérifiés.
 | 9 — Réalisée dans le dépôt le 16 novembre 2026 | Détail, fiche d’article, possession et achats partiels | Couvertures, coches stables, estimations et compléments testés ; voir section 2.11. 0019 appliquée à Supabase ; essais appareils à compléter |
 | 10 — Réalisée dans le dépôt le 16 novembre 2026 | Exclusions, modèles, copie et historique par révision | Copies sans achat ni prix, droits, concurrence et historique immuable vérifiés ; voir section 2.12. 0020 et essais appareils à compléter sur la cible |
 | 11 — Réalisée dans le dépôt le 16 novembre 2026 | Cache complet et reprise des coches hors connexion | Réponse perdue, redémarrage, conflits et changement de compte couverts ; voir section 2.13. Essais appareils à compléter |
-| 12 | Proposer récupération des anciennes données locales privées | Import volontaire et idempotent, aucune attribution des anciennes clés communes |
+| 12 — Réalisée dans le dépôt le 16 novembre 2026 | Récupération volontaire des anciennes données locales privées | Import avec aperçu, sélection et reprise idempotente ; anciennes clés communes ignorées ; voir section 2.14. Essais appareils à compléter |
 | 13 | Raccorder Accueil et Calendrier aux listes identifiées | Même liste, même période et mêmes montants depuis tous les accès |
 | 14 | Retirer l’ancien calcul local après bascule vérifiée | Aucun consommateur actif restant, aucun effacement des données avant reprise validée |
 | 15 | Vérifier appareils, accessibilité, documentation et contrats exportés | Résultats iOS/Android consignés, limites indiquées, guide actualisé |
@@ -1682,6 +1704,7 @@ cibles sont implémentées :
 - [x] Lot B : achats, comparaison et courses livrés dans le dépôt ; migration 0019 appliquée à Supabase ; essais appareils à compléter.
 - [x] Étape 10 : modèles, exclusions, copies privées et historique par révision ; voir section 2.12.
 - [x] Étape 11 : cache complet privé, file persistante de coches et résolution des conflits ; voir section 2.13.
+- [x] Étape 12 : récupération volontaire des anciens ajouts privés, exclusions facultatives et journal de reprise ; voir section 2.14.
 - [ ] Lot C : modèles, historique, résilience et bascule des accès.
 - [ ] Vérifications complètes des contrats et migrations applicables.
 - [ ] Essais iOS et Android consignés séparément.
@@ -1706,6 +1729,7 @@ ce guide prépare leur intégration sans les annoncer présents.
 - [Parcours de courses — étape 9](SHOPPING_COURSES.md).
 - [Réutilisation et historique — étape 10](SHOPPING_REUSE.md).
 - [Cache et courses hors connexion — étape 11](SHOPPING_OFFLINE.md).
+- [Récupération des anciennes données locales — étape 12](SHOPPING_RECOVERY.md).
 - [Migrations applicatives](MIGRATIONS.md).
 - [Modèle de catalogue et de prix proposé](DATABASE.md).
 - [Données locales et provenance](DATA.md).

@@ -30,8 +30,9 @@ vérification consignée ; la migration 0020 de l’étape 10 reste à appliquer
 
 Création, import calendrier, comparaison, possession, modification des besoins,
 clôture et réutilisation nécessitent le réseau. Les brouillons et la reprise
-existants sont conservés. Aucun import des anciennes clés locales ni bascule
-Accueil/Calendrier : ces travaux restent aux étapes 12–14.
+existants sont conservés. La [récupération des anciennes données privées](SHOPPING_RECOVERY.md)
+est livrée séparément à l’étape 12 ; la bascule Accueil/Calendrier reste aux
+étapes 13–14.
 
 ## Persistance et concurrence
 

@@ -7,6 +7,7 @@ class ApiError extends Error { constructor(status, message) { super(message); th
 // Vrais services et hooks TypeScript ; stockage et identité sont simulés.
 function runtime(options = {}) {
   const data = options.data ?? new Map(), cache = new Map(), writes = [], prompts = [], reads = [];
+  let uuid = 0;
   let userId = 'compte-a', week = '2026-11-09', hooks;
   const storage = {
     async getAllKeys() { return [...data.keys()]; },
@@ -29,6 +30,7 @@ function runtime(options = {}) {
     } }).outputText, { exports, require(name) {
       if (name === '@react-native-async-storage/async-storage') return { __esModule: true, default: storage };
       if (name === 'react') return hooks;
+      if (name === 'expo-crypto') return { randomUUID: () => `local-test-${++uuid}` };
       if (name.endsWith('/AuthContext')) return { useAuth: () => ({
         session: userId ? { user: { id: userId } } : null, requestSignIn: reason => prompts.push(reason),
       }) };

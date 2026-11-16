@@ -64,6 +64,7 @@ export default function ListScreen({ navigation }: NativeStackScreenProps<ListSt
     {!userId ? <View style={s.notice}><Text style={s.sectionTitle}>Tes courses, au même endroit</Text>
       <Text style={s.body}>Commence une liste vide ou prépare tes achats à partir des repas de ton calendrier.</Text>
       <RecipeButton title="Me connecter" variant="neutral" onPress={create} /></View> : <>
+      <RecipeButton title="Récupérer mes anciennes données" variant="neutral" onPress={() => navigation.navigate('RecoverLocal')} />
       <RecipeButton title="Mes modèles" variant="neutral" onPress={() => navigation.navigate('Templates')} />
       <View style={s.chips}>
         <RecipeButton title="En cours" variant={collection === 'current' ? 'primary' : 'neutral'} accessibilityState={{ selected: collection === 'current' }} onPress={() => { if (collection === 'current') { void load(); return; } generation.current++; busy.current = false; setItems([]); setTotal(0); setCollection('current'); }} />
