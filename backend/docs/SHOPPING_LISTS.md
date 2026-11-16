@@ -1,8 +1,10 @@
 # Listes d’épicerie — référence et plan d’implémentation
 
-**Date : 14 novembre 2026.**  
-**Statut : étapes 1 à 6 réalisées — lot A et normalisation des ventes disponibles ; étapes 7 à 15 à réaliser.**  
-**Les calculs des prix, comparaisons et parcours des lots B/C restent à implémenter.**
+**Date : 16 novembre 2026.**
+
+**Statut : étapes 1 à 7 réalisées — lot A, normalisation et moteur de couverture disponibles ; étapes 8 à 15 à réaliser.**
+
+**Les comparaisons, leur application et les parcours de courses des lots B/C restent à implémenter.**
 
 Ce document est la référence de travail pour construire le nouvel onglet
 **Liste** d’OptiMeal. Il reprend les parcours demandés, les deux captures
@@ -26,6 +28,7 @@ Repères de lecture :
 - [Résultat de l’étape 4](#26-agrégation-de-période--étape-4).
 - [Résultat de l’étape 5](#27-api-et-parcours-mobile--étape-5).
 - [Résultat de l’étape 6](#28-normalisation-des-ventes--étape-6).
+- [Résultat de l’étape 7](#29-calcul-des-achats--étape-7).
 - [Parcours et écrans](#4-navigation-et-écrans).
 - [Calcul des besoins, paquets et prix](#5-agrégation-et-couverture-des-besoins).
 - [Modèle de données](#6-modèle-de-données-proposé).
@@ -661,6 +664,62 @@ les essais sur appareil restent ceux à effectuer pour les étapes mobiles.
 inconnues explicites, provenance et parité conservées. Prochaine étape :
 **7 — Couverture en paquets, prix au poids, combinaisons et paliers**.
 L’interface reste à « Estimation indisponible » jusqu’au raccordement du moteur.
+
+### 2.9. Calcul des achats — étape 7
+
+**Étape réalisée le 16 novembre 2026.** Le module interne
+`backend/app/shopping_lists/purchases.py` expose `calculate_coverage` pour
+calculer les achats d'un besoin regroupé dans chaque magasin, sans écriture.
+Les contrats HTTP, tables et écrans ne changent pas. Le
+[guide du moteur](PURCHASE_CALCULATION.md) décrit ses entrées, sorties,
+arrondis, preuve de réduction et limites.
+
+#### Calcul livré
+
+- Regroupement exact des contributions compatibles d'un ingrédient ; retrait
+  des quantités déclarées disponibles ou déjà achetées, sans valeur négative.
+  Besoins non quantifiés et dimensions incompatibles restent à vérifier.
+- Revalidation des sources et attestations à la date des courses. Formats,
+  correspondances, conditions ou tarifs inconnus restent exclus avec leurs
+  motifs ; aucune référence réelle n'est promue automatiquement.
+- Couverture par paquets entiers et combinaisons de formats attestés ; ventes
+  au poids ou en pièces avec dénominateur, minimum et pas connus. Le poids
+  réellement payé reste estimatif.
+- Réutilisation de `purchase_total` pour les promotions actives et leurs
+  paliers ; regroupement par produit avant application de la limite. Les
+  quantités déjà affectées peuvent réserver les unités promotionnelles.
+  Sans information d'usage après un achat partiel, le tarif limité est exclu.
+- Calcul exact intermédiaire, arrondi HALF_UP par référence au centime, puis
+  somme des lignes ; taxes et consignes inconnues non inventées.
+- Recherche dans chaque magasin sans fractionner automatiquement un besoin
+  entre magasins. Départage par coût, surplus, nombre de références puis
+  identifiants stables. Les références exclues restent visibles en diagnostic.
+
+#### Bornes et validation
+
+La recherche énumère les combinaisons utiles, avec une référence utilisée comme
+complément minimal couvrant. Les quantités supérieures au besoin couvert par
+cette seule référence sont inutiles sous les tarifs non décroissants pris en
+charge. Le cas à un seul format est résolu directement. Par défaut :
+12 références admissibles, 10 000 options par référence énumérée et
+100 000 combinaisons par magasin. Dépasser une borne retourne `search_limit`
+sans approximation annoncée optimale ; aucun meilleur magasin global n'est
+désigné si sa recherche reste incomplète. Ces limites bornent les opérations,
+sans garantie de durée réelle sur tous les appareils.
+
+Validation : **83 nouveaux tests**, dont **35 cas d'oracle exhaustif avec
+paliers** et **15 cas d'oracle mêlant poids, minimums et arrondis**. Suite complète
+sur PostgreSQL local : **870 tests backend réussis, 14 OCR réels ignorés car
+opt-in**. Les **29 exports de contrats** sont cohérents. Un essai de
+99 856 combinaisons prend environ une seconde sur la machine de développement,
+sans constituer une garantie de performance. Aucune migration, modification
+de Supabase ou dépendance ajoutée ; aucun fichier mobile modifié.
+
+**Critère de passage satisfait :** couverture et coûts du moteur vérifiés dans
+ses bornes. Prochaine étape : **8 — Comparaison sans mutation puis application
+atomique**. Le nouveau détail mobile conserve « Estimation indisponible » tant
+que ces calculs ne sont pas raccordés ; la normalisation disponible ne remplace
+pas les attestations commerciales encore manquantes du catalogue réel.
 
 ## 3. Vocabulaire et cycle de vie
 
@@ -1317,7 +1376,7 @@ reste ouverte tant que ses critères nécessaires ne sont pas vérifiés.
 | 4 — Réalisée le 14 novembre 2026 | Développer agrégation de période et conversions certaines | Critère satisfait ; calculs, accès et instantanés testés, résultats dans la section 2.6 ; sauvegarde et routes à raccorder à l’étape 5 |
 | 5 — Réalisée le 14 novembre 2026 | Développer accueil Liste, création manuelle et import calendrier avec aperçu | Critère satisfait ; routes privées, brouillons, édition et reprise idempotente vérifiés ; voir section 2.7 |
 | 6 — Réalisée le 14 novembre 2026 | Normaliser les formats et bases tarifaires vérifiables | Critère satisfait ; formats, bases, contraintes et attestations normalisés ; inconnues classées, sources conservées et parité JSON/Supabase vérifiée ; voir section 2.8 |
-| 7 | Implémenter couverture en paquets, prix au poids, combinaisons et paliers | Cas de calcul et oracle exhaustif réussis ; bornes du calcul documentées |
+| 7 — Réalisée le 16 novembre 2026 | Implémenter couverture en paquets, prix au poids, combinaisons et paliers | Critère satisfait ; calculs et oracles exhaustifs réussis, bornes documentées ; voir section 2.9 |
 | 8 | Ajouter comparaison sans mutation puis application atomique | Changer de segment ne modifie rien ; choix manuels respectés ; total et couverture vérifiés |
 | 9 | Adapter détail, fiche d’article, possession et achats partiels | Coche stable, compléments après augmentation visibles, cohérence de tous les badges |
 | 10 | Ajouter exclusions, modèles, copie et historique par révision | Copie indépendante, zéro achat repris, original lisible après changements de prix/recette |
@@ -1490,7 +1549,10 @@ cibles sont implémentées :
 - [x] Étape 2 : schémas et contrats du premier lot fixés, avec résolution des points issus de l’audit ; voir section 2.4.
 - [x] Étape 3 : migration et services privés manuels, transactions et tests PostgreSQL ; voir section 2.5. Routes non raccordées.
 - [x] Étape 4 : agrégation et aperçu de période, conversions certaines et validation de l’empreinte ; voir section 2.6. Aucun enregistrement depuis calendrier à ce stade.
-- [ ] Lot A : persistance, période et création fiables.
+- [x] Étape 5 : API privée et parcours mobile de création/édition avec reprise ; voir section 2.7.
+- [x] Étape 6 : formats et bases tarifaires normalisés, migration 0017 appliquée sur Supabase ; voir section 2.8.
+- [x] Étape 7 : moteur de couverture et prix, paliers et oracles exhaustifs ; voir section 2.9.
+- [x] Lot A : persistance, période et création fiables ; essais sur appareils à compléter.
 - [ ] Lot B : achats, comparaison et courses stables.
 - [ ] Lot C : modèles, historique, résilience et bascule des accès.
 - [ ] Vérifications complètes des contrats et migrations applicables.
@@ -1511,6 +1573,7 @@ ce guide prépare leur intégration sans les annoncer présents.
 - [Calendrier et repas](PLANNING.md).
 - [Contrats HTTP existants](CONTRACTS.md).
 - [Contrats préparatoires des listes — Lot A](SHOPPING_LISTS_CONTRACTS.md).
+- [Calcul des achats — moteur de l'étape 7](PURCHASE_CALCULATION.md).
 - [Migrations applicatives](MIGRATIONS.md).
 - [Modèle de catalogue et de prix proposé](DATABASE.md).
 - [Données locales et provenance](DATA.md).
@@ -1521,4 +1584,4 @@ pas être sa seule porte d’entrée : elles sont ignorées par Git. Les deux
 captures et le texte joints à la conversation ont servi à cette conception ;
 ne pas dépendre de leur chemin temporaire pour implémenter les règles écrites ici.
 
-*Dernière mise à jour : 14 novembre 2026.*
+*Dernière mise à jour : 16 novembre 2026.*

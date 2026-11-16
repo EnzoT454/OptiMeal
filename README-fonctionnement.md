@@ -975,7 +975,10 @@ Le domaine des listes expose désormais les routes privées du lot A, les copies
 indépendantes du calendrier et l’édition des brouillons dans le mobile. La
 migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis le
 14 novembre 2026. La normalisation des formats et bases tarifaires est disponible
-côté serveur ; le calcul des paniers vient à l’étape suivante. Le
+côté serveur. Le moteur de couverture calcule désormais les paquets, les
+ventes au poids et les paliers promotionnels dans ses bornes ; son raccordement
+aux comparaisons et à leur application reste à réaliser à l'étape 8. Le mobile
+conserve « Estimation indisponible ». Le
 [suivi de l’étape 5](backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5)
 précise les fonctionnalités disponibles et leurs limites.
 
@@ -1184,4 +1187,4 @@ Pour suivre les ajouts récents, partir des champs `ImageUrl` et `ImageSource` d
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 16 novembre 2026*

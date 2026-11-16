@@ -430,6 +430,7 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Calendrier des repas et limites actuelles](backend/docs/PLANNING.md)
 - [Listes d’épicerie : conception et étapes d’implémentation](backend/docs/SHOPPING_LISTS.md)
 - [Formats de vente et bases tarifaires vérifiables](backend/docs/SALE_NORMALIZATION.md)
+- [Moteur de calcul des achats : paquets, poids et promotions](backend/docs/PURCHASE_CALCULATION.md)
 
 Le [site de suivi du projet](https://enzot454.github.io/OptiMeal/) regroupe nos objectifs, notre avancement et les références utilisées. Il reprend le [template du cours IFT3150](https://github.com/udem-diro/template-projet).
 
@@ -456,4 +457,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 16 novembre 2026*
