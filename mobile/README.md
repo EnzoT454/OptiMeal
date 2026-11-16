@@ -1,5 +1,16 @@
 # Mobile OptiMeal
 
+Le [mode courses hors connexion](../backend/docs/SHOPPING_OFFLINE.md) de l’étape 11
+conserve la liste complète, sa révision et une file de coches/décoches par compte.
+Dans Liste, **Ouvrir la liste enregistrée sur cet appareil** permet de la retrouver
+sans réseau. Les actions locales restent signalées en attente ; reprise avec
+les mêmes clés, résolution explicite des conflits et purge après suppression
+du compte. Le détail réessaie toutes les 15 secondes ou avec Actualiser ; aucune
+tâche native en arrière-plan n’est garantie. Les montants et compteurs restent
+ceux du serveur jusqu’à synchronisation. Création, import et comparaison exigent
+le réseau. Validation automatisée : 236 tests mobiles et TypeScript ; essais
+iOS/Android sur appareils à consigner.
+
 Les [modèles et l’historique](../backend/docs/SHOPPING_REUSE.md) de l’étape 10
 sont intégrés à Liste ; les exclusions futures sont gérées depuis les fiches
 et Paramètres. Copier repart sans achats, possession ou prix. La migration

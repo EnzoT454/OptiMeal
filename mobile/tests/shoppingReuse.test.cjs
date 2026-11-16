@@ -43,6 +43,8 @@ function screen(file, options = {}) {
     if (name === 'react-native') return { Text: 'Text', View: 'View', ActivityIndicator: 'ActivityIndicator', Pressable: 'Pressable', Alert: { alert: (...args) => alerts.push(args) } };
     if (name === 'expo-crypto') return { randomUUID: () => `uuid-${++sequence}` };
     if (name.includes('AuthContext')) return { useAuth: () => auth };
+    if (name.endsWith('useOfflineCourses')) return { useOfflineCourses: () => ({ state: null, busy: false, offline: false, error: '', refresh: async () => null }) };
+    if (name.endsWith('shoppingOffline')) return { readLatestOfflineList: async () => null };
     if (name.endsWith('useListCommand')) return methods;
     if (name.endsWith('useShoppingPage')) return { useShoppingPage: () => ({ ...pages, loading: false, error: '', load: async () => {} }) };
     if (name.endsWith('shoppingLists')) return { listsPath: '/api/v1/shopping-lists', localDate: () => '2026-11-20',

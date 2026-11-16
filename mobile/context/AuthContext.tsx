@@ -2,6 +2,7 @@ import { createContext, PropsWithChildren, useContext, useEffect, useState } fro
 import { AppState, Platform } from 'react-native';
 import * as Linking from 'expo-linking';
 import { Session } from '@supabase/supabase-js';
+import { purgeAccountStorage } from '../services/accountStorage';
 import { clearDeletedAccountSession, supabase } from '../services/supabase';
 
 const AuthContext = createContext<{
@@ -18,7 +19,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const [error, setError] = useState('');
   const [signInReason, setSignInReason] = useState<string | null>(null);
   async function forgetDeletedAccount() {
-    try { await clearDeletedAccountSession(); }
+    try {
+      try { if (session) await purgeAccountStorage(session.user.id); }
+      finally { await clearDeletedAccountSession(); }
+    }
     finally { setSession(null); setSignInReason(null); setError(''); }
   }
   useEffect(() => {

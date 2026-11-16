@@ -11,9 +11,11 @@ import { Message } from '../components/ui';
 import ListComparison from '../components/lists/ListComparison';
 import ListCourses from '../components/lists/ListCourses';
 import type { ListCommand } from '../services/shoppingLists';
+import { isPurchase } from '../services/shoppingOffline';
+import { useOfflineCourses } from '../components/lists/useOfflineCourses';
 import { useListCommand } from '../components/lists/useListCommand';
 import { fetchRevision } from '../services/shoppingReuse';
-import { dateLabel, fetchList, listCommand, listsPath } from '../services/shoppingLists';
+import { dateLabel, listCommand, listsPath } from '../services/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
 import type { Ingredient, Page, RecipeUnit } from '../types/api';
 import type { ShoppingListRead } from '../types/shoppingLists';
@@ -21,7 +23,7 @@ import type { ShoppingListRead } from '../types/shoppingLists';
 export default function ShoppingListDetailScreen({ route, navigation }: NativeStackScreenProps<ListStackParams, 'ShoppingDetail'>) {
   const { id, revision } = route.params;
   const readOnly = revision !== undefined;
-  const [list, setList] = useState<ShoppingListRead | null>(null);
+  const [historicalList, setList] = useState<{ identity: string; value: ShoppingListRead } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [name, setName] = useState('');
@@ -33,7 +35,9 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
   const [showAdd, setShowAdd] = useState(false);
   const { session } = useAuth();
   const userId = session?.user.id;
+  const offlineCourses = useOfflineCourses(userId, id, !readOnly);
   const identity = `${userId}:${id}:${revision ?? 'current'}`;
+  const list = readOnly ? (historicalList?.identity === identity ? historicalList.value : null) : offlineCourses.state?.snapshot ?? null;
   const currentIdentity = useRef(identity);
   currentIdentity.current = identity;
   const [options, setOptions] = useState(false);
@@ -45,19 +49,20 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
     let active = true;
     setLoading(true);
     setList(null);
-    readValue().then(value => { if (active && currentIdentity.current === identity) accept(value); })
+    readValue().then(value => { if (active && currentIdentity.current === identity && readOnly && value) accept(value); })
       .catch(e => { if (active) setError(e instanceof Error ? e.message : 'Liste indisponible.'); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [id, revision, userId]));
-  async function readValue() { return readOnly ? (await fetchRevision(id, revision)).snapshot : fetchList(id); }
+  async function readValue() { return readOnly ? (await fetchRevision(id, revision)).snapshot : offlineCourses.refresh(); }
   function accept(value: ShoppingListRead) {
-    setList(current => !readOnly && current?.id === value.id && current.revision > value.revision ? current : value);
+    if (!readOnly) { void offlineCourses.accept(value); return; }
+    setList({ identity, value });
   }
   async function refresh() {
     const attempt = identity;
     setLoading(true); setError('');
-    try { const value = await readValue(); if (currentIdentity.current === attempt) accept(value); }
+    try { const value = await readValue(); if (currentIdentity.current === attempt && readOnly && value) accept(value); }
     catch (e) { setError(e instanceof Error ? e.message : 'Liste indisponible.'); }
     finally { setLoading(false); }
   }
@@ -93,15 +98,28 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
     } else send();
   }
   const editable = !readOnly && (list?.status === 'draft' || list?.status === 'active');
-  const locked = command.locked || loading || !editable;
+  const coursesLocked = command.locked || loading || offlineCourses.busy || !editable;
+  const pendingCommands = offlineCourses.state?.queue.map(entry => entry.command) ?? [];
+  const locked = coursesLocked || offlineCourses.offline || pendingCommands.length > 0;
   return <RecipeScreen>
     {loading && <ActivityIndicator accessibilityLabel="Chargement de la liste" color={recipeColors.green} />}
-    <Message text={error || command.error} />
+    <Message text={error || command.error || offlineCourses.error} />
+    {!readOnly && offlineCourses.state && <View style={s.notice}>
+      <Text style={s.sectionTitle}>{offlineCourses.offline ? 'Hors connexion · dernières données enregistrées' : pendingCommands.length ? 'Modifications locales non synchronisées' : 'Liste synchronisée'}</Text>
+      <Text style={s.body}>{pendingCommands.length} action(s) en attente · dernière synchronisation : {new Date(offlineCourses.state.syncedAt).toLocaleString('fr-CA')}.</Text>
+      {pendingCommands.length > 0 && <Text style={s.note}>Les coches en attente sont locales. Les quantités, compteurs et montants affichés restent ceux confirmés par le serveur.</Text>}
+      {offlineCourses.offline && <Text style={s.note}>Tu peux cocher et décocher les achats de cette liste. Création, import, comparaison et autres modifications nécessitent le réseau.</Text>}
+      {offlineCourses.state.queue[0]?.conflict && <>
+        <Text accessibilityRole="alert" style={s.requiredItem}>Conflit : {offlineCourses.state.queue[0].conflict} Ton intention locale est conservée.</Text>
+        <RecipeButton title="Réessayer mon intention sur la liste actualisée" disabled={offlineCourses.busy || offlineCourses.offline} onPress={() => void offlineCourses.resolve(true)} />
+        <RecipeButton title="Abandonner cette intention locale" variant="neutral" disabled={offlineCourses.busy} onPress={() => void offlineCourses.resolve(false)} />
+      </>}
+    </View>}
     {!readOnly && command.pending && <View style={s.notice}><Text style={s.sectionTitle}>Enregistrement à vérifier</Text>
       <Text style={s.body}>Reprends la demande précédente avant de modifier la liste. Ton ajout n’a pas été perdu.</Text>
       <RecipeButton title="Reprendre l’enregistrement" disabled={command.busy} onPress={() => void save(path, {})} />
     </View>}
-    <RecipeButton title="Actualiser la liste" variant="neutral" disabled={command.busy || loading} onPress={() => void refresh()} />
+    <RecipeButton title="Actualiser la liste" variant="neutral" disabled={command.busy || loading || offlineCourses.busy} onPress={() => void refresh()} />
     {list && <>
       <RecipeTitle>{list.name}</RecipeTitle>
       {readOnly && <Text style={s.requiredItem}>Révision {revision} · consultation seule. Les prix et quantités sont ceux enregistrés à cette date.</Text>}
@@ -117,7 +135,7 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
       <Text style={s.note}>Reste connu à acheter : {list.totals.remaining_known_amount.replace('.', ',')} $ · {list.totals.unpriced_item_count} article(s) sans estimation complète. Estimations hors taxes et consignes non documentées ; prix payés non confirmés.</Text>
       {list.assignment?.stale && <Text style={s.requiredItem}>Proposition à réévaluer : les achats effectués et leurs estimations sont conservés.</Text>}
       {editable && <RecipeButton title="Comparer les magasins" variant={list.status === 'active' ? 'neutral' : 'primary'} disabled={locked} onPress={() => setShowComparison(!showComparison)} />}
-      {editable && showComparison && <ListComparison list={list} disabled={locked} onCommand={async (intent: ListCommand) => {
+      {editable && showComparison && !offlineCourses.offline && !pendingCommands.length && <ListComparison list={list} disabled={locked} onCommand={async (intent: ListCommand) => {
         const saved = await command.run(intent);
         if (!saved) return false;
         accept(saved); setError(''); return true;
@@ -131,8 +149,8 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
       {list.warnings.filter(w => w.code !== 'ESTIMATE_UNAVAILABLE').map((w, i) => <Text key={i} style={s.requiredItem}>{w.message}</Text>)}
       <RecipeButton title="Options de la liste" variant="neutral" onPress={() => setOptions(!options)} accessibilityState={{ expanded: options }} />
       {options && <>
-      <RecipeButton title="Copier les besoins" variant="neutral" disabled={loading || command.busy} onPress={() => navigation.navigate('ReuseList', { id, revision: list.revision, mode: 'copy' })} />
-      <RecipeButton title="Enregistrer comme modèle" variant="neutral" disabled={loading || command.busy} onPress={() => navigation.navigate('ReuseList', { id, revision: list.revision, mode: 'template' })} />
+      <RecipeButton title="Copier les besoins" variant="neutral" disabled={loading || command.busy || offlineCourses.busy || offlineCourses.offline || pendingCommands.length > 0} onPress={() => navigation.navigate('ReuseList', { id, revision: list.revision, mode: 'copy' })} />
+      <RecipeButton title="Enregistrer comme modèle" variant="neutral" disabled={loading || command.busy || offlineCourses.busy || offlineCourses.offline || pendingCommands.length > 0} onPress={() => navigation.navigate('ReuseList', { id, revision: list.revision, mode: 'template' })} />
       <RecipeButton title="Consulter les révisions" variant="neutral" onPress={() => navigation.navigate('Revisions', { id })} />
       {editable && <RecipeButton title="Archiver la liste" variant="neutral" disabled={locked} onPress={() => Alert.alert('Archiver cette liste ?', 'Elle restera consultable dans l’historique et pourra être rouverte.', [
         { text: 'Annuler', style: 'cancel' }, { text: 'Archiver', onPress: () => void save(`${path}/archive`, { expected_revision: list.revision }) },
@@ -152,9 +170,15 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
         <RecipeUnitPicker value={unit} onChange={setUnit} ingredientLabel={name || 'Article'} disabled={locked} />
         <Text style={s.note}>Sans quantité, l’article reste à préciser. Les articles saisis librement restent sur des lignes distinctes.</Text>
         <RecipeButton title="Ajouter à la liste" disabled={locked || !name.trim()} onPress={submit} />
-      </View> : !readOnly && (list.status === 'archived' || list.status === 'completed') ? <RecipeButton title="Rouvrir cette liste" disabled={command.locked || loading} onPress={() => void save(`${path}/reopen`, { expected_revision: list.revision })} /> : null}
+      </View> : !readOnly && (list.status === 'archived' || list.status === 'completed') ? <RecipeButton title="Rouvrir cette liste" disabled={command.locked || loading || offlineCourses.offline || offlineCourses.busy} onPress={() => void save(`${path}/reopen`, { expected_revision: list.revision })} /> : null}
       {!list.items.some(i => !i.removed) && <Text style={s.body}>Aucun article pour le moment. Ajoute ce dont tu as besoin.</Text>}
-      <ListCourses list={list} disabled={locked} error={command.error} onCommand={async intent => {
+      <ListCourses list={list} disabled={coursesLocked} purchasesOnly={offlineCourses.offline || pendingCommands.length > 0} pendingCommands={pendingCommands} error={command.error || offlineCourses.error} onCommand={async intent => {
+        if (isPurchase(intent, id)) {
+          const saved = await offlineCourses.enqueue(intent);
+          if (saved && !offlineCourses.offline) void offlineCourses.refresh();
+          return saved;
+        }
+        if (offlineCourses.offline || pendingCommands.length) return false;
         const saved = await command.run(intent);
         if (!saved) return false;
         accept(saved); setError(''); return true;

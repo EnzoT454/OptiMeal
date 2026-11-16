@@ -9,6 +9,8 @@ function runtime(options = {}) {
   const data = options.data ?? new Map(), cache = new Map(), writes = [], prompts = [], reads = [];
   let userId = 'compte-a', week = '2026-11-09', hooks;
   const storage = {
+    async getAllKeys() { return [...data.keys()]; },
+    async multiRemove(keys) { for (const key of keys) data.delete(key); },
     async getItem(key) {
       reads.push(key); if (options.beforeGet) await options.beforeGet(key);
       return data.get(key) ?? null;

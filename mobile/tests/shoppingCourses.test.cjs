@@ -159,3 +159,36 @@ test('fiche : erreurs serveur visibles, retrait annulable et quantités achetée
   assert.equal(h.alerts[0][2][0].text, 'Annuler');
   assert.equal(h.commands.length, 1);
 });
+
+test('coches locales produit : afficher le dernier état cible sans recalculer les estimations', () => {
+  const { list } = fixture();
+  const module = harness('components/lists/ProductPurchase.tsx').module;
+  const pending = { method: 'PUT', path: '/api/v1/shopping-lists/list/product-purchases', body: {
+    comparison_id: 'proposal', product_id: 'maxi:1:rice', item_id: 'rice', purchased_units: 2,
+  } };
+  const before = json(list);
+  const row = module.pendingProductRows(list, [pending])[0];
+  assert.equal(row.purchasedUnits, 2); assert.equal(row.pending, true);
+  const h = harness('components/lists/ProductPurchase.tsx', { list, row, disabled: false });
+  assert.equal(check(h).props.accessibilityState.checked, true);
+  assert.match(check(h).props.accessibilityLabel, /en attente/);
+  assert.deepEqual(json(list), before);
+});
+test('fiche hors connexion : bloquer possession et modification, garder les achats produit', () => {
+  const { list, item } = fixture();
+  const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false, purchasesOnly: true });
+  assert.equal(button(h, 'Modifier le besoin').props.disabled, true);
+  assert.equal(button(h, 'J’en ai déjà').props.disabled, true);
+  const product = nodes(h.render()).find(n => n.props.row?.comparisonId === 'proposal');
+  assert.equal(product.props.disabled, false);
+});
+test('coches locales manuelles : déplacer dans les achats et décocher avec un état cible', async () => {
+  const { list } = fixture(); list.assignment = null;
+  const pending = { path: '/api/v1/shopping-lists/list/items/rice/manual-purchase', body: { purchased: true } };
+  const h = harness('components/lists/ListCourses.tsx', { list, disabled: false, pendingCommands: [pending] });
+  button(h, 'Voir les achats enregistrés').props.onPress();
+  assert.equal(check(h).props.accessibilityState.checked, true);
+  await check(h).props.onPress();
+  assert.equal(h.commands[0].body.purchased, false);
+  assert.equal(list.items[0].coverage_status, 'remaining');
+});

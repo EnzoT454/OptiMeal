@@ -6,6 +6,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles as s } from '../components/recipes';
 import { Message } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
+import { readLatestOfflineList } from '../services/shoppingOffline';
 import { fetchLists, dateLabel } from '../services/shoppingLists';
 import type { ShoppingListRead } from '../types/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
@@ -13,6 +14,9 @@ import type { ListStackParams } from '../types/navigation';
 export default function ListScreen({ navigation }: NativeStackScreenProps<ListStackParams, 'Lists'>) {
   const { session, requestSignIn } = useAuth();
   const userId = session?.user.id;
+  const owner = useRef(userId); owner.current = userId;
+  const [itemsOwner, setItemsOwner] = useState(userId);
+  const [cached, setCached] = useState<{ user: string; list: ShoppingListRead } | null>(null);
   const [collection, setCollection] = useState<'current' | 'history'>('current');
   const [items, setItems] = useState<ShoppingListRead[]>([]);
   const [total, setTotal] = useState(0);
@@ -26,15 +30,20 @@ export default function ListScreen({ navigation }: NativeStackScreenProps<ListSt
     const request = ++generation.current;
     try {
       const page = await fetchLists(append ? items.length : 0, collection);
-      if (request === generation.current) {
+      if (request === generation.current && owner.current === userId) {
+        setItemsOwner(userId);
         setItems(previous => append ? [...previous.filter(i => !page.items.some(n => n.id === i.id)), ...page.items] : page.items);
         setTotal(page.total);
       }
-    } catch (e) { if (request === generation.current) setError(e instanceof Error ? e.message : 'Listes indisponibles.'); }
-    finally { if (request === generation.current) { busy.current = false; setLoading(false); } }
+    } catch (e) { if (request === generation.current && owner.current === userId) setError(e instanceof Error ? e.message : 'Listes indisponibles.'); }
+    finally { if (request === generation.current && owner.current === userId) { busy.current = false; setLoading(false); } }
   }
   useFocusEffect(useCallback(() => {
     setItems([]); setTotal(0);
+    setCached(null);
+    if (userId) void readLatestOfflineList(userId).then(value => {
+      if (owner.current === userId && value) setCached({ user: userId, list: value.snapshot });
+    }).catch(() => {});
     void load();
     return () => { generation.current++; busy.current = false; };
   }, [userId, collection]));
@@ -66,7 +75,11 @@ export default function ListScreen({ navigation }: NativeStackScreenProps<ListSt
       {loading && <ActivityIndicator accessibilityLabel="Chargement des listes" color={recipeColors.green} />}
       {!items.length && !loading && !error && <View style={s.notice}><Text style={s.sectionTitle}>{collection === 'history' ? 'Aucune liste terminée ou archivée' : 'Ta première liste t’attend'}</Text>
         <Text style={s.body}>Crée une liste ; ton brouillon sera enregistré dans ton compte.</Text></View>}
-      {items.map(card)}
+      {cached?.user === userId && <View style={s.notice}>
+        <Text style={s.note}>Dernière liste enregistrée sur cet appareil : {cached.list.name}. Disponible pour les courses hors connexion.</Text>
+        <RecipeButton title="Ouvrir la liste enregistrée sur cet appareil" variant="neutral" onPress={() => navigation.navigate('ShoppingDetail', { id: cached.list.id })} />
+      </View>}
+      {itemsOwner === userId && items.map(card)}
       {items.length < total && <RecipeButton title="Voir plus de listes" variant="neutral" disabled={loading} onPress={() => void load(true)} />}
     </>}
   </RecipeScreen>;

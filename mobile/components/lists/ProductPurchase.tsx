@@ -7,7 +7,7 @@ import type { ShoppingCalculatedLine, ShoppingListRead } from '../../types/shopp
 import { storeLabel } from './courseQuantities';
 
 export interface ProductRow {
-  comparisonId: string; itemIds: string[]; line: ShoppingCalculatedLine; purchasedUnits: number;
+  comparisonId: string; itemIds: string[]; line: ShoppingCalculatedLine; purchasedUnits: number; pending?: boolean;
 }
 export function productRows(list: ShoppingListRead): ProductRow[] {
   const rows: ProductRow[] = [];
@@ -21,6 +21,15 @@ export function productRows(list: ShoppingListRead): ProductRow[] {
     rows.push({ comparisonId: p.comparison_id, itemIds: p.item_ids, line: p.line, purchasedUnits: p.purchased_units });
   }
   return rows;
+}
+export function pendingProductRows(list: ShoppingListRead, commands: ListCommand[]): ProductRow[] {
+  return productRows(list).map(row => {
+    const pending = commands.filter(c => c.path === `${listsPath}/${list.id}/product-purchases`).filter(c => {
+      const body = c.body as Record<string, unknown>;
+      return body.comparison_id === row.comparisonId && body.product_id === row.line.sale.product_id && body.item_id === row.itemIds[0];
+    }).pop();
+    return pending ? { ...row, pending: true, purchasedUnits: (pending.body as { purchased_units: number }).purchased_units } : row;
+  });
 }
 export function productCommand(list: ShoppingListRead, row: ProductRow, units: number): ListCommand {
   return listCommand(`${listsPath}/${list.id}/product-purchases`, {
@@ -40,8 +49,9 @@ export default function ProductPurchase({ list, row, disabled, onCommand, onOpen
   const checked = historical ? row.purchasedUnits > 0 : row.purchasedUnits >= line.sale_units;
   const staleNew = !!list.assignment?.stale && !list.product_purchases?.some(p => p.comparison_id === row.comparisonId
     && p.line.sale.product_id === line.sale.product_id && p.item_ids[0] === row.itemIds[0]);
-  const label = `${line.sale.raw_source.name} pour ${names}`;
+  const label = `${line.sale.raw_source.name} pour ${names}${row.pending ? ' · en attente de synchronisation' : ''}`;
   const summary = <>
+    {row.pending && <Text style={s.requiredItem}>Achat local · en attente de synchronisation</Text>}
     <Text style={s.sectionTitle}>{line.sale.raw_source.name}</Text>
     <Text style={s.body}>Pour : {names}</Text>
     <Text style={s.body}>{storeLabel(line.sale.raw_source.retailer)}{line.sale.raw_source.store_id ? ` · ${line.sale.raw_source.store_id}` : ''}</Text>

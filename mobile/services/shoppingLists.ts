@@ -14,8 +14,8 @@ export async function sendListCommand<T = ShoppingListRead>(command: ListCommand
   return result.item;
 }
 export const fetchLists = (offset = 0, collection?: 'current' | 'history') => api<ShoppingPage<ShoppingListRead>>(`${listsPath}?limit=20&offset=${offset}${collection ? `&collection=${collection}` : ''}`);
-export async function fetchList(id: string) {
-  return (await api<ShoppingDetail<ShoppingListRead>>(`${listsPath}/${id}`)).item;
+export async function fetchList(id: string, userId?: string) {
+  return (await api<ShoppingDetail<ShoppingListRead>>(`${listsPath}/${id}`, {}, true, 15000, userId)).item;
 }
 export async function previewCalendar(body: ShoppingCalendarPreviewWrite) {
   return (await api<ShoppingDetail<ShoppingCalendarPreviewRead>>(`${listsPath}/calendar-preview`, {

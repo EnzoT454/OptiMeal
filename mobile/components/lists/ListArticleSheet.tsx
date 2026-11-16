@@ -6,14 +6,14 @@ import { dateLabel, listCommand, listsPath, quantityLabel } from '../../services
 import type { ListCommand } from '../../services/shoppingLists';
 import type { ShoppingCoverage, ShoppingItemRead, ShoppingListRead } from '../../types/shoppingLists';
 import { coverageLabels, positiveAmount, purchasedQuantities, remainingQuantities } from './courseQuantities';
-import ProductPurchase, { productRows } from './ProductPurchase';
+import ProductPurchase, { pendingProductRows } from './ProductPurchase';
 import RecipeUnitPicker from '../RecipeUnitPicker';
 import type { RecipeUnit } from '../../types/api';
 import ListExclusionAction from './ListExclusionAction';
 import ListComparison from './ListComparison';
 
-export default function ListArticleSheet({ list, item, disabled, onClose, onCommand, commandError = '' }: {
-  commandError?: string; list: ShoppingListRead; item: ShoppingItemRead; disabled: boolean; onClose: () => void;
+export default function ListArticleSheet({ list, item, disabled, onClose, onCommand, commandError = '', purchasesOnly = false, pendingCommands = [] }: {
+  commandError?: string; purchasesOnly?: boolean; pendingCommands?: ListCommand[]; list: ShoppingListRead; item: ShoppingItemRead; disabled: boolean; onClose: () => void;
   onCommand: (command: ListCommand) => Promise<boolean>;
 }) {
   const [mode, setMode] = useState<'owned' | 'purchase' | 'need' | null>(null);
@@ -23,10 +23,11 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
   const [newUnit, setNewUnit] = useState<RecipeUnit | null>(null);
   const [choosing, setChoosing] = useState(false);
   const [itemName, setItemName] = useState(item.name);
-  const rows = productRows(list).filter(r => r.itemIds.includes(item.id));
+  const rows = pendingProductRows(list, pendingCommands).filter(r => r.itemIds.includes(item.id));
   const path = `${listsPath}/${list.id}/items/${item.id}`;
   const editable = list.status === 'draft' || list.status === 'active';
-  const locked = disabled || !editable;
+  const purchaseLocked = disabled || !editable;
+  const locked = purchaseLocked || purchasesOnly;
   const bought = list.purchases.find(p => p.item_id === item.id);
   function begin(next: 'owned' | 'purchase' | 'need') {
     setMode(next); setError('');
@@ -60,7 +61,7 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
           {remainingQuantities(list, item).length > 0 && <Text style={s.requiredItem}>Complément à acheter : {quantityLabel(remainingQuantities(list, item))}</Text>}
           {list.warnings.filter(w => w.item_id === item.id).map((w, i) => <Text key={i} style={s.requiredItem}>{w.message}</Text>)}
           {item.contributions.filter(c => c.source === 'calendar').map(c => <Text key={c.id} style={s.note}>Pour : {c.recipe_name} · {c.meal_date ? dateLabel(c.meal_date) : ''} · {c.servings} portions</Text>)}
-          {rows.map(row => <ProductPurchase key={`${row.comparisonId}:${row.line.sale.product_id}:${row.purchasedUnits}`} list={list} row={row} detailed disabled={locked} onCommand={onCommand} />)}
+          {rows.map(row => <ProductPurchase key={`${row.comparisonId}:${row.line.sale.product_id}:${row.purchasedUnits}`} list={list} row={row} detailed disabled={purchaseLocked} onCommand={onCommand} />)}
           {!rows.length && <Text style={s.note}>Produit et prix inconnus. Un achat déclaré reste possible sans inventer de prix.</Text>}
           {!!commandError && <Text accessibilityRole="alert" style={s.requiredItem}>{commandError} Ferme la fiche pour actualiser la liste ou reprendre l’enregistrement si nécessaire.</Text>}
           {!!error && <Text style={s.requiredItem}>{error}</Text>}

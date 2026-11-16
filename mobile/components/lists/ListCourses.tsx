@@ -4,23 +4,27 @@ import { RecipeButton, recipeStyles as s } from '../recipes';
 import { listCommand, listsPath, quantityLabel } from '../../services/shoppingLists';
 import type { ListCommand } from '../../services/shoppingLists';
 import type { ShoppingItemRead, ShoppingListRead } from '../../types/shoppingLists';
-import ProductPurchase, { productRows } from './ProductPurchase';
+import ProductPurchase, { pendingProductRows } from './ProductPurchase';
 import ListArticleSheet from './ListArticleSheet';
 import { coverageLabels, manualCheckCoverage, remainingQuantities, storeLabel } from './courseQuantities';
 
-export default function ListCourses({ list, disabled, onCommand, error = '' }: {
-  list: ShoppingListRead; error?: string; disabled: boolean; onCommand: (command: ListCommand) => Promise<boolean>;
+export default function ListCourses({ list, disabled, onCommand, error = '', purchasesOnly = false, pendingCommands = [] }: {
+  list: ShoppingListRead; error?: string; purchasesOnly?: boolean; pendingCommands?: ListCommand[]; disabled: boolean; onCommand: (command: ListCommand) => Promise<boolean>;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [showBought, setShowBought] = useState(false);
   const [store, setStore] = useState('all');
-  const rows = productRows(list);
+  const rows = pendingProductRows(list, pendingCommands);
+  const isBought = (item: ShoppingItemRead) => {
+    const pending = pendingCommands.filter(c => c.path === `${listsPath}/${list.id}/items/${item.id}/manual-purchase`).pop();
+    return pending ? (pending.body as { purchased: boolean }).purchased : item.coverage_status === 'purchased';
+  };
   const stores = [...new Set(rows.map(r => r.line.sale.raw_source.retailer))];
   const editable = list.status === 'draft' || list.status === 'active';
   const locked = disabled || !editable;
   const selectedItem = list.items.find(i => i.id === selected && !i.removed);
   function manualRow(item: ShoppingItemRead) {
-    const bought = item.coverage_status === 'purchased';
+    const bought = isBought(item);
     const owned = item.coverage_status === 'owned';
     const remaining = remainingQuantities(list, item);
     return <View key={item.id} style={[s.choice, { flexDirection: 'row', alignItems: 'center', gap: 12 }]}>
@@ -32,7 +36,8 @@ export default function ListCourses({ list, disabled, onCommand, error = '' }: {
         <Text style={s.sectionTitle}>{bought ? '☑' : '☐'}</Text>
       </Pressable>}
       <Pressable accessibilityRole="button" accessibilityLabel={`Fiche de ${item.name}`} onPress={() => setSelected(item.id)} style={{ flex: 1, minHeight: 48, gap: 6 }}>
-        <Text style={s.sectionTitle}>{item.name}</Text><Text style={s.body}>Besoin : {quantityLabel(item.required)}</Text>
+        <Text style={s.sectionTitle}>{item.name}</Text>
+        {pendingCommands.some(c => c.path === `${listsPath}/${list.id}/items/${item.id}/manual-purchase`) && <Text style={s.requiredItem}>Achat local · en attente de synchronisation</Text>}<Text style={s.body}>Besoin : {quantityLabel(item.required)}</Text>
         <Text style={s.note}>{coverageLabels[item.coverage_status]} · {item.category}</Text>
         {item.coverage_status === 'partial' && remaining.length > 0 && <Text style={s.requiredItem}>Complément : {quantityLabel(remaining)}</Text>}
         {!owned && <Text style={s.note}>Produit et prix à préciser</Text>}
@@ -59,7 +64,7 @@ export default function ListCourses({ list, disabled, onCommand, error = '' }: {
       </View>;
     })}
     {store === 'all' && categories.map(category => {
-      const remaining = loose.filter(i => i.category === category && (i.coverage_status === 'remaining' || i.coverage_status === 'partial'));
+      const remaining = loose.filter(i => i.category === category && (!isBought(i) && i.coverage_status !== 'owned'));
       return remaining.length > 0 && <View key={category} style={{ gap: 8 }}><Text style={s.note}>Magasin à choisir · {category}</Text>{remaining.map(manualRow)}</View>;
     })}
     {list.items.filter(i => !i.removed && rows.some(r => r.itemIds.includes(i.id)) && remainingQuantities(list, i).length > 0).map(item =>
@@ -69,12 +74,12 @@ export default function ListCourses({ list, disabled, onCommand, error = '' }: {
       </Pressable>)}
     <RecipeButton title={`${showBought ? 'Masquer' : 'Voir'} les achats enregistrés`} variant="neutral" accessibilityState={{ expanded: showBought }} onPress={() => setShowBought(!showBought)} />
     {showBought && <View style={{ gap: 10 }}>
-      {rows.filter(r => r.purchasedUnits > 0 && (store === 'all' || r.line.sale.raw_source.retailer === store)).map(row =>
+      {rows.filter(r => (r.purchasedUnits > 0 || r.pending) && (store === 'all' || r.line.sale.raw_source.retailer === store)).map(row =>
         <ProductPurchase key={`${row.comparisonId}:${row.line.sale.product_id}`} list={list} row={row} disabled={locked} onCommand={onCommand} onOpen={() => setSelected(row.itemIds[0])} />)}
-      {store === 'all' && loose.filter(i => i.coverage_status === 'purchased').map(manualRow)}
-      {!rows.some(r => r.purchasedUnits > 0) && !loose.some(i => i.coverage_status === 'purchased') && <Text style={s.note}>Aucun achat enregistré.</Text>}
+      {store === 'all' && loose.filter(isBought).map(manualRow)}
+      {!rows.some(r => r.purchasedUnits > 0) && !loose.some(isBought) && <Text style={s.note}>Aucun achat enregistré.</Text>}
     </View>}
     {list.items.some(i => !i.removed && i.coverage_status === 'owned') && <View style={{ gap: 8 }}><Text style={s.sectionTitle}>Déjà disponible</Text>{list.items.filter(i => !i.removed && i.coverage_status === 'owned').map(manualRow)}</View>}
-    {selectedItem && <ListArticleSheet key={selectedItem.id} item={selectedItem} list={list} commandError={error} disabled={disabled} onClose={() => setSelected(null)} onCommand={onCommand} />}
+    {selectedItem && <ListArticleSheet key={selectedItem.id} item={selectedItem} list={list} commandError={error} disabled={disabled} purchasesOnly={purchasesOnly} pendingCommands={pendingCommands} onClose={() => setSelected(null)} onCommand={onCommand} />}
   </View>;
 }
