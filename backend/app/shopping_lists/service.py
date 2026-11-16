@@ -178,11 +178,13 @@ def _snapshot(db: Session, list_id: UUID, user: CurrentUser, source_warnings=Non
         partial_item_count=sum(i.coverage_status == 'partial' for i in active),
         unpriced_item_count=unpriced, uncovered_item_count=uncovered,
         budget_known_amount='0', remaining_known_amount='0', estimate_complete=not (unpriced or uncovered))
-    return ShoppingListRead(
+    resource = ShoppingListRead(
         **{k: row[k] for k in ('id', 'name', 'source', 'status', 'revision', 'purchase_date')},
         created_at=row['created_at'].astimezone(timezone.utc), updated_at=row['updated_at'].astimezone(timezone.utc),
         period={'start_date': row['start_date'], 'end_date': row['end_date']} if row['source'] == 'calendar' else None,
         items=result, purchases=purchases_read, totals=totals, warnings=warnings)
+    from .comparisons import decorate
+    return decorate(db, resource)
 
 
 def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,

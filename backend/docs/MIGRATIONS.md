@@ -7,7 +7,14 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
-La tête du dépôt est `0017_shopping_lists`. Elle crée les huit tables privées
+La tête du dépôt est désormais **0018_shopping_comparisons**. Elle ajoute les
+simulations privées, les choix manuels et les répartitions enregistrées ; RLS
+reste activée et les simulations sont immuables. Migration vérifiée sur PostgreSQL
+local, **non appliquée à Supabase pendant l’étape 8**. Le retour à 0017 refuse
+d’effacer des choix ou répartitions existants. Voir le
+[guide des comparaisons](SHOPPING_COMPARISONS.md).
+
+`0017_shopping_lists` crée les huit tables privées
 du premier lot des listes : listes, articles, quantités, contributions, achats
 manuels, quantités achetées, révisions et commandes idempotentes. Les modèles
 sont enregistrés dans les métadonnées Alembic. RLS est activée sans accès mobile
@@ -464,4 +471,4 @@ Sans cette variable, les tests PostgreSQL restent volontairement ignorés :
 ils ne doivent jamais utiliser automatiquement la base Supabase du projet.
 L’option `-rs` affiche la raison de chaque test ignoré.
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 16 novembre 2026*

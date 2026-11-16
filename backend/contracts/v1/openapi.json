@@ -3464,6 +3464,320 @@
         }
       }
     },
+    "/api/v1/shopping-lists/{list_id}/comparisons": {
+      "post": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Compare",
+        "operationId": "compare_api_v1_shopping_lists__list_id__comparisons_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "List Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingComparisonRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/shopping-lists/{list_id}/apply-comparison": {
+      "post": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Apply Comparison",
+        "operationId": "apply_comparison_api_v1_shopping_lists__list_id__apply_comparison_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "List Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingApplyComparison"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingListRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/shopping-lists/{list_id}/items/{item_id}/choice": {
+      "put": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Choice",
+        "operationId": "choice_api_v1_shopping_lists__list_id__items__item_id__choice_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "List Id"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingChoiceWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingListRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -4114,6 +4428,23 @@
         ],
         "title": "Detail[ShoppingCalendarPreviewRead]"
       },
+      "Detail_ShoppingComparisonRead_": {
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/ShoppingComparisonRead"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item",
+          "meta"
+        ],
+        "title": "Detail[ShoppingComparisonRead]"
+      },
       "Detail_ShoppingListRead_": {
         "properties": {
           "item": {
@@ -4570,6 +4901,246 @@
           "entries"
         ],
         "title": "MealPlanRead"
+      },
+      "NormalizedSale": {
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Product Id"
+          },
+          "ingredient_id": {
+            "type": "string",
+            "pattern": "^ing_[a-z0-9_]+$",
+            "title": "Ingredient Id"
+          },
+          "source_fingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Source Fingerprint"
+          },
+          "raw_source": {
+            "$ref": "#/components/schemas/SourceProduct"
+          },
+          "review": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SaleReview"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "review_status": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "matched",
+              "stale",
+              "identity_mismatch"
+            ],
+            "title": "Review Status"
+          },
+          "format": {
+            "$ref": "#/components/schemas/ProductFormat"
+          },
+          "format_status": {
+            "type": "string",
+            "enum": [
+              "candidate",
+              "verified",
+              "unknown"
+            ],
+            "title": "Format Status"
+          },
+          "content_per_package": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SaleBaseQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dimension": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "mass",
+                  "volume",
+                  "count"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dimension"
+          },
+          "price_basis": {
+            "type": "string",
+            "enum": [
+              "package",
+              "weight",
+              "count",
+              "unknown"
+            ],
+            "title": "Price Basis"
+          },
+          "price_per_quantity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SaleBaseQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sale_increment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SaleBaseQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minimum_sale": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SaleBaseQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "applicable_price": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Applicable Price"
+          },
+          "applicable_price_kind": {
+            "type": "string",
+            "enum": [
+              "regular",
+              "promotion",
+              "unknown"
+            ],
+            "title": "Applicable Price Kind"
+          },
+          "quantity_limit": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quantity Limit"
+          },
+          "price_after_limit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price After Limit"
+          },
+          "evaluated_on": {
+            "type": "string",
+            "format": "date",
+            "title": "Evaluated On"
+          },
+          "match_status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "proposed",
+              "rejected"
+            ],
+            "title": "Match Status"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "store",
+              "retailer",
+              "unknown"
+            ],
+            "title": "Scope"
+          },
+          "conditions": {
+            "type": "string",
+            "enum": [
+              "unconditional",
+              "member",
+              "coupon",
+              "multi_buy",
+              "unknown"
+            ],
+            "title": "Conditions"
+          },
+          "issues": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Issues"
+          },
+          "eligible_for_calculation": {
+            "type": "boolean",
+            "title": "Eligible For Calculation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "product_id",
+          "ingredient_id",
+          "source_fingerprint",
+          "raw_source",
+          "review",
+          "review_status",
+          "format",
+          "format_status",
+          "content_per_package",
+          "dimension",
+          "price_basis",
+          "price_per_quantity",
+          "sale_increment",
+          "minimum_sale",
+          "applicable_price",
+          "applicable_price_kind",
+          "quantity_limit",
+          "price_after_limit",
+          "evaluated_on",
+          "match_status",
+          "scope",
+          "conditions",
+          "issues",
+          "eligible_for_calculation"
+        ],
+        "title": "NormalizedSale",
+        "description": "Instantané autonome ; un format lisible ne garantit ni tarif ni équivalence."
       },
       "OfferRead": {
         "properties": {
@@ -6107,6 +6678,280 @@
         ],
         "title": "ResponseMeta"
       },
+      "SaleBaseQuantity": {
+        "properties": {
+          "amount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Amount"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "g",
+              "ml",
+              "unit"
+            ],
+            "title": "Unit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "amount",
+          "unit"
+        ],
+        "title": "SaleBaseQuantity"
+      },
+      "SaleQuantity": {
+        "properties": {
+          "amount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Amount"
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Unit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "amount",
+          "unit"
+        ],
+        "title": "SaleQuantity"
+      },
+      "SaleReview": {
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Product Id"
+          },
+          "ingredient_id": {
+            "type": "string",
+            "pattern": "^ing_[a-z0-9_]+$",
+            "title": "Ingredient Id"
+          },
+          "source_fingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Source Fingerprint"
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Checked At"
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "source_document",
+              "manual_review"
+            ],
+            "title": "Method"
+          },
+          "reference": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Reference"
+          },
+          "format_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Format Raw"
+          },
+          "price_basis_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Basis Raw"
+          },
+          "price_basis": {
+            "type": "string",
+            "enum": [
+              "package",
+              "weight",
+              "count",
+              "unknown"
+            ],
+            "title": "Price Basis",
+            "default": "unknown"
+          },
+          "price_per_quantity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SaleQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sale_increment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SaleQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minimum_sale": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SaleQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "match_status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "proposed",
+              "rejected"
+            ],
+            "title": "Match Status",
+            "default": "proposed"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "store",
+              "retailer",
+              "unknown"
+            ],
+            "title": "Scope",
+            "default": "unknown"
+          },
+          "conditions": {
+            "type": "string",
+            "enum": [
+              "unconditional",
+              "member",
+              "coupon",
+              "multi_buy",
+              "unknown"
+            ],
+            "title": "Conditions",
+            "default": "unknown"
+          },
+          "zero_price_verified": {
+            "type": "boolean",
+            "title": "Zero Price Verified",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "product_id",
+          "ingredient_id",
+          "source_fingerprint",
+          "checked_at",
+          "method",
+          "reference"
+        ],
+        "title": "SaleReview",
+        "description": "Attestation explicite ; ne constitue jamais une vérification automatique."
+      },
+      "ShoppingAppliedComparison": {
+        "properties": {
+          "comparison_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Comparison Id"
+          },
+          "source_revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Source Revision"
+          },
+          "purchase_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Purchase Date"
+          },
+          "state_fingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "State Fingerprint"
+          },
+          "scenario": {
+            "$ref": "#/components/schemas/ShoppingScenario"
+          },
+          "stale": {
+            "type": "boolean",
+            "title": "Stale",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "comparison_id",
+          "source_revision",
+          "purchase_date",
+          "state_fingerprint",
+          "scenario"
+        ],
+        "title": "ShoppingAppliedComparison"
+      },
+      "ShoppingApplyComparison": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Expected Revision"
+          },
+          "comparison_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Comparison Id"
+          },
+          "scenario": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc",
+              "cheapest"
+            ],
+            "title": "Scenario"
+          },
+          "accept_partial": {
+            "type": "boolean",
+            "title": "Accept Partial",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision",
+          "comparison_id",
+          "scenario"
+        ],
+        "title": "ShoppingApplyComparison"
+      },
       "ShoppingBaseQuantity": {
         "properties": {
           "amount": {
@@ -6131,6 +6976,42 @@
           "unit"
         ],
         "title": "ShoppingBaseQuantity"
+      },
+      "ShoppingCalculatedLine": {
+        "properties": {
+          "sale": {
+            "$ref": "#/components/schemas/NormalizedSale"
+          },
+          "sale_units": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Sale Units"
+          },
+          "quantity": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Quantity"
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Amount"
+          },
+          "estimated_weight": {
+            "type": "boolean",
+            "title": "Estimated Weight"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "sale",
+          "sale_units",
+          "quantity",
+          "amount",
+          "estimated_weight"
+        ],
+        "title": "ShoppingCalculatedLine"
       },
       "ShoppingCalendarPreviewRead": {
         "properties": {
@@ -6240,6 +7121,95 @@
         ],
         "title": "ShoppingCalendarPreviewWrite"
       },
+      "ShoppingCandidate": {
+        "properties": {
+          "ingredient_id": {
+            "type": "string",
+            "pattern": "^ing_[a-z0-9_]+$",
+            "title": "Ingredient Id"
+          },
+          "product_id": {
+            "type": "string",
+            "title": "Product Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "retailer": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc"
+            ],
+            "title": "Retailer"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          },
+          "eligible": {
+            "type": "boolean",
+            "title": "Eligible"
+          },
+          "issues": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Issues"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "ingredient_id",
+          "product_id",
+          "name",
+          "retailer",
+          "store_id",
+          "eligible",
+          "issues"
+        ],
+        "title": "ShoppingCandidate"
+      },
+      "ShoppingChoiceWrite": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Expected Revision"
+          },
+          "product_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 512,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision",
+          "product_id"
+        ],
+        "title": "ShoppingChoiceWrite"
+      },
       "ShoppingCommand": {
         "properties": {
           "expected_revision": {
@@ -6255,6 +7225,188 @@
         ],
         "title": "ShoppingCommand"
       },
+      "ShoppingComparedNeed": {
+        "properties": {
+          "item_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Item Ids"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "ingredient_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^ing_[a-z0-9_]+$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ingredient Id"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "g",
+                  "ml",
+                  "unit"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "remaining": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remaining"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "owned",
+              "purchased",
+              "unpriced",
+              "unquantified",
+              "incompatible_units",
+              "search_limit",
+              "manual_unavailable"
+            ],
+            "title": "Status"
+          },
+          "manual": {
+            "type": "boolean",
+            "title": "Manual",
+            "default": false
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingCalculatedLine"
+            },
+            "type": "array",
+            "title": "Lines"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item_ids",
+          "name",
+          "ingredient_id",
+          "unit",
+          "remaining",
+          "status"
+        ],
+        "title": "ShoppingComparedNeed"
+      },
+      "ShoppingComparisonRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "list_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "List Id"
+          },
+          "source_revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Source Revision"
+          },
+          "purchase_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Purchase Date"
+          },
+          "catalog_fingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Catalog Fingerprint"
+          },
+          "state_fingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "State Fingerprint"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Expires At"
+          },
+          "scenarios": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingScenario"
+            },
+            "type": "array",
+            "title": "Scenarios"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingCandidate"
+            },
+            "type": "array",
+            "title": "Candidates"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "list_id",
+          "source_revision",
+          "purchase_date",
+          "catalog_fingerprint",
+          "state_fingerprint",
+          "expires_at",
+          "scenarios",
+          "candidates"
+        ],
+        "title": "ShoppingComparisonRead"
+      },
       "ShoppingConflict": {
         "properties": {
           "code": {
@@ -6264,7 +7416,10 @@
               "IDEMPOTENCY_KEY_REUSED",
               "CALENDAR_PREVIEW_STALE",
               "ACCOUNT_DELETION_PENDING",
-              "LIST_STATE_CONFLICT"
+              "LIST_STATE_CONFLICT",
+              "COMPARISON_STALE",
+              "COMPARISON_PARTIAL",
+              "CHOICE_CONFLICT"
             ],
             "title": "Code"
           },
@@ -6886,6 +8041,23 @@
             "type": "string",
             "format": "date-time",
             "title": "Updated At"
+          },
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingProductChoice"
+            },
+            "type": "array",
+            "title": "Choices"
+          },
+          "assignment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ShoppingAppliedComparison"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -7071,6 +8243,28 @@
         ],
         "title": "ShoppingPossessionWrite"
       },
+      "ShoppingProductChoice": {
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Item Id"
+          },
+          "product_id": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Product Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item_id",
+          "product_id"
+        ],
+        "title": "ShoppingProductChoice"
+      },
       "ShoppingQuantity": {
         "properties": {
           "amount": {
@@ -7137,6 +8331,96 @@
           "snapshot"
         ],
         "title": "ShoppingRevisionRead"
+      },
+      "ShoppingScenario": {
+        "properties": {
+          "scenario": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc",
+              "cheapest"
+            ],
+            "title": "Scenario"
+          },
+          "needs": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingComparedNeed"
+            },
+            "type": "array",
+            "title": "Needs"
+          },
+          "known_amount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Known Amount"
+          },
+          "complete": {
+            "type": "boolean",
+            "title": "Complete"
+          },
+          "store_totals": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingStoreTotal"
+            },
+            "type": "array",
+            "title": "Store Totals"
+          },
+          "store_count": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Store Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "scenario",
+          "needs",
+          "known_amount",
+          "complete",
+          "store_totals",
+          "store_count"
+        ],
+        "title": "ShoppingScenario"
+      },
+      "ShoppingStoreTotal": {
+        "properties": {
+          "retailer": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc"
+            ],
+            "title": "Retailer"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          },
+          "amount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Amount"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "retailer",
+          "store_id",
+          "amount"
+        ],
+        "title": "ShoppingStoreTotal"
       },
       "ShoppingTotals": {
         "properties": {
@@ -7285,6 +8569,223 @@
           "unit_raw"
         ],
         "title": "SourceFormat"
+      },
+      "SourceProduct": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "retailer": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc"
+            ],
+            "title": "Retailer"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          },
+          "external_product_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "External Product Id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Name"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          },
+          "promo_price": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Promo Price"
+          },
+          "quantity_limit": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quantity Limit"
+          },
+          "price_after_limit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price After Limit"
+          },
+          "currency": {
+            "type": "string",
+            "const": "CAD",
+            "title": "Currency"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "quantity": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quantity"
+          },
+          "valid_from": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid From"
+          },
+          "valid_to": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valid To"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved At"
+          },
+          "is_promotion": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Promotion"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url"
+          },
+          "image_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Source"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "retailer",
+          "store_id",
+          "external_product_id",
+          "name",
+          "price",
+          "currency",
+          "unit",
+          "quantity",
+          "valid_from",
+          "valid_to",
+          "is_promotion",
+          "source",
+          "url"
+        ],
+        "title": "SourceProduct"
       },
       "ValidationError": {
         "properties": {

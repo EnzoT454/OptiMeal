@@ -976,9 +976,10 @@ indépendantes du calendrier et l’édition des brouillons dans le mobile. La
 migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis le
 14 novembre 2026. La normalisation des formats et bases tarifaires est disponible
 côté serveur. Le moteur de couverture calcule désormais les paquets, les
-ventes au poids et les paliers promotionnels dans ses bornes ; son raccordement
-aux comparaisons et à leur application reste à réaliser à l'étape 8. Le mobile
-conserve « Estimation indisponible ». Le
+ventes au poids et les paliers promotionnels dans ses bornes. Le détail de Liste
+propose les comparaisons et leur application explicite depuis l'étape 8, après
+la migration 0018. Les prix non attestés restent inconnus et les résultats
+partiels affichent un sous-total connu. Le
 [suivi de l’étape 5](backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5)
 précise les fonctionnalités disponibles et leurs limites.
 

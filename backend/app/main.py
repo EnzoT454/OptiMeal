@@ -66,6 +66,7 @@ def create_app(*, settings: Settings | None = None, env_file: Path | None = ENV_
         app.state.offers_source = 'database' if config.offers_source == 'database' else 'json'
         # Adresse Supabase : sert à construire les liens publics des pages de circulaires.
         app.state.supabase_url = config.supabase_url
+        app.state.sale_reviews_path = config.sale_reviews_path
 
         try:
             app.state.public_catalog = load_catalog(

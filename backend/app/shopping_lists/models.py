@@ -150,3 +150,40 @@ class ShoppingListCommand(Base):
     signature: Mapped[str] = mapped_column(Text, nullable=False)
     result: Mapped[dict] = mapped_column(JSONB, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text('now()'))
+
+
+class ShoppingListComparison(Base):
+    __tablename__ = 'shopping_list_comparison'
+    __table_args__ = (
+        UniqueConstraint('id', 'list_id', name='uq_shopping_list_comparison_id_list'),
+        CheckConstraint("jsonb_typeof(data) = 'object'", name='data_object'),
+        Index('ix_shopping_list_comparison_list_id', 'list_id'),
+    )
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
+    list_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('shopping_list.id', ondelete='CASCADE'), nullable=False)
+    data: Mapped[dict] = mapped_column(JSONB, nullable=False)
+
+
+class ShoppingListChoice(Base):
+    __tablename__ = 'shopping_list_choice'
+    __table_args__ = (
+        ForeignKeyConstraint(['list_id', 'item_id'], ['shopping_list_item.list_id', 'shopping_list_item.id'],
+                             ondelete='CASCADE', name='fk_shopping_list_choice_item_in_list'),
+        CheckConstraint('length(product_id) BETWEEN 1 AND 512', name='product_id_valid'),
+        Index('ix_shopping_list_choice_list_id', 'list_id'),
+    )
+    item_id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
+    list_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
+    product_id: Mapped[str] = mapped_column(Text, nullable=False)
+
+
+class ShoppingListAssignment(Base):
+    __tablename__ = 'shopping_list_assignment'
+    __table_args__ = (
+        ForeignKeyConstraint(['comparison_id', 'list_id'], ['shopping_list_comparison.id', 'shopping_list_comparison.list_id'],
+                             ondelete='CASCADE', name='fk_shopping_list_assignment_comparison_in_list'),
+        CheckConstraint("jsonb_typeof(data) = 'object'", name='data_object'),
+    )
+    list_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('shopping_list.id', ondelete='CASCADE'), primary_key=True)
+    comparison_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
+    data: Mapped[dict] = mapped_column(JSONB, nullable=False)

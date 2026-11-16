@@ -2,19 +2,19 @@
 from typing import Annotated, Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Header, Path, Query
+from fastapi import APIRouter, Depends, Header, Path, Query, Request
 from sqlalchemy.orm import Session
 
 from backend.app.common.contracts import Detail, ErrorResponse, Page, ResponseMeta
 from backend.app.database import get_db
 from backend.app.security import CurrentUser, current_user
-from . import service
+from . import service, comparisons
 from .calendar import preview_calendar
 from .schemas import (
     ShoppingCalendarPreviewRead, ShoppingCalendarPreviewWrite, ShoppingCommand,
     ShoppingConflictResponse, ShoppingFromCalendar, ShoppingItemAdd, ShoppingItemUpdate,
     ShoppingListCreate, ShoppingListRead, ShoppingListUpdate, ShoppingManualPurchaseWrite,
-    ShoppingPossessionWrite, ShoppingRevisionRead,
+    ShoppingPossessionWrite, ShoppingRevisionRead, ShoppingChoiceWrite, ShoppingApplyComparison, ShoppingComparisonRead,
 )
 
 router = APIRouter(prefix='/api/v1/shopping-lists', tags=['Listes v1'], responses={
@@ -103,3 +103,21 @@ def reopen(list_id: UUID, body: ShoppingCommand, user: User, db: DB, key: Key):
 @router.get('/{list_id}/revisions/{revision}', response_model=Detail[ShoppingRevisionRead])
 def revision(list_id: UUID, revision: Annotated[int, Path(ge=1)], user: User, db: DB):
     return detail(service.get_revision(db, list_id, revision, user))
+
+
+@router.post('/{list_id}/comparisons', response_model=Detail[ShoppingComparisonRead])
+def compare(list_id: UUID, request: Request, user: User, db: DB):
+    return detail(comparisons.compare(db, list_id, user,
+        lambda session, day: comparisons.load_sales(request, session, day)))
+
+
+@router.post('/{list_id}/apply-comparison', response_model=Detail[ShoppingListRead])
+def apply_comparison(list_id: UUID, body: ShoppingApplyComparison, request: Request, user: User, db: DB, key: Key):
+    return detail(comparisons.apply(db, list_id, user, body, key,
+        lambda session, day: comparisons.load_sales(request, session, day)))
+
+
+@router.put('/{list_id}/items/{item_id}/choice', response_model=Detail[ShoppingListRead])
+def choice(list_id: UUID, item_id: UUID, body: ShoppingChoiceWrite, request: Request, user: User, db: DB, key: Key):
+    return detail(comparisons.choose(db, list_id, item_id, user, body, key,
+        lambda session, day: comparisons.load_sales(request, session, day)))

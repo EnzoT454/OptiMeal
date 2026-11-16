@@ -1,6 +1,6 @@
 import { randomUUID } from 'expo-crypto';
 import { api } from './api';
-import type { ShoppingCalendarPreviewRead, ShoppingCalendarPreviewWrite, ShoppingDetail, ShoppingListRead, ShoppingPage } from '../types/shoppingLists';
+import type { ShoppingCalendarPreviewRead, ShoppingCalendarPreviewWrite, ShoppingDetail, ShoppingListRead, ShoppingPage, ShoppingComparisonRead, ShoppingScenarioName } from '../types/shoppingLists';
 
 export const listsPath = '/api/v1/shopping-lists';
 export interface ListCommand { key: string; path: string; method: 'POST' | 'PATCH' | 'PUT'; body: object; }
@@ -41,3 +41,15 @@ export const dateLabel = (value: string) => new Date(value + 'T12:00:00').toLoca
 export const quantityLabel = (quantities: { amount: string; unit: string }[]) => quantities.length
   ? quantities.map(q => `${q.amount.replace('.', ',')} ${q.unit === 'unit' ? 'unité(s)' : q.unit}`).join(' + ')
   : 'Quantité à préciser';
+
+export async function compareList(id: string, userId: string): Promise<ShoppingComparisonRead> {
+  return (await api<ShoppingDetail<ShoppingComparisonRead>>(`${listsPath}/${id}/comparisons`, {
+    method: 'POST',
+  }, true, 15000, userId)).item;
+}
+export function applyComparisonCommand(comparison: ShoppingComparisonRead, scenario: ShoppingScenarioName, acceptPartial = false) {
+  return listCommand(`${listsPath}/${comparison.list_id}/apply-comparison`, {
+    expected_revision: comparison.source_revision, comparison_id: comparison.id,
+    scenario, accept_partial: acceptPartial,
+  });
+}

@@ -1,5 +1,326 @@
 {
   "$defs": {
+    "NormalizedSale": {
+      "additionalProperties": false,
+      "description": "Instantané autonome ; un format lisible ne garantit ni tarif ni équivalence.",
+      "properties": {
+        "product_id": {
+          "minLength": 1,
+          "title": "Product Id",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "pattern": "^ing_[a-z0-9_]+$",
+          "title": "Ingredient Id",
+          "type": "string"
+        },
+        "source_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Fingerprint",
+          "type": "string"
+        },
+        "raw_source": {
+          "$ref": "#/$defs/SourceProduct"
+        },
+        "review": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleReview"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "review_status": {
+          "enum": [
+            "missing",
+            "matched",
+            "stale",
+            "identity_mismatch"
+          ],
+          "title": "Review Status",
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/$defs/ProductFormat"
+        },
+        "format_status": {
+          "enum": [
+            "candidate",
+            "verified",
+            "unknown"
+          ],
+          "title": "Format Status",
+          "type": "string"
+        },
+        "content_per_package": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleBaseQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dimension": {
+          "anyOf": [
+            {
+              "enum": [
+                "mass",
+                "volume",
+                "count"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Dimension"
+        },
+        "price_basis": {
+          "enum": [
+            "package",
+            "weight",
+            "count",
+            "unknown"
+          ],
+          "title": "Price Basis",
+          "type": "string"
+        },
+        "price_per_quantity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleBaseQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sale_increment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleBaseQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minimum_sale": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleBaseQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "applicable_price": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Applicable Price"
+        },
+        "applicable_price_kind": {
+          "enum": [
+            "regular",
+            "promotion",
+            "unknown"
+          ],
+          "title": "Applicable Price Kind",
+          "type": "string"
+        },
+        "quantity_limit": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quantity Limit"
+        },
+        "price_after_limit": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Price After Limit"
+        },
+        "evaluated_on": {
+          "format": "date",
+          "title": "Evaluated On",
+          "type": "string"
+        },
+        "match_status": {
+          "enum": [
+            "verified",
+            "proposed",
+            "rejected"
+          ],
+          "title": "Match Status",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "store",
+            "retailer",
+            "unknown"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "conditions": {
+          "enum": [
+            "unconditional",
+            "member",
+            "coupon",
+            "multi_buy",
+            "unknown"
+          ],
+          "title": "Conditions",
+          "type": "string"
+        },
+        "issues": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Issues",
+          "type": "array"
+        },
+        "eligible_for_calculation": {
+          "title": "Eligible For Calculation",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "product_id",
+        "ingredient_id",
+        "source_fingerprint",
+        "raw_source",
+        "review",
+        "review_status",
+        "format",
+        "format_status",
+        "content_per_package",
+        "dimension",
+        "price_basis",
+        "price_per_quantity",
+        "sale_increment",
+        "minimum_sale",
+        "applicable_price",
+        "applicable_price_kind",
+        "quantity_limit",
+        "price_after_limit",
+        "evaluated_on",
+        "match_status",
+        "scope",
+        "conditions",
+        "issues",
+        "eligible_for_calculation"
+      ],
+      "title": "NormalizedSale",
+      "type": "object"
+    },
+    "ProductFormat": {
+      "additionalProperties": false,
+      "properties": {
+        "raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Raw"
+        },
+        "kind": {
+          "enum": [
+            "fixed",
+            "variable_weight",
+            "unknown"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quantity"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "enum": [
+                "g",
+                "ml",
+                "unit"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "package_count": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Package Count"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "raw",
+        "kind"
+      ],
+      "title": "ProductFormat",
+      "type": "object"
+    },
     "ResponseMeta": {
       "additionalProperties": false,
       "properties": {
@@ -47,6 +368,248 @@
       "title": "ResponseMeta",
       "type": "object"
     },
+    "SaleBaseQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "ml",
+            "unit"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "SaleBaseQuantity",
+      "type": "object"
+    },
+    "SaleQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "SaleQuantity",
+      "type": "object"
+    },
+    "SaleReview": {
+      "additionalProperties": false,
+      "description": "Attestation explicite ; ne constitue jamais une vérification automatique.",
+      "properties": {
+        "product_id": {
+          "minLength": 1,
+          "title": "Product Id",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "pattern": "^ing_[a-z0-9_]+$",
+          "title": "Ingredient Id",
+          "type": "string"
+        },
+        "source_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Fingerprint",
+          "type": "string"
+        },
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "method": {
+          "enum": [
+            "source_document",
+            "manual_review"
+          ],
+          "title": "Method",
+          "type": "string"
+        },
+        "reference": {
+          "minLength": 1,
+          "title": "Reference",
+          "type": "string"
+        },
+        "format_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Format Raw"
+        },
+        "price_basis_raw": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Price Basis Raw"
+        },
+        "price_basis": {
+          "default": "unknown",
+          "enum": [
+            "package",
+            "weight",
+            "count",
+            "unknown"
+          ],
+          "title": "Price Basis",
+          "type": "string"
+        },
+        "price_per_quantity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sale_increment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "minimum_sale": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SaleQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "match_status": {
+          "default": "proposed",
+          "enum": [
+            "verified",
+            "proposed",
+            "rejected"
+          ],
+          "title": "Match Status",
+          "type": "string"
+        },
+        "scope": {
+          "default": "unknown",
+          "enum": [
+            "store",
+            "retailer",
+            "unknown"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
+        "conditions": {
+          "default": "unknown",
+          "enum": [
+            "unconditional",
+            "member",
+            "coupon",
+            "multi_buy",
+            "unknown"
+          ],
+          "title": "Conditions",
+          "type": "string"
+        },
+        "zero_price_verified": {
+          "default": false,
+          "title": "Zero Price Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "product_id",
+        "ingredient_id",
+        "source_fingerprint",
+        "checked_at",
+        "method",
+        "reference"
+      ],
+      "title": "SaleReview",
+      "type": "object"
+    },
+    "ShoppingAppliedComparison": {
+      "additionalProperties": false,
+      "properties": {
+        "comparison_id": {
+          "format": "uuid",
+          "title": "Comparison Id",
+          "type": "string"
+        },
+        "source_revision": {
+          "minimum": 1,
+          "title": "Source Revision",
+          "type": "integer"
+        },
+        "purchase_date": {
+          "format": "date",
+          "title": "Purchase Date",
+          "type": "string"
+        },
+        "state_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "State Fingerprint",
+          "type": "string"
+        },
+        "scenario": {
+          "$ref": "#/$defs/ShoppingScenario"
+        },
+        "stale": {
+          "default": false,
+          "title": "Stale",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "comparison_id",
+        "source_revision",
+        "purchase_date",
+        "state_fingerprint",
+        "scenario"
+      ],
+      "title": "ShoppingAppliedComparison",
+      "type": "object"
+    },
     "ShoppingBaseQuantity": {
       "additionalProperties": false,
       "properties": {
@@ -70,6 +633,158 @@
         "unit"
       ],
       "title": "ShoppingBaseQuantity",
+      "type": "object"
+    },
+    "ShoppingCalculatedLine": {
+      "additionalProperties": false,
+      "properties": {
+        "sale": {
+          "$ref": "#/$defs/NormalizedSale"
+        },
+        "sale_units": {
+          "minimum": 1,
+          "title": "Sale Units",
+          "type": "integer"
+        },
+        "quantity": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Quantity",
+          "type": "string"
+        },
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "estimated_weight": {
+          "title": "Estimated Weight",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "sale",
+        "sale_units",
+        "quantity",
+        "amount",
+        "estimated_weight"
+      ],
+      "title": "ShoppingCalculatedLine",
+      "type": "object"
+    },
+    "ShoppingComparedNeed": {
+      "additionalProperties": false,
+      "properties": {
+        "item_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Item Ids",
+          "type": "array"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "anyOf": [
+            {
+              "pattern": "^ing_[a-z0-9_]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ingredient Id"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "enum": [
+                "g",
+                "ml",
+                "unit"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "remaining": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Remaining"
+        },
+        "status": {
+          "enum": [
+            "complete",
+            "owned",
+            "purchased",
+            "unpriced",
+            "unquantified",
+            "incompatible_units",
+            "search_limit",
+            "manual_unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "manual": {
+          "default": false,
+          "title": "Manual",
+          "type": "boolean"
+        },
+        "lines": {
+          "items": {
+            "$ref": "#/$defs/ShoppingCalculatedLine"
+          },
+          "title": "Lines",
+          "type": "array"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Amount"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "item_ids",
+        "name",
+        "ingredient_id",
+        "unit",
+        "remaining",
+        "status"
+      ],
+      "title": "ShoppingComparedNeed",
       "type": "object"
     },
     "ShoppingContributionRead": {
@@ -407,6 +1122,24 @@
           "format": "date-time",
           "title": "Updated At",
           "type": "string"
+        },
+        "choices": {
+          "items": {
+            "$ref": "#/$defs/ShoppingProductChoice"
+          },
+          "title": "Choices",
+          "type": "array"
+        },
+        "assignment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ShoppingAppliedComparison"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -511,6 +1244,28 @@
       "title": "ShoppingPeriod",
       "type": "object"
     },
+    "ShoppingProductChoice": {
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "format": "uuid",
+          "title": "Item Id",
+          "type": "string"
+        },
+        "product_id": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Product Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "item_id",
+        "product_id"
+      ],
+      "title": "ShoppingProductChoice",
+      "type": "object"
+    },
     "ShoppingQuantity": {
       "additionalProperties": false,
       "properties": {
@@ -576,6 +1331,96 @@
         "snapshot"
       ],
       "title": "ShoppingRevisionRead",
+      "type": "object"
+    },
+    "ShoppingScenario": {
+      "additionalProperties": false,
+      "properties": {
+        "scenario": {
+          "enum": [
+            "maxi",
+            "metro",
+            "superc",
+            "cheapest"
+          ],
+          "title": "Scenario",
+          "type": "string"
+        },
+        "needs": {
+          "items": {
+            "$ref": "#/$defs/ShoppingComparedNeed"
+          },
+          "title": "Needs",
+          "type": "array"
+        },
+        "known_amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Known Amount",
+          "type": "string"
+        },
+        "complete": {
+          "title": "Complete",
+          "type": "boolean"
+        },
+        "store_totals": {
+          "items": {
+            "$ref": "#/$defs/ShoppingStoreTotal"
+          },
+          "title": "Store Totals",
+          "type": "array"
+        },
+        "store_count": {
+          "minimum": 0,
+          "title": "Store Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "scenario",
+        "needs",
+        "known_amount",
+        "complete",
+        "store_totals",
+        "store_count"
+      ],
+      "title": "ShoppingScenario",
+      "type": "object"
+    },
+    "ShoppingStoreTotal": {
+      "additionalProperties": false,
+      "properties": {
+        "retailer": {
+          "enum": [
+            "maxi",
+            "metro",
+            "superc"
+          ],
+          "title": "Retailer",
+          "type": "string"
+        },
+        "store_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Store Id"
+        },
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        }
+      },
+      "required": [
+        "retailer",
+        "store_id",
+        "amount"
+      ],
+      "title": "ShoppingStoreTotal",
       "type": "object"
     },
     "ShoppingTotals": {
@@ -685,6 +1530,229 @@
         "message"
       ],
       "title": "ShoppingWarning",
+      "type": "object"
+    },
+    "SourceProduct": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "retailer": {
+          "enum": [
+            "maxi",
+            "metro",
+            "superc"
+          ],
+          "title": "Retailer",
+          "type": "string"
+        },
+        "store_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Store Id"
+        },
+        "external_product_id": {
+          "minLength": 1,
+          "title": "External Product Id",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "price": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Price"
+        },
+        "promo_price": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Promo Price"
+        },
+        "quantity_limit": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quantity Limit"
+        },
+        "price_after_limit": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Price After Limit"
+        },
+        "currency": {
+          "const": "CAD",
+          "title": "Currency",
+          "type": "string"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Unit"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quantity"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid From"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Valid To"
+        },
+        "retrieved_at": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Retrieved At"
+        },
+        "is_promotion": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Is Promotion"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Url"
+        },
+        "image_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image Url"
+        },
+        "image_source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Image Source"
+        }
+      },
+      "required": [
+        "id",
+        "retailer",
+        "store_id",
+        "external_product_id",
+        "name",
+        "price",
+        "currency",
+        "unit",
+        "quantity",
+        "valid_from",
+        "valid_to",
+        "is_promotion",
+        "source",
+        "url"
+      ],
+      "title": "SourceProduct",
       "type": "object"
     }
   },

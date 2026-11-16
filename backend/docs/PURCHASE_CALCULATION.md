@@ -2,8 +2,9 @@
 
 Le moteur interne `backend/app/shopping_lists/purchases.py` calcule les achats
 couvrant un besoin d'ingrédient, par magasin. Il ne modifie aucune liste ni
-aucun achat. Les routes de comparaison, leur application et les écrans viennent
-aux étapes 8–9. Le mobile conserve donc « Estimation indisponible ».
+aucun achat. Les routes et le panneau de comparaison sont raccordés depuis
+[l’étape 8](SHOPPING_COMPARISONS.md). Le détail des courses et les coches restent
+à réaliser à l’étape 9. Sans références attestées, le coût reste inconnu.
 
 ## Entrées et résultat
 

@@ -14,6 +14,7 @@ from pydantic import AwareDatetime, Field, StrictBool, StringConstraints, model_
 from backend.app.common.contracts import (
     ApiError, ContractModel, DecimalText, IngredientId, Quantity,
 )
+from backend.app.catalog.sales import NormalizedSale
 
 Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
 Revision = Annotated[int, Field(strict=True, ge=1)]
@@ -249,6 +250,115 @@ class ShoppingWarning(ContractModel):
     item_id: UUID | None = None
 
 
+class ShoppingProductChoice(ContractModel):
+    item_id: UUID
+    product_id: Annotated[str, StringConstraints(min_length=1, max_length=512)]
+
+
+class ShoppingChoiceWrite(ShoppingCommand):
+    product_id: Annotated[str, StringConstraints(min_length=1, max_length=512)] | None
+
+
+class ShoppingCalculatedLine(ContractModel):
+    sale: NormalizedSale
+    sale_units: Annotated[int, Field(strict=True, ge=1)]
+    quantity: Quantity
+    amount: DecimalText
+    estimated_weight: StrictBool
+
+
+class ShoppingComparedNeed(ContractModel):
+    item_ids: list[UUID] = Field(min_length=1)
+    name: Name
+    ingredient_id: IngredientId | None
+    unit: BaseUnit | None
+    remaining: DecimalText | None
+    status: Literal['complete', 'owned', 'purchased', 'unpriced', 'unquantified',
+                    'incompatible_units', 'search_limit', 'manual_unavailable']
+    manual: StrictBool = False
+    lines: list[ShoppingCalculatedLine] = Field(default_factory=list)
+    amount: DecimalText | None = None
+    warnings: list[str] = Field(default_factory=list)
+
+    @model_validator(mode='after')
+    def coherent_cost(self):
+        from fractions import Fraction
+        total = sum((Fraction(Decimal(line.amount)) for line in self.lines), Fraction())
+        if self.status == 'complete':
+            if not self.lines or self.amount is None or Fraction(Decimal(self.amount)) != total:
+                raise ValueError('Achat calculé sans lignes ou montant cohérent.')
+        elif self.lines or (self.amount is not None and (self.status != 'owned' or Decimal(self.amount) != 0)):
+            raise ValueError('Montant inventé pour un besoin non chiffré.')
+        if len(set(self.item_ids)) != len(self.item_ids):
+            raise ValueError('Articles regroupés dupliqués.')
+        return self
+
+
+class ShoppingStoreTotal(ContractModel):
+    retailer: Literal['maxi', 'metro', 'superc']
+    store_id: str | None
+    amount: DecimalText
+
+
+class ShoppingScenario(ContractModel):
+    scenario: Literal['maxi', 'metro', 'superc', 'cheapest']
+    needs: list[ShoppingComparedNeed]
+    known_amount: DecimalText
+    complete: StrictBool
+    store_totals: list[ShoppingStoreTotal]
+    store_count: Count
+
+    @model_validator(mode='after')
+    def calculated_totals(self):
+        from fractions import Fraction
+        known = sum((Fraction(Decimal(n.amount)) for n in self.needs if n.amount is not None), Fraction())
+        stores = sum((Fraction(Decimal(s.amount)) for s in self.store_totals), Fraction())
+        if known != Fraction(Decimal(self.known_amount)) or stores != known:
+            raise ValueError('Montants de scénario incohérents.')
+        if self.complete != all(n.status in ('complete', 'owned') and 'PURCHASED_PRICE_UNKNOWN' not in n.warnings for n in self.needs):
+            raise ValueError('Couverture de scénario incohérente.')
+        if self.store_count != len(self.store_totals):
+            raise ValueError('Nombre de magasins incohérent.')
+        return self
+
+
+class ShoppingCandidate(ContractModel):
+    ingredient_id: IngredientId
+    product_id: str
+    name: str
+    retailer: Literal['maxi', 'metro', 'superc']
+    store_id: str | None
+    eligible: StrictBool
+    issues: list[str]
+
+
+class ShoppingComparisonRead(ContractModel):
+    id: UUID
+    list_id: UUID
+    source_revision: Revision
+    purchase_date: date
+    catalog_fingerprint: Fingerprint
+    state_fingerprint: Fingerprint
+    expires_at: AwareDatetime
+    scenarios: list[ShoppingScenario]
+    candidates: list[ShoppingCandidate]
+
+
+class ShoppingApplyComparison(ShoppingCommand):
+    comparison_id: UUID
+    scenario: Literal['maxi', 'metro', 'superc', 'cheapest']
+    accept_partial: StrictBool = False
+
+
+class ShoppingAppliedComparison(ContractModel):
+    comparison_id: UUID
+    source_revision: Revision
+    purchase_date: date
+    state_fingerprint: Fingerprint
+    scenario: ShoppingScenario
+    stale: StrictBool = False
+
+
 class ShoppingListRead(ContractModel):
     id: UUID
     name: Name
@@ -263,6 +373,8 @@ class ShoppingListRead(ContractModel):
     warnings: list[ShoppingWarning] = Field(default_factory=list)
     created_at: AwareDatetime
     updated_at: AwareDatetime
+    choices: list[ShoppingProductChoice] = Field(default_factory=list)
+    assignment: ShoppingAppliedComparison | None = None
 
     @model_validator(mode='after')
     def coherent_resource(self):
@@ -283,6 +395,16 @@ class ShoppingListRead(ContractModel):
                     purchase.confirmed_need_revision > item.need_revision or
                     (item.required and purchase.confirmed_need_revision == item.need_revision)):
                 raise ValueError('Confirmation d’achat sans quantité incohérente.')
+        if (len({c.item_id for c in self.choices}) != len(self.choices) or
+                any(c.item_id not in items for c in self.choices)):
+            raise ValueError('Choix manuel dupliqué ou rattaché à un article absent.')
+        if self.assignment is not None:
+            assigned = [item_id for need in self.assignment.scenario.needs for item_id in need.item_ids]
+            if len(set(assigned)) != len(assigned) or set(assigned) - set(items):
+                raise ValueError('Répartition rattachée à des articles incohérents.')
+            expected_amount = Decimal(0) if self.assignment.stale else Decimal(self.assignment.scenario.known_amount)
+            if Decimal(self.totals.budget_known_amount) != expected_amount or Decimal(self.totals.remaining_known_amount) != expected_amount:
+                raise ValueError('Montants différents de la répartition enregistrée.')
         active = [i for i in self.items if not i.removed]
         expected = {'item_count': len(active),
                     'remaining_item_count': sum(i.coverage_status in ('remaining', 'partial') for i in active),
@@ -292,9 +414,9 @@ class ShoppingListRead(ContractModel):
                     'unpriced_item_count': sum(i.coverage_status != 'owned' and i.pricing_status != 'known' for i in active)}
         if any(getattr(self.totals, k) != v for k, v in expected.items()):
             raise ValueError('Compteurs différents des articles de la liste.')
-        if any(i.pricing_status == 'known' and i.coverage_status != 'owned' for i in active) or (
-                Decimal(self.totals.budget_known_amount) != 0 or Decimal(self.totals.remaining_known_amount) != 0):
-            raise ValueError('Le lot A ne dispose pas encore d’achats chiffrés.')
+        if self.assignment is None and (any(i.pricing_status == 'known' and i.coverage_status != 'owned' for i in active) or (
+                Decimal(self.totals.budget_known_amount) != 0 or Decimal(self.totals.remaining_known_amount) != 0)):
+            raise ValueError('Montants sans proposition enregistrée.')
         return self
 
 
@@ -332,7 +454,8 @@ class ShoppingCalendarPreviewRead(ContractModel):
 
 class ShoppingConflict(ApiError):
     code: Literal['LIST_REVISION_CONFLICT', 'IDEMPOTENCY_KEY_REUSED',
-                  'CALENDAR_PREVIEW_STALE', 'ACCOUNT_DELETION_PENDING', 'LIST_STATE_CONFLICT']
+                  'CALENDAR_PREVIEW_STALE', 'ACCOUNT_DELETION_PENDING', 'LIST_STATE_CONFLICT',
+                  'COMPARISON_STALE', 'COMPARISON_PARTIAL', 'CHOICE_CONFLICT']
     list_id: UUID | None = None
     expected_revision: Revision | None = None
     current_revision: Revision | None = None

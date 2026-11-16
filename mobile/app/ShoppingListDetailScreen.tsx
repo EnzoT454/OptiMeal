@@ -5,6 +5,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecipeButton, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles as s } from '../components/recipes';
 import RecipeUnitPicker from '../components/RecipeUnitPicker';
 import { Message } from '../components/ui';
+import ListComparison from '../components/lists/ListComparison';
+import type { ListCommand } from '../services/shoppingLists';
 import { useListCommand } from '../components/lists/useListCommand';
 import { dateLabel, fetchList, listCommand, listsPath, quantityLabel } from '../services/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
@@ -82,7 +84,25 @@ export default function ShoppingListDetailScreen({ route }: NativeStackScreenPro
       {list.period && <Text style={s.note}>Repas du {dateLabel(list.period.start_date)} au {dateLabel(list.period.end_date)}. Copie indépendante du calendrier.</Text>}
       <View style={s.notice}><Text style={s.sectionTitle}>{list.totals.item_count} articles</Text>
         <Text style={s.body}>{list.totals.remaining_item_count} à acheter · {list.totals.purchased_item_count} achetés · {list.totals.owned_item_count} déjà disponibles</Text>
-        <Text style={s.body}>Estimation indisponible</Text></View>
+        <Text style={s.body}>{list.assignment && !list.assignment.stale
+          ? `${list.totals.estimate_complete ? 'Estimation des achats' : 'Sous-total connu'} : ${list.totals.budget_known_amount.replace('.', ',')} $`
+          : 'Estimation indisponible'}</Text></View>
+      {list.assignment && <View style={s.notice}>
+        <Text style={s.sectionTitle}>{list.assignment.stale ? 'Ancienne proposition à réévaluer' : 'Répartition enregistrée'}</Text>
+        {list.assignment.scenario.store_totals.map(store => <Text key={`${store.retailer}:${store.store_id}`} style={s.body}>
+          {store.retailer === 'superc' ? 'Super C' : store.retailer === 'maxi' ? 'Maxi' : 'Metro'}{store.store_id ? ` · ${store.store_id}` : ''} : {store.amount.replace('.', ',')} $
+        </Text>)}
+        {list.assignment.scenario.needs.map(need => <View key={need.item_ids.join(',')}>
+          <Text style={s.body}>{need.name}{need.manual ? ' · choix manuel' : ''}</Text>
+          {need.lines.map(line => <Text key={line.sale.product_id} style={s.note}>{line.sale.raw_source.name} · {line.quantity} {need.unit} · {line.amount.replace('.', ',')} $</Text>)}
+          {!need.lines.length && <Text style={s.note}>{need.status === 'owned' ? 'Déjà disponible' : 'Achat ou prix à vérifier'}</Text>}
+        </View>)}
+      </View>}
+      {editable && <ListComparison list={list} disabled={locked} onCommand={async (intent: ListCommand) => {
+        const saved = await command.run(intent);
+        if (!saved) return false;
+        setList(saved); setError(''); return true;
+      }} />}
       {list.warnings.filter(w => w.code !== 'ESTIMATE_UNAVAILABLE').map((w, i) => <Text key={i} style={s.requiredItem}>{w.message}</Text>)}
       <RecipeButton title="Renommer la liste" variant="neutral" disabled={locked} onPress={() => setListName(list.name)} />
       {listName !== null && <>

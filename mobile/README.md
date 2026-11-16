@@ -11,8 +11,11 @@ se reprennent avec la même commande, enregistrée localement par compte.
 Le serveur doit disposer de la migration `0017_shopping_lists` et des routes du
 lot A. Cette migration est appliquée et vérifiée sur la base Supabase configurée
 depuis le 14 novembre 2026. L’ancienne Épicerie reste accessible dans Calendrier et depuis Accueil
-pendant la transition. Les prix et comparaisons viennent aux étapes suivantes ;
-le nouveau détail affiche « Estimation indisponible ».
+pendant la transition. Le détail permet maintenant de comparer Maxi, Metro, Super C et Moins cher,
+puis d'appliquer explicitement une proposition. Les choix manuels sont conservés
+et les prix inconnus restent signalés. Cette extension nécessite la migration
+`0018_shopping_comparisons`, testée localement mais non appliquée à Supabase
+pendant cette étape. Voir le [guide des comparaisons](../backend/docs/SHOPPING_COMPARISONS.md).
 Voir [le suivi de l’étape 5](../backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
 `expo-crypto`, compatible SDK 58, génère les UUID des commandes idempotentes ;
 il est inclus dans Expo Go. Un client de développement compilé avant son ajout
@@ -834,4 +837,4 @@ avant son redémarrage. Le prix promotionnel est utilisé uniquement pendant
 une période confirmée active. Les contrôles automatisés couvrent cet affichage ;
 les essais sur appareil restent à effectuer.
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 16 novembre 2026*

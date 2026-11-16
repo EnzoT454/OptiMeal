@@ -1,6 +1,129 @@
 {
   "status": "lot_a_implemented",
   "examples": {
+    "shopping-list-comparison-detail": {
+      "item": {
+        "id": "00000000-0000-4000-8000-000000000010",
+        "list_id": "00000000-0000-4000-8000-000000000001",
+        "source_revision": 4,
+        "purchase_date": "2026-11-15",
+        "catalog_fingerprint": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "state_fingerprint": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "expires_at": "2026-11-15T12:15:00Z",
+        "scenarios": [
+          {
+            "scenario": "maxi",
+            "needs": [
+              {
+                "item_ids": [
+                  "00000000-0000-4000-8000-000000000002"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "1300",
+                "status": "unpriced",
+                "manual": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          },
+          {
+            "scenario": "metro",
+            "needs": [
+              {
+                "item_ids": [
+                  "00000000-0000-4000-8000-000000000002"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "1300",
+                "status": "unpriced",
+                "manual": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          },
+          {
+            "scenario": "superc",
+            "needs": [
+              {
+                "item_ids": [
+                  "00000000-0000-4000-8000-000000000002"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "1300",
+                "status": "unpriced",
+                "manual": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          },
+          {
+            "scenario": "cheapest",
+            "needs": [
+              {
+                "item_ids": [
+                  "00000000-0000-4000-8000-000000000002"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "1300",
+                "status": "unpriced",
+                "manual": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          }
+        ],
+        "candidates": []
+      },
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-list-apply-comparison": {
+      "expected_revision": 4,
+      "comparison_id": "00000000-0000-4000-8000-000000000010",
+      "scenario": "cheapest",
+      "accept_partial": true
+    },
+    "shopping-list-choice-write": {
+      "expected_revision": 4,
+      "product_id": null
+    },
     "shopping-list-create": {
       "name": "Mes courses"
     },
@@ -252,7 +375,9 @@
           }
         ],
         "created_at": "2026-11-14T18:00:00Z",
-        "updated_at": "2026-11-14T18:05:00Z"
+        "updated_at": "2026-11-14T18:05:00Z",
+        "choices": [],
+        "assignment": null
       },
       "meta": {
         "contract_version": "1.0",
@@ -394,7 +519,9 @@
             }
           ],
           "created_at": "2026-11-14T18:00:00Z",
-          "updated_at": "2026-11-14T18:05:00Z"
+          "updated_at": "2026-11-14T18:05:00Z",
+          "choices": [],
+          "assignment": null
         }
       ],
       "total": 1,
@@ -544,7 +671,9 @@
             }
           ],
           "created_at": "2026-11-14T18:00:00Z",
-          "updated_at": "2026-11-14T18:05:00Z"
+          "updated_at": "2026-11-14T18:05:00Z",
+          "choices": [],
+          "assignment": null
         }
       },
       "meta": {

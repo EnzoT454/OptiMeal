@@ -25,6 +25,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 - Recettes personnelles, recherche, filtres, partage public/privé et favoris.
 - Évaluations des recettes et classement par notes.
 - Calendrier hebdomadaire des repas.
+- Listes privées, édition et comparaison des achats vérifiables.
 - Promotions et consultation des circulaires.
 - Catalogue commun des produits et ingrédients.
 - Collecte Maxi et lecture locale des reçus.
@@ -33,7 +34,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 À développer ou à compléter :
 
 - Modes IA pour les recettes.
-- Listes d’épicerie par magasin et gestion du budget.
+- Parcours de courses, achats partiels et gestion du budget.
 - Historique stable des plans et des prix.
 - Estimations de prix et contribution par reçu dans l’application.
 - Collecte automatisée Metro et Super C.
@@ -431,6 +432,7 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Listes d’épicerie : conception et étapes d’implémentation](backend/docs/SHOPPING_LISTS.md)
 - [Formats de vente et bases tarifaires vérifiables](backend/docs/SALE_NORMALIZATION.md)
 - [Moteur de calcul des achats : paquets, poids et promotions](backend/docs/PURCHASE_CALCULATION.md)
+- [Comparer les magasins et appliquer une proposition](backend/docs/SHOPPING_COMPARISONS.md)
 
 Le [site de suivi du projet](https://enzot454.github.io/OptiMeal/) regroupe nos objectifs, notre avancement et les références utilisées. Il reprend le [template du cours IFT3150](https://github.com/udem-diro/template-projet).
 

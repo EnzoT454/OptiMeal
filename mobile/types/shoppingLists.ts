@@ -58,6 +58,7 @@ export interface ShoppingListRead {
   revision: number; period: ShoppingPeriod | null; purchase_date: string;
   items: ShoppingItemRead[]; purchases: ShoppingManualPurchaseRead[]; totals: ShoppingTotals;
   warnings: ShoppingWarning[]; created_at: string; updated_at: string;
+  choices: ShoppingProductChoice[]; assignment: ShoppingAppliedComparison | null;
 }
 export interface ShoppingRevisionRead {
   list_id: string; revision: number; command_id: string; recorded_at: string;
@@ -72,7 +73,7 @@ export interface ShoppingCalendarPreviewRead {
 }
 export interface ShoppingConflictResponse {
   error: {
-    code: 'LIST_REVISION_CONFLICT' | 'IDEMPOTENCY_KEY_REUSED' | 'CALENDAR_PREVIEW_STALE' | 'ACCOUNT_DELETION_PENDING' | 'LIST_STATE_CONFLICT';
+    code: 'LIST_REVISION_CONFLICT' | 'IDEMPOTENCY_KEY_REUSED' | 'CALENDAR_PREVIEW_STALE' | 'ACCOUNT_DELETION_PENDING' | 'LIST_STATE_CONFLICT' | 'COMPARISON_STALE' | 'COMPARISON_PARTIAL' | 'CHOICE_CONFLICT';
     message: string; details: { field: string; message: string }[];
     list_id: string | null; expected_revision: number | null; current_revision: number | null;
   };
@@ -89,6 +90,9 @@ export interface ShoppingPage<T> {
 
 // Utilisé par le contrôle des exemples exportés ; aucun fetch implicite.
 export interface ShoppingContractExamples {
+  'shopping-list-comparison-detail': ShoppingDetail<ShoppingComparisonRead>;
+  'shopping-list-apply-comparison': ShoppingApplyComparison;
+  'shopping-list-choice-write': ShoppingChoiceWrite;
   'shopping-list-create': ShoppingListCreate;
   'shopping-list-command-headers': ShoppingCommandHeaders;
   'shopping-list-command': ShoppingCommand;
@@ -104,4 +108,42 @@ export interface ShoppingContractExamples {
   'shopping-lists-page': ShoppingPage<ShoppingListRead>;
   'shopping-list-revision-detail': ShoppingDetail<ShoppingRevisionRead>;
   'shopping-list-conflict': ShoppingConflictResponse;
+}
+
+export type ShoppingScenarioName = 'maxi' | 'metro' | 'superc' | 'cheapest';
+export interface ShoppingProductChoice { item_id: string; product_id: string; }
+export interface ShoppingCalculatedLine {
+  sale: { product_id: string; price_basis: string; raw_source: {
+    name: string; retailer: 'maxi' | 'metro' | 'superc'; store_id: string | null;
+    [field: string]: unknown;
+  }; [field: string]: unknown };
+  sale_units: number; quantity: string; amount: string; estimated_weight: boolean;
+}
+export interface ShoppingComparedNeed {
+  item_ids: string[]; name: string; ingredient_id: string | null;
+  unit: ShoppingBaseUnit | null; remaining: string | null;
+  status: 'complete' | 'owned' | 'purchased' | 'unpriced' | 'unquantified' | 'incompatible_units' | 'search_limit' | 'manual_unavailable';
+  manual: boolean; lines: ShoppingCalculatedLine[]; amount: string | null; warnings: string[];
+}
+export interface ShoppingScenario {
+  scenario: ShoppingScenarioName; needs: ShoppingComparedNeed[]; known_amount: string; complete: boolean;
+  store_totals: { retailer: 'maxi' | 'metro' | 'superc'; store_id: string | null; amount: string }[];
+  store_count: number;
+}
+export interface ShoppingCandidate {
+  ingredient_id: string; product_id: string; name: string;
+  retailer: 'maxi' | 'metro' | 'superc'; store_id: string | null; eligible: boolean; issues: string[];
+}
+export interface ShoppingComparisonRead {
+  id: string; list_id: string; source_revision: number; purchase_date: string;
+  catalog_fingerprint: string; state_fingerprint: string; expires_at: string;
+  scenarios: ShoppingScenario[]; candidates: ShoppingCandidate[];
+}
+export interface ShoppingApplyComparison extends ShoppingCommand {
+  comparison_id: string; scenario: ShoppingScenarioName; accept_partial?: boolean;
+}
+export interface ShoppingChoiceWrite extends ShoppingCommand { product_id: string | null; }
+export interface ShoppingAppliedComparison {
+  comparison_id: string; source_revision: number; purchase_date: string;
+  state_fingerprint: string; scenario: ShoppingScenario; stale: boolean;
 }

@@ -5,10 +5,13 @@ from .schemas import (
     ShoppingCommandHeaders, ShoppingConflictResponse, ShoppingFromCalendar,
     ShoppingItemAdd, ShoppingItemUpdate, ShoppingListCreate, ShoppingListRead,
     ShoppingListUpdate, ShoppingManualPurchaseWrite, ShoppingPossessionWrite,
-    ShoppingRevisionRead,
+    ShoppingRevisionRead, ShoppingComparisonRead, ShoppingApplyComparison, ShoppingChoiceWrite,
 )
 
 MODELS = {
+    'shopping-list-comparison-detail': Detail[ShoppingComparisonRead],
+    'shopping-list-apply-comparison': ShoppingApplyComparison,
+    'shopping-list-choice-write': ShoppingChoiceWrite,
     'shopping-list-create': ShoppingListCreate,
     'shopping-list-command-headers': ShoppingCommandHeaders,
     'shopping-list-command': ShoppingCommand,
@@ -74,7 +77,20 @@ def examples() -> dict:
         'recipe_version': 1, 'recipe_servings': 4, 'meal_date': '2026-11-16', 'servings': 4,
     }]}
     preview_request = {'start_date': '2026-11-16', 'end_date': '2026-11-22', 'purchase_date': '2026-11-15'}
+    compared_need = {'item_ids': [rice_id], 'name': 'Riz', 'ingredient_id': rice['ingredient_id'],
+                     'unit': 'g', 'remaining': '1300', 'status': 'unpriced'}
+    comparison = {'id': '00000000-0000-4000-8000-000000000010', 'list_id': list_id,
+                  'source_revision': 4, 'purchase_date': '2026-11-15',
+                  'catalog_fingerprint': 'b' * 64, 'state_fingerprint': 'c' * 64,
+                  'expires_at': '2026-11-15T12:15:00Z', 'candidates': [],
+                  'scenarios': [{'scenario': name, 'needs': [compared_need], 'known_amount': '0',
+                                 'complete': False, 'store_totals': [], 'store_count': 0}
+                                for name in ('maxi', 'metro', 'superc', 'cheapest')]}
     values = {
+        'shopping-list-comparison-detail': {'item': comparison, 'meta': meta},
+        'shopping-list-apply-comparison': {'expected_revision': 4, 'comparison_id': comparison['id'],
+                                         'scenario': 'cheapest', 'accept_partial': True},
+        'shopping-list-choice-write': {'expected_revision': 4, 'product_id': None},
         'shopping-list-create': {'name': 'Mes courses'},
         'shopping-list-command-headers': {'idempotency_key': '00000000-0000-4000-8000-000000000009'},
         'shopping-list-command': {'expected_revision': 4},
@@ -106,7 +122,7 @@ def examples() -> dict:
             'message': 'La liste a changé. Relis les modifications.', 'list_id': list_id,
             'expected_revision': 3, 'current_revision': 4}},
     }
-    responses = {'shopping-list-calendar-preview-detail', 'shopping-list-detail',
+    responses = {'shopping-list-comparison-detail', 'shopping-list-calendar-preview-detail', 'shopping-list-detail',
                  'shopping-lists-page', 'shopping-list-revision-detail', 'shopping-list-conflict'}
     # Un PATCH doit conserver la différence entre omission et null explicite.
     return {name: MODELS[name].model_validate(value).model_dump(

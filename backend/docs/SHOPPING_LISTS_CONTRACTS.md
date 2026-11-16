@@ -1,7 +1,12 @@
 # Listes d’épicerie — contrats du lot A
 
-**Date : 14 novembre 2026.**  
+**Date : 16 novembre 2026.**
+
 **Statut : routes du lot A et parcours mobile disponibles ; migration 0017 appliquée et vérifiée sur Supabase le 14 novembre 2026.**
+
+Les extensions de l’étape 8 (comparaison, application et choix manuels), ainsi
+que les champs additifs `choices` et `assignment` des lectures, sont décrites dans
+[SHOPPING_COMPARISONS.md](SHOPPING_COMPARISONS.md) et les exports courants.
 
 Ce document précise l’étape 2 du [plan des listes](SHOPPING_LISTS.md).
 Il fixe les échanges du premier lot et les invariants de persistance. Les

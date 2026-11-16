@@ -28,7 +28,10 @@
             "IDEMPOTENCY_KEY_REUSED",
             "CALENDAR_PREVIEW_STALE",
             "ACCOUNT_DELETION_PENDING",
-            "LIST_STATE_CONFLICT"
+            "LIST_STATE_CONFLICT",
+            "COMPARISON_STALE",
+            "COMPARISON_PARTIAL",
+            "CHOICE_CONFLICT"
           ],
           "title": "Code",
           "type": "string"

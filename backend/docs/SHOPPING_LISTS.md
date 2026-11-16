@@ -2,9 +2,9 @@
 
 **Date : 16 novembre 2026.**
 
-**Statut : étapes 1 à 7 réalisées — lot A, normalisation et moteur de couverture disponibles ; étapes 8 à 15 à réaliser.**
+**Statut : étapes 1 à 8 réalisées — listes, moteur et comparaisons disponibles ; étapes 9 à 15 à réaliser.**
 
-**Les comparaisons, leur application et les parcours de courses des lots B/C restent à implémenter.**
+**Les fiches et coches de courses de l’étape 9 et le lot C restent à implémenter. Migration 0018 à appliquer sur la base cible.**
 
 Ce document est la référence de travail pour construire le nouvel onglet
 **Liste** d’OptiMeal. Il reprend les parcours demandés, les deux captures
@@ -29,6 +29,7 @@ Repères de lecture :
 - [Résultat de l’étape 5](#27-api-et-parcours-mobile--étape-5).
 - [Résultat de l’étape 6](#28-normalisation-des-ventes--étape-6).
 - [Résultat de l’étape 7](#29-calcul-des-achats--étape-7).
+- [Résultat de l’étape 8](#210-comparaisons-et-application--étape-8).
 - [Parcours et écrans](#4-navigation-et-écrans).
 - [Calcul des besoins, paquets et prix](#5-agrégation-et-couverture-des-besoins).
 - [Modèle de données](#6-modèle-de-données-proposé).
@@ -721,6 +722,44 @@ atomique**. Le nouveau détail mobile conserve « Estimation indisponible » tan
 que ces calculs ne sont pas raccordés ; la normalisation disponible ne remplace
 pas les attestations commerciales encore manquantes du catalogue réel.
 
+### 2.10. Comparaisons et application — étape 8
+
+**Étape réalisée le 16 novembre 2026.** Comparaisons privées Maxi, Metro,
+Super C et Moins cher, choix manuels et application explicite raccordés à
+FastAPI et au détail de Liste. Voir [le guide des comparaisons](SHOPPING_COMPARISONS.md)
+pour les routes, la configuration des attestations, les transactions et limites.
+
+La comparaison ne change ni les achats ni la révision de la liste. Les segments
+ne changent que l'affichage. Appliquer vérifie propriétaire, révision, expiration
+et empreintes des besoins, sources et preuves, puis écrit répartition, révision
+et résultat idempotent atomiquement. Une proposition partielle exige confirmation.
+Les achats déclarés sont conservés ; leur prix reste inconnu. Les choix manuels
+restent visibles même devenus non chiffrables, avec retour automatique explicite.
+Un changement de besoin conserve l'ancienne répartition en la signalant à réévaluer.
+
+La migration **0018_shopping_comparisons**, après 0017, crée trois tables privées
+avec RLS : simulations immuables, choix par article et instantané de répartition.
+Elle est testée sur PostgreSQL local ; **non appliquée sur Supabase à cette étape**.
+Les contrats exportés et types mobiles incluent ces opérations. Aucune nouvelle
+dépendance n'est requise. Le fichier opérateur facultatif `SALE_REVIEWS_PATH`
+fournit les preuves de l'étape 6 ; sans preuves, les prix ne deviennent pas connus.
+
+Les tests vérifient notamment absence de mutation pendant comparaison, accès
+privés, paliers partagés entre lignes, choix manuels conservés, refus des prix
+client, changements de sources, expiration, rejeu, annulation atomique et
+applications concurrentes. Le mobile vérifie sélection sans écriture,
+confirmation partielle et réponses tardives après changement de compte/révision.
+Validation finale : **892 tests backend réussis**, **14 OCR réels ignorés**
+car opt-in, **193 tests mobiles réussis**, TypeScript, **32 exports de contrats**,
+exports Expo **iOS/Android/web** et documentation stricte réussis. Cela inclut
+22 nouveaux tests backend et 8 nouveaux tests mobiles. Lint mobile non configuré.
+Les essais sur appareil restent à effectuer ; les exports ne les remplacent pas.
+
+**Critère de passage satisfait :** comparaison et application atomique disponibles.
+Prochaine étape : **9 — Détail, fiche d'article, possession et achats partiels**.
+Les compteurs de progression restent distincts de la couverture proposée ;
+les interfaces de coches et de quantité d'achat viennent à cette prochaine étape.
+
 ## 3. Vocabulaire et cycle de vie
 
 ### 3.1. Liste, modèle et historique
@@ -1377,7 +1416,7 @@ reste ouverte tant que ses critères nécessaires ne sont pas vérifiés.
 | 5 — Réalisée le 14 novembre 2026 | Développer accueil Liste, création manuelle et import calendrier avec aperçu | Critère satisfait ; routes privées, brouillons, édition et reprise idempotente vérifiés ; voir section 2.7 |
 | 6 — Réalisée le 14 novembre 2026 | Normaliser les formats et bases tarifaires vérifiables | Critère satisfait ; formats, bases, contraintes et attestations normalisés ; inconnues classées, sources conservées et parité JSON/Supabase vérifiée ; voir section 2.8 |
 | 7 — Réalisée le 16 novembre 2026 | Implémenter couverture en paquets, prix au poids, combinaisons et paliers | Critère satisfait ; calculs et oracles exhaustifs réussis, bornes documentées ; voir section 2.9 |
-| 8 | Ajouter comparaison sans mutation puis application atomique | Changer de segment ne modifie rien ; choix manuels respectés ; total et couverture vérifiés |
+| 8 — Réalisée le 16 novembre 2026 | Comparaison sans mutation puis application atomique | Critère satisfait ; scénarios, choix manuels, sous-totaux, fraîcheur et transactions vérifiés ; voir section 2.10 |
 | 9 | Adapter détail, fiche d’article, possession et achats partiels | Coche stable, compléments après augmentation visibles, cohérence de tous les badges |
 | 10 | Ajouter exclusions, modèles, copie et historique par révision | Copie indépendante, zéro achat repris, original lisible après changements de prix/recette |
 | 11 | Ajouter cache complet et reprise des coches hors connexion | Réponse perdue, redémarrage, conflits et changement de compte couverts |
@@ -1552,6 +1591,7 @@ cibles sont implémentées :
 - [x] Étape 5 : API privée et parcours mobile de création/édition avec reprise ; voir section 2.7.
 - [x] Étape 6 : formats et bases tarifaires normalisés, migration 0017 appliquée sur Supabase ; voir section 2.8.
 - [x] Étape 7 : moteur de couverture et prix, paliers et oracles exhaustifs ; voir section 2.9.
+- [x] Étape 8 : comparaisons privées, choix manuels et application atomique ; voir section 2.10.
 - [x] Lot A : persistance, période et création fiables ; essais sur appareils à compléter.
 - [ ] Lot B : achats, comparaison et courses stables.
 - [ ] Lot C : modèles, historique, résilience et bascule des accès.
@@ -1574,6 +1614,7 @@ ce guide prépare leur intégration sans les annoncer présents.
 - [Contrats HTTP existants](CONTRACTS.md).
 - [Contrats préparatoires des listes — Lot A](SHOPPING_LISTS_CONTRACTS.md).
 - [Calcul des achats — moteur de l'étape 7](PURCHASE_CALCULATION.md).
+- [Comparaisons et application — étape 8](SHOPPING_COMPARISONS.md).
 - [Migrations applicatives](MIGRATIONS.md).
 - [Modèle de catalogue et de prix proposé](DATABASE.md).
 - [Données locales et provenance](DATA.md).
