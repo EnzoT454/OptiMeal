@@ -741,6 +741,11 @@
           "title": "Manual",
           "type": "boolean"
         },
+        "purchased_price_known": {
+          "default": false,
+          "title": "Purchased Price Known",
+          "type": "boolean"
+        },
         "lines": {
           "items": {
             "$ref": "#/$defs/ShoppingCalculatedLine"
@@ -870,6 +875,12 @@
         "known_amount": {
           "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
           "title": "Known Amount",
+          "type": "string"
+        },
+        "purchased_known_amount": {
+          "default": "0",
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Purchased Known Amount",
           "type": "string"
         },
         "complete": {

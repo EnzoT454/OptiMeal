@@ -2,9 +2,9 @@
 
 **Date : 16 novembre 2026.**
 
-**Statut : étapes 1 à 8 réalisées — listes, moteur et comparaisons disponibles ; étapes 9 à 15 à réaliser.**
+**Statut : étapes 1 à 9 réalisées dans le dépôt — listes, comparaisons et parcours de courses ; étapes 10 à 15 à réaliser.**
 
-**Les fiches et coches de courses de l’étape 9 et le lot C restent à implémenter. Migration 0018 appliquée et vérifiée sur Supabase le 16 novembre 2026.**
+**Parcours de courses livré et testé localement ; migration 0019 à appliquer sur Supabase et essais sur appareils à compléter. Migration 0018 déjà appliquée et vérifiée le 16 novembre 2026. Le lot C reste à réaliser.**
 
 Ce document est la référence de travail pour construire le nouvel onglet
 **Liste** d’OptiMeal. Il reprend les parcours demandés, les deux captures
@@ -764,6 +764,34 @@ Prochaine étape : **9 — Détail, fiche d'article, possession et achats partie
 Les compteurs de progression restent distincts de la couverture proposée ;
 les interfaces de coches et de quantité d'achat viennent à cette prochaine étape.
 
+### 2.11. Parcours de courses — étape 9
+
+**Étape réalisée dans le dépôt le 16 novembre 2026.** Le détail groupe les
+produits appliqués par magasin et rayon ; les filtres ne modifient pas la liste.
+Cases Acheté, achats partiels, section repliable des achats, fiche défilante,
+possession annulable, édition du besoin et compléments sont raccordés aux
+commandes privées. Les achats produits gardent leurs formats, estimations et
+couvertures ; une coche n’affecte pas les autres magasins ni le budget prévu.
+Les achats sans prix et confirmations sans quantité restent distincts.
+La clôture demande confirmation des besoins restants et permet la réouverture.
+
+La migration **0019_shopping_courses** ajoute une table privée avec RLS et
+cascades. Elle est testée localement ; **Supabase reste à 0018** pendant cette
+étape. Les anciennes révisions sont conservées. Les limites de promotions sont
+partagées avec les achats passés lors d’une nouvelle comparaison. Les prix
+réels restent conditionnés aux attestations commerciales.
+
+Voir [le guide des courses](SHOPPING_COURSES.md) pour les routes, les quantités,
+les instantanés et le protocole de validation. Les tests couvrent les achats
+concurrents et rejoués, le poids, les besoins groupés, le surplus, les couvertures
+mixtes et les compléments ; les tests mobiles exercent les actions des fiches
+et les cases. Validation finale : **918 tests backend réussis, 14 OCR opt-in
+ignorés ; 203 tests mobiles réussis**, TypeScript, **34 exports de contrats**,
+bundles Expo iOS/Android/web et documentation stricte réussis.
+Les essais iOS/Android sur appareils restent à compléter ; lint
+mobile non configuré. Prochaine étape : **10 — exclusions, modèles, copie et
+historique**. Le cache complet et la bascule Accueil/Calendrier restent à venir.
+
 ## 3. Vocabulaire et cycle de vie
 
 ### 3.1. Liste, modèle et historique
@@ -1421,7 +1449,7 @@ reste ouverte tant que ses critères nécessaires ne sont pas vérifiés.
 | 6 — Réalisée le 14 novembre 2026 | Normaliser les formats et bases tarifaires vérifiables | Critère satisfait ; formats, bases, contraintes et attestations normalisés ; inconnues classées, sources conservées et parité JSON/Supabase vérifiée ; voir section 2.8 |
 | 7 — Réalisée le 16 novembre 2026 | Implémenter couverture en paquets, prix au poids, combinaisons et paliers | Critère satisfait ; calculs et oracles exhaustifs réussis, bornes documentées ; voir section 2.9 |
 | 8 — Réalisée le 16 novembre 2026 | Comparaison sans mutation puis application atomique | Critère satisfait ; scénarios, choix manuels, sous-totaux, fraîcheur et transactions vérifiés ; voir section 2.10 |
-| 9 | Adapter détail, fiche d’article, possession et achats partiels | Coche stable, compléments après augmentation visibles, cohérence de tous les badges |
+| 9 — Réalisée dans le dépôt le 16 novembre 2026 | Détail, fiche d’article, possession et achats partiels | Couvertures, coches stables, estimations et compléments testés ; voir section 2.11. 0019 et essais appareils à compléter sur la cible |
 | 10 | Ajouter exclusions, modèles, copie et historique par révision | Copie indépendante, zéro achat repris, original lisible après changements de prix/recette |
 | 11 | Ajouter cache complet et reprise des coches hors connexion | Réponse perdue, redémarrage, conflits et changement de compte couverts |
 | 12 | Proposer récupération des anciennes données locales privées | Import volontaire et idempotent, aucune attribution des anciennes clés communes |
@@ -1597,7 +1625,8 @@ cibles sont implémentées :
 - [x] Étape 7 : moteur de couverture et prix, paliers et oracles exhaustifs ; voir section 2.9.
 - [x] Étape 8 : comparaisons privées, choix manuels et application atomique ; voir section 2.10.
 - [x] Lot A : persistance, période et création fiables ; essais sur appareils à compléter.
-- [ ] Lot B : achats, comparaison et courses stables.
+- [x] Étape 9 : parcours de courses, achats produits, possession, compléments et clôture ; voir section 2.11.
+- [x] Lot B : achats, comparaison et courses livrés dans le dépôt ; migration 0019 et essais appareils à compléter sur la cible.
 - [ ] Lot C : modèles, historique, résilience et bascule des accès.
 - [ ] Vérifications complètes des contrats et migrations applicables.
 - [ ] Essais iOS et Android consignés séparément.
@@ -1619,6 +1648,7 @@ ce guide prépare leur intégration sans les annoncer présents.
 - [Contrats préparatoires des listes — Lot A](SHOPPING_LISTS_CONTRACTS.md).
 - [Calcul des achats — moteur de l'étape 7](PURCHASE_CALCULATION.md).
 - [Comparaisons et application — étape 8](SHOPPING_COMPARISONS.md).
+- [Parcours de courses — étape 9](SHOPPING_COURSES.md).
 - [Migrations applicatives](MIGRATIONS.md).
 - [Modèle de catalogue et de prix proposé](DATABASE.md).
 - [Données locales et provenance](DATA.md).

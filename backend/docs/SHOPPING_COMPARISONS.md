@@ -109,8 +109,8 @@ conservent avec une indication lorsqu'il sort de l'enseigne simulée. Un produit
 absent, non attesté ou non chiffrable reste choisi, sans alternative appliquée
 silencieusement. Des choix incompatibles sur deux lignes du même ingrédient
 restent à résoudre explicitement. Le mobile permet de revenir au choix
-automatique par article, puis de comparer à nouveau. Les quantités d'achat
-librement modifiées et le parcours de courses viennent à l'étape 9.
+automatique par article, puis de comparer à nouveau. Les quantités d’achat et le parcours de courses sont livrés dans
+[l’étape 9](SHOPPING_COURSES.md).
 
 Bornes du comparateur : 60 besoins regroupés, 1 000 références sources,
 10 000 combinaisons par magasin et au plus 100 000 combinaisons effectivement
@@ -118,6 +118,10 @@ Bornes du comparateur : 60 besoins regroupés, 1 000 références sources,
 Un calcul trop grand est signalé sans approximation annoncée minimale.
 
 ## Lecture et parcours mobile
+
+Depuis l’étape 9, les comparaisons incluent les estimations des achats produits
+déjà effectués (`purchased_known_amount`), sans les réévaluer. Les achats
+déclaratifs sans prix restent inconnus.
 
 Le détail affiche la répartition enregistrée et ses montants sans consulter
 les prix actuels. Renommer la liste conserve cette répartition. Modifier les
@@ -134,7 +138,7 @@ plus récente que l'écran, celui-ci demande d'actualiser la liste.
 
 Les avertissements, états vides et erreurs restent visibles. Une panne ne
 produit pas une comparaison gratuite. Les coches, achats partiels avec produit
-et fiches détaillées de courses restent à réaliser à l'étape 9 ; le cache hors
+et fiches de courses sont livrés à [l’étape 9](SHOPPING_COURSES.md) ; le cache hors
 connexion complet et la bascule d'Accueil/Calendrier gardent les étapes suivantes.
 Les simulations expirées deviennent inapplicables ; leur purge physique reste
 un travail de maintenance, sans suppression de l'historique des listes.

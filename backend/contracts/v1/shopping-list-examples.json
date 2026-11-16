@@ -1,6 +1,17 @@
 {
   "status": "lot_a_implemented",
   "examples": {
+    "shopping-list-product-purchase-write": {
+      "expected_revision": 4,
+      "comparison_id": "00000000-0000-4000-8000-000000000010",
+      "item_id": "00000000-0000-4000-8000-000000000002",
+      "product_id": "maxi:demo:riz",
+      "purchased_units": 1
+    },
+    "shopping-list-complete-write": {
+      "expected_revision": 4,
+      "accept_remaining": true
+    },
     "shopping-list-comparison-detail": {
       "item": {
         "id": "00000000-0000-4000-8000-000000000010",
@@ -24,12 +35,14 @@
                 "remaining": "1300",
                 "status": "unpriced",
                 "manual": false,
+                "purchased_price_known": false,
                 "lines": [],
                 "amount": null,
                 "warnings": []
               }
             ],
             "known_amount": "0",
+            "purchased_known_amount": "0",
             "complete": false,
             "store_totals": [],
             "store_count": 0
@@ -47,12 +60,14 @@
                 "remaining": "1300",
                 "status": "unpriced",
                 "manual": false,
+                "purchased_price_known": false,
                 "lines": [],
                 "amount": null,
                 "warnings": []
               }
             ],
             "known_amount": "0",
+            "purchased_known_amount": "0",
             "complete": false,
             "store_totals": [],
             "store_count": 0
@@ -70,12 +85,14 @@
                 "remaining": "1300",
                 "status": "unpriced",
                 "manual": false,
+                "purchased_price_known": false,
                 "lines": [],
                 "amount": null,
                 "warnings": []
               }
             ],
             "known_amount": "0",
+            "purchased_known_amount": "0",
             "complete": false,
             "store_totals": [],
             "store_count": 0
@@ -93,12 +110,14 @@
                 "remaining": "1300",
                 "status": "unpriced",
                 "manual": false,
+                "purchased_price_known": false,
                 "lines": [],
                 "amount": null,
                 "warnings": []
               }
             ],
             "known_amount": "0",
+            "purchased_known_amount": "0",
             "complete": false,
             "store_totals": [],
             "store_count": 0
@@ -354,6 +373,7 @@
             "estimated_amount": null
           }
         ],
+        "product_purchases": [],
         "totals": {
           "currency": "CAD",
           "item_count": 2,
@@ -498,6 +518,7 @@
               "estimated_amount": null
             }
           ],
+          "product_purchases": [],
           "totals": {
             "currency": "CAD",
             "item_count": 2,
@@ -650,6 +671,7 @@
               "estimated_amount": null
             }
           ],
+          "product_purchases": [],
           "totals": {
             "currency": "CAD",
             "item_count": 2,

@@ -56,7 +56,7 @@ export interface ShoppingWarning { code: string; message: string; item_id: strin
 export interface ShoppingListRead {
   id: string; name: string; source: 'manual' | 'calendar'; status: ShoppingListStatus;
   revision: number; period: ShoppingPeriod | null; purchase_date: string;
-  items: ShoppingItemRead[]; purchases: ShoppingManualPurchaseRead[]; totals: ShoppingTotals;
+  items: ShoppingItemRead[]; purchases: ShoppingManualPurchaseRead[]; product_purchases?: ShoppingProductPurchaseRead[]; totals: ShoppingTotals;
   warnings: ShoppingWarning[]; created_at: string; updated_at: string;
   choices: ShoppingProductChoice[]; assignment: ShoppingAppliedComparison | null;
 }
@@ -73,7 +73,7 @@ export interface ShoppingCalendarPreviewRead {
 }
 export interface ShoppingConflictResponse {
   error: {
-    code: 'LIST_REVISION_CONFLICT' | 'IDEMPOTENCY_KEY_REUSED' | 'CALENDAR_PREVIEW_STALE' | 'ACCOUNT_DELETION_PENDING' | 'LIST_STATE_CONFLICT' | 'COMPARISON_STALE' | 'COMPARISON_PARTIAL' | 'CHOICE_CONFLICT';
+    code: 'LIST_REVISION_CONFLICT' | 'IDEMPOTENCY_KEY_REUSED' | 'CALENDAR_PREVIEW_STALE' | 'ACCOUNT_DELETION_PENDING' | 'LIST_STATE_CONFLICT' | 'COMPARISON_STALE' | 'COMPARISON_PARTIAL' | 'CHOICE_CONFLICT' | 'COURSES_REMAINING';
     message: string; details: { field: string; message: string }[];
     list_id: string | null; expected_revision: number | null; current_revision: number | null;
   };
@@ -90,6 +90,8 @@ export interface ShoppingPage<T> {
 
 // Utilisé par le contrôle des exemples exportés ; aucun fetch implicite.
 export interface ShoppingContractExamples {
+  'shopping-list-product-purchase-write': ShoppingProductPurchaseWrite;
+  'shopping-list-complete-write': ShoppingCompleteWrite;
   'shopping-list-comparison-detail': ShoppingDetail<ShoppingComparisonRead>;
   'shopping-list-apply-comparison': ShoppingApplyComparison;
   'shopping-list-choice-write': ShoppingChoiceWrite;
@@ -113,7 +115,7 @@ export interface ShoppingContractExamples {
 export type ShoppingScenarioName = 'maxi' | 'metro' | 'superc' | 'cheapest';
 export interface ShoppingProductChoice { item_id: string; product_id: string; }
 export interface ShoppingCalculatedLine {
-  sale: { product_id: string; price_basis: string; raw_source: {
+  sale: { product_id: string; price_basis: string; format?: { raw: string | null }; content_per_package?: ShoppingBaseQuantity | null; sale_increment?: ShoppingBaseQuantity | null; minimum_sale?: ShoppingBaseQuantity | null; raw_source: {
     name: string; retailer: 'maxi' | 'metro' | 'superc'; store_id: string | null;
     [field: string]: unknown;
   }; [field: string]: unknown };
@@ -123,10 +125,10 @@ export interface ShoppingComparedNeed {
   item_ids: string[]; name: string; ingredient_id: string | null;
   unit: ShoppingBaseUnit | null; remaining: string | null;
   status: 'complete' | 'owned' | 'purchased' | 'unpriced' | 'unquantified' | 'incompatible_units' | 'search_limit' | 'manual_unavailable';
-  manual: boolean; lines: ShoppingCalculatedLine[]; amount: string | null; warnings: string[];
+  manual: boolean; purchased_price_known?: boolean; lines: ShoppingCalculatedLine[]; amount: string | null; warnings: string[];
 }
 export interface ShoppingScenario {
-  scenario: ShoppingScenarioName; needs: ShoppingComparedNeed[]; known_amount: string; complete: boolean;
+  scenario: ShoppingScenarioName; needs: ShoppingComparedNeed[]; known_amount: string; purchased_known_amount?: string; complete: boolean;
   store_totals: { retailer: 'maxi' | 'metro' | 'superc'; store_id: string | null; amount: string }[];
   store_count: number;
 }
@@ -145,5 +147,15 @@ export interface ShoppingApplyComparison extends ShoppingCommand {
 export interface ShoppingChoiceWrite extends ShoppingCommand { product_id: string | null; }
 export interface ShoppingAppliedComparison {
   comparison_id: string; source_revision: number; purchase_date: string;
-  state_fingerprint: string; scenario: ShoppingScenario; stale: boolean;
+  state_fingerprint: string; scenario: ShoppingScenario; planning_fingerprint?: string | null; stale: boolean;
+}
+
+export interface ShoppingProductPurchaseWrite extends ShoppingCommand {
+  comparison_id: string; item_id: string; product_id: string; purchased_units: number;
+}
+export interface ShoppingCompleteWrite extends ShoppingCommand { accept_remaining?: boolean; }
+export interface ShoppingProductPurchaseRead {
+  id: string; comparison_id: string; item_ids: string[]; line: ShoppingCalculatedLine;
+  purchased_units: number; reserved_units: number; purchased_quantity: string; estimated_amount: string;
+  allocations: { item_id: string; quantity: ShoppingBaseQuantity }[];
 }

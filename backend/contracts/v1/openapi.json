@@ -3778,6 +3778,222 @@
         }
       }
     },
+    "/api/v1/shopping-lists/{list_id}/product-purchases": {
+      "put": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Product Purchase",
+        "operationId": "product_purchase_api_v1_shopping_lists__list_id__product_purchases_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "List Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingProductPurchaseWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingListRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/shopping-lists/{list_id}/complete": {
+      "post": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Complete",
+        "operationId": "complete_api_v1_shopping_lists__list_id__complete_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "List Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingCompleteWrite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingListRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -6898,6 +7114,18 @@
           "scenario": {
             "$ref": "#/components/schemas/ShoppingScenario"
           },
+          "planning_fingerprint": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planning Fingerprint"
+          },
           "stale": {
             "type": "boolean",
             "title": "Stale",
@@ -7301,6 +7529,11 @@
             "title": "Manual",
             "default": false
           },
+          "purchased_price_known": {
+            "type": "boolean",
+            "title": "Purchased Price Known",
+            "default": false
+          },
           "lines": {
             "items": {
               "$ref": "#/components/schemas/ShoppingCalculatedLine"
@@ -7407,6 +7640,26 @@
         ],
         "title": "ShoppingComparisonRead"
       },
+      "ShoppingCompleteWrite": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Expected Revision"
+          },
+          "accept_remaining": {
+            "type": "boolean",
+            "title": "Accept Remaining",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision"
+        ],
+        "title": "ShoppingCompleteWrite"
+      },
       "ShoppingConflict": {
         "properties": {
           "code": {
@@ -7419,7 +7672,8 @@
               "LIST_STATE_CONFLICT",
               "COMPARISON_STALE",
               "COMPARISON_PARTIAL",
-              "CHOICE_CONFLICT"
+              "CHOICE_CONFLICT",
+              "COURSES_REMAINING"
             ],
             "title": "Code"
           },
@@ -8022,6 +8276,13 @@
             "type": "array",
             "title": "Purchases"
           },
+          "product_purchases": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingProductPurchaseRead"
+            },
+            "type": "array",
+            "title": "Product Purchases"
+          },
           "totals": {
             "$ref": "#/components/schemas/ShoppingTotals"
           },
@@ -8265,6 +8526,134 @@
         ],
         "title": "ShoppingProductChoice"
       },
+      "ShoppingProductPurchaseRead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "comparison_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Comparison Id"
+          },
+          "item_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Item Ids"
+          },
+          "line": {
+            "$ref": "#/components/schemas/ShoppingCalculatedLine"
+          },
+          "purchased_units": {
+            "type": "integer",
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Purchased Units"
+          },
+          "reserved_units": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Reserved Units"
+          },
+          "purchased_quantity": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Purchased Quantity"
+          },
+          "estimated_amount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Estimated Amount"
+          },
+          "allocations": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingPurchaseAllocation"
+            },
+            "type": "array",
+            "title": "Allocations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "comparison_id",
+          "item_ids",
+          "line",
+          "purchased_units",
+          "reserved_units",
+          "purchased_quantity",
+          "estimated_amount",
+          "allocations"
+        ],
+        "title": "ShoppingProductPurchaseRead"
+      },
+      "ShoppingProductPurchaseWrite": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Expected Revision"
+          },
+          "comparison_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Comparison Id"
+          },
+          "item_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Item Id"
+          },
+          "product_id": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Product Id"
+          },
+          "purchased_units": {
+            "type": "integer",
+            "maximum": 1000000.0,
+            "minimum": 0.0,
+            "title": "Purchased Units"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision",
+          "comparison_id",
+          "item_id",
+          "product_id",
+          "purchased_units"
+        ],
+        "title": "ShoppingProductPurchaseWrite"
+      },
+      "ShoppingPurchaseAllocation": {
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Item Id"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/ShoppingBaseQuantity"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item_id",
+          "quantity"
+        ],
+        "title": "ShoppingPurchaseAllocation"
+      },
       "ShoppingQuantity": {
         "properties": {
           "amount": {
@@ -8355,6 +8744,12 @@
             "type": "string",
             "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
             "title": "Known Amount"
+          },
+          "purchased_known_amount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+            "title": "Purchased Known Amount",
+            "default": "0"
           },
           "complete": {
             "type": "boolean",

@@ -13,7 +13,7 @@ calendrier, édition, révisions et commandes idempotentes. Voir les
 [contrats](docs/SHOPPING_LISTS_CONTRACTS.md) et le
 [suivi de l’étape 5](docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
 La migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis
-le 14 novembre 2026. Les prix et comparaisons des nouveaux achats restent à développer. L’ancienne Épicerie
+le 14 novembre 2026. Les comparaisons et le [parcours de courses](docs/SHOPPING_COURSES.md) sont livrés dans le dépôt. La migration 0018 est appliquée à Supabase ; 0019 reste à appliquer. Les prix réels demandent des attestations commerciales. L’ancienne Épicerie
 fonctionne encore côté mobile pendant la transition.
 
 La [normalisation des ventes](docs/SALE_NORMALIZATION.md), étape 6, sépare contenu
@@ -22,12 +22,12 @@ commande `python -m backend.cli.normalize_sales --on-date 2026-11-14 --output /t
 audite le JSON ; ajouter `--source database` pour une lecture seule PostgreSQL.
 Au contrôle du 14 novembre, les deux sources donnent les mêmes 93 références :
 90 formats candidats, 3 inconnus et aucune référence certifiée sans attestation.
-Le calcul des achats vient à l’étape 7.
+Le [moteur d’achats](docs/PURCHASE_CALCULATION.md) et les [comparaisons](docs/SHOPPING_COMPARISONS.md) utilisent les références attestées.
 
 Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
 privées par défaut et publication volontaire définitive. Une recette publique
 ne peut plus être rendue privée ni supprimée par son auteur.
-La tête du dépôt est `0017_shopping_lists`, pour les parcours de listes.
+La tête du dépôt est `0019_shopping_courses` ; Supabase reste à 0018 pendant cette étape.
 Les autres routes utilisent les migrations jusqu’à `0016_offer_quantity_limits` :
 `0009_recipe_visibility` ajoute le partage et
 `0010_preserve_meals` conserve les repas après suppression de leur recette. Les

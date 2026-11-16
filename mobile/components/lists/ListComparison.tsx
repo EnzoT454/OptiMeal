@@ -15,8 +15,8 @@ const descriptions = {
   manual_unavailable: 'Choix manuel conservé · achat à vérifier',
 };
 
-export default function ListComparison({ list, disabled, onCommand }: {
-  list: ShoppingListRead; disabled: boolean; onCommand: (command: ListCommand) => Promise<boolean>;
+export default function ListComparison({ list, disabled, onCommand, itemId }: {
+  list: ShoppingListRead; itemId?: string; disabled: boolean; onCommand: (command: ListCommand) => Promise<boolean>;
 }) {
   const { session } = useAuth();
   const [comparison, setComparison] = useState<ShoppingComparisonRead | null>(null);
@@ -73,13 +73,13 @@ export default function ListComparison({ list, disabled, onCommand }: {
       <Text style={s.note}>Moins cher compare les achats complets vérifiables par magasin. Peut nécessiter plusieurs magasins ; déplacements, taxes et consignes non documentées exclus.</Text>
       {scenario && <>
         <Text style={s.sectionTitle}>{scenario.complete ? 'Estimation des achats' : 'Sous-total connu'} : {money(scenario.known_amount)}</Text>
-        <Text style={s.body}>{scenario.store_count} magasin(s) · {scenario.needs.filter(need => !['complete', 'owned'].includes(need.status)).length} besoin(s) à vérifier</Text>
+        <Text style={s.body}>{scenario.store_count} magasin(s) · {scenario.needs.filter(need => !['complete', 'owned'].includes(need.status) && !(need.status === 'purchased' && need.purchased_price_known)).length} besoin(s) à vérifier</Text>
         {scenario.store_totals.map(store => <Text key={`${store.retailer}:${store.store_id}`} style={s.body}>
           {labels[store.retailer]}{store.store_id ? ` · ${store.store_id}` : ''} : {money(store.amount)}
         </Text>)}
-        {scenario.needs.map(need => <View key={need.item_ids.join(',')} style={{ gap: 8 }}>
+        {scenario.needs.filter(need => !itemId || need.item_ids.includes(itemId)).map(need => <View key={need.item_ids.join(',')} style={{ gap: 8 }}>
           <Text style={s.sectionTitle}>{need.name}</Text>
-          <Text style={s.body}>{descriptions[need.status]}{need.manual ? ' · choix manuel' : ''}</Text>
+          <Text style={s.body}>{need.status === 'purchased' && need.purchased_price_known ? 'Déjà acheté · estimation conservée' : descriptions[need.status]}{need.manual ? ' · choix manuel' : ''}</Text>
           {need.warnings.includes('MANUAL_CHOICE_OUTSIDE_SCENARIO') && <Text style={s.note}>Le magasin choisi manuellement est conservé en dehors de cette enseigne.</Text>}
           {need.warnings.includes('PURCHASED_PRICE_UNKNOWN') && <Text style={s.note}>Le prix des achats déjà effectués reste inconnu.</Text>}
           {need.lines.map(line => <Text key={line.sale.product_id} style={s.body}>

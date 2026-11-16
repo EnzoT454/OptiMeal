@@ -1,5 +1,11 @@
 # Listes d’épicerie — contrats du lot A
 
+Les contrats préparatoires ci-dessous sont complétés par les
+[comparaisons de l’étape 8](SHOPPING_COMPARISONS.md) et le
+[parcours de courses de l’étape 9](SHOPPING_COURSES.md) : achats produits
+avec instantanés, couverture, estimations conservées et clôture explicite.
+Les validations historiques ci-dessous conservent leur contexte.
+
 **Date : 16 novembre 2026.**
 
 **Statut : routes du lot A et parcours mobile disponibles ; migration 0017 appliquée et vérifiée sur Supabase le 14 novembre 2026.**

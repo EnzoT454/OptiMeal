@@ -144,7 +144,9 @@ def _snapshot(db: Session, list_id: UUID, user: CurrentUser, source_warnings=Non
     purchases_read = [ShoppingManualPurchaseRead(
         **{k: p[k] for k in ('id', 'item_id', 'purchased', 'confirmed_need_revision')},
         coverage=coverage[p['id']]) for p in purchases]
-    by_item = {p.item_id: p for p in purchases_read}
+    from .courses import read_purchases, purchase_coverage
+    product_purchases = read_purchases(db, list_id)
+    by_item = purchase_coverage(purchases_read, product_purchases)
     # Les avertissements d'import appartiennent à l'instantané d'origine.
     # Les avertissements de couverture, eux, sont recalculés à chaque commande.
     previous = db.scalar(select(ShoppingListRevision.snapshot).where(
@@ -178,11 +180,16 @@ def _snapshot(db: Session, list_id: UUID, user: CurrentUser, source_warnings=Non
         partial_item_count=sum(i.coverage_status == 'partial' for i in active),
         unpriced_item_count=unpriced, uncovered_item_count=uncovered,
         budget_known_amount='0', remaining_known_amount='0', estimate_complete=not (unpriced or uncovered))
+    if product_purchases:
+        from fractions import Fraction
+        from .comparisons import _amount
+        bought_amount = _amount(sum((Fraction(Decimal(p.estimated_amount)) for p in product_purchases), Fraction()))
+        totals = totals.model_copy(update={'budget_known_amount': bought_amount})
     resource = ShoppingListRead(
         **{k: row[k] for k in ('id', 'name', 'source', 'status', 'revision', 'purchase_date')},
         created_at=row['created_at'].astimezone(timezone.utc), updated_at=row['updated_at'].astimezone(timezone.utc),
         period={'start_date': row['start_date'], 'end_date': row['end_date']} if row['source'] == 'calendar' else None,
-        items=result, purchases=purchases_read, totals=totals, warnings=warnings)
+        items=result, purchases=purchases_read, product_purchases=product_purchases, totals=totals, warnings=warnings)
     from .comparisons import decorate
     return decorate(db, resource)
 
@@ -220,6 +227,9 @@ def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,
                                     list_id=list_id, expected_revision=body.expected_revision, current_revision=current['revision'])
         if current is not None and operation not in ('activate', 'archive', 'reopen') and current['status'] not in ('draft', 'active'):
             raise ShoppingListError(409, 'LIST_STATE_CONFLICT', 'Rouvre la liste avant de la modifier.')
+        if current is not None:
+            from .comparisons import upgrade_assignment
+            upgrade_assignment(db, get_list(db, list_id, user))
         target_id = action(list_id)
         if current is not None:
             db.execute(update(ShoppingList).where(ShoppingList.id == target_id).values(
@@ -308,7 +318,7 @@ def update_list(db: Session, list_id: UUID, user: CurrentUser, body: ShoppingLis
 def change_status(db: Session, list_id: UUID, user: CurrentUser, operation: str,
                   body: ShoppingCommand, key: UUID) -> ShoppingListRead:
     transitions = {'activate': ({'draft'}, 'active'), 'archive': ({'draft', 'active'}, 'archived'),
-                   'reopen': ({'archived'}, 'active')}
+                   'reopen': ({'archived', 'completed'}, 'active')}
     if operation not in transitions:
         raise ShoppingListError(422, 'VALIDATION_ERROR', 'Transition inconnue.')
     def change(target):

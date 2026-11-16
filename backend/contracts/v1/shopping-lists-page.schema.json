@@ -594,6 +594,19 @@
         "scenario": {
           "$ref": "#/$defs/ShoppingScenario"
         },
+        "planning_fingerprint": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Planning Fingerprint"
+        },
         "stale": {
           "default": false,
           "title": "Stale",
@@ -746,6 +759,11 @@
         "manual": {
           "default": false,
           "title": "Manual",
+          "type": "boolean"
+        },
+        "purchased_price_known": {
+          "default": false,
+          "title": "Purchased Price Known",
           "type": "boolean"
         },
         "lines": {
@@ -1103,6 +1121,13 @@
           "title": "Purchases",
           "type": "array"
         },
+        "product_purchases": {
+          "items": {
+            "$ref": "#/$defs/ShoppingProductPurchaseRead"
+          },
+          "title": "Product Purchases",
+          "type": "array"
+        },
         "totals": {
           "$ref": "#/$defs/ShoppingTotals"
         },
@@ -1266,6 +1291,93 @@
       "title": "ShoppingProductChoice",
       "type": "object"
     },
+    "ShoppingProductPurchaseRead": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "comparison_id": {
+          "format": "uuid",
+          "title": "Comparison Id",
+          "type": "string"
+        },
+        "item_ids": {
+          "items": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Item Ids",
+          "type": "array"
+        },
+        "line": {
+          "$ref": "#/$defs/ShoppingCalculatedLine"
+        },
+        "purchased_units": {
+          "maximum": 1000000,
+          "minimum": 0,
+          "title": "Purchased Units",
+          "type": "integer"
+        },
+        "reserved_units": {
+          "minimum": 0,
+          "title": "Reserved Units",
+          "type": "integer"
+        },
+        "purchased_quantity": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Purchased Quantity",
+          "type": "string"
+        },
+        "estimated_amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Estimated Amount",
+          "type": "string"
+        },
+        "allocations": {
+          "items": {
+            "$ref": "#/$defs/ShoppingPurchaseAllocation"
+          },
+          "title": "Allocations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "comparison_id",
+        "item_ids",
+        "line",
+        "purchased_units",
+        "reserved_units",
+        "purchased_quantity",
+        "estimated_amount",
+        "allocations"
+      ],
+      "title": "ShoppingProductPurchaseRead",
+      "type": "object"
+    },
+    "ShoppingPurchaseAllocation": {
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "format": "uuid",
+          "title": "Item Id",
+          "type": "string"
+        },
+        "quantity": {
+          "$ref": "#/$defs/ShoppingBaseQuantity"
+        }
+      },
+      "required": [
+        "item_id",
+        "quantity"
+      ],
+      "title": "ShoppingPurchaseAllocation",
+      "type": "object"
+    },
     "ShoppingQuantity": {
       "additionalProperties": false,
       "properties": {
@@ -1319,6 +1431,12 @@
         "known_amount": {
           "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
           "title": "Known Amount",
+          "type": "string"
+        },
+        "purchased_known_amount": {
+          "default": "0",
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Purchased Known Amount",
           "type": "string"
         },
         "complete": {

@@ -14,7 +14,7 @@ from .schemas import (
     ShoppingCalendarPreviewRead, ShoppingCalendarPreviewWrite, ShoppingCommand,
     ShoppingConflictResponse, ShoppingFromCalendar, ShoppingItemAdd, ShoppingItemUpdate,
     ShoppingListCreate, ShoppingListRead, ShoppingListUpdate, ShoppingManualPurchaseWrite,
-    ShoppingPossessionWrite, ShoppingRevisionRead, ShoppingChoiceWrite, ShoppingApplyComparison, ShoppingComparisonRead,
+    ShoppingPossessionWrite, ShoppingRevisionRead, ShoppingChoiceWrite, ShoppingApplyComparison, ShoppingComparisonRead, ShoppingProductPurchaseWrite, ShoppingCompleteWrite,
 )
 
 router = APIRouter(prefix='/api/v1/shopping-lists', tags=['Listes v1'], responses={
@@ -121,3 +121,15 @@ def apply_comparison(list_id: UUID, body: ShoppingApplyComparison, request: Requ
 def choice(list_id: UUID, item_id: UUID, body: ShoppingChoiceWrite, request: Request, user: User, db: DB, key: Key):
     return detail(comparisons.choose(db, list_id, item_id, user, body, key,
         lambda session, day: comparisons.load_sales(request, session, day)))
+
+
+@router.put('/{list_id}/product-purchases', response_model=Detail[ShoppingListRead])
+def product_purchase(list_id: UUID, body: ShoppingProductPurchaseWrite, user: User, db: DB, key: Key):
+    from .courses import set_product_purchase
+    return detail(set_product_purchase(db, list_id, user, body, key))
+
+
+@router.post('/{list_id}/complete', response_model=Detail[ShoppingListRead])
+def complete(list_id: UUID, body: ShoppingCompleteWrite, user: User, db: DB, key: Key):
+    from .courses import complete as complete_courses
+    return detail(complete_courses(db, list_id, user, body, key))

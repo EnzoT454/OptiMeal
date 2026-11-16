@@ -73,17 +73,22 @@ def _amount(value):
     return f'{n // 100}.{n % 100:02d}'
 
 
-def _scenario(name, needs):
+def _scenario(name, needs, products=()):
     totals = defaultdict(Fraction)
     for need in needs:
         for line in need.lines:
             source = line.sale.raw_source
             totals[(source.retailer, source.store_id)] += Fraction(Decimal(line.amount))
+    purchased = sum((Fraction(Decimal(p.estimated_amount)) for p in products), Fraction())
+    for purchase in products:
+        if purchase.purchased_units:
+            source = purchase.line.sale.raw_source
+            totals[(source.retailer, source.store_id)] += Fraction(Decimal(purchase.estimated_amount))
     stores = [ShoppingStoreTotal(retailer=key[0], store_id=key[1], amount=_amount(amount))
               for key, amount in sorted(totals.items(), key=lambda e: (e[0][0], e[0][1] or ''))]
-    known = sum((Fraction(Decimal(n.amount)) for n in needs if n.amount is not None), Fraction())
-    return ShoppingScenario(scenario=name, needs=needs, known_amount=_amount(known),
-        complete=all(n.status in ('complete', 'owned') and 'PURCHASED_PRICE_UNKNOWN' not in n.warnings for n in needs),
+    known = sum((Fraction(Decimal(n.amount)) for n in needs if n.amount is not None), purchased)
+    return ShoppingScenario(scenario=name, needs=needs, known_amount=_amount(known), purchased_known_amount=_amount(purchased),
+        complete=all((n.status in ('complete', 'owned') or n.status == 'purchased' and n.purchased_price_known) and 'PURCHASED_PRICE_UNKNOWN' not in n.warnings for n in needs),
         store_totals=stores, store_count=len(stores))
 
 
@@ -105,7 +110,9 @@ def build_scenarios(resource: ShoppingListRead, sales: list[NormalizedSale]) -> 
         raise ShoppingListError(422, 'PRODUCT_MAPPING_AMBIGUOUS',
                                 'Un produit correspond à plusieurs besoins. Vérifie le catalogue.')
     choices = {c.item_id: c.product_id for c in resource.choices}
-    purchases = {p.item_id: p for p in resource.purchases if p.purchased}
+    from .courses import purchase_coverage
+    purchases = purchase_coverage([p for p in resource.purchases if p.purchased], resource.product_purchases)
+    unknown_purchases = {p.item_id for p in resource.purchases if p.purchased}
     result = {name: [] for name in SCENARIOS}
     remaining_budget = 100_000
     for _, items in sorted(groups.items()):
@@ -113,7 +120,7 @@ def build_scenarios(resource: ShoppingListRead, sales: list[NormalizedSale]) -> 
         base = dict(item_ids=[i.id for i in items], name=items[0].name, ingredient_id=ingredient,
                     unit=None, remaining=None)
         selected = {choices[i.id] for i in items if i.id in choices}
-        warnings = []
+        warnings = ['PURCHASED_PRICE_UNKNOWN'] if any(i.id in unknown_purchases for i in items) else []
         status = None
         if all(i.coverage_status == 'owned' for i in items):
             status = 'owned'
@@ -127,7 +134,8 @@ def build_scenarios(resource: ShoppingListRead, sales: list[NormalizedSale]) -> 
         if status:
             for name in SCENARIOS:
                 result[name].append(ShoppingComparedNeed(**base, status=status, manual=bool(selected),
-                    amount='0.00' if status == 'owned' else None, warnings=warnings))
+                    amount='0.00' if status == 'owned' else None, warnings=warnings,
+                    purchased_price_known=status == 'purchased' and not (set(base['item_ids']) & unknown_purchases)))
             continue
         candidates = [s for s in sales if s.ingredient_id == ingredient]
         if selected:
@@ -152,12 +160,14 @@ def build_scenarios(resource: ShoppingListRead, sales: list[NormalizedSale]) -> 
                 warnings.append('PROMOTION_USAGE_UNKNOWN')
             candidates = [s for s in candidates if s.quantity_limit is None]
         coverage = calculate_coverage(ingredient, quantities, candidates, resource.purchase_date,
-                                      owned=owned, purchased=bought, limits=limits)
+                                      owned=owned, purchased=bought, limits=limits,
+                                      reserved_units=None if any(i.id in unknown_purchases for i in items) else {
+                                          p.line.sale.product_id: sum(other.purchased_units for other in resource.product_purchases
+                                              if other.line.sale.product_id == p.line.sale.product_id)
+                                          for p in resource.product_purchases})
         remaining_budget -= sum(s.combinations for s in coverage.stores if s.status == 'complete')
         base.update(unit=coverage.unit, remaining=coverage.remaining)
         warnings.extend(sorted({issue for _, issues in coverage.excluded for issue in issues}))
-        if has_purchases:
-            warnings.append('PURCHASED_PRICE_UNKNOWN')
         for name in SCENARIOS:
             stores = [s for s in coverage.stores if selected or name == 'cheapest' or s.retailer == name]
             available = [s for s in stores if s.status == 'complete']
@@ -182,8 +192,8 @@ def build_scenarios(resource: ShoppingListRead, sales: list[NormalizedSale]) -> 
                      for line in chosen.lines] if chosen else []
             result[name].append(ShoppingComparedNeed(**base, status=status, manual=bool(selected),
                 lines=lines, amount=chosen.amount if chosen else '0.00' if status == 'owned' else None,
-                warnings=notes))
-    return [_scenario(name, needs) for name, needs in result.items()]
+                warnings=notes, purchased_price_known=status == 'purchased' and not (set(base['item_ids']) & unknown_purchases)))
+    return [_scenario(name, needs, resource.product_purchases) for name, needs in result.items()]
 
 
 def compare(db: Session, list_id: UUID, user: CurrentUser, source: SalesSource) -> ShoppingComparisonRead:
@@ -226,8 +236,9 @@ def apply(db: Session, list_id: UUID, user: CurrentUser, body: ShoppingApplyComp
         scenario = next(s for s in comparison.scenarios if s.scenario == body.scenario)
         if not scenario.complete and not body.accept_partial:
             raise ShoppingListError(409, 'COMPARISON_PARTIAL', 'Confirme les besoins sans estimation avant d’appliquer.')
+        from .courses import planning_fingerprint
         assignment = ShoppingAppliedComparison(comparison_id=comparison.id, source_revision=resource.revision,
-            purchase_date=resource.purchase_date, state_fingerprint=comparison.state_fingerprint, scenario=scenario)
+            purchase_date=resource.purchase_date, state_fingerprint=comparison.state_fingerprint, scenario=scenario, planning_fingerprint=planning_fingerprint(resource, comparison.id, scenario))
         data = assignment.model_dump(mode='json')
         db.execute(pg_insert(ShoppingListAssignment).values(list_id=target, comparison_id=comparison.id, data=data)
             .on_conflict_do_update(index_elements=['list_id'], set_={'comparison_id': comparison.id, 'data': data}))
@@ -261,8 +272,16 @@ def decorate(db: Session, resource: ShoppingListRead) -> ShoppingListRead:
     if data is None:
         return resource
     assignment = ShoppingAppliedComparison.model_validate(data)
-    stale = assignment.state_fingerprint != state_fingerprint(resource)
+    from .courses import planning_fingerprint
+    stale = (assignment.planning_fingerprint != planning_fingerprint(resource, assignment.comparison_id, assignment.scenario)
+             if assignment.planning_fingerprint else assignment.state_fingerprint != state_fingerprint(resource))
     assignment = assignment.model_copy(update={'stale': stale})
+    if resource.product_purchases:
+        from .courses import decorate as decorate_courses
+        if stale:
+            from .schemas import ShoppingWarning
+            resource = resource.model_copy(update={'warnings': [*resource.warnings, ShoppingWarning(code='COMPARISON_STALE', message='Besoins modifiés : compare les compléments.')]})
+        return decorate_courses(resource, assignment)
     if stale:
         return ShoppingListRead.model_validate({**resource.model_dump(), 'assignment': assignment,
             'warnings': [*resource.warnings, {'code': 'COMPARISON_STALE', 'message': 'Besoins ou choix modifiés : compare de nouveau.'}]})
@@ -282,3 +301,21 @@ def decorate(db: Session, resource: ShoppingListRead) -> ShoppingListRead:
         warnings.append({'code': 'ESTIMATE_PARTIAL', 'message': 'Sous-total connu : certains achats ne sont pas chiffrés.'})
     return ShoppingListRead.model_validate({**resource.model_dump(), 'items': items, 'assignment': assignment,
                                            'totals': totals, 'warnings': warnings})
+
+
+def upgrade_assignment(db: Session, resource: ShoppingListRead) -> None:
+    """Ajouter la règle de stabilité de l'étape 9 sans toucher aux révisions.
+
+    Une ancienne proposition déjà périmée ne redevient jamais actuelle ici.
+    La conversion appartient à la transaction de la prochaine commande.
+    """
+    assignment = resource.assignment
+    if assignment is None or assignment.stale:
+        return
+    data = db.scalar(select(ShoppingListAssignment.data).where(ShoppingListAssignment.list_id == resource.id))
+    if data is None or data.get('planning_fingerprint'):
+        return
+    from sqlalchemy import update
+    from .courses import planning_fingerprint
+    data = {**data, 'planning_fingerprint': planning_fingerprint(resource, assignment.comparison_id, assignment.scenario)}
+    db.execute(update(ShoppingListAssignment).where(ShoppingListAssignment.list_id == resource.id).values(data=data))

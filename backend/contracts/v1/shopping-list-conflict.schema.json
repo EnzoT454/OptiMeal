@@ -31,7 +31,8 @@
             "LIST_STATE_CONFLICT",
             "COMPARISON_STALE",
             "COMPARISON_PARTIAL",
-            "CHOICE_CONFLICT"
+            "CHOICE_CONFLICT",
+            "COURSES_REMAINING"
           ],
           "title": "Code",
           "type": "string"

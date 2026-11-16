@@ -4,6 +4,16 @@ Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du d
 
 Il décrit le code au **10 novembre 2026** et les confirmations sur téléphone disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
+**Listes — état au 16 novembre 2026 :** étapes 1 à 9 livrées dans le dépôt.
+L’onglet Liste sauvegarde les besoins privés, compare les achats attestés et
+permet les coches, les achats partiels, la possession et les compléments après
+modification du besoin. Une coche de produit conserve son estimation et le
+budget prévu ; elle diminue le reste connu à acheter. La migration 0019 reste
+à appliquer à Supabase, actuellement à 0018 ; les essais des nouveaux parcours
+sur appareils restent à effectuer. Accueil et Calendrier gardent provisoirement
+l’ancienne liste locale. Voir [le parcours de courses](backend/docs/SHOPPING_COURSES.md).
+Les tableaux datés plus anciens ci-dessous conservent leur contexte historique.
+
 ## 1. Les grandes parties de l’application
 
 **Complément du 14 novembre 2026 :** les offres peuvent conserver un prix
@@ -112,7 +122,7 @@ flowchart TD
 
 À l’inscription, l’utilisateur doit confirmer son courriel. Le retour dans l’application utilise le lien `optimeal://auth/callback` et un échange de code pour obtenir la session.
 
-Les cinq onglets sont visibles avec ou sans compte : Accueil, Promos, Recettes, Calendrier et Liste. Accueil présente les repas du jour et un aperçu des achats au compte connecté, ou un message de bienvenue aux visiteurs. Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine et conserve sa première liste d’épicerie. Le nouvel onglet Liste permet de créer, compléter et reprendre des brouillons privés, manuellement ou depuis un aperçu du calendrier ; les prix et comparaisons restent à développer. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
+Les cinq onglets sont visibles avec ou sans compte : Accueil, Promos, Recettes, Calendrier et Liste. Accueil présente les repas du jour et un aperçu des achats au compte connecté, ou un message de bienvenue aux visiteurs. Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine et conserve sa première liste d’épicerie. Le nouvel onglet Liste permet de créer, compléter et reprendre des brouillons privés, manuellement ou depuis un aperçu du calendrier ; les comparaisons et courses sont raccordées, avec prix inconnus sans attestations commerciales. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
 
 Une roue dentée en haut à droite de l’accueil ouvre Paramètres, avec une zone tactile de 48 × 48 et un libellé accessible. Cet écran présente le mode visiteur ou, après connexion, le profil et la déconnexion. Le bouton de retour ramène à l’accueil ; une connexion ou déconnexion réinitialise toujours la navigation.
 

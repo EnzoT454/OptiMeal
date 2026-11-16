@@ -5,10 +5,12 @@ from .schemas import (
     ShoppingCommandHeaders, ShoppingConflictResponse, ShoppingFromCalendar,
     ShoppingItemAdd, ShoppingItemUpdate, ShoppingListCreate, ShoppingListRead,
     ShoppingListUpdate, ShoppingManualPurchaseWrite, ShoppingPossessionWrite,
-    ShoppingRevisionRead, ShoppingComparisonRead, ShoppingApplyComparison, ShoppingChoiceWrite,
+    ShoppingRevisionRead, ShoppingComparisonRead, ShoppingApplyComparison, ShoppingChoiceWrite, ShoppingProductPurchaseWrite, ShoppingCompleteWrite,
 )
 
 MODELS = {
+    'shopping-list-product-purchase-write': ShoppingProductPurchaseWrite,
+    'shopping-list-complete-write': ShoppingCompleteWrite,
     'shopping-list-comparison-detail': Detail[ShoppingComparisonRead],
     'shopping-list-apply-comparison': ShoppingApplyComparison,
     'shopping-list-choice-write': ShoppingChoiceWrite,
@@ -87,6 +89,8 @@ def examples() -> dict:
                                  'complete': False, 'store_totals': [], 'store_count': 0}
                                 for name in ('maxi', 'metro', 'superc', 'cheapest')]}
     values = {
+        'shopping-list-product-purchase-write': {'expected_revision': 4, 'comparison_id': comparison['id'], 'item_id': rice_id, 'product_id': 'maxi:demo:riz', 'purchased_units': 1},
+        'shopping-list-complete-write': {'expected_revision': 4, 'accept_remaining': True},
         'shopping-list-comparison-detail': {'item': comparison, 'meta': meta},
         'shopping-list-apply-comparison': {'expected_revision': 4, 'comparison_id': comparison['id'],
                                          'scenario': 'cheapest', 'accept_partial': True},

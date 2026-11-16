@@ -1,5 +1,11 @@
 # Mobile OptiMeal
 
+Le [parcours de courses](../backend/docs/SHOPPING_COURSES.md) de l’onglet Liste
+est livré dans le dépôt : fiches défilantes, coches de produits, achats partiels,
+possession annulable et compléments. Backend à migrer vers 0019 avant utilisation ;
+essais des nouveaux écrans sur appareils à compléter. Les anciennes sections
+Épicerie de Calendrier décrites ci-dessous restent en place pendant la transition.
+
 La barre de navigation contient Accueil, Promos, Recettes, Calendrier et Liste.
 Les paramètres s’ouvrent depuis la roue dentée en haut à droite de l’accueil,
 avec un retour vers celui-ci. Cet accès reste disponible sans compte.

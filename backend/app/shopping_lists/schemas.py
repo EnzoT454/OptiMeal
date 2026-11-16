@@ -276,6 +276,7 @@ class ShoppingComparedNeed(ContractModel):
     status: Literal['complete', 'owned', 'purchased', 'unpriced', 'unquantified',
                     'incompatible_units', 'search_limit', 'manual_unavailable']
     manual: StrictBool = False
+    purchased_price_known: StrictBool = False
     lines: list[ShoppingCalculatedLine] = Field(default_factory=list)
     amount: DecimalText | None = None
     warnings: list[str] = Field(default_factory=list)
@@ -304,6 +305,7 @@ class ShoppingScenario(ContractModel):
     scenario: Literal['maxi', 'metro', 'superc', 'cheapest']
     needs: list[ShoppingComparedNeed]
     known_amount: DecimalText
+    purchased_known_amount: DecimalText = '0'
     complete: StrictBool
     store_totals: list[ShoppingStoreTotal]
     store_count: Count
@@ -311,11 +313,11 @@ class ShoppingScenario(ContractModel):
     @model_validator(mode='after')
     def calculated_totals(self):
         from fractions import Fraction
-        known = sum((Fraction(Decimal(n.amount)) for n in self.needs if n.amount is not None), Fraction())
+        known = sum((Fraction(Decimal(n.amount)) for n in self.needs if n.amount is not None), Fraction(Decimal(self.purchased_known_amount)))
         stores = sum((Fraction(Decimal(s.amount)) for s in self.store_totals), Fraction())
         if known != Fraction(Decimal(self.known_amount)) or stores != known:
             raise ValueError('Montants de scénario incohérents.')
-        if self.complete != all(n.status in ('complete', 'owned') and 'PURCHASED_PRICE_UNKNOWN' not in n.warnings for n in self.needs):
+        if self.complete != all((n.status in ('complete', 'owned') or n.status == 'purchased' and n.purchased_price_known) and 'PURCHASED_PRICE_UNKNOWN' not in n.warnings for n in self.needs):
             raise ValueError('Couverture de scénario incohérente.')
         if self.store_count != len(self.store_totals):
             raise ValueError('Nombre de magasins incohérent.')
@@ -350,12 +352,62 @@ class ShoppingApplyComparison(ShoppingCommand):
     accept_partial: StrictBool = False
 
 
+class ShoppingProductPurchaseWrite(ShoppingCommand):
+    comparison_id: UUID
+    item_id: UUID
+    product_id: Annotated[str, StringConstraints(min_length=1, max_length=512)]
+    purchased_units: Annotated[int, Field(strict=True, ge=0, le=1_000_000)]
+
+
+class ShoppingPurchaseAllocation(ContractModel):
+    item_id: UUID
+    quantity: ShoppingBaseQuantity
+
+
+class ShoppingProductPurchaseRead(ContractModel):
+    id: UUID
+    comparison_id: UUID
+    item_ids: list[UUID] = Field(min_length=1)
+    line: ShoppingCalculatedLine
+    purchased_units: Annotated[int, Field(strict=True, ge=0, le=1_000_000)]
+    reserved_units: Count
+    purchased_quantity: DecimalText
+    estimated_amount: DecimalText
+    allocations: list[ShoppingPurchaseAllocation]
+
+    @model_validator(mode='after')
+    def coherent_purchase(self):
+        from fractions import Fraction
+        if len(set(self.item_ids)) != len(self.item_ids):
+            raise ValueError('Articles dupliqués dans un achat produit.')
+        if (len({a.item_id for a in self.allocations}) != len(self.allocations) or
+                any(a.item_id not in self.item_ids for a in self.allocations)):
+            raise ValueError('Couverture produit rattachée à un autre article.')
+        total = sum((Fraction(Decimal(a.quantity.amount)) for a in self.allocations), Fraction())
+        if total != Fraction(Decimal(self.purchased_quantity)):
+            raise ValueError('Quantité achetée différente de sa couverture.')
+        sale = self.line.sale
+        increment = sale.content_per_package if sale.price_basis == 'package' else sale.sale_increment
+        if increment is None or Fraction(Decimal(self.purchased_quantity)) != Fraction(Decimal(increment.amount)) * self.purchased_units:
+            raise ValueError('Quantité produit incompatible avec ses unités de vente.')
+        if any(a.quantity.unit != increment.unit for a in self.allocations):
+            raise ValueError('Couverture incompatible avec le produit acheté.')
+        if self.purchased_units == 0 and (self.allocations or Decimal(self.estimated_amount) != 0):
+            raise ValueError('Achat décoché avec couverture ou montant.')
+        return self
+
+
+class ShoppingCompleteWrite(ShoppingCommand):
+    accept_remaining: StrictBool = False
+
+
 class ShoppingAppliedComparison(ContractModel):
     comparison_id: UUID
     source_revision: Revision
     purchase_date: date
     state_fingerprint: Fingerprint
     scenario: ShoppingScenario
+    planning_fingerprint: Fingerprint | None = None
     stale: StrictBool = False
 
 
@@ -369,6 +421,7 @@ class ShoppingListRead(ContractModel):
     purchase_date: date
     items: list[ShoppingItemRead]
     purchases: list[ShoppingManualPurchaseRead]
+    product_purchases: list[ShoppingProductPurchaseRead] = Field(default_factory=list)
     totals: ShoppingTotals
     warnings: list[ShoppingWarning] = Field(default_factory=list)
     created_at: AwareDatetime
@@ -398,12 +451,21 @@ class ShoppingListRead(ContractModel):
         if (len({c.item_id for c in self.choices}) != len(self.choices) or
                 any(c.item_id not in items for c in self.choices)):
             raise ValueError('Choix manuel dupliqué ou rattaché à un article absent.')
+        if len({p.id for p in self.product_purchases}) != len(self.product_purchases):
+            raise ValueError('Identifiants d’achats produit dupliqués.')
+        if any(set(p.item_ids) - set(items) for p in self.product_purchases):
+            raise ValueError('Achat produit rattaché à une autre liste.')
+        if self.product_purchases:
+            from fractions import Fraction
+            bought = sum((Fraction(Decimal(p.estimated_amount)) for p in self.product_purchases), Fraction())
+            if Fraction(Decimal(self.totals.budget_known_amount)) != bought + Fraction(Decimal(self.totals.remaining_known_amount)):
+                raise ValueError('Budget différent des achats effectués et du reste connu.')
         if self.assignment is not None:
             assigned = [item_id for need in self.assignment.scenario.needs for item_id in need.item_ids]
             if len(set(assigned)) != len(assigned) or set(assigned) - set(items):
                 raise ValueError('Répartition rattachée à des articles incohérents.')
             expected_amount = Decimal(0) if self.assignment.stale else Decimal(self.assignment.scenario.known_amount)
-            if Decimal(self.totals.budget_known_amount) != expected_amount or Decimal(self.totals.remaining_known_amount) != expected_amount:
+            if not self.product_purchases and (Decimal(self.totals.budget_known_amount) != expected_amount or Decimal(self.totals.remaining_known_amount) != expected_amount):
                 raise ValueError('Montants différents de la répartition enregistrée.')
         active = [i for i in self.items if not i.removed]
         expected = {'item_count': len(active),
@@ -414,7 +476,7 @@ class ShoppingListRead(ContractModel):
                     'unpriced_item_count': sum(i.coverage_status != 'owned' and i.pricing_status != 'known' for i in active)}
         if any(getattr(self.totals, k) != v for k, v in expected.items()):
             raise ValueError('Compteurs différents des articles de la liste.')
-        if self.assignment is None and (any(i.pricing_status == 'known' and i.coverage_status != 'owned' for i in active) or (
+        if self.assignment is None and not self.product_purchases and (any(i.pricing_status == 'known' and i.coverage_status != 'owned' for i in active) or (
                 Decimal(self.totals.budget_known_amount) != 0 or Decimal(self.totals.remaining_known_amount) != 0)):
             raise ValueError('Montants sans proposition enregistrée.')
         return self
@@ -455,7 +517,7 @@ class ShoppingCalendarPreviewRead(ContractModel):
 class ShoppingConflict(ApiError):
     code: Literal['LIST_REVISION_CONFLICT', 'IDEMPOTENCY_KEY_REUSED',
                   'CALENDAR_PREVIEW_STALE', 'ACCOUNT_DELETION_PENDING', 'LIST_STATE_CONFLICT',
-                  'COMPARISON_STALE', 'COMPARISON_PARTIAL', 'CHOICE_CONFLICT']
+                  'COMPARISON_STALE', 'COMPARISON_PARTIAL', 'CHOICE_CONFLICT', 'COURSES_REMAINING']
     list_id: UUID | None = None
     expected_revision: Revision | None = None
     current_revision: Revision | None = None

@@ -187,3 +187,18 @@ class ShoppingListAssignment(Base):
     list_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('shopping_list.id', ondelete='CASCADE'), primary_key=True)
     comparison_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
     data: Mapped[dict] = mapped_column(JSONB, nullable=False)
+
+
+class ShoppingListProductPurchase(Base):
+    __tablename__ = 'shopping_list_product_purchase'
+    __table_args__ = (
+        ForeignKeyConstraint(['comparison_id', 'list_id'],
+            ['shopping_list_comparison.id', 'shopping_list_comparison.list_id'],
+            ondelete='CASCADE', name='fk_shopping_product_purchase_comparison_in_list'),
+        CheckConstraint("jsonb_typeof(data) = 'object'", name='data_object'),
+        Index('ix_shopping_list_product_purchase_list_id', 'list_id'),
+    )
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
+    list_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('shopping_list.id', ondelete='CASCADE'), nullable=False)
+    comparison_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
+    data: Mapped[dict] = mapped_column(JSONB, nullable=False)

@@ -7,7 +7,11 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
-La tête du dépôt est désormais **0018_shopping_comparisons**. Elle ajoute les
+La tête du dépôt est **0019_shopping_courses**, qui ajoute les achats produits
+privés avec instantanés et couvertures. Cette migration est testée localement,
+mais reste à appliquer à Supabase. Voir [le guide des courses](SHOPPING_COURSES.md).
+
+La migration précédente est **0018_shopping_comparisons**. Elle ajoute les
 simulations privées, les choix manuels et les répartitions enregistrées ; RLS
 reste activée et les simulations sont immuables. Migration vérifiée sur PostgreSQL
 local, puis **appliquée sur Supabase le 16 novembre 2026**, depuis 0017 dans
