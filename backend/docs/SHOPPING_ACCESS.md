@@ -94,9 +94,15 @@ n’est accepté. Les ressources étrangères restent 404 et les listes terminé
 archivées ne peuvent pas être sélectionnées. Les deux nouveaux schémas, les
 exemples et OpenAPI sont exportés et vérifiés contre TypeScript.
 
-**0021 est testée sur PostgreSQL local jetable. Supabase n’a pas été modifié et
-reste à 0019 selon la dernière vérification consignée.** Appliquer 0020 puis 0021
-sur la cible avant d’y utiliser les nouveaux accès :
+**0021 a été appliquée et vérifiée sur Supabase le 16 novembre 2026, depuis
+0020, qui était déjà présente lors du contrôle préalable.** Transaction unique,
+révision confirmée sur une nouvelle connexion après commit, schéma conforme aux
+modèles et protections RLS sans accès mobile direct vérifiés. Les empreintes et
+comptages des **25 tables préexistantes** et le nombre de comptes Auth sont
+inchangés. La table d’épinglage est vide : aucune préférence utilisateur n’a été
+créée pendant la migration.
+
+Pour une autre base à mettre à niveau :
 
 ```bash
 python -m alembic -c backend/alembic.ini upgrade head
@@ -116,7 +122,6 @@ créer depuis son aperçu, puis ouvrir le même identifiant depuis les trois acc
 et comparer les compteurs et montants. Vérifier aussi perte de réseau et texte
 agrandi. Les tests automatisés ne remplacent pas ces essais iOS et Android.
 
-Les fichiers de l’ancien moteur local restent conservés pour l’étape 14 ; ils
-ne sont plus montés par Accueil ou Calendrier. Les anciennes données et leur
-récupération de l’étape 12 restent intactes. Prochaine étape : retrait du code
-local après vérification des consommateurs, puis validation finale de l’étape 15.
+L’[étape 14](SHOPPING_CLEANUP.md) a retiré les fichiers de l’ancien moteur après
+audit des consommateurs. Les anciennes données et leur récupération de l’étape 12
+restent intactes. La validation finale et les essais appareils restent à l’étape 15.

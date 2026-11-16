@@ -7,7 +7,7 @@ Les ingrédients non suggérés sont gérés depuis leur fiche et depuis Paramè
 
 ## Migration et stockage
 
-La tête Alembic est **0020_shopping_reuse**, après 0019. Elle ajoute :
+La migration **0020_shopping_reuse** suit 0019 ; la tête actuelle est 0021. Elle ajoute :
 
 - `shopping_list_template` : nom, icône autorisée, révision et besoins privés ;
 - `shopping_list_exclusion` : préférence unique par compte et ingrédient ;
@@ -24,9 +24,10 @@ avant l’instanciation. Le modèle ne contient aucune couverture ou estimation.
 Le retour à 0019 refuse d’effacer modèles, exclusions, commandes ou origines
 existants. Les anciennes révisions restent lisibles avec une origine nulle.
 
-**0020 est testée sur PostgreSQL local jetable ; elle n’a pas été appliquée à
-Supabase pendant cette étape.** La base distante reste à 0019. Appliquer la
-migration avant d’utiliser le backend mis à jour sur la base cible :
+**0020 a été constatée déjà présente sur Supabase lors du contrôle du
+16 novembre 2026 précédant l’application de 0021. La cible est maintenant
+vérifiée à 0021.** Le suivi initial de l’étape 10 n’établissait pas encore son
+déploiement. Pour une autre base à mettre à niveau :
 
 ```bash
 python -m alembic -c backend/alembic.ini upgrade head

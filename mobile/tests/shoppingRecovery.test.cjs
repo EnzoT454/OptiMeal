@@ -192,3 +192,28 @@ test('refus de session : garder la commande et ne pas proposer de l’ignorer', 
   await assert.rejects(h.recovery.skipRejectedRecoveryItem(A), /vérifier/);
   h.user = A; await h.recovery.resumeRecovery(A); assert.equal(h.lists.size, 1);
 });
+
+test('après retrait de l’ancien moteur : récupération complète sans effacer ni réinterpréter les anciennes clés', async () => {
+  const h = setup();
+  const legacy = {
+    'shoppingList.coches.2026-11-09': ['rice'],
+    'shoppingList.dejaLa.2026-11-09': ['rice'],
+    'shoppingList.choix.2026-11-09': { rice: 'historical-product' },
+    'shoppingList.magasin': 'maxi',
+    'optimeal.follows.v2': [{ product_id: 'followed-product', retailer: 'maxi', name: 'Suivi', since: '2026-11-09' }],
+  };
+  for (const [name, value] of Object.entries(legacy)) {
+    h.data.set(key(A, name), JSON.stringify(value));
+    h.data.set(name, JSON.stringify(value)); // common keys have no known owner
+  }
+  h.data.set('shoppingList.manuels', JSON.stringify([{ id: 'common', nom: 'Autre propriétaire' }]));
+  h.data.set(key(B, 'shoppingList.manuels'), JSON.stringify([{ id: 'bob', nom: 'Article de B' }]));
+  const before = new Map(h.data);
+  await h.begin(true); await h.recovery.resumeRecovery(A);
+  for (const [name, value] of before) assert.equal(h.data.get(name), value, name);
+  const recovered = [...h.lists.values()][0];
+  assert.equal(recovered.items.length, 2); assert.deepEqual(recovered.purchases, []); assert.deepEqual(recovered.choices, []);
+  assert.ok(h.calls.filter(c => c.request.body).every(c => !c.request.body.includes('historical-product')));
+  assert.equal((await h.preview()).items.length, 0);
+  for (const name of Object.keys(legacy)) assert.equal(h.reads.includes(key(A, name)), false, name);
+});

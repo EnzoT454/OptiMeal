@@ -5,158 +5,102 @@ const A = 'compte-a', B = 'compte-b';
 const oil = { id: 'offer-oil', product_id: 'maxi::oil', retailer: 'maxi', product_name: 'Huile' };
 const rice = { id: 'offer-rice', product_id: 'metro::rice', retailer: 'metro', product_name: 'Riz' };
 const tick = () => new Promise(resolve => setImmediate(resolve));
+const plain = value => JSON.parse(JSON.stringify(value));
 function deferred() {
   let resolve;
   const promise = new Promise(r => { resolve = r; });
   return { promise, resolve };
 }
 
-async function snapshot(s, f, account) {
-  return JSON.parse(JSON.stringify({
-    manuels: (await s.lireManuels(account)).map(x => x.nom),
-    coches: [...await s.lireCoches(account)], dejaLa: [...await s.lireDejaLa(account)],
-    toujours: [...await s.lireToujours(account)], choix: await s.lireChoix(account),
-    magasin: await s.lireMagasin(account), follows: (await f.getFollows(account)).map(x => x.product_id),
-  }));
-}
-const empty = { manuels: [], coches: [], dejaLa: [], toujours: [], choix: {}, magasin: 'auto', follows: [] };
-
-test('A → B → visiteur → A : isoler tous les articles, états, choix et suivis', async () => {
-  const r = runtime(), s = r.load('components/shoppingList.ts'), f = r.load('components/follows.ts');
-  await s.ajouterManuel(A, 'Article A');
-  await s.ecrireCoches(A, new Set(['riz'])); await s.ecrireDejaLa(A, new Set(['huile']));
-  await s.ecrireToujours(A, new Set(['sel'])); await s.ecrireChoix(A, { riz: 'produit-a' });
-  await s.ecrireMagasin(A, 'maxi'); await f.toggleFollow(A, oil);
-  const savedA = await snapshot(s, f, A);
-  assert.deepEqual(await snapshot(s, f, B), empty); assert.deepEqual(await snapshot(s, f, null), empty);
-  await s.ajouterManuel(B, 'Article B');
-  await s.ecrireCoches(B, new Set(['autre'])); await s.ecrireDejaLa(B, new Set(['sucre']));
-  await s.ecrireToujours(B, new Set(['poivre'])); await s.ecrireChoix(B, { riz: 'produit-b' });
-  await s.ecrireMagasin(B, 'metro'); await f.toggleFollow(B, rice);
-  assert.deepEqual(await snapshot(s, f, A), savedA);
-  assert.deepEqual((await snapshot(s, f, B)).manuels, ['Article B']);
-  assert.deepEqual((await snapshot(s, f, B)).follows, ['metro::rice']);
+test('A → B → visiteur → A : le stockage privé et les suivis restent isolés', async () => {
+  const r = runtime(), storage = r.load('services/accountStorage.ts'), follows = r.load('components/follows.ts');
+  const state = { snapshot: { id: 'list-a', revision: 4 }, queue: [{ key: 'command-a' }] };
+  await storage.writeAccountJSON(A, 'shopping-offline.list-a', state);
+  await follows.toggleFollow(A, oil);
+  const before = [...r.data];
+  for (const user of [B, null]) {
+    assert.equal(await storage.readAccountJSON(user, 'shopping-offline.list-a', null), null);
+    assert.equal((await follows.getFollows(user)).length, 0);
+  }
+  assert.deepEqual([...r.data], before);
+  await storage.writeAccountJSON(B, 'shopping-offline.list-a', { snapshot: { id: 'list-b' }, queue: [] });
+  await follows.toggleFollow(B, rice);
+  assert.deepEqual(plain(await storage.readAccountJSON(A, 'shopping-offline.list-a', null)), state);
+  assert.equal((await follows.getFollows(A))[0].product_id, oil.product_id);
 });
 
-test('les suppressions et bascules du compte B ne changent pas A', async () => {
-  const r = runtime(), s = r.load('components/shoppingList.ts'), f = r.load('components/follows.ts');
-  const [manual] = await s.ajouterManuel(A, 'Article A');
-  await f.toggleFollow(A, oil); await s.basculerCocheStockee(A, 'riz');
-  await s.retirerManuel(B, manual.id); await f.unfollow(B, oil.product_id);
-  await s.basculerCocheStockee(B, 'riz'); await s.basculerCocheStockee(B, 'riz');
-  assert.equal((await s.lireManuels(A))[0].nom, 'Article A');
-  assert.equal((await f.getFollows(A))[0].product_id, oil.product_id);
-  assert.deepEqual([...await s.lireCoches(A)], ['riz']); assert.deepEqual([...await s.lireCoches(B)], []);
+test('retirer un suivi de B ne modifie pas ceux de A', async () => {
+  const r = runtime(), follows = r.load('components/follows.ts');
+  await follows.toggleFollow(A, oil); await follows.unfollow(B, oil.product_id);
+  assert.equal((await follows.getFollows(A))[0].product_id, oil.product_id);
+  assert.equal((await follows.getFollows(B)).length, 0);
 });
 
-test('anciennes clés sans propriétaire : ni lecture, ni attribution au premier compte, ni effacement', async () => {
-  const r = runtime(), s = r.load('components/shoppingList.ts'), f = r.load('components/follows.ts');
-  for (const [key, value] of Object.entries({
+test('anciennes clés communes : ni lecture, ni attribution, ni effacement', async () => {
+  const r = runtime(), storage = r.load('services/accountStorage.ts'), follows = r.load('components/follows.ts');
+  const legacy = {
     'shoppingList.manuels': [{ id: 'old', nom: 'Ancien article' }],
     'shoppingList.coches.2026-11-09': ['riz'], 'shoppingList.dejaLa.2026-11-09': ['huile'],
     'shoppingList.gardeManger': ['sel'], 'shoppingList.choix.2026-11-09': { riz: 'old-product' },
     'shoppingList.magasin': 'maxi', 'optimeal.follows.v2': [{ offer_id: oil.id }],
-  })) r.data.set(key, JSON.stringify(value));
+  };
+  for (const [key, value] of Object.entries(legacy)) r.data.set(key, JSON.stringify(value));
   const before = [...r.data];
-  for (const account of [A, B, null]) assert.deepEqual(await snapshot(s, f, account), empty);
+  for (const user of [A, B, null]) {
+    for (const name of Object.keys(legacy)) assert.equal(await storage.readAccountJSON(user, name, null), null);
+    assert.equal((await follows.getFollows(user)).length, 0);
+  }
   assert.deepEqual([...r.data], before);
-  assert.ok(r.reads.every(key => !before.some(([oldKey]) => oldKey === key)));
+  assert.ok(r.reads.every(key => !Object.hasOwn(legacy, key)));
 });
 
-test('visiteur : aucune écriture personnelle ni nouvelle clé anonyme', async () => {
-  const r = runtime(), s = r.load('components/shoppingList.ts'), f = r.load('components/follows.ts');
+test('visiteur : aucune écriture privée ni nouvelle clé anonyme', async () => {
+  const r = runtime(), storage = r.load('services/accountStorage.ts'), follows = r.load('components/follows.ts');
   for (const action of [
-    () => s.ajouterManuel(null, 'Article'), () => s.ecrireCoches(null, new Set(['riz'])),
-    () => s.ecrireDejaLa(null, new Set(['riz'])), () => s.ecrireToujours(null, new Set(['sel'])),
-    () => s.ecrireChoix(null, {}), () => s.ecrireMagasin(null, 'maxi'),
-    () => f.toggleFollow(null, oil), () => f.unfollow(null, oil.id),
+    () => storage.writeAccountJSON(null, 'shopping-offline.list', {}),
+    () => storage.updateAccountJSON(null, 'shopping-recovery.v1', {}, value => value),
+    () => follows.toggleFollow(null, oil), () => follows.unfollow(null, oil.id),
   ]) await assert.rejects(action, /Connecte-toi/);
   assert.equal(r.writes.length, 0); assert.equal(r.data.size, 0);
 });
 
-test('redémarrage : chaque compte retrouve uniquement ses données', async () => {
+test('redémarrage : cache, file et suivis retrouvent leur compte propriétaire', async () => {
   const first = runtime();
-  await first.load('components/shoppingList.ts').ajouterManuel(A, 'Article A');
+  await first.load('services/accountStorage.ts').writeAccountJSON(A, 'shopping-offline.list-a', { snapshot: { id: 'list-a' }, queue: [{ key: 'pending' }] });
   await first.load('components/follows.ts').toggleFollow(B, rice);
-  const reopened = runtime({ data: first.data });
-  assert.equal((await reopened.load('components/shoppingList.ts').lireManuels(A))[0].nom, 'Article A');
-  assert.equal((await reopened.load('components/shoppingList.ts').lireManuels(B)).length, 0);
+  const reopened = runtime({ data: first.data }), storage = reopened.load('services/accountStorage.ts');
+  assert.equal((await storage.readAccountJSON(A, 'shopping-offline.list-a', null)).queue[0].key, 'pending');
+  assert.equal(await storage.readAccountJSON(B, 'shopping-offline.list-a', null), null);
   assert.equal((await reopened.load('components/follows.ts').getFollows(A)).length, 0);
   assert.equal((await reopened.load('components/follows.ts').getFollows(B))[0].product_id, rice.product_id);
 });
 
-test('écriture A en retard : reste dans A même après passage à B', async () => {
+test('écriture A tardive : rester dans A après le passage à B', async () => {
   const entered = deferred(), release = deferred();
-  const r = runtime({ beforeSet: async (_key, value) => {
-    if (value.includes('Article A')) { entered.resolve(); await release.promise; }
-  } });
-  const s = r.load('components/shoppingList.ts');
-  const pendingA = s.ajouterManuel(A, 'Article A'); await entered.promise;
-  r.account(B); await s.ajouterManuel(B, 'Article B');
-  release.resolve(); await pendingA;
-  assert.equal((await s.lireManuels(A))[0].nom, 'Article A');
-  assert.equal((await s.lireManuels(B))[0].nom, 'Article B');
+  const r = runtime({ beforeSet: async (key) => { if (key.includes(A)) { entered.resolve(); await release.promise; } } });
+  const storage = r.load('services/accountStorage.ts');
+  const pending = storage.writeAccountJSON(A, 'shopping-offline.list', { id: 'A' }); await entered.promise;
+  r.account(B); await storage.writeAccountJSON(B, 'shopping-offline.list', { id: 'B' });
+  release.resolve(); await pending;
+  assert.equal((await storage.readAccountJSON(A, 'shopping-offline.list', null)).id, 'A');
+  assert.equal((await storage.readAccountJSON(B, 'shopping-offline.list', null)).id, 'B');
 });
 
 test('modifications concurrentes : conserver les deux suivis de A et isoler B', async () => {
-  const r = runtime(), f = r.load('components/follows.ts');
-  await Promise.all([f.toggleFollow(A, oil), f.toggleFollow(A, rice), f.toggleFollow(B, oil)]);
-  assert.deepEqual(Array.from(await f.getFollows(A), x => x.product_id).sort(), ['maxi::oil', 'metro::rice']);
-  assert.deepEqual(Array.from(await f.getFollows(B), x => x.product_id), ['maxi::oil']);
+  const r = runtime(), follows = r.load('components/follows.ts');
+  await Promise.all([follows.toggleFollow(A, oil), follows.toggleFollow(A, rice), follows.toggleFollow(B, oil)]);
+  assert.deepEqual(Array.from(await follows.getFollows(A), x => x.product_id).sort(), ['maxi::oil', 'metro::rice']);
+  assert.deepEqual(Array.from(await follows.getFollows(B), x => x.product_id), ['maxi::oil']);
 });
 
-test('une erreur d’écriture ne bloque pas les opérations suivantes', async () => {
+test('une erreur de stockage ne bloque pas les commandes locales suivantes', async () => {
   let fail = true;
-  const r = runtime({ beforeSet: async () => { if (fail) { fail = false; throw new Error('Disk failure'); } } });
-  const s = r.load('components/shoppingList.ts');
-  await assert.rejects(() => s.ajouterManuel(A, 'Échec'), /Disk failure/);
-  await s.ajouterManuel(A, 'Réussi');
-  assert.deepEqual(Array.from(await s.lireManuels(A), x => x.nom), ['Réussi']);
+  const r = runtime({ beforeSet: () => { if (fail) { fail = false; throw new Error('Disk failure'); } } });
+  const storage = r.load('services/accountStorage.ts');
+  await assert.rejects(storage.writeAccountJSON(A, 'shopping-command.list', { key: 'failed' }), /Disk failure/);
+  await storage.writeAccountJSON(A, 'shopping-command.list', { key: 'saved' });
+  assert.equal((await storage.readAccountJSON(A, 'shopping-command.list', null)).key, 'saved');
 });
-
-test('coches et choix restent hebdomadaires à l’intérieur de chaque compte', async () => {
-  const r = runtime(), s = r.load('components/shoppingList.ts');
-  await s.ecrireCoches(A, new Set(['riz'])); await s.modifierChoix(A, 'riz', 'produit-a');
-  await s.ecrireToujours(A, new Set(['sel'])); r.week('2026-11-16');
-  assert.equal((await s.lireCoches(A)).size, 0); assert.equal(Object.keys(await s.lireChoix(A)).length, 0);
-  assert.deepEqual([...await s.lireToujours(A)], ['sel']); r.week('2026-11-09');
-  assert.deepEqual([...await s.lireCoches(A)], ['riz']); assert.equal((await s.lireChoix(A)).riz, 'produit-a');
-  assert.equal((await s.lireToujours(B)).size, 0);
-});
-
-test('hook liste : masquer A immédiatement et ignorer son chargement terminé après B', async () => {
-  const release = deferred(); let plans = 0;
-  const r = runtime({ plan: () => ++plans === 1 ? release.promise : Promise.resolve({ entries: [] }) });
-  const s = r.load('components/shoppingList.ts');
-  await s.ajouterManuel(A, 'Article A'); await s.ajouterManuel(B, 'Article B');
-  const h = r.hook('components/useShoppingList.ts', 'useListeAchats');
-  const oldA = h.render(A); h.flush();
-  assert.equal(h.render(B).lignes.length, 0); h.flush(); await tick();
-  assert.deepEqual(Array.from(h.render(B).lignes, x => x.nom), ['Article B']);
-  release.resolve({ entries: [] }); await tick();
-  assert.deepEqual(Array.from(h.render(B).lignes, x => x.nom), ['Article B']);
-  await oldA.ajouter('Ancienne action A'); assert.equal((await s.lireManuels(A)).length, 1);
-  const before = plans;
-  assert.equal(h.render(null).lignes.length, 0); h.flush(); await tick(); assert.equal(plans, before);
-  assert.deepEqual(Array.from((await h.settled(A)).lignes, x => x.nom), ['Article A']); h.unmount();
-});
-
-test('hook liste déjà affichée : tous les champs personnels sont vides avant les effets du compte B', async () => {
-  const r = runtime(), s = r.load('components/shoppingList.ts');
-  await s.ajouterManuel(A, 'Article A');
-  await s.ecrireCoches(A, new Set(['riz'])); await s.ecrireDejaLa(A, new Set(['huile']));
-  await s.ecrireToujours(A, new Set(['sel'])); await s.ecrireChoix(A, { riz: 'produit-a' });
-  await s.ecrireMagasin(A, 'metro');
-  const h = r.hook('components/useShoppingList.ts', 'useListeAchats');
-  const a = await h.settled(A);
-  assert.equal(a.lignes.length, 1); assert.equal(a.coches.size, 1); assert.equal(a.magasin, 'metro');
-  const b = h.render(B);
-  assert.equal(b.lignes.length, 0); assert.equal(b.contexte, null);
-  assert.equal(b.coches.size, 0); assert.equal(b.dejaLa.size, 0); assert.equal(b.toujours.size, 0);
-  assert.equal(Object.keys(b.choix).length, 0); assert.equal(b.magasinAuto, true);
-  h.flush(); await tick(); h.unmount();
-});
-
 test('suivis déjà affichés : changement de compte et déconnexion les masquent immédiatement', async () => {
   const r = runtime(), f = r.load('components/follows.ts'); await f.toggleFollow(A, oil);
   const h = r.hook('components/useFollows.ts', 'useFollows');
@@ -164,20 +108,6 @@ test('suivis déjà affichés : changement de compte et déconnexion les masquen
   assert.equal(h.render(B).follows.length, 0); h.flush(); await tick();
   assert.equal((await h.settled(A)).follows.length, 1);
   assert.equal(h.render(null).follows.length, 0); h.flush(); await tick(); h.unmount();
-});
-
-test('hook liste : une mutation terminée sous B ne réaffiche pas les articles A', async () => {
-  let armed = false; const entered = deferred(), release = deferred();
-  const r = runtime({ beforeSet: async (_key, value) => {
-    if (armed && value.includes('Ajout A')) { entered.resolve(); await release.promise; }
-  } });
-  const s = r.load('components/shoppingList.ts'); await s.ajouterManuel(B, 'Article B');
-  const h = r.hook('components/useShoppingList.ts', 'useListeAchats');
-  const a = await h.settled(A); armed = true;
-  const pending = a.ajouter('Ajout A'); await entered.promise; await h.settled(B);
-  release.resolve(); await pending; await tick();
-  assert.deepEqual(Array.from(h.render(B).lignes, x => x.nom), ['Article B']);
-  assert.deepEqual(Array.from((await h.settled(A)).lignes, x => x.nom), ['Ajout A']); h.unmount();
 });
 
 test('hook suivis : une lecture A tardive reste masquée, visiteur demande la connexion', async () => {

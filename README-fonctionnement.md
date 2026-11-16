@@ -4,7 +4,7 @@ Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du d
 
 Il décrit le code au **10 novembre 2026** et les confirmations sur téléphone disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
-**Listes — état au 16 novembre 2026 :** étapes 1 à 13 livrées dans le dépôt.
+**Listes — état au 16 novembre 2026 :** étapes 1 à 14 livrées dans le dépôt.
 L’onglet Liste sauvegarde les besoins privés, compare les achats attestés et
 permet les coches, les achats partiels, la possession et les compléments après
 modification du besoin. Une coche de produit conserve son estimation et le
@@ -14,7 +14,7 @@ sur appareils restent à effectuer. Accueil et Calendrier ouvrent les listes
 sauvegardées par identifiant. Voir [le parcours de courses](backend/docs/SHOPPING_COURSES.md).
 Les modèles, exclusions futures, copies indépendantes et historique des listes
 sont intégrés à [l’étape 10](backend/docs/SHOPPING_REUSE.md). La migration 0020
-est testée localement et reste à appliquer à Supabase. Une copie ne reprend ni
+est présente sur Supabase, désormais vérifié à 0021. Une copie ne reprend ni
 achats, ni possession, ni prix ; les anciennes révisions gardent leur contenu.
 L’[étape 11](backend/docs/SHOPPING_OFFLINE.md) ajoute le cache complet privé et
 une file persistante pour les coches/décoches, avec reprise idempotente et
@@ -29,8 +29,10 @@ les clés communes sans propriétaire ignorées et les anciens achats/prix non
 réinterprétés. L’[étape 13](backend/docs/SHOPPING_ACCESS.md) ajoute la liste épinglée
 sur Accueil et les listes de la période sélectionnée dans Calendrier. Cartes et
 détail partagent les mêmes agrégats serveur ; les repas ne modifient pas les
-listes déjà enregistrées. La migration 0021 est testée localement ; 0020 et 0021
-restent à appliquer sur Supabase. L’ancien code local reste à retirer à l’étape 14.
+listes déjà enregistrées. La migration 0021 a été appliquée et vérifiée sur Supabase le 16 novembre 2026,
+depuis 0020 déjà présente ; schéma, RLS et conservation des données contrôlés. L’[étape 14](backend/docs/SHOPPING_CLEANUP.md) retire l’ancien moteur local et ses
+composants sans effacer les données de récupération. La validation finale et les
+essais sur appareils restent à l’étape 15.
 Les tableaux datés plus anciens ci-dessous conservent leur contexte historique.
 
 ## 1. Les grandes parties de l’application
@@ -153,33 +155,30 @@ La connexion s’ouvre dans une fenêtre que l’on peut fermer avec « Continue
 
 ### Données personnelles conservées sur le téléphone
 
-La première liste d’achats mobile conserve localement les articles ajoutés,
-les coches, le garde-manger et les choix de produits. Les suivis de produits
-sont également locaux. Ces données sont désormais séparées par compte :
-changer de compte ou revenir au mode visiteur masque immédiatement les
-données du précédent utilisateur. Une réponse terminée après ce changement
-ne les réaffiche pas. Se reconnecter au même compte retrouve ses propres
-données sur ce téléphone, sans synchronisation entre appareils.
+Les listes et achats privés sont sauvegardés sur le serveur. Le téléphone
+conserve leur cache complet, les commandes en attente, le journal de récupération
+et les suivis dans l’espace de chaque compte. Changer de compte masque les
+données de la session précédente ; les réponses tardives ne les réaffichent pas.
+Les suivis restent locaux, tandis que les listes et l’épinglage sont partagés
+entre appareils par le serveur.
 
-Les anciennes données communes sans propriétaire sont conservées à part et
-ne sont pas réattribuées automatiquement. Le [guide mobile](mobile/README.md#données-locales-par-compte)
-décrit cette transition et les essais avec deux comptes. Les contrôles
-automatisés passent ; les essais de cette correction sur iOS et Android
-restent à effectuer.
+L’ancien moteur local a été retiré. Ses anciennes données restent conservées,
+avec [récupération volontaire](backend/docs/SHOPPING_RECOVERY.md) des ajouts privés
+et exclusions futures sur sélection explicite. Les clés communes sans propriétaire
+sont ignorées. Voir aussi [le stockage par compte](mobile/README.md#données-locales-par-compte).
 
 ### Erreurs de chargement et d’enregistrement de la liste d’achats
 
-Une panne pendant la lecture d’une recette bloque l’actualisation entière de
-la liste : les dernières données chargées restent affichées avec un message
-explicite. Seules les recettes introuvables (`404`) sont exclues, avec un
-avertissement « Liste partielle » et un nombre de repas concernés. Le montant
-accessible est alors présenté comme un sous-total et aucune confirmation de
-courses terminées n’est affichée.
+Une panne ne devient pas une liste vide réussie. L’aperçu calendrier signale les
+repas indisponibles avant la création ; une liste sauvegardée reste indépendante
+des repas sources. Les prix inconnus restent visibles et le montant partiel
+reste un sous-total, sans calcul local concurrent.
 
-Les erreurs locales d’enregistrement disposent d’une reprise distincte du
-chargement. Un ajout échoué conserve le texte saisi ; une lecture réussie ne
-vaut pas confirmation de sauvegarde. Le [guide mobile](mobile/README.md#liste-dachats--chargement-incomplet-et-erreurs-locales)
-détaille les comportements, les tests automatisés et les essais manuels.
+Une commande incertaine garde sa clé et son corps pour être reprise sans double
+écriture. Les coches hors connexion restent signalées en attente, les conflits
+incompatibles demandent une décision et les erreurs locales restent explicites.
+Voir le [guide hors connexion](backend/docs/SHOPPING_OFFLINE.md) et le
+[guide mobile](mobile/README.md#liste-dachats--chargement-incomplet-et-erreurs-locales).
 
 ### Identité commerciale des produits
 

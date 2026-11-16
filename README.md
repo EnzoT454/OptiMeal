@@ -37,7 +37,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 À développer ou à compléter :
 
 - Modes IA pour les recettes.
-- Gestion avancée du budget et retrait de l’ancien code local des listes.
+- Gestion avancée du budget et validation finale des parcours de listes sur appareils.
 - Historique stable des plans et des prix.
 - Estimations de prix et contribution par reçu dans l’application.
 - Collecte automatisée Metro et Super C.
@@ -432,6 +432,7 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Démarrer le mobile](mobile/README.md)
 - [Migrations et imports](backend/docs/MIGRATIONS.md)
 - [Calendrier des repas et limites actuelles](backend/docs/PLANNING.md)
+- [Retrait de l’ancien moteur local des listes](backend/docs/SHOPPING_CLEANUP.md)
 - [Accès unifiés Accueil, Calendrier et Liste](backend/docs/SHOPPING_ACCESS.md)
 - [Récupération des anciennes données locales](backend/docs/SHOPPING_RECOVERY.md)
 - [Courses hors connexion : cache et reprise des coches](backend/docs/SHOPPING_OFFLINE.md)

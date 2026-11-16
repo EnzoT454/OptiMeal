@@ -79,7 +79,6 @@ export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "
   }, [mois.getFullYear(), mois.getMonth()]));
 
   // ---- Repas | Épicerie ----
-  // (déclaré APRÈS l'état du calendrier : les tests repèrent les useState par leur ordre)
   const [vue, setVue] = useState<"repas" | "epicerie">("repas");
 
   // L'Accueil peut ouvrir directement l'Épicerie : navigate("Calendrier", { vue: "epicerie" })
@@ -207,7 +206,7 @@ export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "
     <RecipeScreen compact>
       <RecipeTitle>Calendrier</RecipeTitle>
 
-      {/* ---- [ Repas | Épicerie · 14 ] ---- */}
+      {/* ---- Repas et listes de la période sélectionnée ---- */}
       <View style={styles.selecteur} accessibilityRole="tablist">
         {(["repas", "epicerie"] as const).map((v) => {
           const choisi = vue === v;
@@ -349,8 +348,6 @@ const styles = StyleSheet.create({
   optionChoisie: { backgroundColor: "white", borderWidth: 1, borderColor: recipeColors.border },
   optionTexte: { fontFamily: "DMSans_500Medium", fontSize: 14, lineHeight: 19, color: recipeColors.muted },
   optionTexteChoisi: { fontFamily: "DMSans_700Bold", color: recipeColors.ink },
-  compteur: { minWidth: 20, height: 20, paddingHorizontal: 6, borderRadius: 10, alignItems: "center", justifyContent: "center", backgroundColor: recipeColors.border },
-  compteurTexte: { fontFamily: "DMSans_700Bold", fontSize: 11, lineHeight: 14, color: recipeColors.muted },
   // marginHorizontal: -20 annule la marge de RecipeScreen : la liste va d'un bord à l'autre du téléphone
   liste: { backgroundColor: "white", marginHorizontal: -20, paddingHorizontal: 16 },
   semaine: { flexDirection: "row", alignItems: "center", gap: 8 },

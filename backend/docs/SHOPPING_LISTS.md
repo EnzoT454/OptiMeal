@@ -2,9 +2,9 @@
 
 **Date : 16 novembre 2026.**
 
-**Statut : étapes 1 à 13 réalisées dans le dépôt — listes, courses, réutilisation, historique, coches hors connexion et récupération locale ; étapes 14 à 15 à réaliser.**
+**Statut : étapes 1 à 14 réalisées dans le dépôt — listes, courses, réutilisation, historique, coches hors connexion et récupération locale ; étape 15 à réaliser.**
 
-**Modèles, exclusions, copie et historique livrés dans le dépôt. Migrations 0020 et 0021 à appliquer sur Supabase, actuellement à 0019. Le cache et les coches hors connexion sont livrés dans le dépôt. La récupération volontaire des anciennes données privées est livrée. Accueil et Calendrier ouvrent les nouvelles listes par identifiant. Les essais sur appareils et les étapes 14–15 restent à réaliser.**
+**Modèles, exclusions, copie et historique livrés dans le dépôt. Supabase vérifié à 0021 le 16 novembre 2026 ; 0021 appliquée depuis 0020 déjà présente. Le cache et les coches hors connexion sont livrés dans le dépôt. La récupération volontaire des anciennes données privées est livrée. Accueil et Calendrier ouvrent les nouvelles listes par identifiant. L’ancien moteur local a été retiré sans effacer les données récupérables. Les essais sur appareils et l’étape 15 restent à réaliser.**
 
 Ce document est la référence de travail pour construire le nouvel onglet
 **Liste** d’OptiMeal. Il reprend les parcours demandés, les deux captures
@@ -142,10 +142,10 @@ métadonnées. Aucun numéro de migration futur n’est réservé par cet audit.
 | [Accueil](../../mobile/app/HomeScreen.tsx) | Instancie son propre `useListeAchats`, recharge au retour, affiche compteurs et montants, ajoute des articles ; ouvre Calendrier avec `vue=epicerie`. À raccorder à un identifiant de liste. |
 | [Calendrier](../../mobile/app/CalendarScreen.tsx) | Autre instance du même hook, sans transmettre son lundi sélectionné. Recharge après modification de ses repas et rend `ShoppingListView`. Ne pas retirer ce parcours avant l’étape de bascule. |
 | [Navigation](../../mobile/App.tsx) et [types](../../mobile/types/navigation.ts) | `Liste` pointe vers `ListScreen`, sans pile de listes ni paramètre de liste/période. L’accès Paramètres appartient déjà à la pile Accueil. |
-| [Vue Épicerie](../../mobile/components/ShoppingListView.tsx) | Affiche les sections, fiches, prix et coches du hook ; son badge, ses filtres et le sens de son total devront utiliser les futurs agrégats serveur. |
-| [Fiche d’article](../../mobile/components/ArticleSheet.tsx) | Reçoit une ancienne ligne avec ses offres et les actions du hook. Son identité est celle d’un ingrédient ou d’un ajout manuel, pas celle d’un article serveur. |
-| [Champ d’ajout](../../mobile/components/AddItemField.tsx) | Suggestions d’ingrédients, prix indicatifs et ajout libre ; pas de saisie de quantité ni recherche de produits complète. |
-| [Statuts et reprises](../../mobile/components/ShoppingListStatus.tsx) | Distingue erreur de lecture, erreur d’écriture et avertissement ; conserver cette distinction pendant la transition. |
+| Vue Épicerie (`ShoppingListView.tsx`, retiré à l’étape 14) | Affiche les sections, fiches, prix et coches du hook ; son badge, ses filtres et le sens de son total devront utiliser les futurs agrégats serveur. |
+| Fiche d’article (`ArticleSheet.tsx`, retiré à l’étape 14) | Reçoit une ancienne ligne avec ses offres et les actions du hook. Son identité est celle d’un ingrédient ou d’un ajout manuel, pas celle d’un article serveur. |
+| Champ d’ajout (`AddItemField.tsx`, retiré à l’étape 14) | Suggestions d’ingrédients, prix indicatifs et ajout libre ; pas de saisie de quantité ni recherche de produits complète. |
+| Statuts et reprises (`ShoppingListStatus.tsx`, retiré à l’étape 14) | Distingue erreur de lecture, erreur d’écriture et avertissement ; conserver cette distinction pendant la transition. |
 | Tests mobiles | `shoppingListFailures`, `shoppingListStatus`, `localAccountIsolation`, `productIdentity`, `planningAvailability` et `visitorAccess` couvrent les comportements à préserver ou à adapter explicitement. |
 
 Les deux écrans partagent du code et des clés de stockage, mais pas une instance
@@ -879,16 +879,39 @@ La migration **0021_shopping_list_pin** crée la préférence privée unique par
 avec clé étrangère composée, cascades et RLS. Les commandes sont idempotentes,
 les réponses anciennes ne remplacent pas la préférence courante et Accueil peut
 ouvrir le cache privé de la même liste hors connexion. La migration est testée
-localement ; **0020 et 0021 restent à appliquer à Supabase, inchangé à 0019**.
+localement, puis **0021 a été appliquée et vérifiée sur Supabase le 16 novembre
+2026 depuis 0020 déjà présente**. Révision après commit, conformité du schéma,
+RLS et conservation des empreintes/comptages des 25 tables préexistantes ainsi
+que du nombre de comptes Auth vérifiées ; aucun épinglage créé par la migration.
 
 Validation : **949 tests backend réussis, 14 OCR opt-in ignorés**, contrôles ciblés
 de concurrence et migration inverse, **277 tests mobiles**, TypeScript et
 46 exports de contrats, bundles iOS/Android et documentation stricte vérifiés.
 Puis **7 tests backend ciblés réussis**, dont la concurrence et la migration inverse.
 Voir [le guide des accès](SHOPPING_ACCESS.md).
-Essais sur appareils à consigner. L’ancien code local est conservé, sans
-consommateur dans ces écrans. Prochaine étape : **14 — retirer l’ancien calcul
-local après vérification de la bascule**.
+Essais sur appareils à consigner. Le retrait du code ancien est décrit ci-dessous.
+
+### 2.16. Retrait de l’ancien calcul local — étape 14
+
+**Étape réalisée dans le dépôt le 16 novembre 2026.** L’audit des imports confirme
+que les six fichiers de l’ancien moteur et de sa vue n’ont plus de consommateur
+actif. Ils sont retirés avec leurs tests exclusifs, les styles et faux hooks
+résiduels. Les protections de stockage par compte et les tests des suivis sont
+conservés et adaptés aux services encore utilisés. Aucun moteur concurrent de
+prix ou d’agrégation du calendrier ne subsiste dans le mobile.
+
+Aucune ancienne clé n’est effacée ou réécrite. La récupération volontaire reste
+fonctionnelle sans dépendre du code supprimé. Son test de conservation contrôle
+les valeurs privées, les clés communes, les états hebdomadaires, les suivis et
+les données d’un autre compte avant et après récupération. Les composants actuels
+de courses, les calculs serveur et les suivis de produits sont conservés.
+
+Validation : **252 tests mobiles réussis**, TypeScript, 46 exports de contrats,
+bundles Expo iOS/Android et documentation stricte vérifiés. Le nombre de tests diminue avec le retrait des tests du parcours retiré ;
+les tests des parcours actuels ne sont pas désactivés. Aucun contrat, migration
+ou dépendance supplémentaire ; Supabase reste à 0021. Voir
+[le bilan de retrait](SHOPPING_CLEANUP.md). Prochaine étape : **15 — vérifications
+finales, accessibilité et essais iOS/Android sur appareils**.
 
 ## 3. Vocabulaire et cycle de vie
 
@@ -1548,11 +1571,11 @@ reste ouverte tant que ses critères nécessaires ne sont pas vérifiés.
 | 7 — Réalisée le 16 novembre 2026 | Implémenter couverture en paquets, prix au poids, combinaisons et paliers | Critère satisfait ; calculs et oracles exhaustifs réussis, bornes documentées ; voir section 2.9 |
 | 8 — Réalisée le 16 novembre 2026 | Comparaison sans mutation puis application atomique | Critère satisfait ; scénarios, choix manuels, sous-totaux, fraîcheur et transactions vérifiés ; voir section 2.10 |
 | 9 — Réalisée dans le dépôt le 16 novembre 2026 | Détail, fiche d’article, possession et achats partiels | Couvertures, coches stables, estimations et compléments testés ; voir section 2.11. 0019 appliquée à Supabase ; essais appareils à compléter |
-| 10 — Réalisée dans le dépôt le 16 novembre 2026 | Exclusions, modèles, copie et historique par révision | Copies sans achat ni prix, droits, concurrence et historique immuable vérifiés ; voir section 2.12. 0020 et essais appareils à compléter sur la cible |
+| 10 — Réalisée dans le dépôt le 16 novembre 2026 | Exclusions, modèles, copie et historique par révision | Copies sans achat ni prix, droits, concurrence et historique immuable vérifiés ; voir section 2.12. 0020 présente sur Supabase ; essais appareils à compléter |
 | 11 — Réalisée dans le dépôt le 16 novembre 2026 | Cache complet et reprise des coches hors connexion | Réponse perdue, redémarrage, conflits et changement de compte couverts ; voir section 2.13. Essais appareils à compléter |
 | 12 — Réalisée dans le dépôt le 16 novembre 2026 | Récupération volontaire des anciennes données locales privées | Import avec aperçu, sélection et reprise idempotente ; anciennes clés communes ignorées ; voir section 2.14. Essais appareils à compléter |
-| 13 — Réalisée dans le dépôt le 16 novembre 2026 | Accueil épinglé et listes du Calendrier par période exacte | Même identifiant, période et agrégats serveur ; voir section 2.15. 0021 et essais appareils à compléter sur la cible |
-| 14 | Retirer l’ancien calcul local après bascule vérifiée | Aucun consommateur actif restant, aucun effacement des données avant reprise validée |
+| 13 — Réalisée dans le dépôt le 16 novembre 2026 | Accueil épinglé et listes du Calendrier par période exacte | Même identifiant, période et agrégats serveur ; voir section 2.15. 0021 appliquée et vérifiée sur Supabase ; essais appareils à compléter |
+| 14 — Réalisée dans le dépôt le 16 novembre 2026 | Retrait des six fichiers de l’ancien moteur après audit | Aucun consommateur actif restant ; récupération et conservation des données vérifiées ; voir section 2.16 |
 | 15 | Vérifier appareils, accessibilité, documentation et contrats exportés | Résultats iOS/Android consignés, limites indiquées, guide actualisé |
 
 Regrouper ces étapes en trois livraisons utilisables :
@@ -1585,8 +1608,8 @@ Les lots sont un ordre de livraison, pas une réduction du périmètre final.
 | `backend/cli/export_shared_contracts.py`, `backend/contracts/v1/` | Exporter les nouveaux schémas et exemples au fil des contrats livrés |
 | `mobile/App.tsx`, `mobile/types/navigation.ts` | Pile Liste et accès par identifiant/période |
 | `mobile/app/ListScreen.tsx` | Accueil des listes puis écrans dédiés de création, détail et comparaison selon besoin |
-| `mobile/components/ShoppingListView.tsx`, `ArticleSheet.tsx`, `AddItemField.tsx` | Adapter présentation et actions, sans conserver un moteur de prix concurrent |
-| `mobile/components/useShoppingList.ts`, `shoppingList.ts` | Transition vers API/cache ; conserver temporairement l’ancien parcours jusqu’à bascule |
+| Anciens `ShoppingListView.tsx`, `ArticleSheet.tsx`, `AddItemField.tsx` | Retirés à l’étape 14 ; remplacés par les composants de `mobile/components/lists/` |
+| Anciens `useShoppingList.ts` et `shoppingList.ts` | Retirés à l’étape 14 après bascule ; API/cache et récupération autonomes conservés |
 | `mobile/services/api.ts`, `accountStorage.ts` | Transport et erreurs structurées, cache et commandes isolées par compte |
 | `mobile/types/api.ts` | Types des listes, besoins, achats, agrégats, propositions et révisions |
 | `mobile/app/HomeScreen.tsx`, `CalendarScreen.tsx`, `ProfileScreen.tsx` | Liste épinglée, période explicite et gestion des exclusions |
@@ -1729,6 +1752,7 @@ cibles sont implémentées :
 - [x] Étape 11 : cache complet privé, file persistante de coches et résolution des conflits ; voir section 2.13.
 - [x] Étape 12 : récupération volontaire des anciens ajouts privés, exclusions facultatives et journal de reprise ; voir section 2.14.
 - [x] Étape 13 : Accueil épinglé, Calendrier par période exacte et navigation vers le détail identifié ; voir section 2.15.
+- [x] Étape 14 : ancien moteur et composants retirés, données et récupération préservées ; voir section 2.16.
 - [ ] Lot C : modèles, historique, résilience et bascule des accès.
 - [ ] Vérifications complètes des contrats et migrations applicables.
 - [ ] Essais iOS et Android consignés séparément.
@@ -1755,6 +1779,7 @@ ce guide prépare leur intégration sans les annoncer présents.
 - [Cache et courses hors connexion — étape 11](SHOPPING_OFFLINE.md).
 - [Récupération des anciennes données locales — étape 12](SHOPPING_RECOVERY.md).
 - [Accès unifiés Accueil, Calendrier et Liste — étape 13](SHOPPING_ACCESS.md).
+- [Retrait de l’ancien moteur local — étape 14](SHOPPING_CLEANUP.md).
 - [Migrations applicatives](MIGRATIONS.md).
 - [Modèle de catalogue et de prix proposé](DATABASE.md).
 - [Données locales et provenance](DATA.md).

@@ -144,16 +144,5 @@ const styles = StyleSheet.create({
   repasNom: { fontFamily: "DMSans_700Bold", fontSize: 15, lineHeight: 20, color: c.ink },
   repasMoment: { fontFamily: "DMSans_500Medium", fontSize: 12, lineHeight: 16 },
 
-  tuiles: { flexDirection: "row", gap: 8 },
-  tuile: { flex: 1, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 8, backgroundColor: c.background },
-  tuilePromo: { backgroundColor: "#fff1d6" },
-  tuileValeur: { fontFamily: "DMSans_700Bold", fontSize: 20, lineHeight: 26, color: c.ink },
-  tuileLabel: { fontFamily: "DMSans_500Medium", fontSize: 12, lineHeight: 16, color: c.muted },
-  textePromo: { color: "#7a4106" },
 
-  promoLigne: { flexDirection: "row", alignItems: "center", gap: 10 },
-  promoNom: { flex: 1, fontFamily: "DMSans_500Medium", fontSize: 15, lineHeight: 20, color: c.ink },
-  promoPrix: { fontFamily: "DMSans_700Bold", fontSize: 15, lineHeight: 20, color: "#b45309" },
-  etiquette: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, backgroundColor: "#fff1d6" },
-  etiquetteTexte: { fontFamily: "DMSans_500Medium", fontSize: 11, lineHeight: 15, color: "#7a4106" },
 });

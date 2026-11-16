@@ -1,8 +1,8 @@
 # Courses hors connexion — étape 11
 
 Étape livrée dans le dépôt le 16 novembre 2026. Aucune migration, modification
-HTTP ou dépendance supplémentaire. Supabase reste à 0019 selon la dernière
-vérification consignée ; la migration 0020 de l’étape 10 reste à appliquer.
+HTTP ou dépendance supplémentaire. Supabase est désormais vérifié à 0021 après application de cette migration
+depuis 0020 le 16 novembre 2026.
 
 ## Utilisation
 

@@ -15,7 +15,7 @@ calendrier, édition, révisions et commandes idempotentes. Voir les
 La migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis
 le 14 novembre 2026. Les comparaisons et le [parcours de courses](docs/SHOPPING_COURSES.md) sont livrés dans le dépôt. Les migrations jusqu’à 0019 sont appliquées et vérifiées sur Supabase. Les prix réels demandent des attestations commerciales. L’[étape 13](docs/SHOPPING_ACCESS.md) relie Accueil et Calendrier aux listes identifiées,
 avec épinglage privé et filtrage par période exacte. La tête du dépôt est 0021 ;
-0020 et 0021 restent à appliquer sur la cible avant utilisation.
+0021 a été appliquée et vérifiée sur Supabase le 16 novembre 2026, depuis 0020 déjà présente.
 
 La [normalisation des ventes](docs/SALE_NORMALIZATION.md), étape 6, sépare contenu
 net, base du prix, contraintes de vente et fiabilité des correspondances. La
@@ -28,7 +28,7 @@ Le [moteur d’achats](docs/PURCHASE_CALCULATION.md) et les [comparaisons](docs/
 Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
 privées par défaut et publication volontaire définitive. Une recette publique
 ne peut plus être rendue privée ni supprimée par son auteur.
-La tête du dépôt est `0020_shopping_reuse`, pour les [modèles, exclusions, copies et historique](docs/SHOPPING_REUSE.md). Elle est testée localement et reste à appliquer sur Supabase, actuellement à 0019.
+La migration `0020_shopping_reuse`, pour les [modèles, exclusions, copies et historique](docs/SHOPPING_REUSE.md), est présente sur Supabase. La tête du dépôt et la révision distante vérifiée sont `0021_shopping_list_pin`.
 Les autres routes utilisent les migrations jusqu’à `0016_offer_quantity_limits` :
 `0009_recipe_visibility` ajoute le partage et
 `0010_preserve_meals` conserve les repas après suppression de leur recette. Les

@@ -9,13 +9,16 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 La tête du dépôt est **0021_shopping_list_pin**. Elle ajoute une liste épinglée
 privée par compte, une référence composée empêchant l’épinglage d’une liste
-étrangère, RLS et cascades. La migration est testée sur PostgreSQL local jetable ;
-**0020 et 0021 restent à appliquer à Supabase, actuellement à 0019**. Voir
+étrangère, RLS et cascades. Après validation sur PostgreSQL local jetable, **0021 a été appliquée et vérifiée
+sur Supabase le 16 novembre 2026, depuis 0020 déjà présente**. Révision confirmée
+sur une nouvelle connexion après commit, schéma conforme et RLS vérifiée.
+Les empreintes et comptages des 25 tables préexistantes ainsi que le nombre
+de comptes Auth sont inchangés. Voir
 [les accès Accueil et Calendrier](SHOPPING_ACCESS.md).
 
 La migration **0020_shopping_reuse** ajoute les modèles privés, exclusions,
-commandes idempotentes et origine des copies. Elle reste également à appliquer
-sur la cible. Voir [le guide de réutilisation](SHOPPING_REUSE.md).
+commandes idempotentes et origine des copies. Sa présence sur Supabase a été
+constatée avant l’application de 0021. Voir [le guide de réutilisation](SHOPPING_REUSE.md).
 
 La migration précédente est **0019_shopping_courses**, qui ajoute les achats produits
 privés avec instantanés et couvertures. Après tests locaux, elle a été

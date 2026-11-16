@@ -1,13 +1,21 @@
 # Mobile OptiMeal
 
+L’[étape 14](../backend/docs/SHOPPING_CLEANUP.md) retire les six fichiers de
+l’ancien moteur local et ses composants après audit des consommateurs. Accueil,
+Calendrier et Liste utilisent les accès identifiés de l’étape 13. Aucune ancienne
+donnée n’est effacée : la récupération volontaire et son journal sont conservés.
+Les suivis et les prix d’affichage de Promos restent fonctionnels. Validation :
+252 tests mobiles, TypeScript et 46 exports de contrats ; essais appareils à
+consigner à l’étape 15.
+
 Les [accès unifiés](../backend/docs/SHOPPING_ACCESS.md) de l’étape 13 relient
 Accueil, Calendrier et Liste au même détail par identifiant. Épingler une liste
 depuis ses options l’affiche sur Accueil ; Calendrier affiche les listes de la
 semaine sélectionnée et transmet ses dates au formulaire de création. Les cartes
 et le détail utilisent les mêmes agrégats serveur. Le cache de la liste épinglée
-reste accessible hors connexion. La migration 0021 est testée localement ; 0020
-et 0021 restent à appliquer sur Supabase. Validation : 277 tests mobiles et
-TypeScript ; essais sur appareils à consigner. L’ancien code reste à retirer.
+reste accessible hors connexion. La migration 0021 est appliquée et vérifiée sur Supabase depuis le 16 novembre
+2026, à partir de 0020 déjà présente. Validation : 277 tests mobiles et
+TypeScript ; essais sur appareils à consigner. L’ancien code a été retiré à l’étape 14.
 Les descriptions plus anciennes de l’Épicerie locale ci-dessous sont historiques.
 
 La [récupération des anciennes données](../backend/docs/SHOPPING_RECOVERY.md)
@@ -33,7 +41,7 @@ iOS/Android sur appareils à consigner.
 Les [modèles et l’historique](../backend/docs/SHOPPING_REUSE.md) de l’étape 10
 sont intégrés à Liste ; les exclusions futures sont gérées depuis les fiches
 et Paramètres. Copier repart sans achats, possession ou prix. La migration
-0020 reste à appliquer à Supabase ; essais sur appareils à compléter.
+0020 est présente sur Supabase, désormais vérifié à 0021 ; essais sur appareils à compléter.
 
 Le [parcours de courses](../backend/docs/SHOPPING_COURSES.md) de l’onglet Liste
 est livré dans le dépôt : fiches défilantes, coches de produits, achats partiels,
@@ -745,125 +753,76 @@ et [React Navigation](https://reactnavigation.org/docs/getting-started/).
 
 ## Liste d’achats : chargement incomplet et erreurs locales
 
-Le chargement publie la liste seulement après la réussite de toutes les lectures :
-planning, recettes, catalogue, offres et données personnelles locales. Une panne
-réseau, une erreur serveur, une erreur d’authentification ou une réponse de
-recette invalide interrompt ce chargement. La dernière liste chargée dans cet
-écran est conservée avec un avertissement ; elle peut différer du calendrier
-actuel. Il ne s’agit pas d’un cache persistant utilisable après redémarrage.
-Sans chargement préalable réussi, l’écran affiche une erreur plutôt qu’une liste
-vide présentée comme complète. « Réessayer le chargement » relance ces lectures.
+Les listes sont sauvegardées par FastAPI. Leur création depuis le calendrier
+passe par un aperçu explicite qui signale les repas indisponibles ; modifier le
+calendrier ne modifie pas les besoins déjà enregistrés. Une panne de lecture
+reste une erreur, jamais une liste vide inventée.
 
-Seul un HTTP `404` de recette autorise son exclusion. Chaque repas concerné,
-y compris un repas dont la recette supprimée a laissé une référence nulle, est
-compté dans « Liste partielle ». Les notes libres et les restes ne sont pas
-comptés. Les ingrédients accessibles restent consultables, mais le montant est
-nommé « Sous-total des repas accessibles ». L’écran n’annonce pas « Bonne
-épicerie » ou « Ta liste de la semaine est vide » lorsque des repas sont exclus.
-L’Accueil présente également cet avertissement.
+Le détail conserve un cache complet par compte et une file persistante d’états
+cibles d’achat. Les coches locales sont signalées en attente ; les compteurs et
+montants restent ceux confirmés par le serveur. Après réponse perdue, la reprise
+réutilise exactement la même commande. Un conflit incompatible demande une
+décision explicite. Une lecture réussie ne confirme pas une écriture incertaine.
+Voir [le parcours hors connexion](../backend/docs/SHOPPING_OFFLINE.md).
 
-Une écriture locale échouée conserve l’état affiché avant la modification et
-signale « Modification non enregistrée ». Le champ d’ajout attend la confirmation
-avant d’effacer la saisie. « Réessayer l’enregistrement » relance la dernière
-modification échouée ; recharger les données ou réussir une autre modification
-ne masque pas cet échec. Les reprises de coches fixent l’état demandé, sans
-inverser une deuxième fois une écriture qui aurait réussi avant de signaler une
-erreur. La reprise appartient au compte d’origine et devient inutilisable après
-un changement de compte.
+Les formulaires et erreurs restent visibles après refus. Les commandes et caches
+appartiennent au compte d’origine ; un changement de compte masque immédiatement
+les anciennes données. Le [guide de récupération](../backend/docs/SHOPPING_RECOVERY.md)
+décrit la reprise volontaire des anciens ajouts privés, sans effacement des sources.
 
-Les tests `shoppingListFailures.test.cjs` et `shoppingListStatus.test.cjs`
-couvrent ces scénarios avec services TypeScript réels, stockage et réseau
-simulés. Pour une vérification manuelle sur appareil :
-
-1. Planifier deux recettes contenant des ingrédients distincts et ouvrir l’Épicerie.
-2. Couper le réseau et actualiser : vérifier le message, les anciennes lignes
-   conservées et le libellé « Dernier montant chargé ».
-3. Rétablir le réseau et réessayer le chargement : vérifier la liste actualisée.
-4. Supprimer une recette planifiée, puis recharger : vérifier « Liste partielle »,
-   le nombre de repas exclus et l’absence de message de courses terminées.
-5. Avec un stockage simulant un rejet de `setItem`, ajouter un article, cocher une
-   ligne et modifier le garde-manger : vérifier les erreurs et l’état inchangé.
-   Rétablir le stockage et réessayer l’enregistrement ; vérifier la persistance
-   après rechargement et la conservation de la saisie tant que l’ajout échoue.
-6. Changer de compte après une écriture échouée : vérifier qu’aucune reprise
-   de l’ancien compte n’est proposée ou exécutée pour le nouveau.
+Tests actuels : `shoppingListCommands.test.cjs`, `shoppingOffline.test.cjs`,
+`offlineCoursesHook.test.cjs`, `shoppingCourses.test.cjs`,
+`shoppingRecovery.test.cjs` et `shoppingAccess.test.cjs`. Les anciens tests de
+chargement/calcul local et de sa vue ont été retirés avec ce parcours à l’étape 14.
 
 ## Identité des produits suivis et choisis
 
-Les suivis et les choix manuels enregistrent `Offer.product_id`, la clé
-commerciale déjà fournie par l’API : enseigne, magasin et référence marchand.
-Ils n’enregistrent plus l’empreinte `Offer.id`, qui peut changer avec le prix
-ou la date du relevé. Les cloches, la liste Suivis, le détail du produit et le
-compteur de promotions comparent cette clé stable. Un produit absent du
-catalogue garde son suivi ; il réapparaît si la même référence revient.
+Les suivis utilisent `Offer.product_id`, l’identité stable enseigne, magasin et
+référence marchand. Une mise à jour du prix ou de la date peut changer `Offer.id`
+sans casser le suivi. Les cloches, Suivis, le détail et le compteur comparent cette
+identité ; une référence temporairement absente reste conservée.
 
-Dans l’Épicerie, toucher un produit conserve ce choix, même s’il est actuellement
-le moins cher. « Choisir automatiquement le moins cher » efface la préférence.
-Si le produit choisi est absent, la référence reste enregistrée, un avertissement
-invite à vérifier le choix et le produit calculé par défaut est affiché en attendant.
-Les choix restent séparés par compte et par semaine.
+Les anciens suivis par empreinte sont réassociés seulement par correspondance
+exacte avec une offre connue. Les conversions et changements de cloche partagent
+la file d’écritures du compte, avec conservation des noms, dates et références
+introuvables. Ces dernières restent des anciens suivis à réassocier ; aucun
+rapprochement par nom ou prix n’est tenté.
 
-Les données existantes sont converties lors du chargement du catalogue, dans
-les mêmes clés privées du compte. Une ancienne empreinte est convertie seulement
-si elle correspond exactement à une offre encore connue. Les conversions et
-les actions sur les cloches passent par la même file d’écritures ; elles ne
-remplacent pas une modification concurrente. Les doublons identifiés sont réunis.
-Les noms et dates de suivi sont conservés.
+Dans les nouvelles listes, les choix de produits sont privés à une liste
+identifiée. Les commandes de comparaison conservent ces choix ou demandent un
+retour explicite au mode automatique. Un produit absent reste signalé, sans
+remplacement silencieux. Les anciennes préférences hebdomadaires ne sont pas
+converties en choix actuels.
 
-Une empreinte déjà périmée ne permet pas de retrouver avec certitude sa référence
-marchand. Le suivi est conservé et affiché comme « Ancien suivi à réassocier » ;
-l’utilisateur peut retrouver le produit dans Promos, le suivre à nouveau puis
-retirer l’ancien suivi. Aucun rapprochement par nom ou prix n’est tenté. Un ancien
-choix introuvable reste conservé avec un avertissement dans l’Épicerie : choisir
-à nouveau le produit ou activer le choix automatique permet de le remplacer.
-Les anciennes clés communes sans propriétaire restent ignorées.
-
-Tests : `productIdentity.test.cjs` et `backend/tests/test_product_identity.py`.
-Pour tester sur appareil : suivre un produit et en choisir un dans l’Épicerie,
-actualiser ses prix et sa date dans le catalogue, puis recharger Promos, Suivis
-et l’Épicerie. Vérifier les cloches, le compteur, le choix conservé et le nouveau
-prix. Redémarrer l’application et vérifier à nouveau. Tester aussi deux références
-de même nom, deux magasins, un produit retiré puis réintroduit, les anciennes
-données convertibles et non convertibles, et un changement de compte.
+Tests : `productIdentity.test.cjs`, `listComparison.test.cjs`,
+`shoppingCourses.test.cjs` et `backend/tests/test_product_identity.py`.
+Les essais manuels de retrait/réapparition d’une référence, de prix modifié et
+de changement de compte restent à consigner sur les deux plateformes.
 
 ## Données locales par compte
 
-Les articles ajoutés à la liste d’achats, les coches, les ingrédients déjà
-disponibles, le garde-manger, les choix de produits, le magasin choisi et les
-produits suivis sont enregistrés sur le téléphone pour le compte connecté.
-Chaque compte possède ses propres clés AsyncStorage, préfixées par son
-identifiant Supabase. Les coches, « J’en ai déjà » et choix de produits restent
-également séparés par semaine.
+Les listes et achats sont sauvegardés côté serveur et isolés par propriétaire.
+Sur le téléphone, `services/accountStorage.ts` sépare cache complet, commandes,
+récupération, préférence épinglée et suivis par identifiant Supabase. Les écritures
+d’une même clé sont ordonnées, même entre écrans. Le cache et les résultats
+asynchrones d’un ancien compte ne remplacent pas ceux du compte courant.
 
-`services/accountStorage.ts` reçoit explicitement le compte propriétaire et
-ordonne les modifications d’une même clé. `useShoppingList` et `useFollows`
-masquent les anciennes données dès le changement de compte et ignorent les
-résultats asynchrones de la session précédente. Une écriture déjà commencée
-reste attachée à son compte d’origine. Les suivis passent par ce même contrôle
-dans Promos, Suivis et le détail d’un produit.
+Sans compte, aucune donnée privée n’est chargée ou écrite. Une déconnexion masque
+les données locales ; une reconnexion au même compte retrouve son cache et ses
+commandes. Après suppression distante confirmée, la purge bloque les écritures
+tardives et retire l’espace de ce compte. Les listes et la préférence épinglée
+sont partagées entre appareils par le serveur ; les suivis restent locaux.
 
-Sans compte, aucune donnée personnelle locale n’est lue ou enregistrée.
-Toucher une cloche propose la connexion. Une reconnexion au même compte
-retrouve ses données sur ce téléphone ; cette correction n’ajoute pas de
-synchronisation entre appareils.
+Les anciennes clés `shoppingList.*` sont conservées. Seuls les anciens ajouts
+manuels et « J’en ai toujours » privés sont proposés dans la récupération
+volontaire. Les clés communes sans propriétaire ne sont ni lues ni attribuées au
+premier compte connecté. Le retrait de l’ancien moteur ne déclenche aucune purge.
 
-Les anciennes clés communes, sans identifiant de propriétaire, sont conservées
-mais ignorées. Elles ne sont pas attribuées au premier compte qui se connecte :
-leur propriétaire ne peut pas être établi. Les anciens articles et suivis
-peuvent donc ne plus apparaître après la mise à jour ; aucune migration
-automatique ne les transmet à un autre utilisateur.
-
-Les tests `localAccountIsolation.test.cjs`, exécutés par `npm test`, couvrent
-deux comptes, le visiteur, une reconnexion, les anciennes clés, les erreurs de
-stockage, les écritures concurrentes et les réponses tardives. Les essais
-suivants restent à reproduire sur iOS et Android :
-
-1. Sous A, ajouter un article, cocher une ligne, choisir un produit et suivre une offre.
-2. Se déconnecter : vérifier que les suivis de A ne sont plus visibles.
-3. Sous B, vérifier l’absence des données de A, puis enregistrer des données différentes.
-4. Revenir sous A : retrouver ses données sans celles de B.
-5. Fermer puis relancer l’application et vérifier la même séparation.
-6. Sans compte, toucher une cloche et annuler la connexion : aucun suivi ne doit être créé.
+Tests : `localAccountIsolation.test.cjs`, `accountPurge.test.cjs`,
+`shoppingRecovery.test.cjs`, `shoppingOffline.test.cjs` et les tests des accès.
+Essais appareils : créer et cocher sous A, passer en visiteur puis sous B,
+revenir sous A, redémarrer, vérifier les reprises et confirmer qu’une récupération
+n’efface aucune ancienne donnée. Les résultats iOS/Android restent à consigner.
 
 ## Prix promotionnels avec limite de quantité
 

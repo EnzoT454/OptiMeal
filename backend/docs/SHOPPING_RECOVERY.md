@@ -2,8 +2,8 @@
 
 Étape livrée dans le dépôt le 16 novembre 2026. Le parcours est accessible par
 **Liste → Récupérer mes anciennes données**. Aucun nouveau contrat HTTP,
-aucune migration et aucune dépendance. La base distante n’a pas été modifiée ;
-0020 reste à appliquer selon le dernier état consigné.
+aucune migration et aucune dépendance. Cette étape ne modifie pas le schéma. Supabase est désormais vérifié à 0021
+après application de cette migration depuis 0020 le 16 novembre 2026.
 
 ## Parcours utilisateur
 
@@ -59,9 +59,10 @@ de source entre aperçu et confirmation exige un nouvel aperçu. Une récupérat
 commencée conserve au contraire la sélection déjà confirmée, même si l’ancien
 parcours évolue ensuite.
 
-Accueil et Calendrier utilisent toujours l’ancien moteur. Leur unification et
-son retrait restent aux étapes 13–14. La récupération ne synchronise pas en
-continu les anciennes données et les nouveaux brouillons.
+Accueil et Calendrier ouvrent les listes identifiées depuis l’étape 13.
+L’ancien moteur a été retiré à l’étape 14, sans effacer les anciennes clés.
+La récupération reste autonome et ne synchronise pas en continu les anciennes
+données et les nouveaux brouillons.
 
 ## Reprise et absence de doublons
 
