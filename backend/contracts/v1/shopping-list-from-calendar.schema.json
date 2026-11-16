@@ -39,6 +39,11 @@
       "default": false,
       "title": "Accept Partial",
       "type": "boolean"
+    },
+    "accept_empty": {
+      "default": false,
+      "title": "Accept Empty",
+      "type": "boolean"
     }
   },
   "required": [

@@ -11,6 +11,7 @@ export type PromoStackParams = {
 export type HomeStackParams = {
   Home: undefined;
   Paramètres: undefined;
+  Exclusions: undefined;
 };
 
 export type MainTabParams = {
@@ -23,5 +24,8 @@ export type MainTabParams = {
 };
 
 export type ListStackParams = {
-  Lists: undefined; CreateList: undefined; ShoppingDetail: { id: string };
+  Lists: undefined; CreateList: undefined; ShoppingDetail: { id: string; revision?: number };
+  Templates: undefined; TemplateDetail: { id: string };
+  ReuseList: { id: string; revision: number; mode: 'copy' | 'template' };
+  Revisions: { id: string };
 };

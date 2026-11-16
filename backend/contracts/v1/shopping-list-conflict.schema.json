@@ -32,7 +32,8 @@
             "COMPARISON_STALE",
             "COMPARISON_PARTIAL",
             "CHOICE_CONFLICT",
-            "COURSES_REMAINING"
+            "COURSES_REMAINING",
+            "TEMPLATE_REVISION_CONFLICT"
           ],
           "title": "Code",
           "type": "string"

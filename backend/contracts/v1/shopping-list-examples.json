@@ -1,6 +1,157 @@
 {
   "status": "lot_a_implemented",
   "examples": {
+    "shopping-list-duplicate-write": {
+      "source_revision": 4,
+      "name": "Copie indépendante",
+      "purchase_date": "2026-11-20"
+    },
+    "shopping-template-create": {
+      "source_list_id": "00000000-0000-4000-8000-000000000001",
+      "source_revision": 4,
+      "name": "Besoins réutilisables",
+      "icon": "basket"
+    },
+    "shopping-template-update": {
+      "expected_revision": 1,
+      "name": "Nouveau nom"
+    },
+    "shopping-template-instantiate": {
+      "expected_template_revision": 1,
+      "name": "Prochaines courses",
+      "purchase_date": "2026-11-20"
+    },
+    "shopping-template-detail": {
+      "item": {
+        "id": "00000000-0000-4000-8000-000000000020",
+        "name": "Besoins réutilisables",
+        "icon": "basket",
+        "revision": 1,
+        "items": [
+          {
+            "id": "00000000-0000-4000-8000-000000000002",
+            "ingredient_id": "ing_riz_basmati_blanc",
+            "name": "Riz",
+            "category": "Épicerie",
+            "required": [
+              {
+                "amount": "2000",
+                "unit": "g"
+              }
+            ],
+            "preferred_product_id": null
+          }
+        ],
+        "deleted": false,
+        "created_at": "2026-11-14T18:00:00Z",
+        "updated_at": "2026-11-14T18:05:00Z"
+      },
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-templates-page": {
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000020",
+          "name": "Besoins réutilisables",
+          "icon": "basket",
+          "revision": 1,
+          "items": [
+            {
+              "id": "00000000-0000-4000-8000-000000000002",
+              "ingredient_id": "ing_riz_basmati_blanc",
+              "name": "Riz",
+              "category": "Épicerie",
+              "required": [
+                {
+                  "amount": "2000",
+                  "unit": "g"
+                }
+              ],
+              "preferred_product_id": null
+            }
+          ],
+          "deleted": false,
+          "created_at": "2026-11-14T18:00:00Z",
+          "updated_at": "2026-11-14T18:05:00Z"
+        }
+      ],
+      "total": 1,
+      "limit": 20,
+      "offset": 0,
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-exclusion-write": {
+      "excluded": true
+    },
+    "shopping-exclusion-detail": {
+      "item": {
+        "ingredient_id": "ing_riz_basmati_blanc",
+        "name": "Riz",
+        "excluded": true,
+        "updated_at": "2026-11-14T18:05:00Z"
+      },
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-exclusions-page": {
+      "items": [
+        {
+          "ingredient_id": "ing_riz_basmati_blanc",
+          "name": "Riz",
+          "excluded": true,
+          "updated_at": "2026-11-14T18:05:00Z"
+        }
+      ],
+      "total": 1,
+      "limit": 20,
+      "offset": 0,
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-revisions-page": {
+      "items": [
+        {
+          "list_id": "00000000-0000-4000-8000-000000000001",
+          "revision": 4,
+          "recorded_at": "2026-11-14T18:05:00Z",
+          "name": "Courses de démonstration",
+          "status": "active",
+          "item_count": 2
+        }
+      ],
+      "total": 1,
+      "limit": 20,
+      "offset": 0,
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
     "shopping-list-product-purchase-write": {
       "expected_revision": 4,
       "comparison_id": "00000000-0000-4000-8000-000000000010",
@@ -397,7 +548,8 @@
         "created_at": "2026-11-14T18:00:00Z",
         "updated_at": "2026-11-14T18:05:00Z",
         "choices": [],
-        "assignment": null
+        "assignment": null,
+        "origin": null
       },
       "meta": {
         "contract_version": "1.0",
@@ -542,7 +694,8 @@
           "created_at": "2026-11-14T18:00:00Z",
           "updated_at": "2026-11-14T18:05:00Z",
           "choices": [],
-          "assignment": null
+          "assignment": null,
+          "origin": null
         }
       ],
       "total": 1,
@@ -695,7 +848,8 @@
           "created_at": "2026-11-14T18:00:00Z",
           "updated_at": "2026-11-14T18:05:00Z",
           "choices": [],
-          "assignment": null
+          "assignment": null,
+          "origin": null
         }
       },
       "meta": {

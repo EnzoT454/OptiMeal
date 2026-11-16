@@ -4,7 +4,7 @@ Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du d
 
 Il décrit le code au **10 novembre 2026** et les confirmations sur téléphone disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
-**Listes — état au 16 novembre 2026 :** étapes 1 à 9 livrées dans le dépôt.
+**Listes — état au 16 novembre 2026 :** étapes 1 à 10 livrées dans le dépôt.
 L’onglet Liste sauvegarde les besoins privés, compare les achats attestés et
 permet les coches, les achats partiels, la possession et les compléments après
 modification du besoin. Une coche de produit conserve son estimation et le
@@ -12,6 +12,10 @@ budget prévu ; elle diminue le reste connu à acheter. La migration 0019 est
 appliquée et vérifiée sur Supabase depuis le 16 novembre 2026 ; les essais des nouveaux parcours
 sur appareils restent à effectuer. Accueil et Calendrier gardent provisoirement
 l’ancienne liste locale. Voir [le parcours de courses](backend/docs/SHOPPING_COURSES.md).
+Les modèles, exclusions futures, copies indépendantes et historique des listes
+sont intégrés à [l’étape 10](backend/docs/SHOPPING_REUSE.md). La migration 0020
+est testée localement et reste à appliquer à Supabase. Une copie ne reprend ni
+achats, ni possession, ni prix ; les anciennes révisions gardent leur contenu.
 Les tableaux datés plus anciens ci-dessous conservent leur contexte historique.
 
 ## 1. Les grandes parties de l’application

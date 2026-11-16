@@ -15,13 +15,14 @@ export default function CreateListScreen({ navigation }: NativeStackScreenProps<
   const [period, setPeriod] = useState(currentWeek);
   const [purchaseDate, setPurchaseDate] = useState(localDate);
   const [preview, setPreview] = useState<ShoppingCalendarPreviewRead | null>(null);
+  const [empty, setEmpty] = useState(false);
   const [partial, setPartial] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const previewLock = useRef(false);
   const command = useListCommand('create');
   const locked = command.locked || loading;
-  function resetPreview() { setPreview(null); setPartial(false); setError(''); }
+  function resetPreview() { setPreview(null); setPartial(false); setEmpty(false); setError(''); }
   async function generate() {
     if (previewLock.current || locked) return;
     if (period.end_date < period.start_date) { setError('La fin de la période doit suivre son début.'); return; }
@@ -34,7 +35,7 @@ export default function CreateListScreen({ navigation }: NativeStackScreenProps<
     if (!command.pending && !name.trim()) { setError('Donne un nom à ta liste.'); return; }
     const body = mode === 'manual' ? { name: name.trim(), purchase_date: purchaseDate } : {
       name: name.trim(), ...period, purchase_date: purchaseDate,
-      preview_fingerprint: preview?.preview_fingerprint, accept_partial: partial,
+      preview_fingerprint: preview?.preview_fingerprint, accept_partial: partial, accept_empty: empty,
     };
     const result = await command.run(command.pending ?? listCommand(
       mode === 'manual' ? listsPath : `${listsPath}/from-calendar`, body));
@@ -78,13 +79,17 @@ export default function CreateListScreen({ navigation }: NativeStackScreenProps<
             <Text style={s.sectionTitle}>{item.name}</Text><Text style={s.body}>{quantityLabel(item.required)}</Text>
             <Text style={s.note}>{item.contributions.map(c => `${c.recipe_name} · ${c.meal_date ? dateLabel(c.meal_date) : ''} · ${c.servings} portions`).join('\n')}</Text>
           </View>)}
+          {preview.excluded_ingredient_ids.length > 0 && <Text style={s.note}>{preview.excluded_ingredient_ids.length} ingrédient(s) non suggéré(s) selon tes préférences. Tu peux les rétablir dans Paramètres.</Text>}
+          {!preview.items.length && preview.excluded_ingredient_ids.length > 0 && <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: empty, disabled: locked }} disabled={locked} onPress={() => setEmpty(!empty)} style={s.notice}>
+            <Text style={s.body}>{empty ? '☑' : '☐'} Je confirme la création d’une liste vide après exclusions.</Text>
+          </Pressable>}
           {!!preview.excluded_meals.length && <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: partial, disabled: locked }}
             disabled={locked} onPress={() => setPartial(!partial)} style={[s.notice, { minHeight: 52 }]}>
             <Text style={s.body}>{partial ? '☑' : '☐'} Je confirme la création sans les {preview.excluded_meals.length} repas indisponibles.</Text>
           </Pressable>}
         </>}
       </>}
-      <RecipeButton title="Créer le brouillon" disabled={locked || !name.trim() || (mode === 'calendar' && (!preview || (!!preview.excluded_meals.length && !partial)))} onPress={() => void create()} />
+      <RecipeButton title="Créer le brouillon" disabled={locked || !name.trim() || (mode === 'calendar' && (!preview || (!!preview.excluded_meals.length && !partial) || (!preview.items.length && !!preview.excluded_ingredient_ids.length && !empty)))} onPress={() => void create()} />
     </>}
     {(loading || command.busy) && <ActivityIndicator accessibilityLabel="Enregistrement en cours" color={recipeColors.green} />}
     <Message text={error || command.error} />

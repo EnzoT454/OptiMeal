@@ -27,7 +27,7 @@ Le [moteur d’achats](docs/PURCHASE_CALCULATION.md) et les [comparaisons](docs/
 Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
 privées par défaut et publication volontaire définitive. Une recette publique
 ne peut plus être rendue privée ni supprimée par son auteur.
-La tête du dépôt est `0019_shopping_courses` ; cette migration est appliquée et vérifiée sur Supabase depuis le 16 novembre 2026.
+La tête du dépôt est `0020_shopping_reuse`, pour les [modèles, exclusions, copies et historique](docs/SHOPPING_REUSE.md). Elle est testée localement et reste à appliquer sur Supabase, actuellement à 0019.
 Les autres routes utilisent les migrations jusqu’à `0016_offer_quantity_limits` :
 `0009_recipe_visibility` ajoute le partage et
 `0010_preserve_meals` conserve les repas après suppression de leur recette. Les

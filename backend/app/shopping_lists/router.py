@@ -35,8 +35,8 @@ def detail(item):
 @router.get('', response_model=Page[ShoppingListRead])
 def lists(user: User, db: DB, status: Literal['draft', 'active', 'completed', 'archived'] | None = None,
           limit: Annotated[int, Query(ge=1, le=100)] = 20,
-          offset: Annotated[int, Query(ge=0)] = 0):
-    items, total = service.list_lists(db, user, status=status, limit=limit, offset=offset)
+          offset: Annotated[int, Query(ge=0)] = 0, collection: Literal['current', 'history'] | None = None):
+    items, total = service.list_lists(db, user, status=status, limit=limit, offset=offset, collection=collection)
     return dict(items=items, total=total, limit=limit, offset=offset, meta=detail(None)['meta'])
 
 
@@ -133,3 +133,19 @@ def product_purchase(list_id: UUID, body: ShoppingProductPurchaseWrite, user: Us
 def complete(list_id: UUID, body: ShoppingCompleteWrite, user: User, db: DB, key: Key):
     from .courses import complete as complete_courses
     return detail(complete_courses(db, list_id, user, body, key))
+
+
+from . import reuse
+from .reuse_schemas import ShoppingDuplicateWrite, ShoppingRevisionSummary
+
+
+@router.post('/{list_id}/duplicate', response_model=Detail[ShoppingListRead], status_code=201)
+def duplicate(list_id: UUID, body: ShoppingDuplicateWrite, user: User, db: DB, key: Key):
+    return detail(reuse.duplicate(db, list_id, user, body, key))
+
+
+@router.get('/{list_id}/revisions', response_model=Page[ShoppingRevisionSummary])
+def revisions(list_id: UUID, user: User, db: DB, limit: Annotated[int, Query(ge=1, le=100)] = 20,
+              offset: Annotated[int, Query(ge=0)] = 0):
+    items, total = reuse.list_revisions(db, list_id, user, limit, offset)
+    return dict(items=items, total=total, limit=limit, offset=offset, meta=detail(None)['meta'])

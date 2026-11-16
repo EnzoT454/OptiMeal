@@ -36,6 +36,7 @@ class ShoppingList(Base):
     start_date: Mapped[date | None] = mapped_column(Date)
     end_date: Mapped[date | None] = mapped_column(Date)
     purchase_date: Mapped[date] = mapped_column(Date, nullable=False)
+    origin: Mapped[dict | None] = mapped_column(JSONB)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text('now()'))
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text('now()'))
 
@@ -202,3 +203,44 @@ class ShoppingListProductPurchase(Base):
     list_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('shopping_list.id', ondelete='CASCADE'), nullable=False)
     comparison_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
     data: Mapped[dict] = mapped_column(JSONB, nullable=False)
+
+
+class ShoppingListTemplate(Base):
+    __tablename__ = 'shopping_list_template'
+    __table_args__ = (
+        CheckConstraint('length(btrim(name)) BETWEEN 1 AND 120', name='name_valid'),
+        CheckConstraint("icon IN ('basket', 'cart', 'leaf', 'restaurant', 'home')", name='icon_supported'),
+        CheckConstraint('revision > 0', name='revision_positive'),
+        CheckConstraint("jsonb_typeof(items) = 'array'", name='items_array'),
+        CheckConstraint('updated_at >= created_at', name='timestamps_ordered'),
+        Index('ix_shopping_list_template_owner_updated', 'owner_id', 'updated_at'),
+    )
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
+    owner_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), nullable=False)
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    icon: Mapped[str] = mapped_column(Text, nullable=False)
+    revision: Mapped[int] = mapped_column(Integer, nullable=False)
+    items: Mapped[list] = mapped_column(JSONB, nullable=False)
+    deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text('false'))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class ShoppingListExclusion(Base):
+    __tablename__ = 'shopping_list_exclusion'
+    owner_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), primary_key=True)
+    ingredient_id: Mapped[str] = mapped_column(Text, ForeignKey('ingredient.id', ondelete='CASCADE'), primary_key=True)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
+class ShoppingResourceCommand(Base):
+    __tablename__ = 'shopping_resource_command'
+    __table_args__ = (
+        CheckConstraint("signature ~ '^[a-f0-9]{64}$'", name='signature_valid'),
+        CheckConstraint("jsonb_typeof(result) = 'object'", name='result_object'),
+    )
+    owner_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), primary_key=True)
+    idempotency_key: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
+    signature: Mapped[str] = mapped_column(Text, nullable=False)
+    result: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text('now()'))

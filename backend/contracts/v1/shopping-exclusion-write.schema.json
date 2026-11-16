@@ -1,0 +1,14 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "excluded": {
+      "title": "Excluded",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "excluded"
+  ],
+  "title": "ShoppingExclusionWrite",
+  "type": "object"
+}

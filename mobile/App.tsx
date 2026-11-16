@@ -31,6 +31,11 @@ import HomeScreen from './app/HomeScreen';
 import ListScreen from './app/ListScreen';
 import CreateListScreen from './app/CreateListScreen';
 import ShoppingListDetailScreen from './app/ShoppingListDetailScreen';
+import ShoppingTemplatesScreen from './app/ShoppingTemplatesScreen';
+import ShoppingTemplateDetailScreen from './app/ShoppingTemplateDetailScreen';
+import ShoppingReuseScreen from './app/ShoppingReuseScreen';
+import ShoppingRevisionsScreen from './app/ShoppingRevisionsScreen';
+import ShoppingExclusionsScreen from './app/ShoppingExclusionsScreen';
 import { HomeStackParams, ListStackParams, MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
 
 const Tabs = createBottomTabNavigator<MainTabParams>();
@@ -50,12 +55,17 @@ function HomeNavigator() {
   return <Home.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
     <Home.Screen name="Home" component={HomeScreen} options={{ headerShown: false, title: 'Accueil' }} />
     <Home.Screen name="Paramètres" component={ProfileScreen} options={{ headerBackTitle: 'Accueil' }} />
+    <Home.Screen name="Exclusions" component={ShoppingExclusionsScreen} options={{ title: 'Ingrédients non suggérés', headerBackTitle: 'Paramètres' }} />
   </Home.Navigator>;
 }
 function ListNavigator() {
   return <Lists.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
     <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Liste' }} />
     <Lists.Screen name="CreateList" component={CreateListScreen} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="Templates" component={ShoppingTemplatesScreen} options={{ title: 'Mes modèles', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="TemplateDetail" component={ShoppingTemplateDetailScreen} options={{ title: 'Mon modèle', headerBackTitle: 'Modèles' }} />
+    <Lists.Screen name="ReuseList" component={ShoppingReuseScreen} options={{ title: 'Réutiliser', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="Revisions" component={ShoppingRevisionsScreen} options={{ title: 'Révisions', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="ShoppingDetail" component={ShoppingListDetailScreen} options={{ title: 'Ma liste', headerBackTitle: 'Liste' }} />
   </Lists.Navigator>;
 }

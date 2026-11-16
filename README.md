@@ -25,7 +25,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 - Recettes personnelles, recherche, filtres, partage public/privé et favoris.
 - Évaluations des recettes et classement par notes.
 - Calendrier hebdomadaire des repas.
-- Listes privées, édition, comparaison des achats vérifiables et parcours de courses avec achats partiels.
+- Listes privées, comparaison, courses avec achats partiels, modèles, exclusions et historique par révision.
 - Promotions et consultation des circulaires.
 - Catalogue commun des produits et ingrédients.
 - Collecte Maxi et lecture locale des reçus.
@@ -34,7 +34,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 À développer ou à compléter :
 
 - Modes IA pour les recettes.
-- Gestion avancée du budget, modèles et parcours hors connexion.
+- Gestion avancée du budget et parcours hors connexion.
 - Historique stable des plans et des prix.
 - Estimations de prix et contribution par reçu dans l’application.
 - Collecte automatisée Metro et Super C.

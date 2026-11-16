@@ -24,6 +24,7 @@ function harness(file, initialProps = {}) {
       if (name === 'react-native-safe-area-context') return { SafeAreaView: 'SafeAreaView' };
       if (name.endsWith('/recipes')) return { RecipeButton: 'RecipeButton', RecipeField: 'RecipeField', recipeStyles: {}, recipeColors: {} };
       if (name.endsWith('/RecipeUnitPicker')) return { default: 'RecipeUnitPicker', __esModule: true };
+      if (name.endsWith('/ListExclusionAction')) return { default: 'ListExclusionAction', __esModule: true };
       if (name.endsWith('/ListComparison')) return { default: 'ListComparison', __esModule: true };
       if (name.endsWith('/shoppingLists')) return {
         listsPath: '/api/v1/shopping-lists', quantityLabel: values => values.map(q => `${q.amount} ${q.unit}`).join(' + '), dateLabel: x => x,

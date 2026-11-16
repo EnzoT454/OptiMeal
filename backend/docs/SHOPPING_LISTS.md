@@ -2,9 +2,9 @@
 
 **Date : 16 novembre 2026.**
 
-**Statut : étapes 1 à 9 réalisées dans le dépôt — listes, comparaisons et parcours de courses ; étapes 10 à 15 à réaliser.**
+**Statut : étapes 1 à 10 réalisées dans le dépôt — listes, courses, réutilisation et historique ; étapes 11 à 15 à réaliser.**
 
-**Parcours de courses livré et testé ; migration 0019 appliquée et vérifiée sur Supabase le 16 novembre 2026. Les essais sur appareils et le lot C restent à réaliser.**
+**Modèles, exclusions, copie et historique livrés dans le dépôt. Migration 0020 à appliquer sur Supabase, actuellement à 0019. Les essais sur appareils et les étapes 11–15 restent à réaliser.**
 
 Ce document est la référence de travail pour construire le nouvel onglet
 **Liste** d’OptiMeal. Il reprend les parcours demandés, les deux captures
@@ -794,6 +794,35 @@ Les essais iOS/Android sur appareils restent à compléter ; lint
 mobile non configuré. Prochaine étape : **10 — exclusions, modèles, copie et
 historique**. Le cache complet et la bascule Accueil/Calendrier restent à venir.
 
+### 2.12. Modèles, exclusions, copie et historique — étape 10
+
+**Étape réalisée dans le dépôt le 16 novembre 2026.** L’onglet Liste sépare En
+cours et Historique, avec des révisions consultables sans mutation. Copier une
+révision ou utiliser un modèle crée un brouillon indépendant, de nouveaux UUID
+et aucun achat, possession, ancien prix ou comparaison. Les besoins corrigés
+restent exacts ; les choix manuels ne sont repris que sur demande explicite.
+Les modèles ont leur nom, icône et révision ; leur modification et suppression
+ne changent aucune instance existante.
+
+« Ne plus suggérer » concerne uniquement les futures générations calendrier.
+La fiche conserve l’article courant ; Paramètres permet d’annuler la préférence.
+Les exclusions entrent dans l’empreinte de l’aperçu. Une liste vide après
+exclusions demande confirmation. Articles manuels et modèles choisis restent
+ajoutables sans filtrage implicite.
+
+La migration **0020_shopping_reuse** ajoute modèles, exclusions, commandes
+privées et origine des copies. Elle est testée sur PostgreSQL local jetable ;
+**Supabase reste à 0019** pendant cette étape. Les anciennes révisions sont
+conservées, sans relire les prix ou recettes courants. Voir
+[le guide de réutilisation](SHOPPING_REUSE.md) pour les routes, reprises et limites.
+Validation : **943 tests backend réussis, 14 OCR opt-in ignorés**, puis
+**65 contrôles ciblés réussis** avec un test de concurrence supplémentaire ;
+**215 tests mobiles**, TypeScript, **44 exports**, bundles Expo iOS/Android/web
+et documentation stricte valides.
+Prochaine étape : **11 — cache et reprise des coches hors connexion**. Le lot C
+reste incomplet jusqu’à la résilience, la reprise des anciennes données et la
+bascule vérifiée des accès. Les essais sur appareils restent à effectuer.
+
 ## 3. Vocabulaire et cycle de vie
 
 ### 3.1. Liste, modèle et historique
@@ -1452,7 +1481,7 @@ reste ouverte tant que ses critères nécessaires ne sont pas vérifiés.
 | 7 — Réalisée le 16 novembre 2026 | Implémenter couverture en paquets, prix au poids, combinaisons et paliers | Critère satisfait ; calculs et oracles exhaustifs réussis, bornes documentées ; voir section 2.9 |
 | 8 — Réalisée le 16 novembre 2026 | Comparaison sans mutation puis application atomique | Critère satisfait ; scénarios, choix manuels, sous-totaux, fraîcheur et transactions vérifiés ; voir section 2.10 |
 | 9 — Réalisée dans le dépôt le 16 novembre 2026 | Détail, fiche d’article, possession et achats partiels | Couvertures, coches stables, estimations et compléments testés ; voir section 2.11. 0019 appliquée à Supabase ; essais appareils à compléter |
-| 10 | Ajouter exclusions, modèles, copie et historique par révision | Copie indépendante, zéro achat repris, original lisible après changements de prix/recette |
+| 10 — Réalisée dans le dépôt le 16 novembre 2026 | Exclusions, modèles, copie et historique par révision | Copies sans achat ni prix, droits, concurrence et historique immuable vérifiés ; voir section 2.12. 0020 et essais appareils à compléter sur la cible |
 | 11 | Ajouter cache complet et reprise des coches hors connexion | Réponse perdue, redémarrage, conflits et changement de compte couverts |
 | 12 | Proposer récupération des anciennes données locales privées | Import volontaire et idempotent, aucune attribution des anciennes clés communes |
 | 13 | Raccorder Accueil et Calendrier aux listes identifiées | Même liste, même période et mêmes montants depuis tous les accès |
@@ -1629,6 +1658,7 @@ cibles sont implémentées :
 - [x] Lot A : persistance, période et création fiables ; essais sur appareils à compléter.
 - [x] Étape 9 : parcours de courses, achats produits, possession, compléments et clôture ; voir section 2.11.
 - [x] Lot B : achats, comparaison et courses livrés dans le dépôt ; migration 0019 appliquée à Supabase ; essais appareils à compléter.
+- [x] Étape 10 : modèles, exclusions, copies privées et historique par révision ; voir section 2.12.
 - [ ] Lot C : modèles, historique, résilience et bascule des accès.
 - [ ] Vérifications complètes des contrats et migrations applicables.
 - [ ] Essais iOS et Android consignés séparément.
@@ -1651,6 +1681,7 @@ ce guide prépare leur intégration sans les annoncer présents.
 - [Calcul des achats — moteur de l'étape 7](PURCHASE_CALCULATION.md).
 - [Comparaisons et application — étape 8](SHOPPING_COMPARISONS.md).
 - [Parcours de courses — étape 9](SHOPPING_COURSES.md).
+- [Réutilisation et historique — étape 10](SHOPPING_REUSE.md).
 - [Migrations applicatives](MIGRATIONS.md).
 - [Modèle de catalogue et de prix proposé](DATABASE.md).
 - [Données locales et provenance](DATA.md).

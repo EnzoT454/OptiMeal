@@ -1165,6 +1165,17 @@
             }
           ],
           "default": null
+        },
+        "origin": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ShoppingOrigin"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -1246,6 +1257,36 @@
         "purchased"
       ],
       "title": "ShoppingManualPurchaseRead",
+      "type": "object"
+    },
+    "ShoppingOrigin": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "list",
+            "template"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "revision"
+      ],
+      "title": "ShoppingOrigin",
       "type": "object"
     },
     "ShoppingPeriod": {

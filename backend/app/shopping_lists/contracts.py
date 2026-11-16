@@ -8,7 +8,23 @@ from .schemas import (
     ShoppingRevisionRead, ShoppingComparisonRead, ShoppingApplyComparison, ShoppingChoiceWrite, ShoppingProductPurchaseWrite, ShoppingCompleteWrite,
 )
 
+from .reuse_schemas import (
+    ShoppingDuplicateWrite, ShoppingExclusionRead, ShoppingExclusionWrite,
+    ShoppingRevisionSummary, ShoppingTemplateCreate, ShoppingTemplateRead,
+    ShoppingTemplateUpdate, ShoppingTemplateInstantiate,
+)
+
 MODELS = {
+    'shopping-list-duplicate-write': ShoppingDuplicateWrite,
+    'shopping-template-create': ShoppingTemplateCreate,
+    'shopping-template-update': ShoppingTemplateUpdate,
+    'shopping-template-instantiate': ShoppingTemplateInstantiate,
+    'shopping-template-detail': Detail[ShoppingTemplateRead],
+    'shopping-templates-page': Page[ShoppingTemplateRead],
+    'shopping-exclusion-write': ShoppingExclusionWrite,
+    'shopping-exclusion-detail': Detail[ShoppingExclusionRead],
+    'shopping-exclusions-page': Page[ShoppingExclusionRead],
+    'shopping-revisions-page': Page[ShoppingRevisionSummary],
     'shopping-list-product-purchase-write': ShoppingProductPurchaseWrite,
     'shopping-list-complete-write': ShoppingCompleteWrite,
     'shopping-list-comparison-detail': Detail[ShoppingComparisonRead],
@@ -88,7 +104,25 @@ def examples() -> dict:
                   'scenarios': [{'scenario': name, 'needs': [compared_need], 'known_amount': '0',
                                  'complete': False, 'store_totals': [], 'store_count': 0}
                                 for name in ('maxi', 'metro', 'superc', 'cheapest')]}
+    template = {'id': '00000000-0000-4000-8000-000000000020', 'name': 'Besoins réutilisables',
+                'icon': 'basket', 'revision': 1, 'items': [{
+                    'id': rice_id, 'ingredient_id': rice['ingredient_id'], 'name': 'Riz', 'category': 'Épicerie',
+                    'required': [{'amount': '2000', 'unit': 'g'}], 'preferred_product_id': None}],
+                'created_at': resource['created_at'], 'updated_at': resource['updated_at']}
+    exclusion = {'ingredient_id': rice['ingredient_id'], 'name': 'Riz', 'excluded': True,
+                 'updated_at': resource['updated_at']}
     values = {
+        'shopping-list-duplicate-write': {'source_revision': 4, 'name': 'Copie indépendante', 'purchase_date': '2026-11-20'},
+        'shopping-template-create': {'source_list_id': list_id, 'source_revision': 4, 'name': template['name'], 'icon': 'basket'},
+        'shopping-template-update': {'expected_revision': 1, 'name': 'Nouveau nom'},
+        'shopping-template-instantiate': {'expected_template_revision': 1, 'name': 'Prochaines courses', 'purchase_date': '2026-11-20'},
+        'shopping-template-detail': {'item': template, 'meta': meta},
+        'shopping-templates-page': {'items': [template], 'total': 1, 'limit': 20, 'offset': 0, 'meta': meta},
+        'shopping-exclusion-write': {'excluded': True},
+        'shopping-exclusion-detail': {'item': exclusion, 'meta': meta},
+        'shopping-exclusions-page': {'items': [exclusion], 'total': 1, 'limit': 20, 'offset': 0, 'meta': meta},
+        'shopping-revisions-page': {'items': [{'list_id': list_id, 'revision': 4, 'recorded_at': resource['updated_at'],
+            'name': resource['name'], 'status': resource['status'], 'item_count': 2}], 'total': 1, 'limit': 20, 'offset': 0, 'meta': meta},
         'shopping-list-product-purchase-write': {'expected_revision': 4, 'comparison_id': comparison['id'], 'item_id': rice_id, 'product_id': 'maxi:demo:riz', 'purchased_units': 1},
         'shopping-list-complete-write': {'expected_revision': 4, 'accept_remaining': True},
         'shopping-list-comparison-detail': {'item': comparison, 'meta': meta},
@@ -128,6 +162,8 @@ def examples() -> dict:
     }
     responses = {'shopping-list-comparison-detail', 'shopping-list-calendar-preview-detail', 'shopping-list-detail',
                  'shopping-lists-page', 'shopping-list-revision-detail', 'shopping-list-conflict'}
+    responses.update({'shopping-template-detail', 'shopping-templates-page', 'shopping-exclusion-detail',
+                      'shopping-exclusions-page', 'shopping-revisions-page'})
     # Un PATCH doit conserver la différence entre omission et null explicite.
     return {name: MODELS[name].model_validate(value).model_dump(
         mode='json', exclude_unset=name not in responses) for name, value in values.items()}

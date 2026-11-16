@@ -215,4 +215,4 @@ def test_query_count_does_not_grow_with_the_number_of_meals(database):
     finally:
         event.remove(database, 'before_cursor_execute', record)
     assert result.included_meal_count == 10 and result.items[0].required[0].amount == '1000'
-    assert len(statements) == 2
+    assert len(statements) == 3  # préférences + repas + ingrédients, sans boucle par repas

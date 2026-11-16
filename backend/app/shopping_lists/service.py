@@ -61,10 +61,14 @@ def get_list(db: Session, list_id: UUID, user: CurrentUser) -> ShoppingListRead:
 
 
 def list_lists(db: Session, user: CurrentUser, *, status: str | None = None,
-               limit: int = 20, offset: int = 0) -> tuple[list[ShoppingListRead], int]:
+               limit: int = 20, offset: int = 0, collection: str | None = None) -> tuple[list[ShoppingListRead], int]:
     if not 1 <= limit <= 100 or offset < 0 or status not in (None, 'draft', 'active', 'completed', 'archived'):
         raise ShoppingListError(422, 'VALIDATION_ERROR', 'Filtres ou pagination invalides.')
+    if collection not in (None, 'current', 'history') or (collection is not None and status is not None):
+        raise ShoppingListError(422, 'VALIDATION_ERROR', 'Choisis une collection ou un statut.')
     conditions = [ShoppingList.owner_id == user.id]
+    if collection is not None:
+        conditions.append(ShoppingList.status.in_(('draft', 'active') if collection == 'current' else ('completed', 'archived')))
     if status is not None:
         conditions.append(ShoppingList.status == status)
     query = select(ShoppingListRevision.snapshot).join(ShoppingList, and_(
@@ -151,7 +155,7 @@ def _snapshot(db: Session, list_id: UUID, user: CurrentUser, source_warnings=Non
     # Les avertissements de couverture, eux, sont recalculés à chaque commande.
     previous = db.scalar(select(ShoppingListRevision.snapshot).where(
         ShoppingListRevision.list_id == list_id).order_by(ShoppingListRevision.revision.desc()).limit(1))
-    durable_codes = {'CALENDAR_PARTIAL', 'CALENDAR_EXCLUSIONS', 'QUANTITY_ROUNDED'}
+    durable_codes = {'CALENDAR_PARTIAL', 'CALENDAR_EXCLUSIONS', 'QUANTITY_ROUNDED', 'COPY_PRODUCT_CHOICES', 'COPY_INGREDIENT_UNAVAILABLE'}
     warnings = ([w for w in source_warnings if w.code in durable_codes]
                 if source_warnings is not None else [
                     w for w in (previous or {}).get('warnings', []) if w['code'] in durable_codes])
@@ -186,7 +190,7 @@ def _snapshot(db: Session, list_id: UUID, user: CurrentUser, source_warnings=Non
         bought_amount = _amount(sum((Fraction(Decimal(p.estimated_amount)) for p in product_purchases), Fraction()))
         totals = totals.model_copy(update={'budget_known_amount': bought_amount})
     resource = ShoppingListRead(
-        **{k: row[k] for k in ('id', 'name', 'source', 'status', 'revision', 'purchase_date')},
+        **{k: row[k] for k in ('id', 'name', 'source', 'status', 'revision', 'purchase_date', 'origin')},
         created_at=row['created_at'].astimezone(timezone.utc), updated_at=row['updated_at'].astimezone(timezone.utc),
         period={'start_date': row['start_date'], 'end_date': row['end_date']} if row['source'] == 'calendar' else None,
         items=result, purchases=purchases_read, product_purchases=product_purchases, totals=totals, warnings=warnings)
@@ -213,6 +217,10 @@ def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,
         profile = db.execute(select(Profile.deletion_pending).where(Profile.id == user.id).with_for_update()).one()
         if profile.deletion_pending:
             raise ShoppingListError(409, 'ACCOUNT_DELETION_PENDING', 'Suppression du compte en cours.')
+        from .models import ShoppingResourceCommand
+        if db.scalar(select(ShoppingResourceCommand.idempotency_key).where(
+                ShoppingResourceCommand.owner_id == user.id, ShoppingResourceCommand.idempotency_key == key)):
+            raise ShoppingListError(409, 'IDEMPOTENCY_KEY_REUSED', 'Cette clé appartient déjà à une autre commande.')
         current = _owned_list(db, list_id, user, lock=True) if list_id else None
         previous = db.execute(select(ShoppingListCommand.__table__).where(
             ShoppingListCommand.owner_id == user.id, ShoppingListCommand.idempotency_key == key)).mappings().one_or_none()

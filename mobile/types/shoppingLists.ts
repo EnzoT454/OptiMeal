@@ -26,7 +26,7 @@ export interface ShoppingManualPurchaseWrite extends ShoppingCommand {
 }
 export interface ShoppingCalendarPreviewWrite extends ShoppingPeriod { purchase_date?: string | null; }
 export interface ShoppingFromCalendar extends ShoppingCalendarPreviewWrite {
-  name: string; preview_fingerprint: string; accept_partial?: boolean;
+  name: string; preview_fingerprint: string; accept_partial?: boolean; accept_empty?: boolean;
 }
 export interface ShoppingContributionRead {
   id: string; source: 'manual' | 'calendar'; original_quantity: ShoppingQuantity | null;
@@ -58,6 +58,7 @@ export interface ShoppingListRead {
   revision: number; period: ShoppingPeriod | null; purchase_date: string;
   items: ShoppingItemRead[]; purchases: ShoppingManualPurchaseRead[]; product_purchases?: ShoppingProductPurchaseRead[]; totals: ShoppingTotals;
   warnings: ShoppingWarning[]; created_at: string; updated_at: string;
+  origin?: { kind: 'list' | 'template'; id: string; revision: number } | null;
   choices: ShoppingProductChoice[]; assignment: ShoppingAppliedComparison | null;
 }
 export interface ShoppingRevisionRead {
@@ -73,7 +74,7 @@ export interface ShoppingCalendarPreviewRead {
 }
 export interface ShoppingConflictResponse {
   error: {
-    code: 'LIST_REVISION_CONFLICT' | 'IDEMPOTENCY_KEY_REUSED' | 'CALENDAR_PREVIEW_STALE' | 'ACCOUNT_DELETION_PENDING' | 'LIST_STATE_CONFLICT' | 'COMPARISON_STALE' | 'COMPARISON_PARTIAL' | 'CHOICE_CONFLICT' | 'COURSES_REMAINING';
+    code: 'LIST_REVISION_CONFLICT' | 'IDEMPOTENCY_KEY_REUSED' | 'CALENDAR_PREVIEW_STALE' | 'ACCOUNT_DELETION_PENDING' | 'LIST_STATE_CONFLICT' | 'COMPARISON_STALE' | 'COMPARISON_PARTIAL' | 'CHOICE_CONFLICT' | 'COURSES_REMAINING' | 'TEMPLATE_REVISION_CONFLICT';
     message: string; details: { field: string; message: string }[];
     list_id: string | null; expected_revision: number | null; current_revision: number | null;
   };
@@ -90,6 +91,16 @@ export interface ShoppingPage<T> {
 
 // Utilisé par le contrôle des exemples exportés ; aucun fetch implicite.
 export interface ShoppingContractExamples {
+  'shopping-list-duplicate-write': ShoppingDuplicateWrite;
+  'shopping-template-create': ShoppingTemplateCreate;
+  'shopping-template-update': ShoppingTemplateUpdate;
+  'shopping-template-instantiate': ShoppingTemplateInstantiate;
+  'shopping-template-detail': ShoppingDetail<ShoppingTemplateRead>;
+  'shopping-templates-page': ShoppingPage<ShoppingTemplateRead>;
+  'shopping-exclusion-write': ShoppingExclusionWrite;
+  'shopping-exclusion-detail': ShoppingDetail<ShoppingExclusionRead>;
+  'shopping-exclusions-page': ShoppingPage<ShoppingExclusionRead>;
+  'shopping-revisions-page': ShoppingPage<ShoppingRevisionSummary>;
   'shopping-list-product-purchase-write': ShoppingProductPurchaseWrite;
   'shopping-list-complete-write': ShoppingCompleteWrite;
   'shopping-list-comparison-detail': ShoppingDetail<ShoppingComparisonRead>;
@@ -158,4 +169,32 @@ export interface ShoppingProductPurchaseRead {
   id: string; comparison_id: string; item_ids: string[]; line: ShoppingCalculatedLine;
   purchased_units: number; reserved_units: number; purchased_quantity: string; estimated_amount: string;
   allocations: { item_id: string; quantity: ShoppingBaseQuantity }[];
+}
+
+export type ShoppingTemplateIcon = 'basket' | 'cart' | 'leaf' | 'restaurant' | 'home';
+export interface ShoppingTemplateItem {
+  id: string; ingredient_id: string | null; name: string; category: string;
+  required: ShoppingBaseQuantity[]; preferred_product_id: string | null;
+}
+export interface ShoppingTemplateRead {
+  id: string; name: string; icon: ShoppingTemplateIcon; revision: number;
+  items: ShoppingTemplateItem[]; deleted: boolean; created_at: string; updated_at: string;
+}
+export interface ShoppingTemplateCreate {
+  source_list_id: string; source_revision: number; name: string;
+  icon?: ShoppingTemplateIcon; include_choices?: boolean;
+}
+export interface ShoppingTemplateUpdate {
+  expected_revision: number; name?: string; icon?: ShoppingTemplateIcon; items?: ShoppingTemplateItem[];
+}
+export interface ShoppingTemplateInstantiate {
+  expected_template_revision: number; name: string; purchase_date: string; include_choices?: boolean;
+}
+export interface ShoppingDuplicateWrite {
+  source_revision: number; name: string; purchase_date: string; include_choices?: boolean;
+}
+export interface ShoppingExclusionWrite { excluded: boolean; }
+export interface ShoppingExclusionRead { ingredient_id: string; name: string; excluded: boolean; updated_at: string; }
+export interface ShoppingRevisionSummary {
+  list_id: string; revision: number; recorded_at: string; name: string; status: ShoppingListStatus; item_count: number;
 }

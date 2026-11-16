@@ -1,0 +1,156 @@
+{
+  "$defs": {
+    "ShoppingBaseQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "ml",
+            "unit"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingBaseQuantity",
+      "type": "object"
+    },
+    "ShoppingTemplateItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "anyOf": [
+            {
+              "pattern": "^ing_[a-z0-9_]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ingredient Id"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "category": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Category",
+          "type": "string"
+        },
+        "required": {
+          "items": {
+            "$ref": "#/$defs/ShoppingBaseQuantity"
+          },
+          "maxItems": 3,
+          "title": "Required",
+          "type": "array"
+        },
+        "preferred_product_id": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Preferred Product Id"
+        }
+      },
+      "required": [
+        "id",
+        "ingredient_id",
+        "name",
+        "category",
+        "required"
+      ],
+      "title": "ShoppingTemplateItem",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "name": {
+      "anyOf": [
+        {
+          "maxLength": 120,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Name"
+    },
+    "icon": {
+      "anyOf": [
+        {
+          "enum": [
+            "basket",
+            "cart",
+            "leaf",
+            "restaurant",
+            "home"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Icon"
+    },
+    "items": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/ShoppingTemplateItem"
+          },
+          "maxItems": 500,
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Items"
+    }
+  },
+  "required": [
+    "expected_revision"
+  ],
+  "title": "ShoppingTemplateUpdate",
+  "type": "object"
+}

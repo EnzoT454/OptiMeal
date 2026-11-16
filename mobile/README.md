@@ -1,5 +1,10 @@
 # Mobile OptiMeal
 
+Les [modèles et l’historique](../backend/docs/SHOPPING_REUSE.md) de l’étape 10
+sont intégrés à Liste ; les exclusions futures sont gérées depuis les fiches
+et Paramètres. Copier repart sans achats, possession ou prix. La migration
+0020 reste à appliquer à Supabase ; essais sur appareils à compléter.
+
 Le [parcours de courses](../backend/docs/SHOPPING_COURSES.md) de l’onglet Liste
 est livré dans le dépôt : fiches défilantes, coches de produits, achats partiels,
 possession annulable et compléments. La migration 0019 est appliquée et vérifiée

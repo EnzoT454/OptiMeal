@@ -7,7 +7,14 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
-La tête du dépôt est **0019_shopping_courses**, qui ajoute les achats produits
+La tête du dépôt est **0020_shopping_reuse**. Elle ajoute les modèles privés,
+les exclusions futures, leurs commandes idempotentes et l’origine des copies.
+RLS et nettoyage par compte sont activés ; aucun achat, possession ou prix
+n’est importé dans un modèle. Migration testée localement ; **elle reste à
+appliquer à Supabase, actuellement à 0019**. Voir
+[le guide de réutilisation](SHOPPING_REUSE.md).
+
+La migration précédente est **0019_shopping_courses**, qui ajoute les achats produits
 privés avec instantanés et couvertures. Après tests locaux, elle a été
 **appliquée et vérifiée sur Supabase le 16 novembre 2026**, depuis 0018.
 Révision confirmée après commit sur une nouvelle connexion ; schéma conforme

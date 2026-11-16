@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { ApiError } from '../../services/api';
 import { readAccountJSON, writeAccountJSON } from '../../services/accountStorage';
+import type { ShoppingListRead } from '../../types/shoppingLists';
 import { ListCommand, sendListCommand } from '../../services/shoppingLists';
 
 // Conserver une commande incertaine avant l'envoi permet aussi de la reprendre
 // après fermeture de l'app, avec la même clé et le même corps.
-export function useListCommand(scope: string) {
+export function useListCommand<T = ShoppingListRead>(scope: string) {
   const { session } = useAuth();
   const userId = session?.user.id ?? null;
   const storageKey = `shopping-command.${scope}`;
@@ -42,7 +43,7 @@ export function useListCommand(scope: string) {
       await writeAccountJSON(userId, storageKey, attempt);
       if (!isCurrent()) return null;
       setPending(attempt);
-      const result = await sendListCommand(attempt, userId);
+      const result = await sendListCommand<T>(attempt, userId);
       await writeAccountJSON(userId, storageKey, null);
       if (isCurrent()) setPending(null);
       return isCurrent() ? result : null;

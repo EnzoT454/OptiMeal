@@ -9,6 +9,7 @@ import { coverageLabels, positiveAmount, purchasedQuantities, remainingQuantitie
 import ProductPurchase, { productRows } from './ProductPurchase';
 import RecipeUnitPicker from '../RecipeUnitPicker';
 import type { RecipeUnit } from '../../types/api';
+import ListExclusionAction from './ListExclusionAction';
 import ListComparison from './ListComparison';
 
 export default function ListArticleSheet({ list, item, disabled, onClose, onCommand, commandError = '' }: {
@@ -102,6 +103,7 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
             {item.ingredient_id && <RecipeButton title="Le prendre ailleurs" variant="neutral" disabled={locked} onPress={() => setChoosing(!choosing)} />}
             {list.choices.some(c => c.item_id === item.id) && <RecipeButton title="Revenir au choix automatique" variant="neutral" disabled={locked} onPress={() => void onCommand(listCommand(`${path}/choice`, { expected_revision: list.revision, product_id: null }, 'PUT'))} />}
             {choosing && <ListComparison list={list} disabled={locked} onCommand={onCommand} itemId={item.id} />}
+            {item.ingredient_id && <ListExclusionAction ingredientId={item.ingredient_id} name={item.name} disabled={locked} />}
             <RecipeButton title="Retirer de la liste" variant="neutral" disabled={locked} onPress={() => Alert.alert('Retirer cet article ?', 'Il restera restaurable dans cette liste.', [
               { text: 'Annuler', style: 'cancel' }, { text: 'Retirer', onPress: async () => {
                 if (await onCommand(listCommand(path, { expected_revision: list.revision, removed: true }, 'PATCH'))) onClose();

@@ -3,17 +3,17 @@ import { api } from './api';
 import type { ShoppingCalendarPreviewRead, ShoppingCalendarPreviewWrite, ShoppingDetail, ShoppingListRead, ShoppingPage, ShoppingComparisonRead, ShoppingScenarioName } from '../types/shoppingLists';
 
 export const listsPath = '/api/v1/shopping-lists';
-export interface ListCommand { key: string; path: string; method: 'POST' | 'PATCH' | 'PUT'; body: object; }
+export interface ListCommand { key: string; path: string; method: 'POST' | 'PATCH' | 'PUT' | 'DELETE'; body: object; }
 export function listCommand(path: string, body: object, method: ListCommand['method'] = 'POST'): ListCommand {
   return { key: randomUUID(), path, body, method };
 }
-export async function sendListCommand(command: ListCommand, userId: string): Promise<ShoppingListRead> {
-  const result = await api<ShoppingDetail<ShoppingListRead>>(command.path, {
+export async function sendListCommand<T = ShoppingListRead>(command: ListCommand, userId: string): Promise<T> {
+  const result = await api<ShoppingDetail<T>>(command.path, {
     method: command.method, headers: { 'Idempotency-Key': command.key }, body: JSON.stringify(command.body),
   }, true, 15000, userId);
   return result.item;
 }
-export const fetchLists = (offset = 0) => api<ShoppingPage<ShoppingListRead>>(`${listsPath}?limit=20&offset=${offset}`);
+export const fetchLists = (offset = 0, collection?: 'current' | 'history') => api<ShoppingPage<ShoppingListRead>>(`${listsPath}?limit=20&offset=${offset}${collection ? `&collection=${collection}` : ''}`);
 export async function fetchList(id: string) {
   return (await api<ShoppingDetail<ShoppingListRead>>(`${listsPath}/${id}`)).item;
 }

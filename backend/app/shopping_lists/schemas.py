@@ -136,6 +136,7 @@ class ShoppingFromCalendar(ShoppingCalendarPreviewWrite):
     name: Name
     preview_fingerprint: Fingerprint
     accept_partial: StrictBool = False
+    accept_empty: StrictBool = False
 
 
 class ShoppingContributionRead(ContractModel):
@@ -411,6 +412,12 @@ class ShoppingAppliedComparison(ContractModel):
     stale: StrictBool = False
 
 
+class ShoppingOrigin(ContractModel):
+    kind: Literal['list', 'template']
+    id: UUID
+    revision: Revision
+
+
 class ShoppingListRead(ContractModel):
     id: UUID
     name: Name
@@ -428,6 +435,7 @@ class ShoppingListRead(ContractModel):
     updated_at: AwareDatetime
     choices: list[ShoppingProductChoice] = Field(default_factory=list)
     assignment: ShoppingAppliedComparison | None = None
+    origin: ShoppingOrigin | None = None
 
     @model_validator(mode='after')
     def coherent_resource(self):
@@ -517,7 +525,7 @@ class ShoppingCalendarPreviewRead(ContractModel):
 class ShoppingConflict(ApiError):
     code: Literal['LIST_REVISION_CONFLICT', 'IDEMPOTENCY_KEY_REUSED',
                   'CALENDAR_PREVIEW_STALE', 'ACCOUNT_DELETION_PENDING', 'LIST_STATE_CONFLICT',
-                  'COMPARISON_STALE', 'COMPARISON_PARTIAL', 'CHOICE_CONFLICT', 'COURSES_REMAINING']
+                  'COMPARISON_STALE', 'COMPARISON_PARTIAL', 'CHOICE_CONFLICT', 'COURSES_REMAINING', 'TEMPLATE_REVISION_CONFLICT']
     list_id: UUID | None = None
     expected_revision: Revision | None = None
     current_revision: Revision | None = None
