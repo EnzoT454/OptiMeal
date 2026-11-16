@@ -2,8 +2,9 @@
 
 Le [parcours de courses](../backend/docs/SHOPPING_COURSES.md) de l’onglet Liste
 est livré dans le dépôt : fiches défilantes, coches de produits, achats partiels,
-possession annulable et compléments. Backend à migrer vers 0019 avant utilisation ;
-essais des nouveaux écrans sur appareils à compléter. Les anciennes sections
+possession annulable et compléments. La migration 0019 est appliquée et vérifiée
+sur Supabase depuis le 16 novembre 2026 ; essais des nouveaux écrans sur appareils
+à compléter. Les anciennes sections
 Épicerie de Calendrier décrites ci-dessous restent en place pendant la transition.
 
 La barre de navigation contient Accueil, Promos, Recettes, Calendrier et Liste.

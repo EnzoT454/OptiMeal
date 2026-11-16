@@ -8,8 +8,8 @@ Il décrit le code au **10 novembre 2026** et les confirmations sur téléphone 
 L’onglet Liste sauvegarde les besoins privés, compare les achats attestés et
 permet les coches, les achats partiels, la possession et les compléments après
 modification du besoin. Une coche de produit conserve son estimation et le
-budget prévu ; elle diminue le reste connu à acheter. La migration 0019 reste
-à appliquer à Supabase, actuellement à 0018 ; les essais des nouveaux parcours
+budget prévu ; elle diminue le reste connu à acheter. La migration 0019 est
+appliquée et vérifiée sur Supabase depuis le 16 novembre 2026 ; les essais des nouveaux parcours
 sur appareils restent à effectuer. Accueil et Calendrier gardent provisoirement
 l’ancienne liste locale. Voir [le parcours de courses](backend/docs/SHOPPING_COURSES.md).
 Les tableaux datés plus anciens ci-dessous conservent leur contexte historique.

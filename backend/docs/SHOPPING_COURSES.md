@@ -18,9 +18,13 @@ vide par défaut ; elles ne sont ni réécrites ni réévaluées.
 python -m alembic -c backend/alembic.ini upgrade head
 ```
 
-**0019 est testée sur PostgreSQL local jetable ; elle n’a pas été appliquée à
-Supabase pendant cette étape.** Appliquer cette migration avant d’utiliser les
-nouvelles mutations sur la base cible. Aucun fichier `.env` n’a été modifié.
+**0019 a été appliquée et vérifiée sur Supabase le 16 novembre 2026**, depuis
+0018, après les tests PostgreSQL locaux. La révision est confirmée sur une
+nouvelle connexion après commit ; `alembic check` ne détecte aucun écart avec
+les modèles. RLS active, aucune politique mobile, deux clés étrangères et index
+attendu vérifiés. Les empreintes et comptages des **21 tables préexistantes**
+et le nombre de comptes Auth sont conservés. La nouvelle table est vide.
+Aucun fichier `.env` n’a été modifié.
 
 ## Parcours mobile
 

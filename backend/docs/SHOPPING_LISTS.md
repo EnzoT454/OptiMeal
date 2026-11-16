@@ -4,7 +4,7 @@
 
 **Statut : étapes 1 à 9 réalisées dans le dépôt — listes, comparaisons et parcours de courses ; étapes 10 à 15 à réaliser.**
 
-**Parcours de courses livré et testé localement ; migration 0019 à appliquer sur Supabase et essais sur appareils à compléter. Migration 0018 déjà appliquée et vérifiée le 16 novembre 2026. Le lot C reste à réaliser.**
+**Parcours de courses livré et testé ; migration 0019 appliquée et vérifiée sur Supabase le 16 novembre 2026. Les essais sur appareils et le lot C restent à réaliser.**
 
 Ce document est la référence de travail pour construire le nouvel onglet
 **Liste** d’OptiMeal. Il reprend les parcours demandés, les deux captures
@@ -776,8 +776,10 @@ Les achats sans prix et confirmations sans quantité restent distincts.
 La clôture demande confirmation des besoins restants et permet la réouverture.
 
 La migration **0019_shopping_courses** ajoute une table privée avec RLS et
-cascades. Elle est testée localement ; **Supabase reste à 0018** pendant cette
-étape. Les anciennes révisions sont conservées. Les limites de promotions sont
+cascades. Après les tests locaux, elle a été **appliquée et vérifiée sur Supabase
+le 16 novembre 2026**, depuis 0018 : révision après commit, schéma, RLS et
+conservation des empreintes/comptages des 21 tables préexistantes ainsi que
+du nombre de comptes Auth vérifiés. Les anciennes révisions sont conservées. Les limites de promotions sont
 partagées avec les achats passés lors d’une nouvelle comparaison. Les prix
 réels restent conditionnés aux attestations commerciales.
 
@@ -1449,7 +1451,7 @@ reste ouverte tant que ses critères nécessaires ne sont pas vérifiés.
 | 6 — Réalisée le 14 novembre 2026 | Normaliser les formats et bases tarifaires vérifiables | Critère satisfait ; formats, bases, contraintes et attestations normalisés ; inconnues classées, sources conservées et parité JSON/Supabase vérifiée ; voir section 2.8 |
 | 7 — Réalisée le 16 novembre 2026 | Implémenter couverture en paquets, prix au poids, combinaisons et paliers | Critère satisfait ; calculs et oracles exhaustifs réussis, bornes documentées ; voir section 2.9 |
 | 8 — Réalisée le 16 novembre 2026 | Comparaison sans mutation puis application atomique | Critère satisfait ; scénarios, choix manuels, sous-totaux, fraîcheur et transactions vérifiés ; voir section 2.10 |
-| 9 — Réalisée dans le dépôt le 16 novembre 2026 | Détail, fiche d’article, possession et achats partiels | Couvertures, coches stables, estimations et compléments testés ; voir section 2.11. 0019 et essais appareils à compléter sur la cible |
+| 9 — Réalisée dans le dépôt le 16 novembre 2026 | Détail, fiche d’article, possession et achats partiels | Couvertures, coches stables, estimations et compléments testés ; voir section 2.11. 0019 appliquée à Supabase ; essais appareils à compléter |
 | 10 | Ajouter exclusions, modèles, copie et historique par révision | Copie indépendante, zéro achat repris, original lisible après changements de prix/recette |
 | 11 | Ajouter cache complet et reprise des coches hors connexion | Réponse perdue, redémarrage, conflits et changement de compte couverts |
 | 12 | Proposer récupération des anciennes données locales privées | Import volontaire et idempotent, aucune attribution des anciennes clés communes |
@@ -1626,7 +1628,7 @@ cibles sont implémentées :
 - [x] Étape 8 : comparaisons privées, choix manuels et application atomique ; voir section 2.10.
 - [x] Lot A : persistance, période et création fiables ; essais sur appareils à compléter.
 - [x] Étape 9 : parcours de courses, achats produits, possession, compléments et clôture ; voir section 2.11.
-- [x] Lot B : achats, comparaison et courses livrés dans le dépôt ; migration 0019 et essais appareils à compléter sur la cible.
+- [x] Lot B : achats, comparaison et courses livrés dans le dépôt ; migration 0019 appliquée à Supabase ; essais appareils à compléter.
 - [ ] Lot C : modèles, historique, résilience et bascule des accès.
 - [ ] Vérifications complètes des contrats et migrations applicables.
 - [ ] Essais iOS et Android consignés séparément.

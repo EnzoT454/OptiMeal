@@ -8,8 +8,13 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 ## Installer le schéma et charger le référentiel
 
 La tête du dépôt est **0019_shopping_courses**, qui ajoute les achats produits
-privés avec instantanés et couvertures. Cette migration est testée localement,
-mais reste à appliquer à Supabase. Voir [le guide des courses](SHOPPING_COURSES.md).
+privés avec instantanés et couvertures. Après tests locaux, elle a été
+**appliquée et vérifiée sur Supabase le 16 novembre 2026**, depuis 0018.
+Révision confirmée après commit sur une nouvelle connexion ; schéma conforme
+aux modèles, RLS active sans politique mobile, deux clés étrangères et index
+vérifiés. Les empreintes et comptages des 21 tables applicatives préexistantes
+et le nombre de comptes Auth sont conservés ; la nouvelle table est vide.
+Voir [le guide des courses](SHOPPING_COURSES.md).
 
 La migration précédente est **0018_shopping_comparisons**. Elle ajoute les
 simulations privées, les choix manuels et les répartitions enregistrées ; RLS
