@@ -4,7 +4,7 @@
 
 **Statut : étapes 1 à 8 réalisées — listes, moteur et comparaisons disponibles ; étapes 9 à 15 à réaliser.**
 
-**Les fiches et coches de courses de l’étape 9 et le lot C restent à implémenter. Migration 0018 à appliquer sur la base cible.**
+**Les fiches et coches de courses de l’étape 9 et le lot C restent à implémenter. Migration 0018 appliquée et vérifiée sur Supabase le 16 novembre 2026.**
 
 Ce document est la référence de travail pour construire le nouvel onglet
 **Liste** d’OptiMeal. Il reprend les parcours demandés, les deux captures
@@ -739,7 +739,11 @@ Un changement de besoin conserve l'ancienne répartition en la signalant à ré�
 
 La migration **0018_shopping_comparisons**, après 0017, crée trois tables privées
 avec RLS : simulations immuables, choix par article et instantané de répartition.
-Elle est testée sur PostgreSQL local ; **non appliquée sur Supabase à cette étape**.
+Elle est testée sur PostgreSQL local, puis **appliquée et vérifiée sur Supabase
+le 16 novembre 2026**. Révision confirmée après commit, schéma conforme, RLS
+active sans politique mobile et immutabilité des simulations vérifiées ; les
+empreintes/comptages des 18 tables préexistantes et le nombre de comptes Auth
+sont conservés.
 Les contrats exportés et types mobiles incluent ces opérations. Aucune nouvelle
 dépendance n'est requise. Le fichier opérateur facultatif `SALE_REVIEWS_PATH`
 fournit les preuves de l'étape 6 ; sans preuves, les prix ne deviennent pas connus.

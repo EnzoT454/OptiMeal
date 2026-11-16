@@ -758,7 +758,8 @@ flowchart LR
 | `0014_recipe_kitchen_units.py` | Tasses et cuillères acceptées comme unités de recette, sans conversion des quantités existantes ; appliquée sur Supabase le 5 novembre 2026 |
 | `0015_permanent_public_recipes.py` | Conservation des recettes publiques sans propriétaire après suppression du compte ; appliquée sur Supabase le 5 novembre 2026 |
 | `0016_offer_quantity_limits.py` | Prix promotionnel limité et prix après limite ; appliquée sur Supabase le 14 novembre 2026 |
-| `0017_shopping_lists.py` | Huit tables privées de listes et historique ; vérifiée sur PostgreSQL local, non appliquée à Supabase dans cette étape |
+| `0017_shopping_lists.py` | Huit tables privées de listes et historique ; appliquée et vérifiée sur Supabase le 14 novembre 2026 |
+| `0018_shopping_comparisons.py` | Simulations privées, choix manuels et répartition enregistrée ; appliquée et vérifiée sur Supabase le 16 novembre 2026 |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -978,7 +979,8 @@ migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis
 côté serveur. Le moteur de couverture calcule désormais les paquets, les
 ventes au poids et les paliers promotionnels dans ses bornes. Le détail de Liste
 propose les comparaisons et leur application explicite depuis l'étape 8, après
-la migration 0018. Les prix non attestés restent inconnus et les résultats
+la migration 0018, appliquée et vérifiée sur Supabase le 16 novembre 2026.
+Les prix non attestés restent inconnus et les résultats
 partiels affichent un sous-total connu. Le
 [suivi de l’étape 5](backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5)
 précise les fonctionnalités disponibles et leurs limites.

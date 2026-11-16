@@ -10,7 +10,13 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 La tête du dépôt est désormais **0018_shopping_comparisons**. Elle ajoute les
 simulations privées, les choix manuels et les répartitions enregistrées ; RLS
 reste activée et les simulations sont immuables. Migration vérifiée sur PostgreSQL
-local, **non appliquée à Supabase pendant l’étape 8**. Le retour à 0017 refuse
+local, puis **appliquée sur Supabase le 16 novembre 2026**, depuis 0017 dans
+une transaction. Révision confirmée après commit sur une nouvelle connexion,
+schéma conforme aux modèles (`alembic check`), RLS active sans politique mobile
+sur les trois nouvelles tables et déclencheur d'immutabilité des simulations
+actif. Les empreintes et comptages des 18 tables applicatives préexistantes et
+le nombre de comptes Auth sont conservés. Aucun prix ni donnée utilisateur
+n'a été modifié. Le retour à 0017 refuse
 d’effacer des choix ou répartitions existants. Voir le
 [guide des comparaisons](SHOPPING_COMPARISONS.md).
 

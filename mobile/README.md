@@ -14,8 +14,8 @@ depuis le 14 novembre 2026. L’ancienne Épicerie reste accessible dans Calendr
 pendant la transition. Le détail permet maintenant de comparer Maxi, Metro, Super C et Moins cher,
 puis d'appliquer explicitement une proposition. Les choix manuels sont conservés
 et les prix inconnus restent signalés. Cette extension nécessite la migration
-`0018_shopping_comparisons`, testée localement mais non appliquée à Supabase
-pendant cette étape. Voir le [guide des comparaisons](../backend/docs/SHOPPING_COMPARISONS.md).
+`0018_shopping_comparisons`, appliquée et vérifiée sur Supabase le 16 novembre
+2026 après les tests locaux. Voir le [guide des comparaisons](../backend/docs/SHOPPING_COMPARISONS.md).
 Voir [le suivi de l’étape 5](../backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
 `expo-crypto`, compatible SDK 58, génère les UUID des commandes idempotentes ;
 il est inclus dans Expo Go. Un client de développement compilé avant son ajout

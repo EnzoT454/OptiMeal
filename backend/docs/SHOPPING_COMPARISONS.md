@@ -16,7 +16,11 @@ python -m alembic -c backend/alembic.ini upgrade head
 ```
 
 Cette étape a été testée sur PostgreSQL local jetable. **La migration 0018
-n'a pas été appliquée à Supabase pendant ce développement.** Elle ajoute trois
+a été appliquée et vérifiée sur Supabase le 16 novembre 2026**, depuis 0017.
+La révision est confirmée sur une nouvelle connexion après commit et le schéma
+correspond aux modèles Alembic. Les empreintes et comptages des 18 tables
+applicatives préexistantes et le nombre de comptes Auth sont conservés.
+Elle ajoute trois
 tables privées : simulations, choix manuels par article et instantané de la
 répartition courante. RLS reste activée sans accès métier direct du mobile.
 Les simulations sont immuables ; les répartitions sont conservées aussi dans
