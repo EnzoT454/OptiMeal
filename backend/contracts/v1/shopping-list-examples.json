@@ -1,6 +1,21 @@
 {
   "status": "lot_a_implemented",
   "examples": {
+    "shopping-list-pin-write": {
+      "list_id": "00000000-0000-4000-8000-000000000001"
+    },
+    "shopping-list-pin-detail": {
+      "item": {
+        "list_id": "00000000-0000-4000-8000-000000000001"
+      },
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
     "shopping-list-duplicate-write": {
       "source_revision": 4,
       "name": "Copie indépendante",

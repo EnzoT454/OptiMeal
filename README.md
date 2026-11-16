@@ -28,6 +28,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 - Listes privées, comparaison, courses avec achats partiels, modèles, exclusions et historique par révision.
 - Cache privé et coches hors connexion avec synchronisation et gestion des conflits.
 - Récupération volontaire des anciens ajouts locaux privés, sans double import.
+- Liste épinglée sur Accueil et accès aux listes du Calendrier par période.
 - Promotions et consultation des circulaires.
 - Catalogue commun des produits et ingrédients.
 - Collecte Maxi et lecture locale des reçus.
@@ -36,7 +37,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 À développer ou à compléter :
 
 - Modes IA pour les recettes.
-- Gestion avancée du budget et unification des accès Accueil/Calendrier.
+- Gestion avancée du budget et retrait de l’ancien code local des listes.
 - Historique stable des plans et des prix.
 - Estimations de prix et contribution par reçu dans l’application.
 - Collecte automatisée Metro et Super C.
@@ -431,6 +432,7 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Démarrer le mobile](mobile/README.md)
 - [Migrations et imports](backend/docs/MIGRATIONS.md)
 - [Calendrier des repas et limites actuelles](backend/docs/PLANNING.md)
+- [Accès unifiés Accueil, Calendrier et Liste](backend/docs/SHOPPING_ACCESS.md)
 - [Récupération des anciennes données locales](backend/docs/SHOPPING_RECOVERY.md)
 - [Courses hors connexion : cache et reprise des coches](backend/docs/SHOPPING_OFFLINE.md)
 - [Listes d’épicerie : conception et étapes d’implémentation](backend/docs/SHOPPING_LISTS.md)

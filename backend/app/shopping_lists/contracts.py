@@ -8,6 +8,7 @@ from .schemas import (
     ShoppingRevisionRead, ShoppingComparisonRead, ShoppingApplyComparison, ShoppingChoiceWrite, ShoppingProductPurchaseWrite, ShoppingCompleteWrite,
 )
 
+from .access_schemas import ShoppingPinRead, ShoppingPinWrite
 from .reuse_schemas import (
     ShoppingDuplicateWrite, ShoppingExclusionRead, ShoppingExclusionWrite,
     ShoppingRevisionSummary, ShoppingTemplateCreate, ShoppingTemplateRead,
@@ -15,6 +16,8 @@ from .reuse_schemas import (
 )
 
 MODELS = {
+    'shopping-list-pin-write': ShoppingPinWrite,
+    'shopping-list-pin-detail': Detail[ShoppingPinRead],
     'shopping-list-duplicate-write': ShoppingDuplicateWrite,
     'shopping-template-create': ShoppingTemplateCreate,
     'shopping-template-update': ShoppingTemplateUpdate,
@@ -112,6 +115,8 @@ def examples() -> dict:
     exclusion = {'ingredient_id': rice['ingredient_id'], 'name': 'Riz', 'excluded': True,
                  'updated_at': resource['updated_at']}
     values = {
+        'shopping-list-pin-write': {'list_id': list_id},
+        'shopping-list-pin-detail': {'item': {'list_id': list_id}, 'meta': meta},
         'shopping-list-duplicate-write': {'source_revision': 4, 'name': 'Copie indépendante', 'purchase_date': '2026-11-20'},
         'shopping-template-create': {'source_list_id': list_id, 'source_revision': 4, 'name': template['name'], 'icon': 'basket'},
         'shopping-template-update': {'expected_revision': 1, 'name': 'Nouveau nom'},
@@ -160,7 +165,7 @@ def examples() -> dict:
             'message': 'La liste a changé. Relis les modifications.', 'list_id': list_id,
             'expected_revision': 3, 'current_revision': 4}},
     }
-    responses = {'shopping-list-comparison-detail', 'shopping-list-calendar-preview-detail', 'shopping-list-detail',
+    responses = {'shopping-list-pin-detail', 'shopping-list-comparison-detail', 'shopping-list-calendar-preview-detail', 'shopping-list-detail',
                  'shopping-lists-page', 'shopping-list-revision-detail', 'shopping-list-conflict'}
     responses.update({'shopping-template-detail', 'shopping-templates-page', 'shopping-exclusion-detail',
                       'shopping-exclusions-page', 'shopping-revisions-page'})

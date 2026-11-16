@@ -54,7 +54,7 @@ Le catalogue paginé vérifie les identités d’ingrédients. Une préférence 
 ancien ingrédient introuvable reste locale avec avertissement. Les articles
 invalides ou partageant une identité ambiguë sont signalés, jamais fusionnés
 par hypothèse. Une source illisible bloque l’aperçu ; plus de 500 articles ou
-préférences demande de réduire l’ancienne source avant récupération. Un changement
+préférences bloque la récupération sans effacer les sources. Un changement
 de source entre aperçu et confirmation exige un nouvel aperçu. Une récupération
 commencée conserve au contraire la sélection déjà confirmée, même si l’ancien
 parcours évolue ensuite.

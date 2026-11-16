@@ -3,11 +3,12 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles as s } from '../components/recipes';
+import { RecipeButton, RecipeScreen, recipeColors, recipeStyles as s } from '../components/recipes';
+import SavedListCard from '../components/lists/SavedListCard';
 import { Message } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { readLatestOfflineList } from '../services/shoppingOffline';
-import { fetchLists, dateLabel } from '../services/shoppingLists';
+import { fetchLists } from '../services/shoppingLists';
 import type { ShoppingListRead } from '../types/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
 
@@ -48,14 +49,7 @@ export default function ListScreen({ navigation }: NativeStackScreenProps<ListSt
     return () => { generation.current++; busy.current = false; };
   }, [userId, collection]));
   const create = () => userId ? navigation.navigate('CreateList') : requestSignIn('Connecte-toi pour créer et retrouver tes listes d’achats.');
-  const card = (list: ShoppingListRead) => <Pressable key={list.id} accessibilityRole="button"
-    onPress={() => navigation.navigate('ShoppingDetail', { id: list.id })}
-    style={[s.choice, { borderWidth: 1, borderColor: recipeColors.border, minHeight: 72 }]}>
-    <Text style={s.sectionTitle}>{list.name}</Text>
-    <Text style={s.body}>{list.status === 'draft' ? 'Brouillon' : list.status === 'active' ? 'En cours' : list.status === 'archived' ? 'Archivée' : 'Terminée'} · {list.totals.item_count} articles · {list.totals.remaining_item_count} à acheter</Text>
-    {(list.status === 'completed' || list.status === 'archived') && <Text style={s.note}>{list.status === 'completed' ? 'Clôturée' : 'Archivée'} le {new Date(list.updated_at).toLocaleDateString('fr-CA')}</Text>}
-    {list.period && <Text style={s.note}>Du {dateLabel(list.period.start_date)} au {dateLabel(list.period.end_date)}</Text>}
-  </Pressable>;
+  const card = (list: ShoppingListRead) => <SavedListCard key={list.id} list={list} onOpen={() => navigation.navigate('ShoppingDetail', { id: list.id })} />;
   return <RecipeScreen>
     <Text style={[s.sectionTitle, { color: recipeColors.green }]}>OptiMeal</Text>
     <View style={s.row}><Text accessibilityRole="header" style={s.title}>Liste d’achats</Text><Ionicons name="basket-outline" size={42} color={recipeColors.green} accessible={false} /></View>

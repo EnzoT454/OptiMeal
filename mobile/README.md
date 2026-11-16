@@ -1,5 +1,15 @@
 # Mobile OptiMeal
 
+Les [accès unifiés](../backend/docs/SHOPPING_ACCESS.md) de l’étape 13 relient
+Accueil, Calendrier et Liste au même détail par identifiant. Épingler une liste
+depuis ses options l’affiche sur Accueil ; Calendrier affiche les listes de la
+semaine sélectionnée et transmet ses dates au formulaire de création. Les cartes
+et le détail utilisent les mêmes agrégats serveur. Le cache de la liste épinglée
+reste accessible hors connexion. La migration 0021 est testée localement ; 0020
+et 0021 restent à appliquer sur Supabase. Validation : 277 tests mobiles et
+TypeScript ; essais sur appareils à consigner. L’ancien code reste à retirer.
+Les descriptions plus anciennes de l’Épicerie locale ci-dessous sont historiques.
+
 La [récupération des anciennes données](../backend/docs/SHOPPING_RECOVERY.md)
 de l’étape 12 est accessible depuis Liste. Elle propose les ajouts manuels privés
 avec sélection et confirmation, puis un brouillon aux quantités à préciser.
@@ -7,7 +17,7 @@ La conversion de « J’en ai toujours » en exclusions futures est facultative,
 désactivée par défaut. Le journal de reprise évite les doublons après interruption ;
 aucune ancienne donnée n’est effacée, aucune clé commune attribuée au compte.
 Le réseau est requis. Validation : 261 tests mobiles et TypeScript ; essais
-sur appareils à consigner. Accueil/Calendrier gardent leur ancien parcours.
+sur appareils à consigner. Les accès Accueil/Calendrier sont raccordés à l’étape 13.
 
 Le [mode courses hors connexion](../backend/docs/SHOPPING_OFFLINE.md) de l’étape 11
 conserve la liste complète, sa révision et une file de coches/décoches par compte.

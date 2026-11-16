@@ -13,8 +13,9 @@ calendrier, édition, révisions et commandes idempotentes. Voir les
 [contrats](docs/SHOPPING_LISTS_CONTRACTS.md) et le
 [suivi de l’étape 5](docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
 La migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis
-le 14 novembre 2026. Les comparaisons et le [parcours de courses](docs/SHOPPING_COURSES.md) sont livrés dans le dépôt. Les migrations jusqu’à 0019 sont appliquées et vérifiées sur Supabase. Les prix réels demandent des attestations commerciales. L’ancienne Épicerie
-fonctionne encore côté mobile pendant la transition.
+le 14 novembre 2026. Les comparaisons et le [parcours de courses](docs/SHOPPING_COURSES.md) sont livrés dans le dépôt. Les migrations jusqu’à 0019 sont appliquées et vérifiées sur Supabase. Les prix réels demandent des attestations commerciales. L’[étape 13](docs/SHOPPING_ACCESS.md) relie Accueil et Calendrier aux listes identifiées,
+avec épinglage privé et filtrage par période exacte. La tête du dépôt est 0021 ;
+0020 et 0021 restent à appliquer sur la cible avant utilisation.
 
 La [normalisation des ventes](docs/SALE_NORMALIZATION.md), étape 6, sépare contenu
 net, base du prix, contraintes de vente et fiabilité des correspondances. La

@@ -5,7 +5,7 @@ Les lectures utilisent les instantanés immuables, afin de ne pas reconstruire
 une liste depuis plusieurs états concurrents. Aucun appel réseau ou collecte.
 """
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from decimal import Decimal, localcontext
 from hashlib import sha256
 import json
@@ -61,12 +61,17 @@ def get_list(db: Session, list_id: UUID, user: CurrentUser) -> ShoppingListRead:
 
 
 def list_lists(db: Session, user: CurrentUser, *, status: str | None = None,
-               limit: int = 20, offset: int = 0, collection: str | None = None) -> tuple[list[ShoppingListRead], int]:
+               limit: int = 20, offset: int = 0, collection: str | None = None,
+               start_date: date | None = None, end_date: date | None = None) -> tuple[list[ShoppingListRead], int]:
     if not 1 <= limit <= 100 or offset < 0 or status not in (None, 'draft', 'active', 'completed', 'archived'):
         raise ShoppingListError(422, 'VALIDATION_ERROR', 'Filtres ou pagination invalides.')
     if collection not in (None, 'current', 'history') or (collection is not None and status is not None):
         raise ShoppingListError(422, 'VALIDATION_ERROR', 'Choisis une collection ou un statut.')
+    if (start_date is None) != (end_date is None) or (start_date is not None and end_date < start_date):
+        raise ShoppingListError(422, 'VALIDATION_ERROR', 'Indique une période complète et ordonnée.')
     conditions = [ShoppingList.owner_id == user.id]
+    if start_date is not None:
+        conditions.extend((ShoppingList.start_date == start_date, ShoppingList.end_date == end_date))
     if collection is not None:
         conditions.append(ShoppingList.status.in_(('draft', 'active') if collection == 'current' else ('completed', 'archived')))
     if status is not None:

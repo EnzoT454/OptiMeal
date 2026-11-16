@@ -244,3 +244,12 @@ class ShoppingResourceCommand(Base):
     signature: Mapped[str] = mapped_column(Text, nullable=False)
     result: Mapped[dict] = mapped_column(JSONB, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, server_default=text('now()'))
+
+
+class ShoppingListPin(Base):
+    __tablename__ = 'shopping_list_pin'
+    __table_args__ = (
+        ForeignKeyConstraint(['list_id', 'owner_id'], ['shopping_list.id', 'shopping_list.owner_id'], ondelete='CASCADE'),
+    )
+    owner_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), primary_key=True)
+    list_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)

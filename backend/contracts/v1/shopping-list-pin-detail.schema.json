@@ -1,0 +1,88 @@
+{
+  "$defs": {
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "data_source": {
+          "default": "local_json",
+          "enum": [
+            "local_json",
+            "postgresql"
+          ],
+          "title": "Data Source",
+          "type": "string"
+        },
+        "dataset_kind": {
+          "enum": [
+            "source_snapshot",
+            "demo",
+            "user_content",
+            "mixed"
+          ],
+          "title": "Dataset Kind",
+          "type": "string"
+        },
+        "review_required": {
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dataset_kind"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    },
+    "ShoppingPinRead": {
+      "additionalProperties": false,
+      "properties": {
+        "list_id": {
+          "anyOf": [
+            {
+              "format": "uuid",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "List Id"
+        }
+      },
+      "required": [
+        "list_id"
+      ],
+      "title": "ShoppingPinRead",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "item": {
+      "$ref": "#/$defs/ShoppingPinRead"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    }
+  },
+  "required": [
+    "item",
+    "meta"
+  ],
+  "title": "Detail[ShoppingPinRead]",
+  "type": "object"
+}

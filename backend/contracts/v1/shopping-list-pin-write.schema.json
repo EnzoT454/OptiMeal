@@ -1,0 +1,22 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "list_id": {
+      "anyOf": [
+        {
+          "format": "uuid",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "List Id"
+    }
+  },
+  "required": [
+    "list_id"
+  ],
+  "title": "ShoppingPinWrite",
+  "type": "object"
+}

@@ -90,7 +90,10 @@ export interface ShoppingPage<T> {
 }
 
 // Utilisé par le contrôle des exemples exportés ; aucun fetch implicite.
+export interface ShoppingPin { list_id: string | null; }
 export interface ShoppingContractExamples {
+  'shopping-list-pin-write': ShoppingPin;
+  'shopping-list-pin-detail': ShoppingDetail<ShoppingPin>;
   'shopping-list-duplicate-write': ShoppingDuplicateWrite;
   'shopping-template-create': ShoppingTemplateCreate;
   'shopping-template-update': ShoppingTemplateUpdate;

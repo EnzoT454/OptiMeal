@@ -1,6 +1,6 @@
 import { randomUUID } from 'expo-crypto';
 import { api } from './api';
-import type { ShoppingCalendarPreviewRead, ShoppingCalendarPreviewWrite, ShoppingDetail, ShoppingListRead, ShoppingPage, ShoppingComparisonRead, ShoppingScenarioName } from '../types/shoppingLists';
+import type { ShoppingCalendarPreviewRead, ShoppingCalendarPreviewWrite, ShoppingDetail, ShoppingListRead, ShoppingPage, ShoppingComparisonRead, ShoppingScenarioName, ShoppingPeriod } from '../types/shoppingLists';
 
 export const listsPath = '/api/v1/shopping-lists';
 export interface ListCommand { key: string; path: string; method: 'POST' | 'PATCH' | 'PUT' | 'DELETE'; body: object; }
@@ -13,7 +13,8 @@ export async function sendListCommand<T = ShoppingListRead>(command: ListCommand
   }, true, 15000, userId);
   return result.item;
 }
-export const fetchLists = (offset = 0, collection?: 'current' | 'history') => api<ShoppingPage<ShoppingListRead>>(`${listsPath}?limit=20&offset=${offset}${collection ? `&collection=${collection}` : ''}`);
+export const fetchLists = (offset = 0, collection?: 'current' | 'history', period?: ShoppingPeriod, userId?: string) =>
+  api<ShoppingPage<ShoppingListRead>>(`${listsPath}?limit=20&offset=${offset}${collection ? `&collection=${collection}` : ''}${period ? `&start_date=${encodeURIComponent(period.start_date)}&end_date=${encodeURIComponent(period.end_date)}` : ''}`, {}, true, 15000, userId);
 export async function fetchList(id: string, userId?: string) {
   return (await api<ShoppingDetail<ShoppingListRead>>(`${listsPath}/${id}`, {}, true, 15000, userId)).item;
 }

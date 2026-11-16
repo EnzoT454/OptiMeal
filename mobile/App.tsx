@@ -62,7 +62,7 @@ function HomeNavigator() {
 function ListNavigator() {
   return <Lists.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
     <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Liste' }} />
-    <Lists.Screen name="CreateList" component={CreateListScreen} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="CreateList" component={CreateListScreen} getId={({ params }) => params?.period ? `${params.period.start_date}:${params.period.end_date}` : 'manual'} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="RecoverLocal" component={ShoppingRecoveryScreen} options={{ title: 'Anciennes données', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="Templates" component={ShoppingTemplatesScreen} options={{ title: 'Mes modèles', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="TemplateDetail" component={ShoppingTemplateDetailScreen} options={{ title: 'Mon modèle', headerBackTitle: 'Modèles' }} />
@@ -105,7 +105,7 @@ function PromoNavigator() {
     <Promos.Screen name="Follows" component={FollowsScreen} />
   </Promos.Navigator>;
 }
-// route.params.vue = "epicerie" quand l'Accueil ouvre directement la liste d'épicerie
+// Épicerie conserve la semaine du calendrier et présente ses listes enregistrées.
 function Calendar({ route }: { route?: { params?: { vue?: 'repas' | 'epicerie' } } } = {}) {
   return <AccountRequired reason="Connecte-toi pour planifier tes repas dans ton calendrier.">
     <CalendarScreen vue={route?.params?.vue} />

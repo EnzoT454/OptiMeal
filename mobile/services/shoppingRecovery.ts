@@ -35,7 +35,7 @@ async function sources(user: string) {
     readAccountJSON<unknown>(user, 'shoppingList.gardeManger', []),
   ]);
   if (!Array.isArray(manuals) || !Array.isArray(pantry)) throw new Error('Les anciennes données sont illisibles. Elles restent conservées sur cet appareil.');
-  if (manuals.length > 500 || pantry.length > 500) throw new Error('Plus de 500 anciennes entrées. Réduis la liste dans l’ancienne Épicerie avant de réessayer.');
+  if (manuals.length > 500 || pantry.length > 500) throw new Error('La récupération accepte au maximum 500 anciennes entrées par catégorie. Tes données restent conservées sur cet appareil.');
   return { manuals: manuals as unknown[], pantry: pantry as unknown[], signature: JSON.stringify([manuals, pantry]) };
 }
 function record(value: unknown): value is Record<string, unknown> {

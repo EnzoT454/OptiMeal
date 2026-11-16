@@ -9,6 +9,8 @@ import { api } from '../services/api';
 import RecipeUnitPicker from '../components/RecipeUnitPicker';
 import { Message } from '../components/ui';
 import ListComparison from '../components/lists/ListComparison';
+import PinListAction from '../components/lists/PinListAction';
+import { SavedListTotals } from '../components/lists/SavedListCard';
 import ListCourses from '../components/lists/ListCourses';
 import type { ListCommand } from '../services/shoppingLists';
 import { isPurchase } from '../services/shoppingOffline';
@@ -128,11 +130,9 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
       <Text style={s.note}>Courses prévues le {dateLabel(list.purchase_date)}</Text>
       {list.period && <Text style={s.note}>Repas du {dateLabel(list.period.start_date)} au {dateLabel(list.period.end_date)}. Copie indépendante du calendrier.</Text>}
       <View style={s.notice}><Text style={s.sectionTitle}>{list.totals.item_count} articles</Text>
-        <Text style={s.body}>{list.totals.remaining_item_count} à acheter · {list.totals.purchased_item_count} achetés · {list.totals.owned_item_count} déjà disponibles</Text>
-        <Text style={s.body}>{(list.assignment && !list.assignment.stale && list.assignment.scenario.needs.some(n => n.lines.length)) || list.product_purchases?.some(p => p.purchased_units > 0)
-          ? `${list.totals.estimate_complete ? 'Estimation des achats' : 'Sous-total connu'} : ${list.totals.budget_known_amount.replace('.', ',')} $`
-          : 'Estimation indisponible'}</Text></View>
-      <Text style={s.note}>Reste connu à acheter : {list.totals.remaining_known_amount.replace('.', ',')} $ · {list.totals.unpriced_item_count} article(s) sans estimation complète. Estimations hors taxes et consignes non documentées ; prix payés non confirmés.</Text>
+        <SavedListTotals list={list} />
+        <Text style={s.note}>Estimations hors taxes et consignes non documentées ; prix payés non confirmés.</Text>
+      </View>
       {list.assignment?.stale && <Text style={s.requiredItem}>Proposition à réévaluer : les achats effectués et leurs estimations sont conservés.</Text>}
       {editable && <RecipeButton title="Comparer les magasins" variant={list.status === 'active' ? 'neutral' : 'primary'} disabled={locked} onPress={() => setShowComparison(!showComparison)} />}
       {editable && showComparison && !offlineCourses.offline && !pendingCommands.length && <ListComparison list={list} disabled={locked} onCommand={async (intent: ListCommand) => {
@@ -149,6 +149,7 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
       {list.warnings.filter(w => w.code !== 'ESTIMATE_UNAVAILABLE').map((w, i) => <Text key={i} style={s.requiredItem}>{w.message}</Text>)}
       <RecipeButton title="Options de la liste" variant="neutral" onPress={() => setOptions(!options)} accessibilityState={{ expanded: options }} />
       {options && <>
+      {editable && <PinListAction id={id} disabled={locked} />}
       <RecipeButton title="Copier les besoins" variant="neutral" disabled={loading || command.busy || offlineCourses.busy || offlineCourses.offline || pendingCommands.length > 0} onPress={() => navigation.navigate('ReuseList', { id, revision: list.revision, mode: 'copy' })} />
       <RecipeButton title="Enregistrer comme modèle" variant="neutral" disabled={loading || command.busy || offlineCourses.busy || offlineCourses.offline || pendingCommands.length > 0} onPress={() => navigation.navigate('ReuseList', { id, revision: list.revision, mode: 'template' })} />
       <RecipeButton title="Consulter les révisions" variant="neutral" onPress={() => navigation.navigate('Revisions', { id })} />

@@ -9,10 +9,10 @@ import { currentWeek, dateLabel, listCommand, listsPath, localDate, previewCalen
 import type { ShoppingCalendarPreviewRead } from '../types/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
 
-export default function CreateListScreen({ navigation }: NativeStackScreenProps<ListStackParams, 'CreateList'>) {
-  const [mode, setMode] = useState<'manual' | 'calendar'>('manual');
+export default function CreateListScreen({ navigation, route }: NativeStackScreenProps<ListStackParams, 'CreateList'>) {
+  const [mode, setMode] = useState<'manual' | 'calendar'>(route.params?.period ? 'calendar' : 'manual');
   const [name, setName] = useState('');
-  const [period, setPeriod] = useState(currentWeek);
+  const [period, setPeriod] = useState(() => route.params?.period ?? currentWeek());
   const [purchaseDate, setPurchaseDate] = useState(localDate);
   const [preview, setPreview] = useState<ShoppingCalendarPreviewRead | null>(null);
   const [empty, setEmpty] = useState(false);
@@ -20,7 +20,7 @@ export default function CreateListScreen({ navigation }: NativeStackScreenProps<
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const previewLock = useRef(false);
-  const command = useListCommand('create');
+  const command = useListCommand(route.params?.period ? `create.${route.params.period.start_date}.${route.params.period.end_date}` : 'create');
   const locked = command.locked || loading;
   function resetPreview() { setPreview(null); setPartial(false); setEmpty(false); setError(''); }
   async function generate() {

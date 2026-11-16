@@ -4,7 +4,8 @@ from uuid import UUID
 from fastapi import APIRouter, Query
 from backend.app.common.contracts import Detail, Page, IngredientId
 from .router import User, DB, Key, detail, router as list_router
-from . import reuse
+from . import reuse, access
+from .access_schemas import ShoppingPinRead, ShoppingPinWrite
 from .schemas import ShoppingCommand, ShoppingListRead
 from .reuse_schemas import (
     ShoppingExclusionRead, ShoppingExclusionWrite, ShoppingTemplateCreate,
@@ -65,3 +66,13 @@ def exclusion(ingredient_id: IngredientId, body: ShoppingExclusionWrite, user: U
 @router.delete('/shopping-list-exclusions/{ingredient_id}', response_model=Detail[ShoppingExclusionRead])
 def remove_exclusion(ingredient_id: IngredientId, user: User, db: DB, key: Key):
     return detail(reuse.set_exclusion(db, ingredient_id, user, ShoppingExclusionWrite(excluded=False), key))
+
+
+@router.get('/shopping-list-pin', response_model=Detail[ShoppingPinRead])
+def read_pin(user: User, db: DB):
+    return detail(access.get_pin(db, user))
+
+
+@router.put('/shopping-list-pin', response_model=Detail[ShoppingPinRead])
+def write_pin(body: ShoppingPinWrite, user: User, db: DB, key: Key):
+    return detail(access.set_pin(db, user, body, key))

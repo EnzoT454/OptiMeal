@@ -7,7 +7,10 @@ Pydantic et l’application FastAPI ; ne pas modifier les JSON à la main.
 Les fichiers `shopping-*.schema.json` et `shopping-list-examples.json` fixent
 les [contrats du lot A des listes](../../docs/SHOPPING_LISTS_CONTRACTS.md).
 Ils sont testés et consommés par le mobile ; les routes privées de listes
-apparaissent dans `openapi.json`. La migration `0017_shopping_lists` est requise.
+apparaissent dans `openapi.json`. Les schémas `shopping-list-pin-*` ajoutent la préférence privée d’Accueil.
+Le filtre `start_date`/`end_date` recherche une période exacte avant pagination.
+La migration `0021_shopping_list_pin` est requise pour l’épinglage ; voir
+[les accès unifiés](../../docs/SHOPPING_ACCESS.md).
 
 - `sale-reviews.schema.json` et `sale-normalization-report.schema.json` :
   attestations et rapports serveur de [normalisation des ventes](../../docs/SALE_NORMALIZATION.md),

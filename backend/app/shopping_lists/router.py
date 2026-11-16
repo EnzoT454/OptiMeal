@@ -1,4 +1,5 @@
 """Listes privées ; identité du jeton, commandes idempotentes et révisions."""
+from datetime import date
 from typing import Annotated, Literal
 from uuid import UUID
 
@@ -35,8 +36,9 @@ def detail(item):
 @router.get('', response_model=Page[ShoppingListRead])
 def lists(user: User, db: DB, status: Literal['draft', 'active', 'completed', 'archived'] | None = None,
           limit: Annotated[int, Query(ge=1, le=100)] = 20,
-          offset: Annotated[int, Query(ge=0)] = 0, collection: Literal['current', 'history'] | None = None):
-    items, total = service.list_lists(db, user, status=status, limit=limit, offset=offset, collection=collection)
+          offset: Annotated[int, Query(ge=0)] = 0, collection: Literal['current', 'history'] | None = None,
+          start_date: date | None = None, end_date: date | None = None):
+    items, total = service.list_lists(db, user, status=status, limit=limit, offset=offset, collection=collection, start_date=start_date, end_date=end_date)
     return dict(items=items, total=total, limit=limit, offset=offset, meta=detail(None)['meta'])
 
 
