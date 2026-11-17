@@ -5,8 +5,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecipeButton, RecipeField, RecipeScreen, RecipeTitle, recipeStyles as s } from '../components/recipes';
 import { ListDateField } from '../components/lists/ListDateField';
 import { useListCommand } from '../components/lists/useListCommand';
-import { fetchRevision, templateIcons, templatesPath } from '../services/shoppingReuse';
-import { listCommand, listsPath, localDate, quantityLabel } from '../services/shoppingLists';
+import { templateIcons, templatesPath } from '../services/shoppingReuse';
+import { fetchList, listCommand, listsPath, localDate, quantityLabel } from '../services/shoppingLists';
 import type { ShoppingListRead, ShoppingTemplateIcon, ShoppingTemplateRead } from '../types/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
 
@@ -24,8 +24,8 @@ export default function ShoppingReuseScreen({ route, navigation }: NativeStackSc
   useFocusEffect(useCallback(() => {
     mounted.current = true;
     let active = true; setLoading(true);
-    fetchRevision(id, revision).then(value => { if (active) { setSource(value.snapshot); setName(value.snapshot.name); setError(''); } })
-      .catch(e => { if (active) setError(e instanceof Error ? e.message : 'Révision indisponible.'); })
+    fetchList(id).then(value => { if (active) { if (value.revision !== revision) throw new Error('La liste a changé. Rouvre-la avant de continuer.'); setSource(value); setName(value.name); setError(''); } })
+      .catch(e => { if (active) setError(e instanceof Error ? e.message : 'Liste indisponible.'); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; mounted.current = false; };
   }, [id, revision]));
@@ -40,12 +40,12 @@ export default function ShoppingReuseScreen({ route, navigation }: NativeStackSc
   }
   const locked = command.locked || loading;
   return <RecipeScreen><RecipeTitle>{mode === 'copy' ? 'Copier les besoins' : 'Enregistrer un modèle'}</RecipeTitle>
-    <Text style={s.body}>Révision {revision} de la liste d’origine. Les achats, la possession et les prix ne seront pas repris. Les articles retirés sont ignorés.</Text>
+    <Text style={s.body}>Les achats, la possession et les prix ne seront pas repris. Les articles retirés sont ignorés.</Text>
     {!!(error || command.error) && <Text accessibilityRole="alert" style={s.requiredItem}>{error || command.error}</Text>}
-    {loading && <ActivityIndicator accessibilityLabel="Chargement de la révision" />}
+    {loading && <ActivityIndicator accessibilityLabel="Chargement de la liste" />}
     {command.pending ? <View style={s.notice}><Text style={s.body}>Une demande attend sa confirmation. Reprends-la sans créer de doublon.</Text>
       <RecipeButton title="Reprendre l’enregistrement" disabled={command.busy} onPress={() => void save()} /></View> : source && <>
-      <RecipeField label={mode === 'copy' ? 'Nom de la nouvelle liste' : 'Nom du modèle'} value={name} onChangeText={setName} editable={!locked} maxLength={120} />
+      <RecipeField label={mode === 'copy' ? 'Nom de la nouvelle liste' : 'Nom du modèle'} placeholder={mode === 'template' ? 'Ex. Fête, barbecue, voyage' : undefined} value={name} onChangeText={setName} editable={!locked} maxLength={120} />
       {mode === 'copy' ? <ListDateField label="Date prévue des courses" value={purchaseDate} onChange={setPurchaseDate} disabled={locked} /> : <View style={s.chips}>
         {(Object.keys(templateIcons) as ShoppingTemplateIcon[]).map(value => <RecipeButton key={value} title={`${templateIcons[value]} ${value === 'basket' ? 'Panier' : value === 'cart' ? 'Chariot' : value === 'leaf' ? 'Feuille' : value === 'home' ? 'Maison' : 'Repas'}`}
           variant={value === icon ? 'primary' : 'neutral'} accessibilityState={{ selected: value === icon }} disabled={locked} onPress={() => setIcon(value)} />)}

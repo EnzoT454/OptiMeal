@@ -1,5 +1,14 @@
 # Accueil, Calendrier et Liste — étape 13
 
+## Présentation compacte d’Accueil — 16 novembre 2026
+
+Dans Accueil, **Ton épicerie** réutilise `ListSummaryRow`, le même résumé que
+l’onglet Liste : nom, icônes/nombres d’articles et magasins, date des courses et
+coût total estimé. Les sous-totaux/inconnues gardent « ≥ »/« — » et les libellés
+complets du lecteur d’écran. L’état vide se limite à « Aucune liste épinglée. ».
+Le bouton Choisir une liste et l’ouverture de l’identifiant épinglé sont conservés.
+
+
 Étape livrée dans le dépôt le 16 novembre 2026. Les trois accès utilisent
 maintenant les listes privées identifiées. Aucun de ces écrans n’instancie
 l’ancien `useListeAchats` ni ne calcule son propre panier.
@@ -7,12 +16,11 @@ l’ancien `useListeAchats` ni ne calcule son propre panier.
 ## Depuis Accueil
 
 1. Ouvrir une liste en cours depuis Liste.
-2. Dans **Options de la liste**, choisir **Épingler sur Accueil**. Une seule
+2. Dans le menu **…** en haut à droite, choisir **Épingler sur Accueil**. Une seule
    liste peut être épinglée par compte ; une nouvelle préférence remplace
    explicitement la précédente. **Ne plus épingler sur Accueil** la retire.
-3. Revenir sur Accueil. La carte **Ton épicerie** indique le nom, le statut,
-   la révision, la période éventuelle, la date des courses, la progression et
-   les montants serveur. Toucher la carte ouvre ce même identifiant dans le
+3. Revenir sur Accueil. La carte **Ton épicerie** indique le nom, puis les icônes
+   pour les articles, magasins, date des courses et coût total. Toucher la carte ouvre ce même identifiant dans le
    détail de Liste. **Choisir une liste** ouvre l’accueil des listes.
 4. Sans préférence, aucun panier n’est inventé à partir de la semaine courante.
    L’interface invite à épingler une liste. Les visiteurs gardent leur accueil
@@ -57,19 +65,11 @@ serveur sont affichées sans calcul de prix local. Un sous-total incomplet et
 les articles sans estimation restent explicites. L’ancienne carte de promotions
 et l’ajout rapide local d’Accueil sont remplacés par l’accès au détail sauvegardé.
 
-Accueil mémorise seulement l’identité d’une préférence confirmée par lecture
-serveur, dans l’espace du compte. Hors connexion, il peut ouvrir le cache complet
-de cette même liste, avec date de synchronisation et nombre d’actions en attente.
-Il ne choisit jamais la dernière liste ouverte à la place de la liste épinglée.
-Un refus 403/404 reste une erreur. Les résultats d’un ancien compte/parcours sont
-ignorés. Les compteurs et montants du cache restent ceux confirmés par le serveur,
-comme dans le détail hors connexion de l’étape 11.
-
-Le panneau de listes du Calendrier nécessite le réseau pour charger une nouvelle
-période. Une erreur de rafraîchissement laisse les dernières cartes chargées de
-cette période avec un avertissement ; un changement de semaine ne réutilise pas
-les cartes de la semaine précédente. L’ouverture d’un détail déjà enregistré peut
-ensuite utiliser son cache habituel.
+Accueil charge la préférence et la liste courante depuis le serveur à l’ouverture.
+Il ne conserve plus de copie locale ni de file de synchronisation et ne se replie
+pas sur d’anciennes données en cas de panne. L’ouverture du détail exige compte
+et réseau. Aucun contrôle périodique n’est exécuté.
+Voir [la création complète](SHOPPING_CREATION.md).
 
 ## Migration et contrats
 
@@ -123,5 +123,4 @@ et comparer les compteurs et montants. Vérifier aussi perte de réseau et texte
 agrandi. Les tests automatisés ne remplacent pas ces essais iOS et Android.
 
 L’[étape 14](SHOPPING_CLEANUP.md) a retiré les fichiers de l’ancien moteur après
-audit des consommateurs. Les anciennes données et leur récupération de l’étape 12
-restent intactes. La validation finale et les essais appareils restent à l’étape 15.
+audit des consommateurs. Les anciennes données restent conservées ; leur ancien parcours d’import a été retiré. La validation finale et les essais appareils restent à l’étape 15.

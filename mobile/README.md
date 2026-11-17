@@ -1,67 +1,61 @@
 # Mobile OptiMeal
 
-L’[étape 14](../backend/docs/SHOPPING_CLEANUP.md) retire les six fichiers de
-l’ancien moteur local et ses composants après audit des consommateurs. Accueil,
-Calendrier et Liste utilisent les accès identifiés de l’étape 13. Aucune ancienne
-donnée n’est effacée : la récupération volontaire et son journal sont conservés.
-Les suivis et les prix d’affichage de Promos restent fonctionnels. Validation :
-252 tests mobiles, TypeScript et 46 exports de contrats ; essais appareils à
-consigner à l’étape 15.
+Dans Liste, le « + » est réservé au bouton **+ Créer une liste** ; les titres des
+pages de création n’en portent plus. Des séparateurs et espacements distinguent
+En cours, Historique et Mes modèles.
 
-Les [accès unifiés](../backend/docs/SHOPPING_ACCESS.md) de l’étape 13 relient
-Accueil, Calendrier et Liste au même détail par identifiant. Épingler une liste
-depuis ses options l’affiche sur Accueil ; Calendrier affiche les listes de la
-semaine sélectionnée et transmet ses dates au formulaire de création. Les cartes
-et le détail utilisent les mêmes agrégats serveur. Le cache de la liste épinglée
-reste accessible hors connexion. La migration 0021 est appliquée et vérifiée sur Supabase depuis le 16 novembre
-2026, à partir de 0020 déjà présente. Validation : 277 tests mobiles et
-TypeScript ; essais sur appareils à consigner. L’ancien code a été retiré à l’étape 14.
-Les descriptions plus anciennes de l’Épicerie locale ci-dessous sont historiques.
+**Ton épicerie** sur Accueil utilise le même résumé compact avec icônes que Liste :
+articles, magasins, date et coût total, avec le nom de la liste épinglée.
 
-La [récupération des anciennes données](../backend/docs/SHOPPING_RECOVERY.md)
-de l’étape 12 est accessible depuis Liste. Elle propose les ajouts manuels privés
-avec sélection et confirmation, puis un brouillon aux quantités à préciser.
-La conversion de « J’en ai toujours » en exclusions futures est facultative,
-désactivée par défaut. Le journal de reprise évite les doublons après interruption ;
-aucune ancienne donnée n’est effacée, aucune clé commune attribuée au compte.
-Le réseau est requis. Validation : 261 tests mobiles et TypeScript ; essais
-sur appareils à consigner. Les accès Accueil/Calendrier sont raccordés à l’étape 13.
+Le détail montre les produits et prix sauvegardés, avec les achats déjà effectués
+visibles par défaut. Une seule action **Recalculer les prix** recalcule le reste
+avec les prix directs et l’arrondi supérieur, en conservant les achats passés.
+Les anciens boutons/panneau de comparaison sont retirés. **Le prendre ailleurs**
+ouvre les alternatives et enregistre le changement avec ce même recalcul.
 
-Le [mode courses hors connexion](../backend/docs/SHOPPING_OFFLINE.md) de l’étape 11
-conserve la liste complète, sa révision et une file de coches/décoches par compte.
-Dans Liste, **Ouvrir la liste enregistrée sur cet appareil** permet de la retrouver
-sans réseau. Les actions locales restent signalées en attente ; reprise avec
-les mêmes clés, résolution explicite des conflits et purge après suppression
-du compte. Le détail réessaie toutes les 15 secondes ou avec Actualiser ; aucune
-tâche native en arrière-plan n’est garantie. Les montants et compteurs restent
-ceux du serveur jusqu’à synchronisation. Création, import et comparaison exigent
-le réseau. Validation automatisée : 236 tests mobiles et TypeScript ; essais
-iOS/Android sur appareils à consigner.
+Le détail des listes possède un menu **…** : renommer, épingler sur Accueil,
+utiliser comme modèle, marquer comme terminée et modifier les articles
+(ajout/suppression). Une liste terminée peut être rouverte depuis ce menu.
 
-Les [modèles et l’historique](../backend/docs/SHOPPING_REUSE.md) de l’étape 10
-sont intégrés à Liste ; les exclusions futures sont gérées depuis les fiches
-et Paramètres. Copier repart sans achats, possession ou prix. La migration
-0020 est présente sur Supabase, désormais vérifié à 0021 ; essais sur appareils à compléter.
+L’[onglet Liste](../backend/docs/SHOPPING_OVERVIEW.md) exige un compte et une
+vérification réseau à l’entrée. Ordre : **+ Créer une liste → En cours → Historique → Mes modèles**.
+Les listes en cours et historiques utilisent des résumés avec icônes : articles,
+magasins, date des courses et coût total (ou sous-total indiqué par « ≥ »).
+La [création complète](../backend/docs/SHOPPING_CREATION.md) prépare les articles
+dans **1. Ingrédients**, avec ajustement direct des quantités du calendrier.
+**Suivant** ouvre **2. Prix par magasin** : Maxi, Metro, Super C, puis Moins cher.
+Toucher un magasin affiche ses produits ; Moins cher les regroupe par magasin.
+Toucher un produit permet de changer son magasin et de recalculer le panier.
+Le prix direct est multiplié par le nombre de produits arrondi au supérieur.
+La validation finale enregistre une liste active avec les prix choisis en une
+requête. Aucun brouillon intermédiaire n’est créé par ce parcours.
+
+Synchronisation, cache des listes, contrôles périodiques et anciennes versions
+consultables sont retirés. Les achats s’enregistrent lors de l’action ; les
+lectures se font à l’ouverture. L’historique des listes terminées reste limité
+à trois lignes sur l’accueil, avec **Voir tout** vers la page complète.
+Les modèles pour les occasions gardent leur menu **…** : modifier le nom,
+supprimer le modèle, ajouter un produit. La reprise d’une demande incertaine
+reste manuelle et idempotente. Les anciens états de file/cache ne sont plus lus.
+Les sections datées ci-dessous décrivent aussi les étapes historiques ; ces
+choix actuels remplacent les propositions de synchronisation et de révisions.
 
 Le [parcours de courses](../backend/docs/SHOPPING_COURSES.md) de l’onglet Liste
 est livré dans le dépôt : fiches défilantes, coches de produits, achats partiels,
 possession annulable et compléments. La migration 0019 est appliquée et vérifiée
 sur Supabase depuis le 16 novembre 2026 ; essais des nouveaux écrans sur appareils
-à compléter. Les anciennes sections
-Épicerie de Calendrier décrites ci-dessous restent en place pendant la transition.
+à compléter. Calendrier ouvre les listes sauvegardées pour la période sélectionnée.
 
 La barre de navigation contient Accueil, Promos, Recettes, Calendrier et Liste.
 Les paramètres s’ouvrent depuis la roue dentée en haut à droite de l’accueil,
 avec un retour vers celui-ci. Cet accès reste disponible sans compte.
 L’onglet Liste permet de créer un brouillon manuel ou une copie indépendante
 d’une période du calendrier avec aperçu et confirmation des exclusions, puis
-de compléter et reprendre ses listes enregistrées. Les visiteurs voient la
-présentation et peuvent se connecter à la demande. Les réponses incertaines
+de compléter et reprendre ses listes enregistrées. Les visiteurs doivent se connecter avant d’accéder à Liste. Les réponses incertaines
 se reprennent avec la même commande, enregistrée localement par compte.
 Le serveur doit disposer de la migration `0017_shopping_lists` et des routes du
 lot A. Cette migration est appliquée et vérifiée sur la base Supabase configurée
-depuis le 14 novembre 2026. L’ancienne Épicerie reste accessible dans Calendrier et depuis Accueil
-pendant la transition. Le détail permet maintenant de comparer Maxi, Metro, Super C et Moins cher,
+depuis le 14 novembre 2026. Accueil et Calendrier ouvrent désormais les listes par identifiant. Le détail permet maintenant de comparer Maxi, Metro, Super C et Moins cher,
 puis d'appliquer explicitement une proposition. Les choix manuels sont conservés
 et les prix inconnus restent signalés. Cette extension nécessite la migration
 `0018_shopping_comparisons`, appliquée et vérifiée sur Supabase le 16 novembre
@@ -759,7 +753,8 @@ calendrier ne modifie pas les besoins déjà enregistrés. Une panne de lecture
 reste une erreur, jamais une liste vide inventée.
 
 Le détail conserve un cache complet par compte et une file persistante d’états
-cibles d’achat. Les coches locales sont signalées en attente ; les compteurs et
+cibles d’achat pour la reprise après interruption. L’entrée dans Liste exige
+toujours une session et une connexion au serveur. Les coches locales sont signalées en attente ; les compteurs et
 montants restent ceux confirmés par le serveur. Après réponse perdue, la reprise
 réutilise exactement la même commande. Un conflit incompatible demande une
 décision explicite. Une lecture réussie ne confirme pas une écriture incertaine.
@@ -767,12 +762,11 @@ Voir [le parcours hors connexion](../backend/docs/SHOPPING_OFFLINE.md).
 
 Les formulaires et erreurs restent visibles après refus. Les commandes et caches
 appartiennent au compte d’origine ; un changement de compte masque immédiatement
-les anciennes données. Le [guide de récupération](../backend/docs/SHOPPING_RECOVERY.md)
-décrit la reprise volontaire des anciens ajouts privés, sans effacement des sources.
+les anciennes données. Le parcours de récupération des anciens ajouts privés a été retiré.
 
 Tests actuels : `shoppingListCommands.test.cjs`, `shoppingOffline.test.cjs`,
 `offlineCoursesHook.test.cjs`, `shoppingCourses.test.cjs`,
-`shoppingRecovery.test.cjs` et `shoppingAccess.test.cjs`. Les anciens tests de
+`shoppingAccess.test.cjs`. Les anciens tests de
 chargement/calcul local et de sa vue ont été retirés avec ce parcours à l’étape 14.
 
 ## Identité des produits suivis et choisis
@@ -803,7 +797,7 @@ de changement de compte restent à consigner sur les deux plateformes.
 
 Les listes et achats sont sauvegardés côté serveur et isolés par propriétaire.
 Sur le téléphone, `services/accountStorage.ts` sépare cache complet, commandes,
-récupération, préférence épinglée et suivis par identifiant Supabase. Les écritures
+préférence épinglée et suivis par identifiant Supabase. Les écritures
 d’une même clé sont ordonnées, même entre écrans. Le cache et les résultats
 asynchrones d’un ancien compte ne remplacent pas ceux du compte courant.
 
@@ -813,16 +807,13 @@ commandes. Après suppression distante confirmée, la purge bloque les écriture
 tardives et retire l’espace de ce compte. Les listes et la préférence épinglée
 sont partagées entre appareils par le serveur ; les suivis restent locaux.
 
-Les anciennes clés `shoppingList.*` sont conservées. Seuls les anciens ajouts
-manuels et « J’en ai toujours » privés sont proposés dans la récupération
-volontaire. Les clés communes sans propriétaire ne sont ni lues ni attribuées au
+Les anciennes clés `shoppingList.*` sont conservées. L’ancien import des ajouts manuels et du garde-manger est retiré. Les clés communes sans propriétaire ne sont ni lues ni attribuées au
 premier compte connecté. Le retrait de l’ancien moteur ne déclenche aucune purge.
 
 Tests : `localAccountIsolation.test.cjs`, `accountPurge.test.cjs`,
-`shoppingRecovery.test.cjs`, `shoppingOffline.test.cjs` et les tests des accès.
+`shoppingOffline.test.cjs` et les tests des accès.
 Essais appareils : créer et cocher sous A, passer en visiteur puis sous B,
-revenir sous A, redémarrer, vérifier les reprises et confirmer qu’une récupération
-n’efface aucune ancienne donnée. Les résultats iOS/Android restent à consigner.
+revenir sous A, redémarrer, vérifier les reprises et le refus d’accès sans réseau. Les résultats iOS/Android restent à consigner.
 
 ## Prix promotionnels avec limite de quantité
 

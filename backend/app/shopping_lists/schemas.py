@@ -56,8 +56,41 @@ class ShoppingCommandHeaders(ContractModel):
     idempotency_key: UUID
 
 
+class ShoppingDraftChoice(ContractModel):
+    item_index: Annotated[int, Field(strict=True, ge=0, le=499)]
+    product_id: Annotated[str, StringConstraints(min_length=1, max_length=512)]
+
+
+class ShoppingCreationPricing(ContractModel):
+    fingerprint: Fingerprint
+    scenario: Literal['maxi', 'metro', 'superc', 'cheapest']
+    choices: list[ShoppingDraftChoice] = Field(default_factory=list, max_length=500)
+    accept_partial: StrictBool = False
+
+
+class ShoppingDraftItem(ContractModel):
+    name: Name
+    ingredient_id: IngredientId | None = None
+    required: list[ShoppingQuantity] = Field(default_factory=list, max_length=3)
+
+
+class ShoppingDraftPricingWrite(ContractModel):
+    items: list[ShoppingDraftItem] = Field(min_length=1, max_length=500)
+    purchase_date: date
+    choices: list[ShoppingDraftChoice] = Field(default_factory=list, max_length=500)
+
+
+class ShoppingInitialItem(ContractModel):
+    ingredient_id: IngredientId | None = None
+    name: Name
+    quantity: ShoppingQuantity | None = None
+
+
 class ShoppingListCreate(ContractModel):
     name: Name
+    pricing: ShoppingCreationPricing | None = None
+    items: list[ShoppingInitialItem] = Field(default_factory=list, max_length=500)
+    activate: StrictBool = False
     purchase_date: date | None = None  # défaut résolu par le service à Toronto
 
 
@@ -132,8 +165,23 @@ class ShoppingCalendarPreviewWrite(ShoppingPeriod):
     purchase_date: date | None = None
 
 
+class ShoppingCalendarAdjustment(ContractModel):
+    item_id: UUID
+    required: list[ShoppingBaseQuantity] = Field(default_factory=list, max_length=3)
+
+    @model_validator(mode='after')
+    def coherent(self):
+        unique_units(self.required)
+        return self
+
+
 class ShoppingFromCalendar(ShoppingCalendarPreviewWrite):
     name: Name
+    pricing: ShoppingCreationPricing | None = None
+    items: list[ShoppingInitialItem] = Field(default_factory=list, max_length=500)
+    excluded_item_ids: list[UUID] = Field(default_factory=list, max_length=500)
+    adjusted_items: list[ShoppingCalendarAdjustment] = Field(default_factory=list, max_length=500)
+    activate: StrictBool = False
     preview_fingerprint: Fingerprint
     accept_partial: StrictBool = False
     accept_empty: StrictBool = False
@@ -260,12 +308,36 @@ class ShoppingChoiceWrite(ShoppingCommand):
     product_id: Annotated[str, StringConstraints(min_length=1, max_length=512)] | None
 
 
+class ShoppingRecalculateChoice(ContractModel):
+    item_id: UUID
+    product_id: Annotated[str, StringConstraints(min_length=1, max_length=512)] | None
+
+
+class ShoppingRecalculatePricesWrite(ShoppingCommand):
+    scenario: Literal['maxi', 'metro', 'superc', 'cheapest'] | None = None
+    choices: list[ShoppingRecalculateChoice] = Field(default_factory=list, max_length=500)
+
+    @model_validator(mode='after')
+    def unique_choices(self):
+        if len({choice.item_id for choice in self.choices}) != len(self.choices):
+            raise ValueError('Choix de produit dupliqué.')
+        return self
+
+
 class ShoppingCalculatedLine(ContractModel):
+    pricing_method: Literal['verified', 'direct'] = 'verified'
+    direct_increment: ShoppingBaseQuantity | None = None
     sale: NormalizedSale
     sale_units: Annotated[int, Field(strict=True, ge=1)]
     quantity: Quantity
     amount: DecimalText
     estimated_weight: StrictBool
+
+    @model_validator(mode='after')
+    def direct_units(self):
+        if (self.pricing_method == 'direct') != (self.direct_increment is not None):
+            raise ValueError('Les prix directs exigent leur unité de vente explicite.')
+        return self
 
 
 class ShoppingComparedNeed(ContractModel):
@@ -325,6 +397,26 @@ class ShoppingScenario(ContractModel):
         return self
 
 
+class ShoppingDraftProduct(ContractModel):
+    item_id: UUID
+    item_index: Annotated[int, Field(strict=True, ge=0, le=499)]
+    product_id: str
+    name: str
+    retailer: Literal['maxi', 'metro', 'superc']
+    store_id: str | None
+    format: str | None
+    unit_price: DecimalText | None
+    units: Annotated[int, Field(strict=True, ge=0, le=1_000_000)] | None
+    amount: DecimalText | None
+    issue: str | None
+
+
+class ShoppingDraftPricingRead(ContractModel):
+    fingerprint: Fingerprint
+    scenarios: list[ShoppingScenario]
+    candidates: list[ShoppingDraftProduct]
+
+
 class ShoppingCandidate(ContractModel):
     ingredient_id: IngredientId
     product_id: str
@@ -375,6 +467,7 @@ class ShoppingProductPurchaseRead(ContractModel):
     purchased_quantity: DecimalText
     estimated_amount: DecimalText
     allocations: list[ShoppingPurchaseAllocation]
+    confirmed_need_revisions: dict[UUID, Revision] = Field(default_factory=dict)
 
     @model_validator(mode='after')
     def coherent_purchase(self):
@@ -388,12 +481,14 @@ class ShoppingProductPurchaseRead(ContractModel):
         if total != Fraction(Decimal(self.purchased_quantity)):
             raise ValueError('Quantité achetée différente de sa couverture.')
         sale = self.line.sale
-        increment = sale.content_per_package if sale.price_basis == 'package' else sale.sale_increment
+        increment = self.line.direct_increment if self.line.pricing_method == 'direct' else (sale.content_per_package if sale.price_basis == 'package' else sale.sale_increment)
         if increment is None or Fraction(Decimal(self.purchased_quantity)) != Fraction(Decimal(increment.amount)) * self.purchased_units:
             raise ValueError('Quantité produit incompatible avec ses unités de vente.')
         if any(a.quantity.unit != increment.unit for a in self.allocations):
             raise ValueError('Couverture incompatible avec le produit acheté.')
-        if self.purchased_units == 0 and (self.allocations or Decimal(self.estimated_amount) != 0):
+        if any(item_id not in self.item_ids for item_id in self.confirmed_need_revisions):
+            raise ValueError('Confirmation rattachée à un autre article.')
+        if self.purchased_units == 0 and (self.allocations or self.confirmed_need_revisions or Decimal(self.estimated_amount) != 0):
             raise ValueError('Achat décoché avec couverture ou montant.')
         return self
 
@@ -487,20 +582,6 @@ class ShoppingListRead(ContractModel):
         if self.assignment is None and not self.product_purchases and (any(i.pricing_status == 'known' and i.coverage_status != 'owned' for i in active) or (
                 Decimal(self.totals.budget_known_amount) != 0 or Decimal(self.totals.remaining_known_amount) != 0)):
             raise ValueError('Montants sans proposition enregistrée.')
-        return self
-
-
-class ShoppingRevisionRead(ContractModel):
-    list_id: UUID
-    revision: Revision
-    command_id: UUID
-    recorded_at: AwareDatetime
-    snapshot: ShoppingListRead
-
-    @model_validator(mode='after')
-    def same_revision(self):
-        if self.list_id != self.snapshot.id or self.revision != self.snapshot.revision:
-            raise ValueError('Instantané d’une autre liste ou révision.')
         return self
 
 

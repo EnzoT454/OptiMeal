@@ -568,9 +568,54 @@
       "title": "SaleReview",
       "type": "object"
     },
+    "ShoppingBaseQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "ml",
+            "unit"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingBaseQuantity",
+      "type": "object"
+    },
     "ShoppingCalculatedLine": {
       "additionalProperties": false,
       "properties": {
+        "pricing_method": {
+          "default": "verified",
+          "enum": [
+            "verified",
+            "direct"
+          ],
+          "title": "Pricing Method",
+          "type": "string"
+        },
+        "direct_increment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ShoppingBaseQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "sale": {
           "$ref": "#/$defs/NormalizedSale"
         },

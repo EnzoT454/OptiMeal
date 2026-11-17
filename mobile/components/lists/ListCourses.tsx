@@ -4,21 +4,18 @@ import { RecipeButton, recipeStyles as s } from '../recipes';
 import { listCommand, listsPath, quantityLabel } from '../../services/shoppingLists';
 import type { ListCommand } from '../../services/shoppingLists';
 import type { ShoppingItemRead, ShoppingListRead } from '../../types/shoppingLists';
-import ProductPurchase, { pendingProductRows } from './ProductPurchase';
+import ProductPurchase, { productRows } from './ProductPurchase';
 import ListArticleSheet from './ListArticleSheet';
 import { coverageLabels, manualCheckCoverage, remainingQuantities, storeLabel } from './courseQuantities';
 
-export default function ListCourses({ list, disabled, onCommand, error = '', purchasesOnly = false, pendingCommands = [] }: {
-  list: ShoppingListRead; error?: string; purchasesOnly?: boolean; pendingCommands?: ListCommand[]; disabled: boolean; onCommand: (command: ListCommand) => Promise<boolean>;
+export default function ListCourses({ list, disabled, onCommand, error = '' }: {
+  list: ShoppingListRead; error?: string; disabled: boolean; onCommand: (command: ListCommand) => Promise<boolean>;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
-  const [showBought, setShowBought] = useState(false);
+  const [showBought, setShowBought] = useState(true);
   const [store, setStore] = useState('all');
-  const rows = pendingProductRows(list, pendingCommands);
-  const isBought = (item: ShoppingItemRead) => {
-    const pending = pendingCommands.filter(c => c.path === `${listsPath}/${list.id}/items/${item.id}/manual-purchase`).pop();
-    return pending ? (pending.body as { purchased: boolean }).purchased : item.coverage_status === 'purchased';
-  };
+  const rows = productRows(list);
+  const isBought = (item: ShoppingItemRead) => item.coverage_status === 'purchased';
   const stores = [...new Set(rows.map(r => r.line.sale.raw_source.retailer))];
   const editable = list.status === 'draft' || list.status === 'active';
   const locked = disabled || !editable;
@@ -37,7 +34,7 @@ export default function ListCourses({ list, disabled, onCommand, error = '', pur
       </Pressable>}
       <Pressable accessibilityRole="button" accessibilityLabel={`Fiche de ${item.name}`} onPress={() => setSelected(item.id)} style={{ flex: 1, minHeight: 48, gap: 6 }}>
         <Text style={s.sectionTitle}>{item.name}</Text>
-        {pendingCommands.some(c => c.path === `${listsPath}/${list.id}/items/${item.id}/manual-purchase`) && <Text style={s.requiredItem}>Achat local · en attente de synchronisation</Text>}<Text style={s.body}>Besoin : {quantityLabel(item.required)}</Text>
+        <Text style={s.body}>Besoin : {quantityLabel(item.required)}</Text>
         <Text style={s.note}>{coverageLabels[item.coverage_status]} · {item.category}</Text>
         {item.coverage_status === 'partial' && remaining.length > 0 && <Text style={s.requiredItem}>Complément : {quantityLabel(remaining)}</Text>}
         {!owned && <Text style={s.note}>Produit et prix à préciser</Text>}
@@ -59,7 +56,7 @@ export default function ListCourses({ list, disabled, onCommand, error = '', pur
         <Text accessibilityRole="header" style={s.sectionTitle}>{storeLabel(retailer)}</Text>
         {grouped.map(category => <View key={category} style={{ gap: 8 }}><Text style={s.note}>{category}</Text>
           {storeRows.filter(r => (list.items.find(i => i.id === r.itemIds[0])?.category ?? 'Autres') === category).map(row =>
-            <ProductPurchase key={`${row.comparisonId}:${row.line.sale.product_id}`} list={list} row={row} disabled={locked} onCommand={onCommand} onOpen={() => setSelected(row.itemIds[0])} />)}
+            <ProductPurchase key={`${row.comparisonId}:${row.line.sale.product_id}`} list={list} row={row} display="remaining" disabled={locked} onCommand={onCommand} onOpen={() => setSelected(row.itemIds[0])} />)}
         </View>)}
       </View>;
     })}
@@ -70,16 +67,16 @@ export default function ListCourses({ list, disabled, onCommand, error = '', pur
     {list.items.filter(i => !i.removed && rows.some(r => r.itemIds.includes(i.id)) && remainingQuantities(list, i).length > 0).map(item =>
       <Pressable key={item.id} accessibilityRole="button" accessibilityLabel={`Vérifier le complément de ${item.name}`} onPress={() => setSelected(item.id)} style={s.notice}>
         <Text style={s.body}>{item.name} · encore {quantityLabel(remainingQuantities(list, item))}</Text>
-        {list.assignment?.stale && <Text style={s.requiredItem}>Comparer les compléments avant de préparer leurs achats.</Text>}
+        {list.assignment?.stale && <Text style={s.requiredItem}>Recalculer les prix pour les compléments.</Text>}
       </Pressable>)}
     <RecipeButton title={`${showBought ? 'Masquer' : 'Voir'} les achats enregistrés`} variant="neutral" accessibilityState={{ expanded: showBought }} onPress={() => setShowBought(!showBought)} />
     {showBought && <View style={{ gap: 10 }}>
-      {rows.filter(r => (r.purchasedUnits > 0 || r.pending) && (store === 'all' || r.line.sale.raw_source.retailer === store)).map(row =>
-        <ProductPurchase key={`${row.comparisonId}:${row.line.sale.product_id}`} list={list} row={row} disabled={locked} onCommand={onCommand} onOpen={() => setSelected(row.itemIds[0])} />)}
+      {rows.filter(r => r.purchasedUnits > 0 && (store === 'all' || r.line.sale.raw_source.retailer === store)).map(row =>
+        <ProductPurchase key={`${row.comparisonId}:${row.line.sale.product_id}`} list={list} row={row} display="purchased" disabled={locked} onCommand={onCommand} onOpen={() => setSelected(row.itemIds[0])} />)}
       {store === 'all' && loose.filter(isBought).map(manualRow)}
       {!rows.some(r => r.purchasedUnits > 0) && !loose.some(isBought) && <Text style={s.note}>Aucun achat enregistré.</Text>}
     </View>}
     {list.items.some(i => !i.removed && i.coverage_status === 'owned') && <View style={{ gap: 8 }}><Text style={s.sectionTitle}>Déjà disponible</Text>{list.items.filter(i => !i.removed && i.coverage_status === 'owned').map(manualRow)}</View>}
-    {selectedItem && <ListArticleSheet key={selectedItem.id} item={selectedItem} list={list} commandError={error} disabled={disabled} purchasesOnly={purchasesOnly} pendingCommands={pendingCommands} onClose={() => setSelected(null)} onCommand={onCommand} />}
+    {selectedItem && <ListArticleSheet key={selectedItem.id} item={selectedItem} list={list} commandError={error} disabled={disabled} onClose={() => setSelected(null)} onCommand={onCommand} />}
   </View>;
 }

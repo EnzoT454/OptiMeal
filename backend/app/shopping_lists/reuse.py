@@ -17,13 +17,13 @@ from . import service
 from .errors import ShoppingListError
 from .models import (
     ShoppingList, ShoppingListChoice, ShoppingListCommand, ShoppingListContribution,
-    ShoppingListExclusion, ShoppingListItem, ShoppingListQuantity, ShoppingListRevision,
+    ShoppingListExclusion, ShoppingListItem, ShoppingListQuantity,
     ShoppingListTemplate, ShoppingResourceCommand,
 )
 from .schemas import ShoppingCommand, ShoppingContributionRead, ShoppingListRead, ShoppingWarning
 from .reuse_schemas import (
     ShoppingDuplicateWrite, ShoppingExclusionRead, ShoppingExclusionWrite,
-    ShoppingRevisionSummary, ShoppingTemplateCreate, ShoppingTemplateInstantiate,
+    ShoppingTemplateCreate, ShoppingTemplateInstantiate,
     ShoppingTemplateItem, ShoppingTemplateRead, ShoppingTemplateUpdate,
 )
 
@@ -76,9 +76,17 @@ def list_templates(db: Session, user: CurrentUser, limit=20, offset=0):
     return [ShoppingTemplateRead.model_validate({k: v for k, v in row.items() if k != 'owner_id'}) for row in rows], total
 
 
+def _current_source(db, list_id, expected_revision, user):
+    source = service.get_list(db, list_id, user)
+    if source.revision != expected_revision:
+        raise ShoppingListError(409, 'LIST_REVISION_CONFLICT', 'La liste a changé. Rouvre-la avant de continuer.',
+            list_id=list_id, expected_revision=expected_revision, current_revision=source.revision)
+    return source
+
+
 def create_template(db: Session, user: CurrentUser, body: ShoppingTemplateCreate, key: UUID) -> ShoppingTemplateRead:
     def action():
-        source = service.get_revision(db, body.source_list_id, body.source_revision, user).snapshot
+        source = _current_source(db, body.source_list_id, body.source_revision, user)
         choices = {choice.item_id: choice.product_id for choice in source.choices} if body.include_choices else {}
         items = [ShoppingTemplateItem(id=uuid4(), name=item.name, ingredient_id=item.ingredient_id,
             category=item.category, required=item.required, preferred_product_id=choices.get(item.id) if item.ingredient_id else None)
@@ -161,7 +169,7 @@ def _clone(db, user, name, purchase_date, items, choices, origin, warnings, sour
 def duplicate(db: Session, list_id: UUID, user: CurrentUser, body: ShoppingDuplicateWrite, key: UUID) -> ShoppingListRead:
     warnings = []
     def action(_):
-        source = service.get_revision(db, list_id, body.source_revision, user).snapshot
+        source = _current_source(db, list_id, body.source_revision, user)
         choices = {c.item_id: c.product_id for c in source.choices} if body.include_choices else {}
         return _clone(db, user, body.name, body.purchase_date, [i for i in source.items if not i.removed],
             choices, {'kind': 'list', 'id': str(list_id), 'revision': body.source_revision}, warnings, source)
@@ -205,12 +213,3 @@ def set_exclusion(db: Session, ingredient_id: str, user: CurrentUser,
                 ShoppingListExclusion.ingredient_id == ingredient_id))
         return ShoppingExclusionRead(ingredient_id=ingredient_id, name=name, excluded=body.excluded, updated_at=now)
     return _resource_mutate(db, user, key, 'exclusion:' + ingredient_id, body, ShoppingExclusionRead, action)
-
-
-def list_revisions(db: Session, list_id: UUID, user: CurrentUser, limit=20, offset=0):
-    service._owned_list(db, list_id, user)
-    query = select(ShoppingListRevision).where(ShoppingListRevision.list_id == list_id)
-    total = db.scalar(select(func.count()).select_from(ShoppingListRevision).where(ShoppingListRevision.list_id == list_id))
-    rows = db.scalars(query.order_by(ShoppingListRevision.revision.desc()).limit(limit).offset(offset))
-    return [ShoppingRevisionSummary(list_id=list_id, revision=row.revision, recorded_at=row.recorded_at,
-        name=row.snapshot['name'], status=row.snapshot['status'], item_count=row.snapshot['totals']['item_count']) for row in rows], total

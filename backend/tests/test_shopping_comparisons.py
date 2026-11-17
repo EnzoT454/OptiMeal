@@ -41,7 +41,7 @@ def test_comparison_does_not_change_list_or_revision(db):
     comparison = simulate(db, resource)
     assert len(comparison.scenarios) == 4
     assert service.get_list(db, resource.id, ALICE) == resource
-    assert db.scalar(select(func.count()).select_from(ShoppingListRevision)) == resource.revision
+    assert db.scalar(select(func.count()).select_from(ShoppingListRevision)) == 1
     cheapest = comparison.scenarios[-1]
     assert cheapest.known_amount == '7.00' and cheapest.complete
     assert cheapest.store_count == 1 and cheapest.needs[0].lines[0].sale_units == 1
@@ -59,7 +59,7 @@ def test_apply_is_atomic_replayable_and_history_keeps_estimate(db):
     assert saved.assignment.scenario.scenario == 'cheapest'
     assert apply(db, resource, comparison, key=key, loader=lambda *args: pytest.fail('Rejeu avant sources')) == saved
     assert service.get_list(db, resource.id, ALICE) == saved
-    assert service.get_revision(db, resource.id, resource.revision, ALICE).snapshot == resource
+    assert service.get_list(db, resource.id, ALICE) == saved
     renamed = service.update_list(db, resource.id, ALICE,
         ShoppingListUpdate(expected_revision=saved.revision, name='Dimanche'), uuid4())
     assert renamed.assignment == saved.assignment and renamed.totals.budget_known_amount == '7.00'
@@ -73,7 +73,7 @@ def test_changed_quantity_keeps_old_assignment_visible_but_stale(db):
     assert changed.assignment.stale
     assert changed.assignment.scenario.known_amount == '7.00'
     assert not changed.totals.estimate_complete
-    assert service.get_revision(db, resource.id, saved.revision, ALICE).snapshot == saved
+    assert service.get_list(db, resource.id, ALICE) == changed
 
 
 @pytest.mark.parametrize('change', ['price', 'proof', 'expiry', 'list'])

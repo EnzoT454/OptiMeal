@@ -4,35 +4,30 @@ Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du d
 
 Il décrit le code au **10 novembre 2026** et les confirmations sur téléphone disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
 
-**Listes — état au 16 novembre 2026 :** étapes 1 à 14 livrées dans le dépôt.
-L’onglet Liste sauvegarde les besoins privés, compare les achats attestés et
-permet les coches, les achats partiels, la possession et les compléments après
-modification du besoin. Une coche de produit conserve son estimation et le
-budget prévu ; elle diminue le reste connu à acheter. La migration 0019 est
-appliquée et vérifiée sur Supabase depuis le 16 novembre 2026 ; les essais des nouveaux parcours
-sur appareils restent à effectuer. Accueil et Calendrier ouvrent les listes
-sauvegardées par identifiant. Voir [le parcours de courses](backend/docs/SHOPPING_COURSES.md).
-Les modèles, exclusions futures, copies indépendantes et historique des listes
-sont intégrés à [l’étape 10](backend/docs/SHOPPING_REUSE.md). La migration 0020
-est présente sur Supabase, désormais vérifié à 0021. Une copie ne reprend ni
-achats, ni possession, ni prix ; les anciennes révisions gardent leur contenu.
-L’[étape 11](backend/docs/SHOPPING_OFFLINE.md) ajoute le cache complet privé et
-une file persistante pour les coches/décoches, avec reprise idempotente et
-résolution explicite des conflits. La dernière liste est accessible sans réseau
-depuis Liste ; les montants et compteurs restent ceux du serveur jusqu’à la
-synchronisation. Création, import et comparaison exigent le réseau.
-La [récupération volontaire](backend/docs/SHOPPING_RECOVERY.md) de l’étape 12
-reprend les anciens ajouts manuels privés dans un brouillon, avec aperçu et
-journal empêchant les doubles imports. Les anciens « J’en ai toujours » ne sont
-convertis en exclusions que sur sélection explicite. Les sources sont conservées,
-les clés communes sans propriétaire ignorées et les anciens achats/prix non
-réinterprétés. L’[étape 13](backend/docs/SHOPPING_ACCESS.md) ajoute la liste épinglée
-sur Accueil et les listes de la période sélectionnée dans Calendrier. Cartes et
-détail partagent les mêmes agrégats serveur ; les repas ne modifient pas les
-listes déjà enregistrées. La migration 0021 a été appliquée et vérifiée sur Supabase le 16 novembre 2026,
-depuis 0020 déjà présente ; schéma, RLS et conservation des données contrôlés. L’[étape 14](backend/docs/SHOPPING_CLEANUP.md) retire l’ancien moteur local et ses
-composants sans effacer les données de récupération. La validation finale et les
-essais sur appareils restent à l’étape 15.
+**Listes — état au 16 novembre 2026 :** compte et réseau sont nécessaires à
+l’entrée. L’onglet affiche **+ Créer une liste → En cours → Historique → Mes modèles**.
+La création comporte deux étapes : **Ingrédients**, puis **Prix par magasin**.
+L’utilisateur ajoute les articles ou ajuste directement les besoins du calendrier,
+puis clique sur **Suivant**. Les totaux Maxi, Metro, Super C et Moins cher sont
+présentés dans cet ordre ; chaque magasin ouvre ses produits exacts. Moins cher
+regroupe les produits par magasin et permet de changer un choix au toucher.
+Le nombre de produits est arrondi au supérieur et multiplié par leur prix direct.
+**Créer la liste** enregistre ensuite le panier choisi en une seule transaction. Les listes
+restent indépendantes des changements futurs du calendrier.
+Les courses affichent directement les produits/prix sauvegardés et permettent
+coches, achats partiels, possession et compléments. **Recalculer les prix** est
+l’unique action de calcul : prix directs du complément, arrondi supérieur, achats
+passés conservés. Les deux anciens boutons de comparaison sont retirés. Les modèles sauvegardent les besoins d’une occasion
+(fête, barbecue, voyage, sortie) avec un menu **…** pour renommer, supprimer et
+ajouter un produit.
+La synchronisation, le cache de listes, les contrôles périodiques et la consultation
+des anciennes versions sont retirés. L’historique des listes terminées/archivées
+reste, avec trois lignes puis **Voir tout**. Les compteurs internes protègent
+encore contre les modifications concurrentes. La reprise d’une demande incertaine
+est manuelle et conserve sa clé pour éviter les doublons.
+Supabase reste vérifié à 0021 ; aucune nouvelle migration n’est nécessaire.
+Voir [le parcours de création](backend/docs/SHOPPING_CREATION.md) et
+[la présentation de Liste](backend/docs/SHOPPING_OVERVIEW.md).
 Les tableaux datés plus anciens ci-dessous conservent leur contexte historique.
 
 ## 1. Les grandes parties de l’application
@@ -143,7 +138,7 @@ flowchart TD
 
 À l’inscription, l’utilisateur doit confirmer son courriel. Le retour dans l’application utilise le lien `optimeal://auth/callback` et un échange de code pour obtenir la session.
 
-Les cinq onglets sont visibles avec ou sans compte : Accueil, Promos, Recettes, Calendrier et Liste. Accueil présente les repas du jour et un aperçu des achats au compte connecté, ou un message de bienvenue aux visiteurs. Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine et conserve sa première liste d’épicerie. Le nouvel onglet Liste permet de créer, compléter et reprendre des brouillons privés, manuellement ou depuis un aperçu du calendrier ; les comparaisons et courses sont raccordées, avec prix inconnus sans attestations commerciales. Sans compte, Calendrier demande de se connecter avant de charger les repas personnels. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
+Les cinq onglets sont visibles avec ou sans compte : Accueil, Promos, Recettes, Calendrier et Liste. Accueil présente les repas du jour et un aperçu des achats au compte connecté, ou un message de bienvenue aux visiteurs. Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine et ouvre ses listes sauvegardées. Le nouvel onglet Liste permet de créer, compléter et reprendre des brouillons privés, manuellement ou depuis un aperçu du calendrier ; les comparaisons et courses sont raccordées, avec prix inconnus sans attestations commerciales. Calendrier et Liste demandent un compte ; Liste exige aussi une connexion au serveur. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
 
 Une roue dentée en haut à droite de l’accueil ouvre Paramètres, avec une zone tactile de 48 × 48 et un libellé accessible. Cet écran présente le mode visiteur ou, après connexion, le profil et la déconnexion. Le bouton de retour ramène à l’accueil ; une connexion ou déconnexion réinitialise toujours la navigation.
 
@@ -163,8 +158,7 @@ Les suivis restent locaux, tandis que les listes et l’épinglage sont partagé
 entre appareils par le serveur.
 
 L’ancien moteur local a été retiré. Ses anciennes données restent conservées,
-avec [récupération volontaire](backend/docs/SHOPPING_RECOVERY.md) des ajouts privés
-et exclusions futures sur sélection explicite. Les clés communes sans propriétaire
+sans interface d’import des anciens ajouts ou du garde-manger. Les clés communes sans propriétaire
 sont ignorées. Voir aussi [le stockage par compte](mobile/README.md#données-locales-par-compte).
 
 ### Erreurs de chargement et d’enregistrement de la liste d’achats

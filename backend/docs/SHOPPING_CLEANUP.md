@@ -30,26 +30,22 @@ couverture, paquets, limites et budgets des listes restent côté backend. Les
 outils décimaux de saisie et de présentation des courses ne sont pas un second
 moteur de prix et restent nécessaires.
 
-## Données et reprise conservées
+## Anciennes données conservées
 
-Aucun effacement, renommage ou réécriture des données de téléphone n’accompagne
-ce retrait de code. Les anciennes clés privées `shoppingList.manuels` et
-`shoppingList.gardeManger` restent lisibles uniquement par la récupération
-volontaire de l’étape 12. Les anciennes coches, possessions hebdomadaires,
-préférences de produits et de magasin restent conservées sans être utilisées
-comme achats ou prix actuels. Les clés communes sans propriétaire restent ignorées.
+Le retrait de code ne déclenche aucun effacement, renommage ou réécriture des
+anciennes clés du téléphone. Le parcours d’import local livré précédemment a
+ensuite été supprimé à la demande de l’utilisateur ; aucun écran ou service ne
+propose de récupérer ou convertir ces données. Les commandes actuelles, le cache
+privé, les modèles et les suivis restent indépendants de cet ancien parcours.
+La purge après suppression distante confirmée du compte conserve son
+comportement explicite ; elle n’est pas exécutée par cette mise à jour.
 
-La récupération garde son aperçu, la sélection explicite des exclusions, ses
-reçus par identité source et son journal idempotent. Son test de conservation
-compare les anciennes valeurs avant et après une récupération complète, y
-compris les clés communes, les suivis et les données du compte voisin. La purge
-après suppression distante confirmée du compte conserve son comportement
-explicite ; elle n’est pas exécutée par cette mise à jour.
+## Validation initiale de l’étape 14
 
-## Validation
+Les ajustements ultérieurs de présentation et d’accès sont décrits dans
+[la présentation actuelle de Liste](SHOPPING_OVERVIEW.md).
 
-**252 tests mobiles réussis**, dont la récupération après retrait du moteur,
-l’isolation du stockage, les suivis, les commandes, les courses, le cache et les
+**252 tests mobiles réussis**, couvrant notamment l’isolation du stockage, les suivis, les commandes, les courses, le cache et les
 accès unifiés. Les tests exclusivement liés à l’ancien moteur et à sa vue sont
 retirés ; les tests d’identité des suivis restent, et les contrôles du stockage
 par compte utilisent directement le service actuel. Le nombre inférieur à
@@ -62,5 +58,5 @@ Les essais appareils et la validation finale d’accessibilité restent à consi
 à l’étape 15 ; ce retrait ne constitue pas une confirmation iOS/Android manuelle.
 
 Références : [accès unifiés](SHOPPING_ACCESS.md),
-[récupération](SHOPPING_RECOVERY.md), [hors connexion](SHOPPING_OFFLINE.md),
+[hors connexion](SHOPPING_OFFLINE.md),
 [suivi complet](SHOPPING_LISTS.md).

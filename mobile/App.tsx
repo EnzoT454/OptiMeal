@@ -29,13 +29,12 @@ import CalendarScreen from './app/CalendarScreen';
 import FollowsScreen from './app/FollowsScreen'; 
 import HomeScreen from './app/HomeScreen';
 import ListScreen from './app/ListScreen';
-import ShoppingRecoveryScreen from './app/ShoppingRecoveryScreen';
 import CreateListScreen from './app/CreateListScreen';
 import ShoppingListDetailScreen from './app/ShoppingListDetailScreen';
-import ShoppingTemplatesScreen from './app/ShoppingTemplatesScreen';
+import ShoppingHistoryScreen from './app/ShoppingHistoryScreen';
+import ListAccessRequired from './components/lists/ListAccessRequired';
 import ShoppingTemplateDetailScreen from './app/ShoppingTemplateDetailScreen';
 import ShoppingReuseScreen from './app/ShoppingReuseScreen';
-import ShoppingRevisionsScreen from './app/ShoppingRevisionsScreen';
 import ShoppingExclusionsScreen from './app/ShoppingExclusionsScreen';
 import { HomeStackParams, ListStackParams, MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
 
@@ -60,16 +59,14 @@ function HomeNavigator() {
   </Home.Navigator>;
 }
 function ListNavigator() {
-  return <Lists.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
+  return <ListAccessRequired><Lists.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
     <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Liste' }} />
     <Lists.Screen name="CreateList" component={CreateListScreen} getId={({ params }) => params?.period ? `${params.period.start_date}:${params.period.end_date}` : 'manual'} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
-    <Lists.Screen name="RecoverLocal" component={ShoppingRecoveryScreen} options={{ title: 'Anciennes données', headerBackTitle: 'Liste' }} />
-    <Lists.Screen name="Templates" component={ShoppingTemplatesScreen} options={{ title: 'Mes modèles', headerBackTitle: 'Liste' }} />
-    <Lists.Screen name="TemplateDetail" component={ShoppingTemplateDetailScreen} options={{ title: 'Mon modèle', headerBackTitle: 'Modèles' }} />
+    <Lists.Screen name="History" component={ShoppingHistoryScreen} options={{ title: 'Historique', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="TemplateDetail" component={ShoppingTemplateDetailScreen} options={{ title: 'Modèle', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="ReuseList" component={ShoppingReuseScreen} options={{ title: 'Réutiliser', headerBackTitle: 'Liste' }} />
-    <Lists.Screen name="Revisions" component={ShoppingRevisionsScreen} options={{ title: 'Révisions', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="ShoppingDetail" component={ShoppingListDetailScreen} options={{ title: 'Ma liste', headerBackTitle: 'Liste' }} />
-  </Lists.Navigator>;
+  </Lists.Navigator></ListAccessRequired>;
 }
 function ProtectedAdd(props: NativeStackScreenProps<RecipeStackParams, 'Add'>) {
   return <AccountRequired reason="Connecte-toi pour ajouter tes propres recettes." onCancel={() => props.navigation.popToTop()}>

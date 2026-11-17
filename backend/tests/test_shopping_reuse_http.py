@@ -51,14 +51,15 @@ def test_copy_revision_and_history_routes(accounts):
     archived = command(client, path + '/archive', {'expected_revision': original['revision']}).json()['item']
     assert client.get(ROOT + '?collection=current').json()['total'] == 0
     assert client.get(ROOT + '?collection=history').json()['total'] == 1
-    page = client.get(path + '/revisions?limit=1').json()
-    assert page['total'] == archived['revision'] and page['items'][0]['status'] == 'archived'
-    copied = command(client, path + '/duplicate', {'source_revision': original['revision'], 'name': 'Copie', 'purchase_date': '2026-11-22'})
+    assert client.get(path + '/revisions?limit=1').status_code == 404
+    old = command(client, path + '/duplicate', {'source_revision': original['revision'], 'name': 'Copie', 'purchase_date': '2026-11-22'})
+    assert old.status_code == 409
+    copied = command(client, path + '/duplicate', {'source_revision': archived['revision'], 'name': 'Copie', 'purchase_date': '2026-11-22'})
     assert copied.status_code == 201, copied.text
     value = copied.json()['item']
-    assert value['origin'] == {'kind': 'list', 'id': original['id'], 'revision': original['revision']}
+    assert value['origin'] == {'kind': 'list', 'id': original['id'], 'revision': archived['revision']}
     assert not value['purchases'] and not value['product_purchases']
-    assert client.get(path + '/revisions/' + str(original['revision'])).json()['item']['snapshot'] == original
+    assert client.get(path + '/revisions/' + str(original['revision'])).status_code == 404
     assert client.get(ROOT + '?collection=current&status=active').status_code == 422
 
 

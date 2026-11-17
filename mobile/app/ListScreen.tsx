@@ -1,81 +1,77 @@
-import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import type { ComponentProps } from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { RecipeButton, RecipeScreen, recipeColors, recipeStyles as s } from '../components/recipes';
-import SavedListCard from '../components/lists/SavedListCard';
-import { Message } from '../components/ui';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles as s } from '../components/recipes';
+import { useShoppingPage } from '../components/lists/useShoppingPage';
+import ListSummaryRow from '../components/lists/ListSummaryRow';
 import { useAuth } from '../context/AuthContext';
-import { readLatestOfflineList } from '../services/shoppingOffline';
 import { fetchLists } from '../services/shoppingLists';
-import type { ShoppingListRead } from '../types/shoppingLists';
+import { fetchTemplates } from '../services/shoppingReuse';
+import type { ShoppingTemplateIcon } from '../types/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
 
+const modelIcons: Record<ShoppingTemplateIcon, ComponentProps<typeof MaterialCommunityIcons>['name']> = {
+  basket: 'format-list-bulleted', cart: 'clipboard-list-outline', leaf: 'leaf', restaurant: 'silverware-fork-knife', home: 'home-outline',
+};
+const sectionStyle = {
+  gap: 12,
+  paddingTop: 16,
+  borderTopWidth: 1,
+  borderTopColor: recipeColors.border,
+};
+
 export default function ListScreen({ navigation }: NativeStackScreenProps<ListStackParams, 'Lists'>) {
-  const { session, requestSignIn } = useAuth();
-  const userId = session?.user.id;
-  const owner = useRef(userId); owner.current = userId;
-  const [itemsOwner, setItemsOwner] = useState(userId);
-  const [cached, setCached] = useState<{ user: string; list: ShoppingListRead } | null>(null);
-  const [collection, setCollection] = useState<'current' | 'history'>('current');
-  const [items, setItems] = useState<ShoppingListRead[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const generation = useRef(0);
-  const busy = useRef(false);
-  async function load(append = false) {
-    if (!userId || busy.current) return;
-    busy.current = true; setLoading(true); setError('');
-    const request = ++generation.current;
-    try {
-      const page = await fetchLists(append ? items.length : 0, collection);
-      if (request === generation.current && owner.current === userId) {
-        setItemsOwner(userId);
-        setItems(previous => append ? [...previous.filter(i => !page.items.some(n => n.id === i.id)), ...page.items] : page.items);
-        setTotal(page.total);
-      }
-    } catch (e) { if (request === generation.current && owner.current === userId) setError(e instanceof Error ? e.message : 'Listes indisponibles.'); }
-    finally { if (request === generation.current && owner.current === userId) { busy.current = false; setLoading(false); } }
-  }
-  useFocusEffect(useCallback(() => {
-    setItems([]); setTotal(0);
-    setCached(null);
-    if (userId) void readLatestOfflineList(userId).then(value => {
-      if (owner.current === userId && value) setCached({ user: userId, list: value.snapshot });
-    }).catch(() => {});
-    void load();
-    return () => { generation.current++; busy.current = false; };
-  }, [userId, collection]));
-  const create = () => userId ? navigation.navigate('CreateList') : requestSignIn('Connecte-toi pour créer et retrouver tes listes d’achats.');
-  const card = (list: ShoppingListRead) => <SavedListCard key={list.id} list={list} onOpen={() => navigation.navigate('ShoppingDetail', { id: list.id })} />;
+  const { session } = useAuth();
+  const user = session?.user.id;
+  const current = useShoppingPage('lists:current', offset => fetchLists(offset, 'current', undefined, user), item => item.id);
+  const history = useShoppingPage('lists:history-preview', offset => fetchLists(offset, 'history', undefined, user, 3), item => item.id);
+  const templates = useShoppingPage('templates', offset => fetchTemplates(offset, user), item => item.id);
+  if (!session) return null; // The navigator handles sign-in before mounting personal screens.
   return <RecipeScreen>
-    <Text style={[s.sectionTitle, { color: recipeColors.green }]}>OptiMeal</Text>
-    <View style={s.row}><Text accessibilityRole="header" style={s.title}>Liste d’achats</Text><Ionicons name="basket-outline" size={42} color={recipeColors.green} accessible={false} /></View>
-    <Text style={s.intro}>Crée, organise et retrouve tes listes d’épicerie.</Text>
-    <RecipeButton title="＋ Créer une liste" onPress={create} />
-    {!userId ? <View style={s.notice}><Text style={s.sectionTitle}>Tes courses, au même endroit</Text>
-      <Text style={s.body}>Commence une liste vide ou prépare tes achats à partir des repas de ton calendrier.</Text>
-      <RecipeButton title="Me connecter" variant="neutral" onPress={create} /></View> : <>
-      <RecipeButton title="Récupérer mes anciennes données" variant="neutral" onPress={() => navigation.navigate('RecoverLocal')} />
-      <RecipeButton title="Mes modèles" variant="neutral" onPress={() => navigation.navigate('Templates')} />
-      <View style={s.chips}>
-        <RecipeButton title="En cours" variant={collection === 'current' ? 'primary' : 'neutral'} accessibilityState={{ selected: collection === 'current' }} onPress={() => { if (collection === 'current') { void load(); return; } generation.current++; busy.current = false; setItems([]); setTotal(0); setCollection('current'); }} />
-        <RecipeButton title="Historique" variant={collection === 'history' ? 'primary' : 'neutral'} accessibilityState={{ selected: collection === 'history' }} onPress={() => { if (collection === 'history') { void load(); return; } generation.current++; busy.current = false; setItems([]); setTotal(0); setCollection('history'); }} />
+    <RecipeTitle>Liste</RecipeTitle>
+    <RecipeButton title="+ Créer une liste" onPress={() => navigation.navigate('CreateList')} />
+
+    <View style={sectionStyle}>
+      <Text accessibilityRole="header" style={s.sectionTitle}>En cours</Text>
+      {current.loading && <ActivityIndicator accessibilityLabel="Chargement des listes en cours" color={recipeColors.green} />}
+      {!!current.error && <Text accessibilityRole="alert" style={s.requiredItem}>{current.error}</Text>}
+      {!current.loading && !current.error && !current.items.length && <Text style={s.body}>Aucune liste en cours.</Text>}
+      {current.items.map(list => <ListSummaryRow key={list.id} list={list} onPress={() => navigation.navigate('ShoppingDetail', { id: list.id })} />)}
+      {current.error && <RecipeButton title="Réessayer" variant="neutral" disabled={current.loading} onPress={() => void current.load()} />}
+      {current.items.length < current.total && <RecipeButton title="Voir plus de listes" variant="neutral" disabled={current.loading} onPress={() => void current.load(true)} />}
+    </View>
+
+    <View style={sectionStyle}>
+      <View style={s.row}>
+        <Text accessibilityRole="header" style={[s.sectionTitle, { flex: 1 }]}>Historique</Text>
+        {history.total > 0 && <Pressable accessibilityRole="button" accessibilityLabel="Voir tout l’historique"
+          onPress={() => navigation.navigate('History')} style={{ minHeight: 48, paddingHorizontal: 8, justifyContent: 'center' }}>
+          <Text style={s.remove}>Voir tout</Text>
+        </Pressable>}
       </View>
-      <View style={s.row}><Text style={[s.sectionTitle, { flex: 1 }]}>{collection === 'history' ? 'Listes terminées ou archivées' : 'Mes listes en cours'}</Text>
-        <RecipeButton title="Actualiser" variant="neutral" disabled={loading} onPress={() => void load()} /></View>
-      <Message text={error} />
-      {loading && <ActivityIndicator accessibilityLabel="Chargement des listes" color={recipeColors.green} />}
-      {!items.length && !loading && !error && <View style={s.notice}><Text style={s.sectionTitle}>{collection === 'history' ? 'Aucune liste terminée ou archivée' : 'Ta première liste t’attend'}</Text>
-        <Text style={s.body}>Crée une liste ; ton brouillon sera enregistré dans ton compte.</Text></View>}
-      {cached?.user === userId && <View style={s.notice}>
-        <Text style={s.note}>Dernière liste enregistrée sur cet appareil : {cached.list.name}. Disponible pour les courses hors connexion.</Text>
-        <RecipeButton title="Ouvrir la liste enregistrée sur cet appareil" variant="neutral" onPress={() => navigation.navigate('ShoppingDetail', { id: cached.list.id })} />
-      </View>}
-      {itemsOwner === userId && items.map(card)}
-      {items.length < total && <RecipeButton title="Voir plus de listes" variant="neutral" disabled={loading} onPress={() => void load(true)} />}
-    </>}
+      {history.loading && <ActivityIndicator accessibilityLabel="Chargement de l’historique" color={recipeColors.green} />}
+      {!!history.error && <Text accessibilityRole="alert" style={s.requiredItem}>{history.error}</Text>}
+      {!history.loading && !history.error && !history.items.length && <Text style={s.body}>Aucune liste dans l’historique.</Text>}
+      {history.items.slice(0, 3).map(list => <ListSummaryRow key={list.id} list={list} onPress={() => navigation.navigate('ShoppingDetail', { id: list.id })} />)}
+      {history.error && <RecipeButton title="Réessayer" variant="neutral" disabled={history.loading} onPress={() => void history.load()} />}
+    </View>
+
+    <View style={sectionStyle}>
+      <Text accessibilityRole="header" style={s.sectionTitle}>Mes modèles</Text>
+      {templates.loading && <ActivityIndicator accessibilityLabel="Chargement des modèles" color={recipeColors.green} />}
+      {!!templates.error && <Text accessibilityRole="alert" style={s.requiredItem}>{templates.error}</Text>}
+      {!templates.loading && !templates.error && !templates.items.length && <Text style={s.body}>Aucun modèle enregistré.</Text>}
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+        {templates.items.map(template => <Pressable key={template.id} accessibilityRole="button" accessibilityLabel={`Ouvrir le modèle ${template.name}`}
+          onPress={() => navigation.navigate('TemplateDetail', { id: template.id })}
+          style={[s.choice, { flexBasis: '45%', flexGrow: 1, alignItems: 'center', gap: 8, paddingVertical: 16 }]}>
+          <View style={s.filterCircle}><MaterialCommunityIcons name={modelIcons[template.icon]} size={28} color={recipeColors.green} accessible={false} /></View>
+          <Text style={[s.body, { color: recipeColors.ink, textAlign: 'center' }]}>{template.name}</Text>
+        </Pressable>)}
+      </View>
+      {templates.error && <RecipeButton title="Réessayer" variant="neutral" disabled={templates.loading} onPress={() => void templates.load()} />}
+      {templates.items.length < templates.total && <RecipeButton title="Voir plus de modèles" variant="neutral" disabled={templates.loading} onPress={() => void templates.load(true)} />}
+    </View>
   </RecipeScreen>;
 }

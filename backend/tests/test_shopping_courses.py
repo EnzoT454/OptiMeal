@@ -42,7 +42,7 @@ def test_partial_check_uncheck_keep_stores_budget_and_history(db):
     assert full.totals.remaining_known_amount == '0.00'
     assert full.totals.estimate_complete
     assert full.assignment == resource.assignment
-    assert service.get_revision(db, resource.id, partial.revision, ALICE).snapshot == partial
+    assert service.get_list(db, resource.id, ALICE) == full
     unchecked = buy(db, full, 0)
     assert unchecked.items[0].coverage_status == 'remaining'
     assert unchecked.totals.budget_known_amount == '6.00'
@@ -287,7 +287,7 @@ def test_legacy_purchased_scenario_remains_readable_without_retroactive_price():
     assert not ShoppingScenario.model_validate(scenario.model_dump()).complete
 
 
-def test_legacy_assignment_gains_stable_checks_without_rewriting_history(db):
+def test_legacy_assignment_gains_stable_checks_in_current_state(db):
     from backend.app.shopping_lists.models import ShoppingListAssignment
     from sqlalchemy import update
     resource = assigned(db)
@@ -298,4 +298,4 @@ def test_legacy_assignment_gains_stable_checks_without_rewriting_history(db):
     assert not partial.assignment.stale
     assert partial.totals.budget_known_amount == '6.00'
     assert partial.totals.remaining_known_amount == '3.00'
-    assert service.get_revision(db, resource.id, resource.revision, ALICE).snapshot == resource
+    assert service.get_list(db, resource.id, ALICE) == partial

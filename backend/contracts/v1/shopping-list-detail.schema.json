@@ -651,6 +651,26 @@
     "ShoppingCalculatedLine": {
       "additionalProperties": false,
       "properties": {
+        "pricing_method": {
+          "default": "verified",
+          "enum": [
+            "verified",
+            "direct"
+          ],
+          "title": "Pricing Method",
+          "type": "string"
+        },
+        "direct_increment": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ShoppingBaseQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
         "sale": {
           "$ref": "#/$defs/NormalizedSale"
         },
@@ -1384,6 +1404,17 @@
           },
           "title": "Allocations",
           "type": "array"
+        },
+        "confirmed_need_revisions": {
+          "additionalProperties": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "propertyNames": {
+            "format": "uuid"
+          },
+          "title": "Confirmed Need Revisions",
+          "type": "object"
         }
       },
       "required": [

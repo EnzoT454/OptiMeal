@@ -21,6 +21,17 @@ from .schemas import (
 )
 
 
+def _purchase_fingerprint_data(purchase):
+    # Garder les empreintes déjà enregistrées avant l’ajout du calcul direct.
+    data = purchase.model_dump(mode='json')
+    if not purchase.confirmed_need_revisions:
+        data.pop('confirmed_need_revisions', None)
+    if purchase.line.pricing_method == 'verified':
+        data['line'].pop('pricing_method', None)
+        data['line'].pop('direct_increment', None)
+    return data
+
+
 def planning_fingerprint(resource: ShoppingListRead, comparison_id: UUID | None = None,
                          scenario: ShoppingScenario | None = None) -> str:
     from .comparisons import _hash
@@ -29,7 +40,7 @@ def planning_fingerprint(resource: ShoppingListRead, comparison_id: UUID | None 
         'items': [i.model_dump(mode='json', exclude={'pricing_status', 'coverage_status'}) for i in resource.items],
         'purchases': [p.model_dump(mode='json') for p in resource.purchases if p.item_id in priced_ids],
         'choices': [c.model_dump(mode='json') for c in resource.choices],
-        'previous_products': [p.model_dump(mode='json') for p in resource.product_purchases
+        'previous_products': [_purchase_fingerprint_data(p) for p in resource.product_purchases
                               if p.comparison_id != comparison_id and p.purchased_units]})
 
 
@@ -52,12 +63,15 @@ def purchase_coverage(manual: list[ShoppingManualPurchaseRead], products: list[S
                       ) -> dict[UUID, ShoppingManualPurchaseRead | PurchaseCoverage]:
     """Vue interne pour le calcul commun ; les achats exposés restent distincts."""
     amounts = defaultdict(lambda: defaultdict(Fraction))
+    confirmations = {}
     originals = {p.item_id: p for p in manual}
     for p in manual:
         if p.purchased:
             for q in p.coverage:
                 amounts[p.item_id][q.unit] += Fraction(Decimal(q.amount))
     for purchase in products:
+        for item_id, revision in purchase.confirmed_need_revisions.items():
+            confirmations[item_id] = max(confirmations.get(item_id, 0), revision)
         for allocation in purchase.allocations:
             q = allocation.quantity
             amounts[allocation.item_id][q.unit] += Fraction(Decimal(q.amount))
@@ -65,7 +79,7 @@ def purchase_coverage(manual: list[ShoppingManualPurchaseRead], products: list[S
     for item_id, quantities in amounts.items():
         original = originals.get(item_id)
         result[item_id] = PurchaseCoverage(purchased=True,
-            confirmed_need_revision=original.confirmed_need_revision if original and original.purchased else None,
+            confirmed_need_revision=max(confirmations.get(item_id, 0), (original.confirmed_need_revision or 0) if original and original.purchased else 0) or None,
             coverage=[ShoppingBaseQuantity(unit=u, amount=_quantity(a)) for u, a in sorted(quantities.items()) if a])
     return result
 
@@ -84,7 +98,7 @@ def set_product_purchase(db: Session, list_id: UUID, user: CurrentUser,
             reserved = existing.reserved_units
         else:
             if assignment is None or assignment.comparison_id != body.comparison_id or assignment.stale:
-                raise ShoppingListError(409, 'COMPARISON_STALE', 'Compare et applique une proposition avant cet achat.')
+                raise ShoppingListError(409, 'COMPARISON_STALE', 'Recalcule les prix avant cet achat.')
             need = next((n for n in assignment.scenario.needs if body.item_id in n.item_ids), None)
             line = next((l for l in need.lines if l.sale.product_id == body.product_id), None) if need else None
             if line is None:
@@ -95,9 +109,10 @@ def set_product_purchase(db: Session, list_id: UUID, user: CurrentUser,
         if body.purchased_units and any(service._item(db, target, i)['removed'] for i in ids):
             raise ShoppingListError(409, 'LIST_STATE_CONFLICT', 'Rétablis les articles avant cet achat.')
         sale = line.sale
-        increment = sale.content_per_package if sale.price_basis == 'package' else sale.sale_increment
+        from .draft_pricing import direct_cost, line_increment
+        increment = line_increment(line)
         quantity = Fraction(Decimal(increment.amount)) * body.purchased_units
-        if body.purchased_units and sale.price_basis != 'package' and quantity < Fraction(Decimal(sale.minimum_sale.amount)):
+        if body.purchased_units and line.pricing_method != 'direct' and sale.price_basis != 'package' and quantity < Fraction(Decimal(sale.minimum_sale.amount)):
             raise ShoppingListError(422, 'SALE_MINIMUM', 'La quantité est inférieure au minimum de vente.')
         other = [p for p in resource.product_purchases if existing is None or p.id != existing.id]
         covered = purchase_coverage(resource.purchases, other)
@@ -108,21 +123,31 @@ def set_product_purchase(db: Session, list_id: UUID, user: CurrentUser,
         for index, item_id in enumerate(ids):
             item = items[item_id]
             unit = increment.unit
-            required = next((Fraction(Decimal(q.amount)) for q in item.required if q.unit == unit), Fraction())
+            required = next((Fraction(Decimal(q.amount)) for q in item.required if q.unit == unit),
+                            Fraction(Decimal(increment.amount)) if not item.required else Fraction())
             owned = next((Fraction(Decimal(q.amount)) for q in item.owned if q.unit == unit), Fraction())
+            if not item.required and item.owned_unquantified_need_revision == item.need_revision:
+                owned = required
             bought = sum((Fraction(Decimal(q.amount)) for q in covered[item_id].coverage if q.unit == unit), Fraction()) if item_id in covered else Fraction()
+            if not item.required and item_id in covered and covered[item_id].confirmed_need_revision == item.need_revision:
+                bought = max(bought, required)
             allocated = remaining if index == len(ids) - 1 else min(remaining, max(Fraction(), required - owned - bought))
             if allocated:
                 allocations.append({'item_id': item_id, 'quantity': {'amount': _quantity(allocated), 'unit': unit}})
             remaining -= allocated
-        if existing and existing.purchased_units == body.purchased_units:
+        unchanged = existing is not None and existing.purchased_units == body.purchased_units
+        if unchanged:
             allocations = existing.allocations
+            confirmations = existing.confirmed_need_revisions
+        else:
+            confirmations = {a['item_id']: items[a['item_id']].need_revision for a in allocations
+                if not items[a['item_id']].required and Fraction(Decimal(a['quantity']['amount'])) >= Fraction(Decimal(increment.amount))} if body.purchased_units else {}
         identity = uuid5(body.comparison_id, '|'.join(sorted(map(str, ids))) + ':' + body.product_id)
         purchase = ShoppingProductPurchaseRead(id=identity, comparison_id=body.comparison_id,
             item_ids=ids, line=line, purchased_units=body.purchased_units, reserved_units=reserved,
             purchased_quantity=_quantity(quantity),
-            estimated_amount=_money(_line_cost(sale, body.purchased_units, reserved)) if body.purchased_units else '0.00',
-            allocations=allocations)
+            estimated_amount=existing.estimated_amount if unchanged else (direct_cost(sale, body.purchased_units, reserved) if line.pricing_method == 'direct' else _money(_line_cost(sale, body.purchased_units, reserved))) if body.purchased_units else '0.00',
+            allocations=allocations, confirmed_need_revisions=confirmations)
         db.execute(insert(ShoppingListProductPurchase).values(id=identity, list_id=target,
             comparison_id=body.comparison_id, data=purchase.model_dump(mode='json'))
             .on_conflict_do_update(index_elements=['id'], set_={'data': purchase.model_dump(mode='json')}))

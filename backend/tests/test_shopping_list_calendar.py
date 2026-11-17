@@ -216,3 +216,47 @@ def test_query_count_does_not_grow_with_the_number_of_meals(database):
         event.remove(database, 'before_cursor_execute', record)
     assert result.included_meal_count == 10 and result.items[0].required[0].amount == '1000'
     assert len(statements) == 3  # préférences + repas + ingrédients, sans boucle par repas
+
+
+def test_calendar_creation_saves_selected_needs_and_extra_items_in_one_transaction(database):
+    from backend.app.shopping_lists import service
+    add_meal(database)
+    result = preview(database)
+    body = creation_request(result, activate=True, items=[{'name': 'Serviettes'}])
+    with Session(database) as db:
+        saved = service.create_from_calendar(db, ALICE, body, uuid4())
+        assert saved.status == 'active' and saved.revision == 1
+        assert [item.name for item in saved.items] == ['Riz', 'Serviettes']
+        assert saved.items[0].contributions[0].source == 'calendar'
+        assert saved.items[1].contributions[0].source == 'manual'
+        assert db.scalar(select(func.count()).select_from(ShoppingListCommand)) == 1
+        assert db.scalar(select(func.count()).select_from(ShoppingListRevision)) == 1
+
+
+def test_calendar_creation_can_remove_preview_needs_before_saving(database):
+    from backend.app.shopping_lists import service
+    add_meal(database)
+    result = preview(database)
+    body = creation_request(result, activate=True, excluded_item_ids=[result.items[0].id], items=[{'name': 'Pain'}])
+    with Session(database) as db:
+        saved = service.create_from_calendar(db, ALICE, body, uuid4())
+        assert [item.name for item in saved.items] == ['Pain']
+
+
+@pytest.mark.parametrize('invalid', ['empty', 'unknown_item', 'unknown_ingredient'])
+def test_invalid_complete_calendar_creation_leaves_no_partial_list(database, invalid):
+    from backend.app.shopping_lists import service
+    add_meal(database)
+    result = preview(database)
+    changes = {'activate': True}
+    if invalid == 'empty':
+        changes['excluded_item_ids'] = [result.items[0].id]
+    elif invalid == 'unknown_item':
+        changes['excluded_item_ids'] = [uuid4()]
+    else:
+        changes['items'] = [{'name': 'Absent', 'ingredient_id': 'ing_absent'}]
+    with Session(database) as db:
+        with pytest.raises(ShoppingListError):
+            service.create_from_calendar(db, ALICE, creation_request(result, **changes), uuid4())
+        for model in (ShoppingList, ShoppingListCommand, ShoppingListRevision):
+            assert db.scalar(select(func.count()).select_from(model)) == 0

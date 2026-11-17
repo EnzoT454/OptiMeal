@@ -1,5 +1,119 @@
 # Comparer et appliquer les achats — étape 8
 
+## Recalcul unique des prix — 16 novembre 2026
+
+Le détail affiche directement les produits et prix enregistrés, y compris les
+achats déjà effectués (visibles par défaut et masquables). Les anciens boutons
+**Comparer les magasins** et **Comparer les achats**, leur panneau et le service
+mobile d’application d’une comparaison sont retirés. Une seule action
+**Recalculer les prix** enregistre le nouveau panier après une action explicite.
+Les modifications d’articles signalent que les prix sont à recalculer ; aucun
+minuteur ni synchronisation automatique n’est ajouté.
+
+Le recalcul partage la fonction de prix directs et d’arrondi supérieur avec la
+création. Il déduit les possessions et quantités achetées avant de choisir les
+produits du complément. Le magasin/scénario choisi et les préférences de produits
+sont conservés. Les limites promotionnelles tiennent compte des unités déjà
+achetées. Un montant absent reste inconnu ; le coût d’un achat déclaré sans prix
+n’est pas déduit du catalogue actuel.
+
+Les achats produits, leurs quantités, prix, allocations et identités sont conservés
+sans réévaluation. Le budget devient achats connus déjà enregistrés + complément
+nouvellement chiffré ; le reste à acheter ne contient que ce complément. Retirer
+un article ne supprime pas le coût de ses achats passés. Les cartes distinguent
+les quantités/montants encore à acheter de ceux effectivement enregistrés.
+Les confirmations sans quantité sont rattachées uniquement aux articles auxquels
+au moins une unité de vente a été allouée ; un achat partiel n’acquitte pas toutes
+les lignes d’un groupe. Un même état cible d’achat conserve son instantané exact.
+
+**Le prendre ailleurs** ouvre directement les alternatives du complément de
+l’ingrédient concerné. Le choix ou le retour au choix automatique est enregistré
+avec le recalcul dans une seule transaction, en passant au panier Moins cher.
+Les achats de l’ancien magasin restent conservés.
+
+API privée : `GET /shopping-lists/{id}/price-options` sans écriture, enveloppe
+`Detail[ShoppingDraftPricingRead]` ; `POST /shopping-lists/{id}/recalculate-prices`
+avec `Idempotency-Key`, `expected_revision`, scénario facultatif et changements
+facultatifs de produits par article (`product_id=null` pour le choix automatique).
+Le serveur calcule tous les prix ; il n’accepte aucun montant client. Les sous-totaux
+connus sont enregistrés avec leurs besoins sans prix explicitement signalés.
+Conflits, erreur de catalogue et choix invalides annulent la transaction. Une
+réponse incertaine se reprend manuellement avec sa clé exacte, sans recalculer
+les prix lors du rejeu.
+
+Le mobile n’appelle plus les anciennes routes comparisons/apply-comparison,
+qui restent disponibles côté serveur pour compatibilité. Aucune migration ni
+dépendance supplémentaire ; backend et mobile doivent être déployés ensemble.
+
+
+Validation du recalcul : **993 tests backend réussis** dans la suite complète,
+14 essais OCR opt-in ignorés, puis **14 contrôles ciblés réussis**, dont deux
+nouveaux cas (quantités mixtes et HTTP privé), soit 995 tests distincts vérifiés.
+**252 tests mobiles réussis**, TypeScript, 47 exports de contrats, bundles Expo
+iOS/Android et documentation stricte vérifiés. Aucun lint mobile configuré.
+PostgreSQL local jetable uniquement, arrêté après vérification. Essais sur
+appareils à consigner ; aucun changement distant ou migration.
+
+Les sections ci-dessous gardent leur contexte historique.
+
+## Création en deux étapes et prix directs — 16 novembre 2026
+
+Ce parcours remplace la création en une étape décrite dans les notes précédentes.
+
+1. **Ingrédients** : nom et date, saisie manuelle ou calendrier. Les quantités du
+   calendrier se modifient directement ; les besoins peuvent être retirés et des
+   articles ajoutés. **Suivant** calcule les prix sans enregistrer de brouillon.
+2. **Prix par magasin** : Maxi, Metro, Super C, puis **Moins cher** en dernier.
+   Toucher une carte affiche les produits exacts. Le panier Moins cher les
+   regroupe par magasin. Toucher un produit ouvre les alternatives ; choisir un
+   autre produit/magasin recalcule le panier Moins cher. Les totaux propres à une
+   enseigne restent distincts de cette personnalisation. **Précédent** conserve
+   les ingrédients et permet de corriger la saisie avant un nouveau calcul.
+3. **Créer la liste** confirme le panier sélectionné et enregistre la liste active,
+   ses besoins et ses prix ensemble. Il ne s’agit pas d’une troisième page.
+   Aucun minuteur, cache de liste ou historique des versions n’est réintroduit.
+
+### Calcul demandé
+
+- Sans quantité : prix direct d’un produit. Avec quantité : nombre entier de
+  produits arrondi au supérieur, puis coût de ces produits. Exemple : 750 g,
+  format 500 g à 3 $ → 2 produits, total 6 $. Une quantité exactement divisible
+  n’ajoute pas de produit. Les calculs utilisent des décimaux/fractions exacts.
+- Les besoins d’un même ingrédient se regroupent avant l’arrondi et les limites
+  promotionnelles. Plusieurs lignes sans quantité demandent chacune un produit.
+- Le prix direct utilise le prix régulier ou la promotion valide à la date des
+  courses, avec son prix après limite. Le moins cher minimise le total à acheter,
+  et ne compare pas seulement les prix affichés d’un produit de chaque format.
+- Le format doit correspondre à la dimension demandée pour convertir des g/ml.
+  Un nombre de produits utilise l’unité de vente lorsque le format n’est pas
+  exprimé en pièces. Aucun prix ou format absent n’est inventé : le besoin reste
+  sans prix, et un panier incomplet exige une confirmation explicite.
+- Le calcul direct conserve la source et son statut de vérification. Il ne
+  transforme pas une référence sans attestation en référence vérifiée. Le moteur
+  historique de couverture attestée reste distinct pour les autres parcours.
+
+### API et persistance
+
+`POST /api/v1/shopping-lists/creation-prices` est privé et sans écriture. Il reçoit
+les ingrédients/quantités, la date et les choix par indice. Il retourne les quatre
+scénarios, les produits alternatifs, leurs prix/nombres à acheter et une empreinte.
+Un nom libre est relié au catalogue uniquement si son nom ou alias exact donne
+une identité unique ; les noms inconnus restent sans prix.
+
+Les créations manuelle/calendrier acceptent `pricing` (empreinte, scénario, choix,
+confirmation d’un sous-total) ; le calendrier accepte aussi `adjusted_items`.
+Le serveur relit le catalogue et recalcule les montants : aucun prix client n’est
+accepté. Prix, besoins ou choix différents de l’empreinte → conflit et annulation
+complète, sans liste partielle. La reprise idempotente ne relance pas le calcul.
+Les achats produits conservent ces prix directs et couvrent aussi les besoins
+sans quantité avec une confirmation liée au besoin courant ; une décoche annule
+leur couverture et rétablit le montant restant.
+
+Aucune migration ni dépendance supplémentaire. Le backend doit être déployé avec
+le mobile pour les nouveaux contrats. Supabase n’est pas modifié par ce travail.
+
+Les sections précédentes ci-dessous gardent leur contexte historique.
+
 Le détail du nouvel onglet Liste permet de comparer **Maxi, Metro, Super C et
 Moins cher**. Une simulation est privée et ne change ni la liste, ni ses achats,
 ni sa révision. **Appliquer cette proposition** enregistre explicitement une

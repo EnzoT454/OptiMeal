@@ -25,9 +25,8 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 - Recettes personnelles, recherche, filtres, partage public/privé et favoris.
 - Évaluations des recettes et classement par notes.
 - Calendrier hebdomadaire des repas.
-- Listes privées, comparaison, courses avec achats partiels, modèles, exclusions et historique par révision.
-- Cache privé et coches hors connexion avec synchronisation et gestion des conflits.
-- Récupération volontaire des anciens ajouts locaux privés, sans double import.
+- Listes privées, comparaison, courses avec achats partiels, modèles pour les occasions (fête, barbecue, voyage, sortie), exclusions et historique des listes terminées.
+- Création des listes en deux étapes : ingrédients puis prix par magasin, panier Moins cher personnalisable et quantités arrondies au supérieur. Recalcul du complément en une action, avec conservation des achats effectués.
 - Liste épinglée sur Accueil et accès aux listes du Calendrier par période.
 - Promotions et consultation des circulaires.
 - Catalogue commun des produits et ingrédients.
@@ -434,8 +433,8 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Calendrier des repas et limites actuelles](backend/docs/PLANNING.md)
 - [Retrait de l’ancien moteur local des listes](backend/docs/SHOPPING_CLEANUP.md)
 - [Accès unifiés Accueil, Calendrier et Liste](backend/docs/SHOPPING_ACCESS.md)
-- [Récupération des anciennes données locales](backend/docs/SHOPPING_RECOVERY.md)
-- [Courses hors connexion : cache et reprise des coches](backend/docs/SHOPPING_OFFLINE.md)
+- [Onglet Liste : présentation et accès par compte/réseau](backend/docs/SHOPPING_OVERVIEW.md)
+- [Cache et reprise des coches après interruption](backend/docs/SHOPPING_OFFLINE.md)
 - [Listes d’épicerie : conception et étapes d’implémentation](backend/docs/SHOPPING_LISTS.md)
 - [Formats de vente et bases tarifaires vérifiables](backend/docs/SALE_NORMALIZATION.md)
 - [Moteur de calcul des achats : paquets, poids et promotions](backend/docs/PURCHASE_CALCULATION.md)

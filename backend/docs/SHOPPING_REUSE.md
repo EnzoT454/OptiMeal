@@ -2,7 +2,7 @@
 
 L’onglet Liste sépare les listes **En cours** (brouillons et actives) de
 l’**Historique** (terminées ou archivées). Les options d’une liste permettent de
-copier ses besoins, de l’enregistrer comme modèle et de consulter ses révisions.
+copier ses besoins, de l’enregistrer comme modèle et de retrouver ses besoins.
 Les ingrédients non suggérés sont gérés depuis leur fiche et depuis Paramètres.
 
 ## Migration et stockage
@@ -33,16 +33,16 @@ déploiement. Pour une autre base à mettre à niveau :
 python -m alembic -c backend/alembic.ini upgrade head
 ```
 
-## Copier une révision
+## Copier la liste courante
 
-1. Ouvrir les options de la liste, ou une ancienne révision dans son historique.
+1. Ouvrir les options de la liste courante, y compris une liste terminée dans l’historique.
 2. Choisir **Copier les besoins**, vérifier l’aperçu, le nom et une nouvelle date
    de courses. Les articles retirés sont ignorés.
 3. Confirmer explicitement la reprise des choix manuels de produits si souhaité.
    Les choix automatiques d’une ancienne comparaison ne sont pas des préférences.
 4. Créer un nouveau brouillon avec de nouveaux UUID pour la liste, les articles
    et les contributions. Les besoins corrigés et la provenance de la révision
-   choisie sont conservés, même si les recettes ont changé depuis.
+   consultée sont conservés, même si les recettes ont changé depuis.
 
 La copie ne reprend **aucun achat, possession, prix, comparaison ou état acheté**.
 Ses propositions se calculent pour sa propre date des courses. Une copie d’une
@@ -55,23 +55,29 @@ signalé et n’est pas remplacé silencieusement.
 
 ## Modèles privés
 
-**Enregistrer comme modèle** copie les besoins d’une révision, avec un nom et
+**Utiliser comme modèle** depuis le menu **…** copie les besoins de la liste courante, avec un nom et
 une icône parmi panier, chariot, feuille, repas et maison. Reprendre les choix
 manuels est facultatif et explicite. Les achats et la provenance détaillée des
 recettes ne sont pas nécessaires au contenu du modèle : ses instances créent
 leurs propres contributions manuelles.
 
-Depuis **Mes modèles**, l’utilisateur peut renommer le modèle, changer son
-icône, ajouter des articles libres ou du référentiel, modifier des quantités et
-retirer des articles ou des préférences de produit. L’enregistrement remplace
-atomiquement le contenu après contrôle de sa révision. Les nouveaux ingrédients
-doivent exister dans le référentiel ; une ancienne identité disparue reste
-conservée jusqu’à une décision explicite. Une quantité modifiée conserve les
-autres dimensions ; leur effacement complet possède une action dédiée.
+Un modèle est une liste enregistrée pour une occasion : fête, barbecue, voyage
+ou sortie. Il se retrouve dans **Mes modèles**, à la fin de l’onglet Liste,
+avec son icône et son nom. Son détail affiche le nom et les produits enregistrés.
 
-Utiliser le modèle demande un nom, une date des courses et la révision du modèle
-consulté. Un modèle modifié entre lecture et création provoque un conflit ;
-aucune liste n’est créée depuis un contenu différent de celui vérifié.
+Le menu **…** en haut à droite propose **Modifier le nom**, **Supprimer le modèle**
+et **Ajouter un produit**. Le renommage ne transmet que le nom et la révision ;
+il ne remplace pas les produits. Un ajout libre ou choisi dans le catalogue est
+enregistré directement dans le modèle. Toucher un produit permet de le modifier
+ou de le retirer après confirmation. Les autres dimensions de quantité et les
+préférences existantes sont conservées ; retirer toutes les quantités est explicite.
+Les nouveaux ingrédients doivent exister dans le référentiel ; une ancienne
+identité disparue reste conservée jusqu’à une décision explicite.
+
+Le détail mobile ne demande plus de nom de nouvelle liste ni de date prévue et
+ne propose plus « Créer une liste depuis ce modèle » ou d’actions globales en bas.
+Le contrat HTTP d’instanciation reste disponible côté serveur : il exige le nom,
+la date et la révision du modèle, mais ce formulaire n’est plus exposé ici.
 Une modification ultérieure du modèle ne change aucune instance déjà créée.
 La suppression est logique : le modèle disparaît des lectures, et son résultat
 de suppression reste rejouable après réponse perdue. Les listes et révisions
@@ -98,20 +104,16 @@ Une fusion avec un besoin canonique existant demande de choisir entre addition
 et article distinct. Les modèles choisis explicitement ne sont pas filtrés
 silencieusement par les exclusions.
 
-## Historique et révisions
+## Historique des listes
 
 L’historique affiche nom, période éventuelle, statut, nombre d’articles et date
 de clôture ou d’archivage. Les collections sont filtrées côté serveur avant
 pagination ; une liste active n’apparaît pas dans l’historique. La réouverture
 la replace dans En cours sans effacer ses anciennes révisions.
 
-**Consulter les révisions** ouvre un catalogue paginé avec date, statut et
-nombre d’articles de chaque instantané. Ouvrir une révision affiche le détail
-en consultation seule, avec ses quantités, provenances et estimations d’origine.
-Ni le calendrier ni les prix courants ne sont relus pour le reconstruire.
-Les actions de mutation de cette liste sont masquées ou désactivées ; la copie
-et la création d’un modèle restent des actions explicites vers de nouvelles
-ressources. Cet historique ne remplace pas le futur historique complet des plans.
+La consultation des anciennes versions d’une liste est retirée. Les copies et
+modèles lisent l’état courant et refusent un compteur de concurrence périmé.
+Aucune ancienne version n’est restaurée. Voir [le parcours actuel](SHOPPING_CREATION.md).
 
 ## Surface HTTP
 
@@ -121,8 +123,6 @@ mutations exigent `Idempotency-Key`. Tous les décimaux restent des chaînes JSO
 | Route | Corps et résultat |
 | --- | --- |
 | `GET /shopping-lists?collection=current\|history` | Pagination ; `collection` et `status` sont exclusifs ; sans collection, ancien comportement conservé |
-| `GET /shopping-lists/{id}/revisions` | Résumés paginés, révisions décroissantes |
-| `GET /shopping-lists/{id}/revisions/{revision}` | Instantané privé existant |
 | `POST /shopping-lists/{id}/duplicate` | `source_revision`, `name`, `purchase_date`, `include_choices=false` ; nouvelle liste, 201 |
 | `GET /shopping-list-templates` | Modèles privés paginés |
 | `POST /shopping-list-templates` | `source_list_id`, `source_revision`, `name`, `icon`, `include_choices=false` ; 201 |

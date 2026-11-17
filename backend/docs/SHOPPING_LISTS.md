@@ -1,10 +1,98 @@
 # Listes d’épicerie — référence et plan d’implémentation
 
+## Création en deux étapes et prix directs — 16 novembre 2026
+
+Ce parcours remplace la création en une étape décrite dans les notes précédentes.
+
+1. **Ingrédients** : nom et date, saisie manuelle ou calendrier. Les quantités du
+   calendrier se modifient directement ; les besoins peuvent être retirés et des
+   articles ajoutés. **Suivant** calcule les prix sans enregistrer de brouillon.
+2. **Prix par magasin** : Maxi, Metro, Super C, puis **Moins cher** en dernier.
+   Toucher une carte affiche les produits exacts. Le panier Moins cher les
+   regroupe par magasin. Toucher un produit ouvre les alternatives ; choisir un
+   autre produit/magasin recalcule le panier Moins cher. Les totaux propres à une
+   enseigne restent distincts de cette personnalisation. **Précédent** conserve
+   les ingrédients et permet de corriger la saisie avant un nouveau calcul.
+3. **Créer la liste** confirme le panier sélectionné et enregistre la liste active,
+   ses besoins et ses prix ensemble. Il ne s’agit pas d’une troisième page.
+   Aucun minuteur, cache de liste ou historique des versions n’est réintroduit.
+
+### Calcul demandé
+
+- Sans quantité : prix direct d’un produit. Avec quantité : nombre entier de
+  produits arrondi au supérieur, puis coût de ces produits. Exemple : 750 g,
+  format 500 g à 3 $ → 2 produits, total 6 $. Une quantité exactement divisible
+  n’ajoute pas de produit. Les calculs utilisent des décimaux/fractions exacts.
+- Les besoins d’un même ingrédient se regroupent avant l’arrondi et les limites
+  promotionnelles. Plusieurs lignes sans quantité demandent chacune un produit.
+- Le prix direct utilise le prix régulier ou la promotion valide à la date des
+  courses, avec son prix après limite. Le moins cher minimise le total à acheter,
+  et ne compare pas seulement les prix affichés d’un produit de chaque format.
+- Le format doit correspondre à la dimension demandée pour convertir des g/ml.
+  Un nombre de produits utilise l’unité de vente lorsque le format n’est pas
+  exprimé en pièces. Aucun prix ou format absent n’est inventé : le besoin reste
+  sans prix, et un panier incomplet exige une confirmation explicite.
+- Le calcul direct conserve la source et son statut de vérification. Il ne
+  transforme pas une référence sans attestation en référence vérifiée. Le moteur
+  historique de couverture attestée reste distinct pour les autres parcours.
+
+### API et persistance
+
+`POST /api/v1/shopping-lists/creation-prices` est privé et sans écriture. Il reçoit
+les ingrédients/quantités, la date et les choix par indice. Il retourne les quatre
+scénarios, les produits alternatifs, leurs prix/nombres à acheter et une empreinte.
+Un nom libre est relié au catalogue uniquement si son nom ou alias exact donne
+une identité unique ; les noms inconnus restent sans prix.
+
+Les créations manuelle/calendrier acceptent `pricing` (empreinte, scénario, choix,
+confirmation d’un sous-total) ; le calendrier accepte aussi `adjusted_items`.
+Le serveur relit le catalogue et recalcule les montants : aucun prix client n’est
+accepté. Prix, besoins ou choix différents de l’empreinte → conflit et annulation
+complète, sans liste partielle. La reprise idempotente ne relance pas le calcul.
+Les achats produits conservent ces prix directs et couvrent aussi les besoins
+sans quantité avec une confirmation liée au besoin courant ; une décoche annule
+leur couverture et rétablit le montant restant.
+
+Aucune migration ni dépendance supplémentaire. Le backend doit être déployé avec
+le mobile pour les nouveaux contrats. Supabase n’est pas modifié par ce travail.
+
+Les sections précédentes ci-dessous gardent leur contexte historique.
+
 **Date : 16 novembre 2026.**
 
-**Statut : étapes 1 à 14 réalisées dans le dépôt — listes, courses, réutilisation, historique, coches hors connexion et récupération locale ; étape 15 à réaliser.**
+## Création complète et retrait de la synchronisation — 16 novembre 2026
 
-**Modèles, exclusions, copie et historique livrés dans le dépôt. Supabase vérifié à 0021 le 16 novembre 2026 ; 0021 appliquée depuis 0020 déjà présente. Le cache et les coches hors connexion sont livrés dans le dépôt. La récupération volontaire des anciennes données privées est livrée. Accueil et Calendrier ouvrent les nouvelles listes par identifiant. L’ancien moteur local a été retiré sans effacer les données récupérables. Les essais sur appareils et l’étape 15 restent à réaliser.**
+Cette décision remplace les anciennes descriptions de brouillons à compléter,
+de cache hors connexion, de synchronisation et d’historique des versions.
+
+- **+ Créer une liste** ouvre un formulaire : nom, date, origine et articles.
+- Les articles sont ajoutés, modifiés ou retirés dans le formulaire sans écriture
+  serveur. Une saisie d’article inachevée ou une liste vide bloque la validation.
+- **Créer la liste** envoie le contenu complet en une seule transaction et ouvre
+  une liste active. Le calendrier conserve son aperçu vérifié ; on peut retirer
+  des besoins de cet aperçu et ajouter des articles avant de confirmer.
+- Aucun rafraîchissement périodique, cache de listes ni file de synchronisation.
+  Le chargement a lieu à l’ouverture ; chaque action explicite enregistre son
+  résultat sur le serveur. Une panne apparaît comme une erreur, sans coche locale.
+- L’historique des listes terminées/archivées reste disponible. Les anciennes
+  versions d’une même liste ne sont plus sauvegardées ni consultables par API.
+  L’écran et les routes de révisions sont retirés.
+- Le compteur `revision` reste interne pour refuser les modifications concurrentes.
+  La table technique `shopping_list_revision` conserve seulement l’état courant :
+  chaque mutation remplace ses lignes dans la même transaction. Les anciennes
+  lignes déjà présentes sont retirées à la prochaine mutation de cette liste.
+- Les résultats de commandes idempotentes et la reprise **manuelle** d’une demande
+  incertaine restent pour éviter un doublon après une réponse perdue ; ils ne
+  constituent ni un historique consultable ni un envoi automatique en arrière-plan.
+
+Aucune migration n’est nécessaire : la structure existante sert à l’état courant.
+Le serveur doit être déployé avec le mobile pour accepter `items`, `activate` et,
+pour le calendrier, `excluded_item_ids`. Les anciens clients/API qui omettent
+`activate` gardent le contrat de création en brouillon. Aucune modification de
+Supabase n’est exécutée pour ces ajustements.
+
+Voir [le parcours actuel de création](SHOPPING_CREATION.md). Les suivis des
+étapes ci-dessous gardent leur contexte historique.
 
 Ce document est la référence de travail pour construire le nouvel onglet
 **Liste** d’OptiMeal. Il reprend les parcours demandés, les deux captures
@@ -844,27 +932,12 @@ configuré. Les essais iOS/Android sur appareils restent à effectuer. Voir
 [le guide hors connexion](SHOPPING_OFFLINE.md) pour le fonctionnement, les limites
 et les scénarios. Le résultat de l’étape suivante est décrit ci-dessous.
 
-### 2.14. Récupération des anciennes données locales privées — étape 12
+### 2.14. Ancienne étape 12 — fonctionnalité retirée
 
-**Étape réalisée dans le dépôt le 16 novembre 2026.** Liste propose un aperçu
-et une sélection explicites des anciens ajouts manuels du compte sur l’appareil.
-La confirmation crée un brouillon avec quantités à préciser ; les anciens
-« J’en ai toujours » deviennent des exclusions futures seulement si sélectionnés.
-Les coches, possessions hebdomadaires, choix et prix ne sont pas réinterprétés.
-Les anciennes clés communes sans propriétaire sont ignorées ; aucune source
-n’est effacée. Les identités déjà récupérées ne sont pas proposées deux fois.
-
-Un journal privé conserve consentement, progression et commande exacte. Les
-réponses perdues et échecs de stockage reprennent sans nouvelle liste ni nouvel
-article. Les refus explicites permettent une reprise ou un saut contrôlé ; les
-changements de compte masquent immédiatement le parcours et ses résultats.
-Les routes existantes sont réutilisées, sans migration ni contrat nouveau.
-
-Validation : **261 tests mobiles réussis**, TypeScript, bundles Expo iOS/Android,
-44 exports de contrats et documentation stricte vérifiés. Les contrats HTTP
-restent inchangés. Les essais sur appareils restent à consigner. Voir
-[le guide de récupération](SHOPPING_RECOVERY.md) pour la portée, les reprises
-et les limites. Le résultat de l’étape suivante est décrit ci-dessous.
+Le parcours de récupération locale initialement livré a été retiré à la demande
+de l’utilisateur après les essais : écran, service, route, guide et tests dédiés.
+Aucun import ou conversion de données locales n’est proposé. Les anciennes clés
+restent inutilisées et ne sont pas effacées par cette suppression.
 
 ### 2.15. Accès unifiés depuis Accueil et Calendrier — étape 13
 
@@ -900,10 +973,8 @@ résiduels. Les protections de stockage par compte et les tests des suivis sont
 conservés et adaptés aux services encore utilisés. Aucun moteur concurrent de
 prix ou d’agrégation du calendrier ne subsiste dans le mobile.
 
-Aucune ancienne clé n’est effacée ou réécrite. La récupération volontaire reste
-fonctionnelle sans dépendre du code supprimé. Son test de conservation contrôle
-les valeurs privées, les clés communes, les états hebdomadaires, les suivis et
-les données d’un autre compte avant et après récupération. Les composants actuels
+Aucune ancienne clé n’est effacée ou réécrite. L’ancien parcours d’import local
+a été retiré ensuite à la demande de l’utilisateur. Les composants actuels
 de courses, les calculs serveur et les suivis de produits sont conservés.
 
 Validation : **252 tests mobiles réussis**, TypeScript, 46 exports de contrats,
@@ -969,24 +1040,17 @@ Ne pas conserver deux moteurs indépendants sous Calendrier et Liste.
 
 ### 4.2. Accueil de Liste
 
-Reprendre la hiérarchie de la première capture :
+L’[ajustement demandé après les essais](SHOPPING_OVERVIEW.md) fixe cet ordre :
 
-1. Titre « Liste d’achats » et description courte, dans le ton actuel de
-   l’application : « Crée, organise et retrouve tes listes d’épicerie. »
-2. Action principale « Créer une liste ».
-3. Section « En cours » si nécessaire : nom, période, progression et accès.
-4. Section « Listes sauvegardées », cartes de modèles et « Voir tout ».
-5. Section « Historique », éléments récents et « Voir tout » si nécessaire.
+1. Titre simple « Liste » et bouton « Créer une liste ».
+2. « En cours », avec message si vide et pagination.
+3. « Historique », trois listes au maximum et « Voir tout » vers l’historique complet.
+4. « Mes modèles », tuiles icône/nom et accès direct au détail du modèle.
 
-Les noms Anniversaire, Fête, Voyage, Été et Printemps sont des exemples visuels,
-pas des données à injecter chez chaque utilisateur. Les illustrations doivent
-rester secondaires ; utiliser les ressources existantes avant d’en ajouter.
-Une grille de modèles passe à une colonne si l’espace ou la taille de texte
-le nécessite. Afficher les dates réelles et éviter les noms tronqués ambigus.
-
-Un visiteur voit une présentation sans données personnelles. Proposer la
-connexion lorsqu’il veut créer ou retrouver ses listes ; annuler conserve
-l’écran et n’enregistre aucune donnée dans un compte anonyme partagé.
+Aucune marque, illustration de panier ou description introductive n’est affichée.
+Un compte et une connexion au serveur sont obligatoires avant le montage des
+écrans, y compris depuis Accueil et Calendrier. La création est donc aussi
+protégée. La récupération des anciennes données n’est plus proposée.
 
 ### 4.3. Création depuis le calendrier
 
@@ -1483,27 +1547,24 @@ et la révision utile lors d’un 409, au lieu de ne restituer qu’un message g
 - Ne pas annoncer que ce premier socle rend déjà toutes les actions utilisables
   hors connexion.
 
-### 8.2. Mode courses hors connexion
+### 8.2. Reprises après interruption et accès réseau
 
-Livrer ensuite un cache de la dernière liste complète, avec révision et date
-de synchronisation, et une file persistante minimale pour acheter/décocher.
-Le bandeau indique « Hors connexion · dernières données enregistrées » et
-le nombre d’actions en attente. Une coche locale n’est pas annoncée synchronisée.
-
-Chaque commande fixe un état cible sur un achat identifié et conserve sa
-clé idempotente. Au retour du réseau, ne pas rejouer un toggle ou écraser une
-révision distante. Si la même cible existe sans changement incompatible,
-réconcilier explicitement ; sinon afficher le conflit et conserver l’intention
-locale jusqu’à résolution. Une réponse perdue après commit ne doit pas créer
-un deuxième achat ni faire perdre une coche.
-
-La création serveur, l’import calendrier et la nouvelle comparaison nécessitent
-le réseau dans cette version ; l’interface conserve les brouillons et explique
-la limitation. Ne pas annoncer un mode hors connexion complet. Les données
-personnelles locales sont purgées lors d’une suppression de compte confirmée ;
-un simple sign-out les masque sans les attribuer au prochain utilisateur.
+L’entrée dans Liste exige désormais compte et réseau, conformément aux retours
+d’essais. La validation se fait avant montage du navigateur, au retour au premier
+plan et périodiquement. Les caches et commandes incertaines restent privés afin
+de reprendre après reconnexion ; ils ne contournent pas ce contrôle d’accès.
+Une commande déjà partie garde sa clé et son corps exacts. Une session expirée
+ou un autre compte ne reprend pas silencieusement les données précédentes.
+Voir [la présentation actuelle](SHOPPING_OVERVIEW.md).
 
 ## 9. Modèles et historique
+
+Un modèle est une liste enregistrée pour une occasion (fête, barbecue, voyage,
+sortie), retrouvée par son icône et son nom. Son détail propose **…** en haut à
+droite : **Modifier le nom**, **Supprimer le modèle**, **Ajouter un produit**.
+Les produits s’enregistrent directement dans le modèle. Le formulaire de nouvelle
+liste (nom, date et création depuis le modèle) et les actions globales en bas
+sont retirés. Toucher un produit permet encore de le modifier.
 
 Enregistrer un modèle copie les besoins et éventuellement des préférences
 explicites de produit, pas les statuts acheté/disponible ou des prix imposés.
@@ -1573,9 +1634,9 @@ reste ouverte tant que ses critères nécessaires ne sont pas vérifiés.
 | 9 — Réalisée dans le dépôt le 16 novembre 2026 | Détail, fiche d’article, possession et achats partiels | Couvertures, coches stables, estimations et compléments testés ; voir section 2.11. 0019 appliquée à Supabase ; essais appareils à compléter |
 | 10 — Réalisée dans le dépôt le 16 novembre 2026 | Exclusions, modèles, copie et historique par révision | Copies sans achat ni prix, droits, concurrence et historique immuable vérifiés ; voir section 2.12. 0020 présente sur Supabase ; essais appareils à compléter |
 | 11 — Réalisée dans le dépôt le 16 novembre 2026 | Cache complet et reprise des coches hors connexion | Réponse perdue, redémarrage, conflits et changement de compte couverts ; voir section 2.13. Essais appareils à compléter |
-| 12 — Réalisée dans le dépôt le 16 novembre 2026 | Récupération volontaire des anciennes données locales privées | Import avec aperçu, sélection et reprise idempotente ; anciennes clés communes ignorées ; voir section 2.14. Essais appareils à compléter |
+| 12 — Retirée à la demande de l’utilisateur | Ancien import local supprimé | Écran, service, route et tests dédiés retirés ; aucun import proposé ; voir section 2.14 |
 | 13 — Réalisée dans le dépôt le 16 novembre 2026 | Accueil épinglé et listes du Calendrier par période exacte | Même identifiant, période et agrégats serveur ; voir section 2.15. 0021 appliquée et vérifiée sur Supabase ; essais appareils à compléter |
-| 14 — Réalisée dans le dépôt le 16 novembre 2026 | Retrait des six fichiers de l’ancien moteur après audit | Aucun consommateur actif restant ; récupération et conservation des données vérifiées ; voir section 2.16 |
+| 14 — Réalisée dans le dépôt le 16 novembre 2026 | Retrait des six fichiers de l’ancien moteur après audit | Aucun consommateur actif restant ; aucune ancienne donnée effacée ; voir section 2.16 |
 | 15 | Vérifier appareils, accessibilité, documentation et contrats exportés | Résultats iOS/Android consignés, limites indiquées, guide actualisé |
 
 Regrouper ces étapes en trois livraisons utilisables :
@@ -1609,7 +1670,7 @@ Les lots sont un ordre de livraison, pas une réduction du périmètre final.
 | `mobile/App.tsx`, `mobile/types/navigation.ts` | Pile Liste et accès par identifiant/période |
 | `mobile/app/ListScreen.tsx` | Accueil des listes puis écrans dédiés de création, détail et comparaison selon besoin |
 | Anciens `ShoppingListView.tsx`, `ArticleSheet.tsx`, `AddItemField.tsx` | Retirés à l’étape 14 ; remplacés par les composants de `mobile/components/lists/` |
-| Anciens `useShoppingList.ts` et `shoppingList.ts` | Retirés à l’étape 14 après bascule ; API/cache et récupération autonomes conservés |
+| Anciens `useShoppingList.ts` et `shoppingList.ts` | Retirés à l’étape 14 après bascule ; API/cache conservés |
 | `mobile/services/api.ts`, `accountStorage.ts` | Transport et erreurs structurées, cache et commandes isolées par compte |
 | `mobile/types/api.ts` | Types des listes, besoins, achats, agrégats, propositions et révisions |
 | `mobile/app/HomeScreen.tsx`, `CalendarScreen.tsx`, `ProfileScreen.tsx` | Liste épinglée, période explicite et gestion des exclusions |
@@ -1666,8 +1727,8 @@ Vérifier au minimum :
   double appui, conflit de révision et édition depuis deux appareils.
 - Erreur d’enregistrement distincte de la lecture ; reprise après redémarrage ;
   actions hors connexion rattachées au bon compte ; session expirée ou changée.
-- Migration locale volontaire sans double import ; anciennes clés sans
-  propriétaire ignorées ; aucun ancien montant présenté comme nouveau calcul.
+- Anciennes clés sans propriétaire ignorées ; aucun import local proposé et
+  aucun ancien montant présenté comme nouveau calcul.
 
 ### 13.3. Vérifications de livraison
 
@@ -1699,7 +1760,7 @@ valider le moteur des listes.
 
 ### 13.4. Scénario manuel sur appareil
 
-1. Ouvrir Liste en visiteur, demander la création puis annuler la connexion.
+1. Ouvrir Liste en visiteur, vérifier le refus d’accès et annuler la connexion.
 2. Se connecter sous A, choisir une autre semaine dans Calendrier et créer sa
    liste ; vérifier dates, portions et aperçu.
 3. Ajouter un ingrédient déjà présent et un article libre ; modifier quantité
@@ -1709,7 +1770,7 @@ valider le moteur des listes.
 5. Cocher, décocher, déclarer une quantité déjà disponible et augmenter un besoin.
    Vérifier progression, budget, compléments et absence de changement de magasin.
 6. Fermer puis rouvrir ; vérifier sauvegarde et choix manuels. Tester ensuite
-   le mode hors connexion livré, ses indications et sa reprise après réseau.
+   le refus d’entrée sans réseau, puis la reprise des commandes après reconnexion.
 7. Créer une exclusion, générer une autre liste, vérifier sa portée et la retirer
    depuis Paramètres ; vérifier que l’ajout manuel reste possible.
 8. Sauvegarder un modèle, terminer avec un besoin encore ouvert après confirmation,
@@ -1750,9 +1811,9 @@ cibles sont implémentées :
 - [x] Lot B : achats, comparaison et courses livrés dans le dépôt ; migration 0019 appliquée à Supabase ; essais appareils à compléter.
 - [x] Étape 10 : modèles, exclusions, copies privées et historique par révision ; voir section 2.12.
 - [x] Étape 11 : cache complet privé, file persistante de coches et résolution des conflits ; voir section 2.13.
-- [x] Étape 12 : récupération volontaire des anciens ajouts privés, exclusions facultatives et journal de reprise ; voir section 2.14.
+- [x] Ancienne étape 12 retirée à la demande de l’utilisateur ; aucun import local proposé ; voir section 2.14.
 - [x] Étape 13 : Accueil épinglé, Calendrier par période exacte et navigation vers le détail identifié ; voir section 2.15.
-- [x] Étape 14 : ancien moteur et composants retirés, données et récupération préservées ; voir section 2.16.
+- [x] Étape 14 : ancien moteur et composants retirés, anciennes données conservées ; voir section 2.16.
 - [ ] Lot C : modèles, historique, résilience et bascule des accès.
 - [ ] Vérifications complètes des contrats et migrations applicables.
 - [ ] Essais iOS et Android consignés séparément.
@@ -1777,7 +1838,7 @@ ce guide prépare leur intégration sans les annoncer présents.
 - [Parcours de courses — étape 9](SHOPPING_COURSES.md).
 - [Réutilisation et historique — étape 10](SHOPPING_REUSE.md).
 - [Cache et courses hors connexion — étape 11](SHOPPING_OFFLINE.md).
-- [Récupération des anciennes données locales — étape 12](SHOPPING_RECOVERY.md).
+- [Présentation et accès de l’onglet Liste](SHOPPING_OVERVIEW.md).
 - [Accès unifiés Accueil, Calendrier et Liste — étape 13](SHOPPING_ACCESS.md).
 - [Retrait de l’ancien moteur local — étape 14](SHOPPING_CLEANUP.md).
 - [Migrations applicatives](MIGRATIONS.md).

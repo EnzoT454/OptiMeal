@@ -49,18 +49,22 @@ def test_copy_has_fresh_ids_zero_purchases_and_keeps_exact_corrected_needs(db):
     assert service.get_list(db, source.id, ALICE) == source
 
 
-def test_historical_copy_does_not_follow_current_quantity_or_removed_state(db):
+def test_copy_and_model_reject_an_old_state_instead_of_restoring_a_saved_version(db):
     original = add(db, create(db), quantity={'amount': '250', 'unit': 'g'})
     changed = service.update_item(db, original.id, original.items[0].id, ALICE,
         ShoppingItemUpdate(expected_revision=original.revision, removed=True), uuid4())
-    copied = reuse.duplicate(db, original.id, ALICE,
-        ShoppingDuplicateWrite(source_revision=original.revision, name='Ancien besoin', purchase_date='2026-11-21'), uuid4())
-    assert copied.items[0].required[0].amount == '250'
-    assert not copied.items[0].removed
+    for action in [
+        lambda: reuse.duplicate(db, original.id, ALICE,
+            ShoppingDuplicateWrite(source_revision=original.revision, name='Ancien besoin', purchase_date='2026-11-21'), uuid4()),
+        lambda: model(db, original),
+    ]:
+        with pytest.raises(service.ShoppingListError) as error:
+            action()
+        assert error.value.code == 'LIST_REVISION_CONFLICT'
+    copied = reuse.duplicate(db, changed.id, ALICE,
+        ShoppingDuplicateWrite(source_revision=changed.revision, name='Besoin actuel', purchase_date='2026-11-21'), uuid4())
+    assert not copied.items
     assert service.get_list(db, original.id, ALICE) == changed
-    revisions, count = reuse.list_revisions(db, original.id, ALICE, limit=1)
-    assert count == changed.revision and revisions[0].revision == changed.revision
-    assert service.get_revision(db, original.id, original.revision, ALICE).snapshot == original
 
 
 def test_template_edits_and_deletion_do_not_change_existing_instances(db):
@@ -103,7 +107,7 @@ def test_foreign_sources_templates_revisions_and_exclusions_are_private(db):
     template = model(db, source)
     for call in [lambda: reuse.get_template(db, template.id, BOB),
                  lambda: instantiate(db, template, user=BOB),
-                 lambda: reuse.list_revisions(db, source.id, BOB),
+                 lambda: service.get_list(db, source.id, BOB),
                  lambda: reuse.duplicate(db, source.id, BOB, ShoppingDuplicateWrite(source_revision=source.revision, name='Vol', purchase_date='2026-11-20'), uuid4())]:
         with pytest.raises(service.ShoppingListError) as error:
             call()
@@ -189,7 +193,7 @@ def test_copy_drops_saved_prices_and_keeps_original_after_catalog_changes(db):
     assert copied.assignment is None and not copied.product_purchases
     assert not copied.totals.estimate_complete and copied.totals.budget_known_amount == '0'
     simulate(db, copied, source(sale(500, 9, 'price')))
-    assert service.get_revision(db, saved.id, saved.revision, ALICE).snapshot == saved
+    assert service.get_list(db, saved.id, ALICE) == saved
     assert service.get_list(db, saved.id, ALICE).assignment.scenario.known_amount == '6.00'
 
 
@@ -254,7 +258,7 @@ def test_recipe_changes_do_not_rewrite_copied_calendar_provenance(database):
             name='Ancienne recette', purchase_date='2026-11-23'), uuid4())
         assert copied.items[0].contributions[0].recipe_name == original.items[0].contributions[0].recipe_name
         assert copied.items[0].required == original.items[0].required
-        assert service.get_revision(session, original.id, original.revision, ALICE).snapshot == original
+        assert service.get_list(session, original.id, ALICE) == original
 
 
 @pytest.mark.parametrize('same_key', [False, True])

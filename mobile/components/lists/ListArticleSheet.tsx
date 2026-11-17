@@ -2,18 +2,18 @@ import { useState } from 'react';
 import { Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RecipeButton, RecipeField, recipeColors as c, recipeStyles as s } from '../recipes';
-import { dateLabel, listCommand, listsPath, quantityLabel } from '../../services/shoppingLists';
+import { dateLabel, listCommand, listsPath, quantityLabel, recalculatePricesCommand } from '../../services/shoppingLists';
 import type { ListCommand } from '../../services/shoppingLists';
 import type { ShoppingCoverage, ShoppingItemRead, ShoppingListRead } from '../../types/shoppingLists';
 import { coverageLabels, positiveAmount, purchasedQuantities, remainingQuantities } from './courseQuantities';
-import ProductPurchase, { pendingProductRows } from './ProductPurchase';
+import ProductPurchase, { productRows } from './ProductPurchase';
 import RecipeUnitPicker from '../RecipeUnitPicker';
 import type { RecipeUnit } from '../../types/api';
 import ListExclusionAction from './ListExclusionAction';
-import ListComparison from './ListComparison';
+import ListProductAlternatives from './ListProductAlternatives';
 
-export default function ListArticleSheet({ list, item, disabled, onClose, onCommand, commandError = '', purchasesOnly = false, pendingCommands = [] }: {
-  commandError?: string; purchasesOnly?: boolean; pendingCommands?: ListCommand[]; list: ShoppingListRead; item: ShoppingItemRead; disabled: boolean; onClose: () => void;
+export default function ListArticleSheet({ list, item, disabled, onClose, onCommand, commandError = '' }: {
+  commandError?: string; list: ShoppingListRead; item: ShoppingItemRead; disabled: boolean; onClose: () => void;
   onCommand: (command: ListCommand) => Promise<boolean>;
 }) {
   const [mode, setMode] = useState<'owned' | 'purchase' | 'need' | null>(null);
@@ -23,11 +23,11 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
   const [newUnit, setNewUnit] = useState<RecipeUnit | null>(null);
   const [choosing, setChoosing] = useState(false);
   const [itemName, setItemName] = useState(item.name);
-  const rows = pendingProductRows(list, pendingCommands).filter(r => r.itemIds.includes(item.id));
+  const rows = productRows(list).filter(r => r.itemIds.includes(item.id));
   const path = `${listsPath}/${list.id}/items/${item.id}`;
   const editable = list.status === 'draft' || list.status === 'active';
   const purchaseLocked = disabled || !editable;
-  const locked = purchaseLocked || purchasesOnly;
+  const locked = purchaseLocked;
   const bought = list.purchases.find(p => p.item_id === item.id);
   function begin(next: 'owned' | 'purchase' | 'need') {
     setMode(next); setError('');
@@ -63,7 +63,7 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
           {item.contributions.filter(c => c.source === 'calendar').map(c => <Text key={c.id} style={s.note}>Pour : {c.recipe_name} · {c.meal_date ? dateLabel(c.meal_date) : ''} · {c.servings} portions</Text>)}
           {rows.map(row => <ProductPurchase key={`${row.comparisonId}:${row.line.sale.product_id}:${row.purchasedUnits}`} list={list} row={row} detailed disabled={purchaseLocked} onCommand={onCommand} />)}
           {!rows.length && <Text style={s.note}>Produit et prix inconnus. Un achat déclaré reste possible sans inventer de prix.</Text>}
-          {!!commandError && <Text accessibilityRole="alert" style={s.requiredItem}>{commandError} Ferme la fiche pour actualiser la liste ou reprendre l’enregistrement si nécessaire.</Text>}
+          {!!commandError && <Text accessibilityRole="alert" style={s.requiredItem}>{commandError} Ferme la fiche pour réessayer ou reprendre l’enregistrement si nécessaire.</Text>}
           {!!error && <Text style={s.requiredItem}>{error}</Text>}
           {editable && <>
             <RecipeButton title="Modifier le besoin" variant="neutral" disabled={locked} onPress={() => begin('need')} />
@@ -82,7 +82,7 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
             {mode === 'need' && <View style={s.notice}>
               <RecipeField label="Nom de l’article" value={itemName} onChangeText={setItemName} editable={!locked} maxLength={120} />
               <RecipeButton title="Enregistrer le nom de l’article" disabled={locked || !itemName.trim()} onPress={() => void onCommand(listCommand(path, { expected_revision: list.revision, name: itemName.trim() }, 'PATCH'))} />
-              <Text style={s.note}>Les quantités déjà achetées sont conservées. Une augmentation fait apparaître le complément ; compare ensuite pour préparer ses achats.</Text>
+              <Text style={s.note}>Les quantités déjà achetées sont conservées. Une augmentation fait apparaître le complément ; recalcule ensuite les prix depuis la liste.</Text>
               {!item.required.length && <>
                 <RecipeField label="Besoin total" value={newAmount} onChangeText={setNewAmount} keyboardType="decimal-pad" editable={!locked} />
                 <RecipeUnitPicker value={newUnit} onChange={setNewUnit} ingredientLabel={item.name} disabled={locked} />
@@ -102,8 +102,8 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
               </View>)}
             </View>}
             {item.ingredient_id && <RecipeButton title="Le prendre ailleurs" variant="neutral" disabled={locked} onPress={() => setChoosing(!choosing)} />}
-            {list.choices.some(c => c.item_id === item.id) && <RecipeButton title="Revenir au choix automatique" variant="neutral" disabled={locked} onPress={() => void onCommand(listCommand(`${path}/choice`, { expected_revision: list.revision, product_id: null }, 'PUT'))} />}
-            {choosing && <ListComparison list={list} disabled={locked} onCommand={onCommand} itemId={item.id} />}
+            {list.choices.some(c => c.item_id === item.id) && <RecipeButton title="Revenir au choix automatique" variant="neutral" disabled={locked} onPress={() => void onCommand(recalculatePricesCommand(list, { choices: [{ item_id: item.id, product_id: null }], scenario: 'cheapest' }))} />}
+            {choosing && <ListProductAlternatives list={list} disabled={locked} onCommand={onCommand} itemId={item.id} onClose={() => setChoosing(false)} />}
             {item.ingredient_id && <ListExclusionAction ingredientId={item.ingredient_id} name={item.name} disabled={locked} />}
             <RecipeButton title="Retirer de la liste" variant="neutral" disabled={locked} onPress={() => Alert.alert('Retirer cet article ?', 'Il restera restaurable dans cette liste.', [
               { text: 'Annuler', style: 'cancel' }, { text: 'Retirer', onPress: async () => {

@@ -15,17 +15,17 @@ function deferred() {
 test('A → B → visiteur → A : le stockage privé et les suivis restent isolés', async () => {
   const r = runtime(), storage = r.load('services/accountStorage.ts'), follows = r.load('components/follows.ts');
   const state = { snapshot: { id: 'list-a', revision: 4 }, queue: [{ key: 'command-a' }] };
-  await storage.writeAccountJSON(A, 'shopping-offline.list-a', state);
+  await storage.writeAccountJSON(A, 'test-private.list-a', state);
   await follows.toggleFollow(A, oil);
   const before = [...r.data];
   for (const user of [B, null]) {
-    assert.equal(await storage.readAccountJSON(user, 'shopping-offline.list-a', null), null);
+    assert.equal(await storage.readAccountJSON(user, 'test-private.list-a', null), null);
     assert.equal((await follows.getFollows(user)).length, 0);
   }
   assert.deepEqual([...r.data], before);
-  await storage.writeAccountJSON(B, 'shopping-offline.list-a', { snapshot: { id: 'list-b' }, queue: [] });
+  await storage.writeAccountJSON(B, 'test-private.list-a', { snapshot: { id: 'list-b' }, queue: [] });
   await follows.toggleFollow(B, rice);
-  assert.deepEqual(plain(await storage.readAccountJSON(A, 'shopping-offline.list-a', null)), state);
+  assert.deepEqual(plain(await storage.readAccountJSON(A, 'test-private.list-a', null)), state);
   assert.equal((await follows.getFollows(A))[0].product_id, oil.product_id);
 });
 
@@ -57,20 +57,20 @@ test('anciennes clés communes : ni lecture, ni attribution, ni effacement', asy
 test('visiteur : aucune écriture privée ni nouvelle clé anonyme', async () => {
   const r = runtime(), storage = r.load('services/accountStorage.ts'), follows = r.load('components/follows.ts');
   for (const action of [
-    () => storage.writeAccountJSON(null, 'shopping-offline.list', {}),
-    () => storage.updateAccountJSON(null, 'shopping-recovery.v1', {}, value => value),
+    () => storage.writeAccountJSON(null, 'test-private.list', {}),
+    () => storage.updateAccountJSON(null, 'shopping-command.list', {}, value => value),
     () => follows.toggleFollow(null, oil), () => follows.unfollow(null, oil.id),
   ]) await assert.rejects(action, /Connecte-toi/);
   assert.equal(r.writes.length, 0); assert.equal(r.data.size, 0);
 });
 
-test('redémarrage : cache, file et suivis retrouvent leur compte propriétaire', async () => {
+test('redémarrage : données privées et suivis retrouvent leur compte propriétaire', async () => {
   const first = runtime();
-  await first.load('services/accountStorage.ts').writeAccountJSON(A, 'shopping-offline.list-a', { snapshot: { id: 'list-a' }, queue: [{ key: 'pending' }] });
+  await first.load('services/accountStorage.ts').writeAccountJSON(A, 'test-private.list-a', { snapshot: { id: 'list-a' }, queue: [{ key: 'pending' }] });
   await first.load('components/follows.ts').toggleFollow(B, rice);
   const reopened = runtime({ data: first.data }), storage = reopened.load('services/accountStorage.ts');
-  assert.equal((await storage.readAccountJSON(A, 'shopping-offline.list-a', null)).queue[0].key, 'pending');
-  assert.equal(await storage.readAccountJSON(B, 'shopping-offline.list-a', null), null);
+  assert.equal((await storage.readAccountJSON(A, 'test-private.list-a', null)).queue[0].key, 'pending');
+  assert.equal(await storage.readAccountJSON(B, 'test-private.list-a', null), null);
   assert.equal((await reopened.load('components/follows.ts').getFollows(A)).length, 0);
   assert.equal((await reopened.load('components/follows.ts').getFollows(B))[0].product_id, rice.product_id);
 });
@@ -79,11 +79,11 @@ test('écriture A tardive : rester dans A après le passage à B', async () => {
   const entered = deferred(), release = deferred();
   const r = runtime({ beforeSet: async (key) => { if (key.includes(A)) { entered.resolve(); await release.promise; } } });
   const storage = r.load('services/accountStorage.ts');
-  const pending = storage.writeAccountJSON(A, 'shopping-offline.list', { id: 'A' }); await entered.promise;
-  r.account(B); await storage.writeAccountJSON(B, 'shopping-offline.list', { id: 'B' });
+  const pending = storage.writeAccountJSON(A, 'test-private.list', { id: 'A' }); await entered.promise;
+  r.account(B); await storage.writeAccountJSON(B, 'test-private.list', { id: 'B' });
   release.resolve(); await pending;
-  assert.equal((await storage.readAccountJSON(A, 'shopping-offline.list', null)).id, 'A');
-  assert.equal((await storage.readAccountJSON(B, 'shopping-offline.list', null)).id, 'B');
+  assert.equal((await storage.readAccountJSON(A, 'test-private.list', null)).id, 'A');
+  assert.equal((await storage.readAccountJSON(B, 'test-private.list', null)).id, 'B');
 });
 
 test('modifications concurrentes : conserver les deux suivis de A et isoler B', async () => {

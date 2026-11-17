@@ -96,12 +96,3 @@ class ShoppingExclusionRead(ContractModel):
     name: Name
     excluded: StrictBool
     updated_at: AwareDatetime
-
-
-class ShoppingRevisionSummary(ContractModel):
-    list_id: UUID
-    revision: Revision
-    recorded_at: AwareDatetime
-    name: Name
-    status: Literal['draft', 'active', 'completed', 'archived']
-    item_count: Annotated[int, Field(strict=True, ge=0)]

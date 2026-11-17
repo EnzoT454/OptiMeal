@@ -2,20 +2,24 @@
 from backend.app.common.contracts import Detail, Page
 from .schemas import (
     ShoppingCalendarPreviewRead, ShoppingCalendarPreviewWrite, ShoppingCommand,
+    ShoppingDraftPricingWrite, ShoppingDraftPricingRead, ShoppingRecalculatePricesWrite,
     ShoppingCommandHeaders, ShoppingConflictResponse, ShoppingFromCalendar,
     ShoppingItemAdd, ShoppingItemUpdate, ShoppingListCreate, ShoppingListRead,
     ShoppingListUpdate, ShoppingManualPurchaseWrite, ShoppingPossessionWrite,
-    ShoppingRevisionRead, ShoppingComparisonRead, ShoppingApplyComparison, ShoppingChoiceWrite, ShoppingProductPurchaseWrite, ShoppingCompleteWrite,
+    ShoppingComparisonRead, ShoppingApplyComparison, ShoppingChoiceWrite, ShoppingProductPurchaseWrite, ShoppingCompleteWrite,
 )
 
 from .access_schemas import ShoppingPinRead, ShoppingPinWrite
 from .reuse_schemas import (
     ShoppingDuplicateWrite, ShoppingExclusionRead, ShoppingExclusionWrite,
-    ShoppingRevisionSummary, ShoppingTemplateCreate, ShoppingTemplateRead,
+    ShoppingTemplateCreate, ShoppingTemplateRead,
     ShoppingTemplateUpdate, ShoppingTemplateInstantiate,
 )
 
 MODELS = {
+    'shopping-list-recalculate-prices': ShoppingRecalculatePricesWrite,
+    'shopping-draft-pricing-write': ShoppingDraftPricingWrite,
+    'shopping-draft-pricing-detail': Detail[ShoppingDraftPricingRead],
     'shopping-list-pin-write': ShoppingPinWrite,
     'shopping-list-pin-detail': Detail[ShoppingPinRead],
     'shopping-list-duplicate-write': ShoppingDuplicateWrite,
@@ -27,7 +31,6 @@ MODELS = {
     'shopping-exclusion-write': ShoppingExclusionWrite,
     'shopping-exclusion-detail': Detail[ShoppingExclusionRead],
     'shopping-exclusions-page': Page[ShoppingExclusionRead],
-    'shopping-revisions-page': Page[ShoppingRevisionSummary],
     'shopping-list-product-purchase-write': ShoppingProductPurchaseWrite,
     'shopping-list-complete-write': ShoppingCompleteWrite,
     'shopping-list-comparison-detail': Detail[ShoppingComparisonRead],
@@ -46,7 +49,6 @@ MODELS = {
     'shopping-list-calendar-preview-detail': Detail[ShoppingCalendarPreviewRead],
     'shopping-list-detail': Detail[ShoppingListRead],
     'shopping-lists-page': Page[ShoppingListRead],
-    'shopping-list-revision-detail': Detail[ShoppingRevisionRead],
     'shopping-list-conflict': ShoppingConflictResponse,
 }
 
@@ -114,7 +116,14 @@ def examples() -> dict:
                 'created_at': resource['created_at'], 'updated_at': resource['updated_at']}
     exclusion = {'ingredient_id': rice['ingredient_id'], 'name': 'Riz', 'excluded': True,
                  'updated_at': resource['updated_at']}
+    from .draft_pricing import build
+    draft_request = ShoppingDraftPricingWrite(purchase_date='2026-11-15',
+        items=[{'name': 'Riz', 'ingredient_id': rice['ingredient_id'], 'required': [{'amount': '750', 'unit': 'g'}]}])
+    draft_quote = build(draft_request, [])
     values = {
+        'shopping-list-recalculate-prices': {'expected_revision': 4},
+        'shopping-draft-pricing-write': draft_request.model_dump(mode='json'),
+        'shopping-draft-pricing-detail': {'item': draft_quote.model_dump(mode='json'), 'meta': meta},
         'shopping-list-pin-write': {'list_id': list_id},
         'shopping-list-pin-detail': {'item': {'list_id': list_id}, 'meta': meta},
         'shopping-list-duplicate-write': {'source_revision': 4, 'name': 'Copie indépendante', 'purchase_date': '2026-11-20'},
@@ -126,15 +135,13 @@ def examples() -> dict:
         'shopping-exclusion-write': {'excluded': True},
         'shopping-exclusion-detail': {'item': exclusion, 'meta': meta},
         'shopping-exclusions-page': {'items': [exclusion], 'total': 1, 'limit': 20, 'offset': 0, 'meta': meta},
-        'shopping-revisions-page': {'items': [{'list_id': list_id, 'revision': 4, 'recorded_at': resource['updated_at'],
-            'name': resource['name'], 'status': resource['status'], 'item_count': 2}], 'total': 1, 'limit': 20, 'offset': 0, 'meta': meta},
         'shopping-list-product-purchase-write': {'expected_revision': 4, 'comparison_id': comparison['id'], 'item_id': rice_id, 'product_id': 'maxi:demo:riz', 'purchased_units': 1},
         'shopping-list-complete-write': {'expected_revision': 4, 'accept_remaining': True},
         'shopping-list-comparison-detail': {'item': comparison, 'meta': meta},
         'shopping-list-apply-comparison': {'expected_revision': 4, 'comparison_id': comparison['id'],
                                          'scenario': 'cheapest', 'accept_partial': True},
         'shopping-list-choice-write': {'expected_revision': 4, 'product_id': None},
-        'shopping-list-create': {'name': 'Mes courses'},
+        'shopping-list-create': {'name': 'Mes courses', 'activate': True, 'items': [{'name': 'Riz', 'ingredient_id': 'ing_riz_basmati_blanc', 'quantity': {'amount': '500', 'unit': 'g'}}]},
         'shopping-list-command-headers': {'idempotency_key': '00000000-0000-4000-8000-000000000009'},
         'shopping-list-command': {'expected_revision': 4},
         'shopping-list-update': {'expected_revision': 4, 'name': 'Courses du dimanche'},
@@ -156,19 +163,14 @@ def examples() -> dict:
         }, 'meta': meta},
         'shopping-list-detail': {'item': resource, 'meta': meta},
         'shopping-lists-page': {'items': [resource], 'total': 1, 'limit': 20, 'offset': 0, 'meta': meta},
-        'shopping-list-revision-detail': {'item': {
-            'list_id': list_id, 'revision': 4,
-            'command_id': '00000000-0000-4000-8000-000000000009',
-            'recorded_at': '2026-11-14T18:05:00Z', 'snapshot': resource,
-        }, 'meta': meta},
         'shopping-list-conflict': {'error': {'code': 'LIST_REVISION_CONFLICT',
             'message': 'La liste a changé. Relis les modifications.', 'list_id': list_id,
             'expected_revision': 3, 'current_revision': 4}},
     }
-    responses = {'shopping-list-pin-detail', 'shopping-list-comparison-detail', 'shopping-list-calendar-preview-detail', 'shopping-list-detail',
-                 'shopping-lists-page', 'shopping-list-revision-detail', 'shopping-list-conflict'}
+    responses = {'shopping-draft-pricing-detail', 'shopping-list-pin-detail', 'shopping-list-comparison-detail', 'shopping-list-calendar-preview-detail', 'shopping-list-detail',
+                 'shopping-lists-page', 'shopping-list-conflict'}
     responses.update({'shopping-template-detail', 'shopping-templates-page', 'shopping-exclusion-detail',
-                      'shopping-exclusions-page', 'shopping-revisions-page'})
+                      'shopping-exclusions-page'})
     # Un PATCH doit conserver la différence entre omission et null explicite.
     return {name: MODELS[name].model_validate(value).model_dump(
         mode='json', exclude_unset=name not in responses) for name, value in values.items()}

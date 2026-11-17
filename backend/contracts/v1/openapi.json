@@ -2256,6 +2256,92 @@
         }
       }
     },
+    "/api/v1/shopping-lists/creation-prices": {
+      "post": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Creation Prices",
+        "operationId": "creation_prices_api_v1_shopping_lists_creation_prices_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingDraftPricingWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingDraftPricingRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/shopping-lists/calendar-preview": {
       "post": {
         "tags": [
@@ -2566,6 +2652,202 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ShoppingListUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingListRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/shopping-lists/{list_id}/price-options": {
+      "get": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Price Options",
+        "operationId": "price_options_api_v1_shopping_lists__list_id__price_options_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "List Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingDraftPricingRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/shopping-lists/{list_id}/recalculate-prices": {
+      "post": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Recalculate Prices",
+        "operationId": "recalculate_prices_api_v1_shopping_lists__list_id__recalculate_prices_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "List Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingRecalculatePricesWrite"
               }
             }
           }
@@ -3420,104 +3702,6 @@
         }
       }
     },
-    "/api/v1/shopping-lists/{list_id}/revisions/{revision}": {
-      "get": {
-        "tags": [
-          "Listes v1"
-        ],
-        "summary": "Revision",
-        "operationId": "revision_api_v1_shopping_lists__list_id__revisions__revision__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "list_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "List Id"
-            }
-          },
-          {
-            "name": "revision",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "title": "Revision"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Detail_ShoppingRevisionRead_"
-                }
-              }
-            }
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ShoppingConflictResponse"
-                }
-              }
-            },
-            "description": "Conflict"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
     "/api/v1/shopping-lists/{list_id}/comparisons": {
       "post": {
         "tags": [
@@ -4099,117 +4283,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Detail_ShoppingListRead_"
-                }
-              }
-            }
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Unauthorized"
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Not Found"
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ShoppingConflictResponse"
-                }
-              }
-            },
-            "description": "Conflict"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          },
-          "503": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            },
-            "description": "Service Unavailable"
-          }
-        }
-      }
-    },
-    "/api/v1/shopping-lists/{list_id}/revisions": {
-      "get": {
-        "tags": [
-          "Listes v1"
-        ],
-        "summary": "Revisions",
-        "operationId": "revisions_api_v1_shopping_lists__list_id__revisions_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "list_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "List Id"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 100,
-              "minimum": 1,
-              "default": 20,
-              "title": "Limit"
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "default": 0,
-              "title": "Offset"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Page_ShoppingRevisionSummary_"
                 }
               }
             }
@@ -6016,6 +6089,23 @@
         ],
         "title": "Detail[ShoppingComparisonRead]"
       },
+      "Detail_ShoppingDraftPricingRead_": {
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/ShoppingDraftPricingRead"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item",
+          "meta"
+        ],
+        "title": "Detail[ShoppingDraftPricingRead]"
+      },
       "Detail_ShoppingExclusionRead_": {
         "properties": {
           "item": {
@@ -6066,23 +6156,6 @@
           "meta"
         ],
         "title": "Detail[ShoppingPinRead]"
-      },
-      "Detail_ShoppingRevisionRead_": {
-        "properties": {
-          "item": {
-            "$ref": "#/components/schemas/ShoppingRevisionRead"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "required": [
-          "item",
-          "meta"
-        ],
-        "title": "Detail[ShoppingRevisionRead]"
       },
       "Detail_ShoppingTemplateRead_": {
         "properties": {
@@ -7199,46 +7272,6 @@
           "meta"
         ],
         "title": "Page[ShoppingListRead]"
-      },
-      "Page_ShoppingRevisionSummary_": {
-        "properties": {
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/ShoppingRevisionSummary"
-            },
-            "type": "array",
-            "title": "Items"
-          },
-          "total": {
-            "type": "integer",
-            "minimum": 0.0,
-            "title": "Total"
-          },
-          "limit": {
-            "type": "integer",
-            "maximum": 100.0,
-            "minimum": 1.0,
-            "title": "Limit"
-          },
-          "offset": {
-            "type": "integer",
-            "minimum": 0.0,
-            "title": "Offset"
-          },
-          "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "required": [
-          "items",
-          "total",
-          "limit",
-          "offset",
-          "meta"
-        ],
-        "title": "Page[ShoppingRevisionSummary]"
       },
       "Page_ShoppingTemplateRead_": {
         "properties": {
@@ -8733,6 +8766,25 @@
       },
       "ShoppingCalculatedLine": {
         "properties": {
+          "pricing_method": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "direct"
+            ],
+            "title": "Pricing Method",
+            "default": "verified"
+          },
+          "direct_increment": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ShoppingBaseQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "sale": {
             "$ref": "#/components/schemas/NormalizedSale"
           },
@@ -8766,6 +8818,29 @@
           "estimated_weight"
         ],
         "title": "ShoppingCalculatedLine"
+      },
+      "ShoppingCalendarAdjustment": {
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Item Id"
+          },
+          "required": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingBaseQuantity"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "title": "Required"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item_id"
+        ],
+        "title": "ShoppingCalendarAdjustment"
       },
       "ShoppingCalendarPreviewRead": {
         "properties": {
@@ -9425,6 +9500,286 @@
         "title": "ShoppingCoverage",
         "description": "Couverture explicite, ou confirmation d'un besoin sans quantité."
       },
+      "ShoppingCreationPricing": {
+        "properties": {
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint"
+          },
+          "scenario": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc",
+              "cheapest"
+            ],
+            "title": "Scenario"
+          },
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingDraftChoice"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "Choices"
+          },
+          "accept_partial": {
+            "type": "boolean",
+            "title": "Accept Partial",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fingerprint",
+          "scenario"
+        ],
+        "title": "ShoppingCreationPricing"
+      },
+      "ShoppingDraftChoice": {
+        "properties": {
+          "item_index": {
+            "type": "integer",
+            "maximum": 499.0,
+            "minimum": 0.0,
+            "title": "Item Index"
+          },
+          "product_id": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Product Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item_index",
+          "product_id"
+        ],
+        "title": "ShoppingDraftChoice"
+      },
+      "ShoppingDraftItem": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "ingredient_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^ing_[a-z0-9_]+$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ingredient Id"
+          },
+          "required": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingQuantity"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "title": "Required"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ShoppingDraftItem"
+      },
+      "ShoppingDraftPricingRead": {
+        "properties": {
+          "fingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Fingerprint"
+          },
+          "scenarios": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingScenario"
+            },
+            "type": "array",
+            "title": "Scenarios"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingDraftProduct"
+            },
+            "type": "array",
+            "title": "Candidates"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "fingerprint",
+          "scenarios",
+          "candidates"
+        ],
+        "title": "ShoppingDraftPricingRead"
+      },
+      "ShoppingDraftPricingWrite": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingDraftItem"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Items"
+          },
+          "purchase_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Purchase Date"
+          },
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingDraftChoice"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "Choices"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "purchase_date"
+        ],
+        "title": "ShoppingDraftPricingWrite"
+      },
+      "ShoppingDraftProduct": {
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Item Id"
+          },
+          "item_index": {
+            "type": "integer",
+            "maximum": 499.0,
+            "minimum": 0.0,
+            "title": "Item Index"
+          },
+          "product_id": {
+            "type": "string",
+            "title": "Product Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "retailer": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc"
+            ],
+            "title": "Retailer"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          },
+          "format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Format"
+          },
+          "unit_price": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit Price"
+          },
+          "units": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 1000000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Units"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount"
+          },
+          "issue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Issue"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item_id",
+          "item_index",
+          "product_id",
+          "name",
+          "retailer",
+          "store_id",
+          "format",
+          "unit_price",
+          "units",
+          "amount",
+          "issue"
+        ],
+        "title": "ShoppingDraftProduct"
+      },
       "ShoppingDuplicateWrite": {
         "properties": {
           "source_revision": {
@@ -9556,6 +9911,46 @@
             "minLength": 1,
             "title": "Name"
           },
+          "pricing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ShoppingCreationPricing"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingInitialItem"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "Items"
+          },
+          "excluded_item_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "Excluded Item Ids"
+          },
+          "adjusted_items": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingCalendarAdjustment"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "Adjusted Items"
+          },
+          "activate": {
+            "type": "boolean",
+            "title": "Activate",
+            "default": false
+          },
           "preview_fingerprint": {
             "type": "string",
             "pattern": "^[a-f0-9]{64}$",
@@ -9581,6 +9976,44 @@
           "preview_fingerprint"
         ],
         "title": "ShoppingFromCalendar"
+      },
+      "ShoppingInitialItem": {
+        "properties": {
+          "ingredient_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^ing_[a-z0-9_]+$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ingredient Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "quantity": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ShoppingQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ShoppingInitialItem"
       },
       "ShoppingItemAdd": {
         "properties": {
@@ -9802,6 +10235,29 @@
             "maxLength": 120,
             "minLength": 1,
             "title": "Name"
+          },
+          "pricing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ShoppingCreationPricing"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingInitialItem"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "Items"
+          },
+          "activate": {
+            "type": "boolean",
+            "title": "Activate",
+            "default": false
           },
           "purchase_date": {
             "anyOf": [
@@ -10273,6 +10729,17 @@
             },
             "type": "array",
             "title": "Allocations"
+          },
+          "confirmed_need_revisions": {
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 1.0
+            },
+            "propertyNames": {
+              "format": "uuid"
+            },
+            "type": "object",
+            "title": "Confirmed Need Revisions"
           }
         },
         "additionalProperties": false,
@@ -10380,93 +10847,74 @@
         ],
         "title": "ShoppingQuantity"
       },
-      "ShoppingRevisionRead": {
+      "ShoppingRecalculateChoice": {
         "properties": {
-          "list_id": {
+          "item_id": {
             "type": "string",
             "format": "uuid",
-            "title": "List Id"
+            "title": "Item Id"
           },
-          "revision": {
-            "type": "integer",
-            "minimum": 1.0,
-            "title": "Revision"
-          },
-          "command_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Command Id"
-          },
-          "recorded_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Recorded At"
-          },
-          "snapshot": {
-            "$ref": "#/components/schemas/ShoppingListRead"
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "required": [
-          "list_id",
-          "revision",
-          "command_id",
-          "recorded_at",
-          "snapshot"
-        ],
-        "title": "ShoppingRevisionRead"
-      },
-      "ShoppingRevisionSummary": {
-        "properties": {
-          "list_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "List Id"
-          },
-          "revision": {
-            "type": "integer",
-            "minimum": 1.0,
-            "title": "Revision"
-          },
-          "recorded_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Recorded At"
-          },
-          "name": {
-            "type": "string",
-            "maxLength": 120,
-            "minLength": 1,
-            "title": "Name"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "draft",
-              "active",
-              "completed",
-              "archived"
+          "product_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 512,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
             ],
-            "title": "Status"
-          },
-          "item_count": {
-            "type": "integer",
-            "minimum": 0.0,
-            "title": "Item Count"
+            "title": "Product Id"
           }
         },
         "additionalProperties": false,
         "type": "object",
         "required": [
-          "list_id",
-          "revision",
-          "recorded_at",
-          "name",
-          "status",
-          "item_count"
+          "item_id",
+          "product_id"
         ],
-        "title": "ShoppingRevisionSummary"
+        "title": "ShoppingRecalculateChoice"
+      },
+      "ShoppingRecalculatePricesWrite": {
+        "properties": {
+          "expected_revision": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Expected Revision"
+          },
+          "scenario": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "maxi",
+                  "metro",
+                  "superc",
+                  "cheapest"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario"
+          },
+          "choices": {
+            "items": {
+              "$ref": "#/components/schemas/ShoppingRecalculateChoice"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "title": "Choices"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_revision"
+        ],
+        "title": "ShoppingRecalculatePricesWrite"
       },
       "ShoppingScenario": {
         "properties": {

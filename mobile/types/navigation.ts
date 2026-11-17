@@ -26,8 +26,7 @@ export type MainTabParams = {
 };
 
 export type ListStackParams = {
-  Lists: undefined; CreateList: { period?: ShoppingPeriod } | undefined; RecoverLocal: undefined; ShoppingDetail: { id: string; revision?: number };
-  Templates: undefined; TemplateDetail: { id: string };
+  Lists: undefined; CreateList: { period?: ShoppingPeriod } | undefined; ShoppingDetail: { id: string };
+  History: undefined; TemplateDetail: { id: string };
   ReuseList: { id: string; revision: number; mode: 'copy' | 'template' };
-  Revisions: { id: string };
 };

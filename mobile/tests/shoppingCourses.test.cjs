@@ -16,18 +16,25 @@ function harness(file, initialProps = {}) {
       compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022 },
     }).outputText, { exports, require(name) {
       if (name === 'react/jsx-runtime') return { jsx, jsxs: jsx };
-      if (name === 'react') return { useState(initial) {
+      if (name === 'react') return {
+        useRef(initial) { const index = cursor++; if (!(index in hooks)) hooks[index] = { current: initial }; return hooks[index]; },
+        useEffect(fn, deps) { const index = cursor++; if (!(index in hooks)) hooks[index] = { deps, cleanup: fn() }; },
+        useState(initial) {
         const index = cursor++; if (!(index in hooks)) hooks[index] = initial;
         return [hooks[index], value => { hooks[index] = typeof value === 'function' ? value(hooks[index]) : value; }];
       } };
       if (name === 'react-native') return { Text: 'Text', View: 'View', Pressable: 'Pressable', Modal: 'Modal', ScrollView: 'ScrollView', Alert: { alert: (...args) => alerts.push(args) } };
       if (name === 'react-native-safe-area-context') return { SafeAreaView: 'SafeAreaView' };
+      if (name.endsWith('/AuthContext')) return { useAuth: () => ({ session: { user: { id: 'alice' } } }) };
+      if (name.endsWith('/api')) return { api: async () => ({ items: [{ id: 'ing_riz', name: 'Riz', aliases: [], category: 'Épicerie' }] }) };
+      if (name.endsWith('/IngredientPicker')) return { default: 'IngredientPicker', __esModule: true };
       if (name.endsWith('/recipes')) return { RecipeButton: 'RecipeButton', RecipeField: 'RecipeField', recipeStyles: {}, recipeColors: {} };
       if (name.endsWith('/RecipeUnitPicker')) return { default: 'RecipeUnitPicker', __esModule: true };
       if (name.endsWith('/ListExclusionAction')) return { default: 'ListExclusionAction', __esModule: true };
-      if (name.endsWith('/ListComparison')) return { default: 'ListComparison', __esModule: true };
+      if (name.endsWith('/ListProductAlternatives')) return { default: 'ListProductAlternatives', __esModule: true };
       if (name.endsWith('/shoppingLists')) return {
         listsPath: '/api/v1/shopping-lists', quantityLabel: values => values.map(q => `${q.amount} ${q.unit}`).join(' + '), dateLabel: x => x,
+        recalculatePricesCommand: (list, options = {}) => ({ key: 'stable-key', path: `/api/v1/shopping-lists/${list.id}/recalculate-prices`, method: 'POST', body: { expected_revision: list.revision, ...options } }),
         listCommand: (path, body, method) => ({ key: 'stable-key', path, body, method }),
       };
       const relative = path.resolve(path.dirname(filename), name);
@@ -122,8 +129,9 @@ test('filtrer les magasins et ouvrir les achats enregistrés ne modifie jamais l
   const { list } = fixture();
   const h = harness('components/lists/ListCourses.tsx', { list, disabled: false });
   button(h, 'Maxi').props.onPress();
-  button(h, 'Voir les achats enregistrés').props.onPress();
   assert.equal(button(h, 'Masquer les achats enregistrés').props.accessibilityState.expanded, true);
+  button(h, 'Masquer les achats enregistrés').props.onPress();
+  assert.equal(button(h, 'Voir les achats enregistrés').props.accessibilityState.expanded, false);
   assert.equal(h.commands.length, 0);
 });
 
@@ -160,35 +168,103 @@ test('fiche : erreurs serveur visibles, retrait annulable et quantités achetée
   assert.equal(h.commands.length, 1);
 });
 
-test('coches locales produit : afficher le dernier état cible sans recalculer les estimations', () => {
+test('les achats affichés proviennent uniquement de l’état confirmé par le serveur', () => {
   const { list } = fixture();
   const module = harness('components/lists/ProductPurchase.tsx').module;
-  const pending = { method: 'PUT', path: '/api/v1/shopping-lists/list/product-purchases', body: {
-    comparison_id: 'proposal', product_id: 'maxi:1:rice', item_id: 'rice', purchased_units: 2,
-  } };
   const before = json(list);
-  const row = module.pendingProductRows(list, [pending])[0];
-  assert.equal(row.purchasedUnits, 2); assert.equal(row.pending, true);
+  const row = module.productRows(list)[0];
   const h = harness('components/lists/ProductPurchase.tsx', { list, row, disabled: false });
-  assert.equal(check(h).props.accessibilityState.checked, true);
-  assert.match(check(h).props.accessibilityLabel, /en attente/);
+  assert.doesNotMatch(check(h).props.accessibilityLabel, /synchronisation|en attente/);
   assert.deepEqual(json(list), before);
 });
-test('fiche hors connexion : bloquer possession et modification, garder les achats produit', () => {
-  const { list, item } = fixture();
-  const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false, purchasesOnly: true });
-  assert.equal(button(h, 'Modifier le besoin').props.disabled, true);
-  assert.equal(button(h, 'J’en ai déjà').props.disabled, true);
-  const product = nodes(h.render()).find(n => n.props.row?.comparisonId === 'proposal');
-  assert.equal(product.props.disabled, false);
-});
-test('coches locales manuelles : déplacer dans les achats et décocher avec un état cible', async () => {
-  const { list } = fixture(); list.assignment = null;
-  const pending = { path: '/api/v1/shopping-lists/list/items/rice/manual-purchase', body: { purchased: true } };
-  const h = harness('components/lists/ListCourses.tsx', { list, disabled: false, pendingCommands: [pending] });
-  button(h, 'Voir les achats enregistrés').props.onPress();
-  assert.equal(check(h).props.accessibilityState.checked, true);
+
+test('un achat au prix direct affiche un nombre de produits et conserve la commande de coche', async () => {
+  const { list, row } = fixture();
+  row.line.pricing_method = 'direct'; row.line.direct_increment = { amount: '500', unit: 'g' };
+  row.line.sale.price_basis = 'unknown';
+  const h = harness('components/lists/ProductPurchase.tsx', { list, row, disabled: false, detailed: true });
+  assert.ok(field(h, 'Nombre de produits achetés'));
+  assert.equal(field(h, 'Nombre de pas de vente achetés'), undefined);
   await check(h).props.onPress();
-  assert.equal(h.commands[0].body.purchased, false);
-  assert.equal(list.items[0].coverage_status, 'remaining');
+  assert.equal(h.commands[0].body.purchased_units, 2);
+});
+
+const flush = () => new Promise(setImmediate);
+const editorFixture = () => { const f = fixture(); f.list.totals = { item_count: 1 }; return f; };
+test('édition des articles : un ajout envoie nom et quantité et conserve les achats existants', async () => {
+  const { list } = editorFixture();
+  const h = harness('components/lists/ListItemsEditor.tsx', { list, disabled: false, onDone() {} });
+  field(h, 'Article').props.onChangeText('Pain');
+  field(h, 'Quantité (facultative)').props.onChangeText('2');
+  nodes(h.render()).find(n => n.type === 'RecipeUnitPicker').props.onChange('unit');
+  button(h, 'Ajouter à la liste').props.onPress(); await flush();
+  assert.equal(h.commands[0].path, '/api/v1/shopping-lists/list/items');
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, name: 'Pain', quantity: { amount: '2', unit: 'unit' } });
+  assert.equal(field(h, 'Article').props.value, '');
+  assert.equal(list.items.length, 1);
+});
+test('édition des articles : une quantité invalide ne déclenche pas d’ajout', async () => {
+  const { list } = editorFixture();
+  const h = harness('components/lists/ListItemsEditor.tsx', { list, disabled: false, onDone() {} });
+  field(h, 'Article').props.onChangeText('Pain'); field(h, 'Quantité (facultative)').props.onChangeText('-1');
+  button(h, 'Ajouter à la liste').props.onPress(); await flush();
+  assert.equal(h.commands.length, 0);
+  assert.ok(nodes(h.render()).some(n => n.props.accessibilityRole === 'alert'));
+});
+test('édition des articles : suppression confirmée et restauration envoient les états explicites', async () => {
+  const { list } = editorFixture();
+  const h = harness('components/lists/ListItemsEditor.tsx', { list, disabled: false, onDone() {} });
+  button(h, 'Supprimer Riz').props.onPress();
+  assert.equal(h.commands.length, 0); assert.equal(h.alerts[0][2][0].text, 'Annuler');
+  h.alerts[0][2][1].onPress(); await flush();
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, removed: true });
+  assert.equal(h.commands[0].method, 'PATCH');
+  list.items[0].removed = true;
+  await button(h, 'Restaurer Riz').props.onPress();
+  assert.deepEqual(json(h.commands[1].body), { expected_revision: 8, removed: false });
+});
+test('édition des articles : choisir un ingrédient existant demande comment gérer le doublon', async () => {
+  const { list } = editorFixture();
+  const h = harness('components/lists/ListItemsEditor.tsx', { list, disabled: false, onDone() {} });
+  button(h, 'Choisir dans le catalogue').props.onPress(); await flush();
+  nodes(h.render()).find(n => n.type === 'IngredientPicker').props.onSelect('ing_riz');
+  button(h, 'Ajouter à la liste').props.onPress();
+  assert.equal(h.commands.length, 0);
+  h.alerts[0][2][2].onPress(); await flush();
+  assert.equal(h.commands[0].body.ingredient_id, 'ing_riz');
+  assert.equal(h.commands[0].body.merge, 'separate');
+});
+test('édition des articles : un ajout refusé garde les champs pour la correction', async () => {
+  const { list } = editorFixture();
+  const h = harness('components/lists/ListItemsEditor.tsx', { list, disabled: false, onCommand: async () => false, onDone() {} });
+  field(h, 'Article').props.onChangeText('Pain');
+  button(h, 'Ajouter à la liste').props.onPress(); await flush();
+  assert.equal(field(h, 'Article').props.value, 'Pain');
+});
+
+test('la liste affiche les produits et prix sauvegardés sans calcul ou commande préalable', () => {
+  const { list } = fixture();
+  const h = harness('components/lists/ListCourses.tsx', { list, disabled: false });
+  const product = nodes(h.render()).find(n => n.props.row?.line?.sale.product_id === 'maxi:1:rice');
+  assert.ok(product); assert.equal(product.props.row.line.amount, '6.00');
+  assert.equal(h.commands.length, 0);
+  assert.equal(button(h, 'Comparer les magasins'), undefined);
+  assert.equal(button(h, 'Comparer les achats'), undefined);
+});
+
+test('les montants affichés distinguent le reste à acheter du coût des achats conservés', () => {
+  const { list, row } = fixture();
+  row.purchasedUnits = 1; row.purchasedAmount = '3.00'; row.purchasedQuantity = '500';
+  const h = harness('components/lists/ProductPurchase.tsx', { list, row, disabled: false, display: 'remaining' });
+  const contents = tree => nodes(tree).flatMap(n => [].concat(n.props.children ?? [])).filter(v => typeof v === 'string').join(' ');
+  assert.match(contents(h.render()), /1 paquet/); assert.match(contents(h.render()), /3,00/); assert.doesNotMatch(contents(h.render()), /6,00/);
+  row.comparisonId = 'old';
+  assert.match(contents(h.render({ list, row, disabled: false, display: 'purchased' })), /3,00/);
+});
+test('les achats enregistrés sont visibles dès l’ouverture avec leurs prix sauvegardés', () => {
+  const { list, line } = fixture();
+  list.product_purchases = [{ comparison_id: 'old', item_ids: ['rice'], line, purchased_units: 1, purchased_quantity: '500', estimated_amount: '3.00', allocations: [{ item_id: 'rice', quantity: { amount: '500', unit: 'g' } }] }];
+  const h = harness('components/lists/ListCourses.tsx', { list, disabled: false });
+  const old = nodes(h.render()).find(n => n.props.row?.comparisonId === 'old');
+  assert.ok(old); assert.equal(old.props.display, 'purchased'); assert.equal(old.props.row.purchasedAmount, '3.00');
 });
