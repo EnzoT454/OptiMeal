@@ -46,7 +46,8 @@ def test_manual_routes_revision_replay_and_account_isolation(accounts):
     assert conflict.status_code == 409
     assert conflict.json()['error']['current_revision'] == 2
     assert conflict.json()['error']['list_id'] == result['id']
-    assert client.get(path + '/revisions/1').json()['item']['snapshot'] == result
+    assert client.get(path + '/revisions/1').status_code == 404
+    assert client.get(path + '/revisions').status_code == 404
     assert client.get(ROOT).json()['total'] == 1
     bought = command(client, path + '/items/' + item['id'] + '/manual-purchase',
         {'expected_revision': 2, 'purchased': True, 'coverage': {'confirms_unquantified': True}}, method='put')

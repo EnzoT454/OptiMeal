@@ -11,7 +11,7 @@ from backend.app.shopping_lists.schemas import (
     ShoppingConflictResponse, ShoppingCoverage, ShoppingFromCalendar,
     ShoppingItemRead, ShoppingItemUpdate, ShoppingListCreate, ShoppingListRead,
     ShoppingListUpdate, ShoppingManualPurchaseRead, ShoppingManualPurchaseWrite,
-    ShoppingQuantity, ShoppingRevisionRead, ShoppingTotals,
+    ShoppingQuantity, ShoppingTotals,
 )
 
 
@@ -189,12 +189,7 @@ def test_calendar_contributions_require_readable_recipe_provenance():
         ShoppingItemRead.model_validate(item)
 
 
-def test_revision_snapshot_and_conflict_carry_the_right_context():
-    revision = examples()['shopping-list-revision-detail']['item']
-    assert ShoppingRevisionRead.model_validate(revision)
-    revision['revision'] = 5
-    with pytest.raises(ValidationError):
-        ShoppingRevisionRead.model_validate(revision)
+def test_conflict_carries_the_right_context():
     conflict = examples()['shopping-list-conflict']
     assert ShoppingConflictResponse.model_validate(conflict)
     conflict['error']['current_revision'] = None

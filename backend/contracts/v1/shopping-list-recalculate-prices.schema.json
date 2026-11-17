@@ -1,0 +1,72 @@
+{
+  "$defs": {
+    "ShoppingRecalculateChoice": {
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "format": "uuid",
+          "title": "Item Id",
+          "type": "string"
+        },
+        "product_id": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Product Id"
+        }
+      },
+      "required": [
+        "item_id",
+        "product_id"
+      ],
+      "title": "ShoppingRecalculateChoice",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "scenario": {
+      "anyOf": [
+        {
+          "enum": [
+            "maxi",
+            "metro",
+            "superc",
+            "cheapest"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Scenario"
+    },
+    "choices": {
+      "items": {
+        "$ref": "#/$defs/ShoppingRecalculateChoice"
+      },
+      "maxItems": 500,
+      "title": "Choices",
+      "type": "array"
+    }
+  },
+  "required": [
+    "expected_revision"
+  ],
+  "title": "ShoppingRecalculatePricesWrite",
+  "type": "object"
+}

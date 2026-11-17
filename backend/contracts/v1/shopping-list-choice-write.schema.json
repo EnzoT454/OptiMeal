@@ -1,0 +1,29 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "product_id": {
+      "anyOf": [
+        {
+          "maxLength": 512,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Product Id"
+    }
+  },
+  "required": [
+    "expected_revision",
+    "product_id"
+  ],
+  "title": "ShoppingChoiceWrite",
+  "type": "object"
+}

@@ -1,0 +1,33 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_template_revision": {
+      "minimum": 1,
+      "title": "Expected Template Revision",
+      "type": "integer"
+    },
+    "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "purchase_date": {
+      "format": "date",
+      "title": "Purchase Date",
+      "type": "string"
+    },
+    "include_choices": {
+      "default": false,
+      "title": "Include Choices",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "expected_template_revision",
+    "name",
+    "purchase_date"
+  ],
+  "title": "ShoppingTemplateInstantiate",
+  "type": "object"
+}

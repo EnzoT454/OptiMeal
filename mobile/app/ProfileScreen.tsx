@@ -1,5 +1,8 @@
 import { useCallback, useState } from 'react';
 import { Alert, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { HomeStackParams } from '../types/navigation';
 import { useFocusEffect } from '@react-navigation/native';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -8,6 +11,7 @@ import { Profile } from '../types/api';
 import { Button, Field, Heading, Message, Screen } from '../components/ui';
 
 export default function ProfileScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { session, requestSignIn, forgetDeletedAccount } = useAuth();
   const userId = session?.user.id;
   const [name, setName] = useState(''); const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false);
@@ -51,6 +55,7 @@ export default function ProfileScreen() {
   return <Screen><Heading>Mon compte</Heading><Text>{session.user.email}</Text>
     <Field label="Nom affiché" value={name} onChangeText={setName} maxLength={80} />
     <Message text={message} /><Button title="Enregistrer le profil" disabled={busy} onPress={() => void save()} />
+    <Button title="Ingrédients non suggérés" disabled={busy} onPress={() => navigation.navigate('Exclusions')} />
     <Button title="Se déconnecter de cet appareil" disabled={busy} onPress={() => void logout()} />
     {!confirmDelete ? <Button title="Supprimer mon compte" disabled={busy}
       style={{ backgroundColor: '#9c2f2f' }} onPress={() => { setConfirmDelete(true); setMessage(''); }} /> : <>

@@ -57,16 +57,15 @@ def test_migration_matches_metadata_and_all_private_tables_have_rls(db):
                                  {'name': model.__tablename__}) == 0
 
 
-def test_create_replay_and_history_survive_later_changes(db):
+def test_create_replay_keeps_exact_result_but_only_current_state_is_stored(db):
     key = uuid4()
     original = create(db, key=key)
     assert original.revision == 1 and original.status == 'draft'
     changed = service.update_list(db, original.id, ALICE, ShoppingListUpdate(expected_revision=1, name='Dimanche'), uuid4())
     replay = create(db, key=key)
     assert replay == original and service.get_list(db, original.id, ALICE) == changed
-    assert service.get_revision(db, original.id, 1, ALICE).snapshot == original
     assert db.scalar(select(func.count()).select_from(ShoppingList)) == 1
-    assert db.scalar(select(func.count()).select_from(ShoppingListRevision)) == 2
+    assert db.scalar(select(func.count()).select_from(ShoppingListRevision)) == 1
 
 
 def test_reused_key_with_other_body_conflicts_without_new_list(db):
@@ -85,7 +84,7 @@ def test_creation_retry_keeps_resolved_date_and_utc_timestamps(db, monkeypatch):
     monkeypatch.setattr(service, 'today', lambda: date(2026, 11, 15))
     assert create(db, key=key).purchase_date == date(2026, 11, 14)
     assert original.created_at.utcoffset() == timedelta(0)
-    assert service.get_revision(db, original.id, 1, ALICE).recorded_at.utcoffset() == timedelta(0)
+    assert service.get_list(db, original.id, ALICE).updated_at.utcoffset() == timedelta(0)
 
 
 def test_list_filters_pagination_and_independent_list_ids(db):
@@ -102,7 +101,6 @@ def test_same_key_is_scoped_by_account_and_reads_are_private(db):
     a, b = create(db, ALICE, key), create(db, BOB, key)
     assert a.id != b.id
     for call in [lambda: service.get_list(db, a.id, BOB),
-                 lambda: service.get_revision(db, a.id, 1, BOB),
                  lambda: service.update_list(db, a.id, BOB, ShoppingListUpdate(expected_revision=1, name='Vol'), uuid4())]:
         with pytest.raises(service.ShoppingListError) as exc:
             call()
@@ -217,7 +215,7 @@ def test_status_transitions_preserve_items_and_history(db):
     resource = service.change_status(db, resource.id, ALICE, 'reopen',
                                      ShoppingCommand(expected_revision=resource.revision), uuid4())
     assert resource.status == 'active' and len(resource.items) == 1
-    assert service.get_revision(db, resource.id, archived.revision, ALICE).snapshot.status == 'archived'
+    assert service.get_list(db, resource.id, ALICE).status == 'active'
 
 
 @pytest.mark.parametrize('failure_phase', ['snapshot', 'revision'])
@@ -303,3 +301,43 @@ def test_empty_downgrade_then_upgrade_preserves_existing_tables(db):
     assert 'ingredient' in inspect(connection).get_table_names(schema='public')
     command.upgrade(alembic_config(connection), 'head')
     command.check(alembic_config(connection))
+
+
+def test_complete_creation_is_one_atomic_active_list_with_normalized_initial_items(db):
+    body = ShoppingListCreate(name='Barbecue', activate=True, purchase_date='2026-11-21', items=[
+        {'name': 'Riz', 'ingredient_id': 'ing_test_riz', 'quantity': {'amount': '2', 'unit': 'kg'}},
+        {'name': 'Serviettes'},
+    ])
+    key = uuid4()
+    result = service.create_list(db, ALICE, body, key)
+    assert result.status == 'active' and result.revision == 1
+    assert [item.name for item in result.items] == ['Riz', 'Serviettes']
+    assert result.items[0].required[0].amount == '2000'
+    assert result.items[0].required[0].unit == 'g'
+    assert result.items[0].category == 'Épicerie'
+    assert result.items[0].contributions[0].source == 'manual'
+    assert not result.items[1].required
+    assert service.create_list(db, ALICE, body, key) == result
+    assert db.scalar(select(func.count()).select_from(ShoppingListCommand)) == 1
+    assert db.scalar(select(func.count()).select_from(ShoppingListRevision)) == 1
+
+
+def test_complete_creation_refuses_empty_lists_without_persisting_anything(db):
+    with pytest.raises(service.ShoppingListError) as failure:
+        service.create_list(db, ALICE, ShoppingListCreate(name='Vide', activate=True), uuid4())
+    assert failure.value.code == 'EMPTY_LIST'
+    assert db.scalar(select(func.count()).select_from(ShoppingList)) == 0
+    assert db.scalar(select(func.count()).select_from(ShoppingListCommand)) == 0
+
+
+def test_invalid_initial_ingredient_rolls_back_the_entire_list_and_all_previous_items(db):
+    key = uuid4()
+    with pytest.raises(service.ShoppingListError) as failure:
+        service.create_list(db, ALICE, ShoppingListCreate(name='Fête', activate=True, items=[
+            {'name': 'Pain'}, {'name': 'Absent', 'ingredient_id': 'ing_absent'},
+        ]), key)
+    assert failure.value.code == 'INGREDIENT_NOT_FOUND'
+    for model in (ShoppingList, ShoppingListItem, ShoppingListContribution, ShoppingListCommand, ShoppingListRevision):
+        assert db.scalar(select(func.count()).select_from(model)) == 0
+    result = service.create_list(db, ALICE, ShoppingListCreate(name='Fête', activate=True, items=[{'name': 'Pain'}]), key)
+    assert len(result.items) == 1

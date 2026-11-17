@@ -1,72 +1,88 @@
-import { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, Text, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, Modal, Pressable, ScrollView, Text, View } from 'react-native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecipeButton, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles as s } from '../components/recipes';
-import RecipeUnitPicker from '../components/RecipeUnitPicker';
+import { useAuth } from '../context/AuthContext';
 import { Message } from '../components/ui';
+import PinListAction from '../components/lists/PinListAction';
+import { SavedListTotals } from '../components/lists/SavedListCard';
+import ListCourses from '../components/lists/ListCourses';
+import ListItemsEditor from '../components/lists/ListItemsEditor';
+import type { ListCommand } from '../services/shoppingLists';
 import { useListCommand } from '../components/lists/useListCommand';
-import { dateLabel, fetchList, listCommand, listsPath, quantityLabel } from '../services/shoppingLists';
+import { dateLabel, fetchList, listCommand, listsPath, recalculatePricesCommand } from '../services/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
-import type { RecipeUnit } from '../types/api';
-import type { ShoppingItemRead, ShoppingListRead } from '../types/shoppingLists';
+import type { ShoppingListRead } from '../types/shoppingLists';
 
-export default function ShoppingListDetailScreen({ route }: NativeStackScreenProps<ListStackParams, 'ShoppingDetail'>) {
+export default function ShoppingListDetailScreen({ route, navigation }: NativeStackScreenProps<ListStackParams, 'ShoppingDetail'>) {
   const { id } = route.params;
-  const [list, setList] = useState<ShoppingListRead | null>(null);
+  const { session } = useAuth();
+  const userId = session?.user.id;
+  const identity = `${userId}:${id}`;
+  const currentIdentity = useRef(identity);
+  currentIdentity.current = identity;
+  const generation = useRef(0);
+  const [stored, setList] = useState<{ identity: string; value: ShoppingListRead } | null>(null);
+  const list = stored?.identity === identity ? stored.value : null;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [name, setName] = useState('');
-  const [amount, setAmount] = useState('');
-  const [unit, setUnit] = useState<RecipeUnit | null>(null);
-  const [editing, setEditing] = useState<string | null>(null);
+  const [options, setOptions] = useState(false);
+  const [panel, setPanel] = useState<'rename' | 'items' | null>(null);
   const [listName, setListName] = useState<string | null>(null);
   const command = useListCommand(id);
   const path = `${listsPath}/${id}`;
-  useFocusEffect(useCallback(() => {
-    let active = true;
-    setLoading(true);
-    fetchList(id).then(value => { if (active) setList(value); })
-      .catch(e => { if (active) setError(e instanceof Error ? e.message : 'Liste indisponible.'); })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, [id]));
+  function accept(value: ShoppingListRead) {
+    if (currentIdentity.current !== identity || value.id !== id) return;
+    setList(previous => previous?.identity === identity && previous.value.revision > value.revision ? previous : { identity, value });
+  }
   async function refresh() {
+    if (!userId) return;
+    const version = ++generation.current;
     setLoading(true); setError('');
-    try { setList(await fetchList(id)); }
-    catch (e) { setError(e instanceof Error ? e.message : 'Liste indisponible.'); }
-    finally { setLoading(false); }
+    try { const value = await fetchList(id, userId); if (generation.current === version) accept(value); }
+    catch (failure) { if (generation.current === version && currentIdentity.current === identity) setError(failure instanceof Error ? failure.message : 'Liste indisponible.'); }
+    finally { if (generation.current === version && currentIdentity.current === identity) setLoading(false); }
   }
-  async function save(commandPath: string, body: object, method: 'POST' | 'PATCH' = 'POST') {
-    const result = await command.run(command.pending ?? listCommand(commandPath, body, method));
-    if (result) { setList(result); setName(''); setAmount(''); setUnit(null); setEditing(null); setListName(null); setError(''); }
+  useFocusEffect(useCallback(() => {
+    setList(null); setPanel(null); setOptions(false); setListName(null);
+    void refresh();
+    return () => { generation.current++; };
+  }, [identity]));
+  async function send(intent: ListCommand) {
+    const version = generation.current;
+    const result = await command.run(intent);
+    if (!result || version !== generation.current || currentIdentity.current !== identity) return false;
+    accept(result); if (panel === 'rename') setPanel(null); setListName(null); setError(''); return true;
   }
-  function submit() {
-    if (!list || !name.trim()) { setError('Indique le nom de l’article.'); return; }
-    const decimal = amount.trim().replace(',', '.');
-    if (decimal && (!/^(0|[1-9][0-9]*)(\.[0-9]+)?$/.test(decimal) || !/[1-9]/.test(decimal) || !unit)) {
-      setError('Indique une quantité positive et son unité, ou laisse la quantité vide.'); return;
-    }
-    const quantity = decimal && unit ? { amount: decimal, unit } : null;
-    const body = { expected_revision: list.revision, name: name.trim(), quantity };
-    const send = () => void save(editing ? `${path}/items/${editing}` : `${path}/items`, body, editing ? 'PATCH' : 'POST');
-    if (!editing && list.items.some(i => !i.removed && i.name.trim().toLocaleLowerCase('fr') === name.trim().toLocaleLowerCase('fr'))) {
-      Alert.alert('Article déjà présent', 'Un article porte déjà ce nom. Veux-tu ajouter une ligne distincte ?', [
-        { text: 'Annuler', style: 'cancel' }, { text: 'Ajouter séparément', onPress: send },
-      ]);
-    } else send();
+  async function save(commandPath: string, body: object, method: 'POST' | 'PATCH' | 'PUT' = 'POST') {
+    return send(command.pending ?? listCommand(commandPath, body, method));
   }
-  function edit(item: ShoppingItemRead) {
-    setEditing(item.id); setName(item.name);
-    setAmount(item.required.length === 1 ? item.required[0].amount : '');
-    setUnit(item.required.length === 1 ? item.required[0].unit : null);
-    setError('');
-  }
-  const editedUnit = list?.items.find(i => i.id === editing)?.required[0]?.unit;
-  const allowedUnits: RecipeUnit[] | undefined = !editedUnit ? undefined
-    : editedUnit === 'g' ? ['g'] : editedUnit === 'unit' ? ['unit'] : ['ml', 'cup', 'tbsp', 'tsp'];
   const editable = list?.status === 'draft' || list?.status === 'active';
   const locked = command.locked || loading || !editable;
+  const menuLocked = command.locked || loading || !list || panel !== null;
+  useEffect(() => {
+    navigation.setOptions({ headerRight: () => <Pressable accessibilityRole="button" accessibilityLabel="Options de la liste"
+      accessibilityState={{ expanded: options, disabled: menuLocked }} disabled={menuLocked} onPress={() => setOptions(true)}
+      style={{ minWidth: 48, minHeight: 48, alignItems: 'center', justifyContent: 'center' }}>
+      <MaterialCommunityIcons name="dots-horizontal" size={26} color={recipeColors.green} accessible={false} />
+    </Pressable> });
+  }, [navigation, menuLocked, options]);
+  function openPanel(next: 'rename' | 'items') {
+    if (!list || locked) return;
+    setOptions(false); setPanel(next); setError('');
+    if (next === 'rename') setListName(list.name);
+  }
+  function finish() {
+    if (!list || locked || list.status !== 'active') return;
+    setOptions(false);
+    const complete = (accept_remaining: boolean) => void save(`${path}/complete`, { expected_revision: list.revision, accept_remaining });
+    if (list.totals.remaining_item_count) Alert.alert('Des articles restent à acheter', 'Marquer quand même la liste comme terminée ?', [
+      { text: 'Continuer les courses', style: 'cancel' }, { text: 'Marquer comme terminée', onPress: () => complete(true) },
+    ]); else complete(false);
+  }
   return <RecipeScreen>
     {loading && <ActivityIndicator accessibilityLabel="Chargement de la liste" color={recipeColors.green} />}
     <Message text={error || command.error} />
@@ -74,47 +90,54 @@ export default function ShoppingListDetailScreen({ route }: NativeStackScreenPro
       <Text style={s.body}>Reprends la demande précédente avant de modifier la liste. Ton ajout n’a pas été perdu.</Text>
       <RecipeButton title="Reprendre l’enregistrement" disabled={command.busy} onPress={() => void save(path, {})} />
     </View>}
-    <RecipeButton title="Actualiser la liste" variant="neutral" disabled={command.busy || loading} onPress={() => void refresh()} />
+    {!!error && <RecipeButton title="Réessayer" variant="neutral" disabled={command.busy || loading} onPress={() => void refresh()} />}
     {list && <>
       <RecipeTitle>{list.name}</RecipeTitle>
-      <Text style={s.body}>{list.status === 'draft' ? 'Brouillon enregistré' : list.status === 'active' ? 'Liste en cours' : list.status === 'completed' ? 'Liste terminée' : 'Liste archivée'} · révision {list.revision}</Text>
+      {list.origin && <Text style={s.note}>Copie indépendante {list.origin.kind === 'template' ? 'd’un modèle' : 'd’une liste'}.</Text>}
+      <Text style={s.body}>{list.status === 'draft' ? 'Brouillon enregistré' : list.status === 'active' ? 'Liste en cours' : list.status === 'completed' ? 'Liste terminée' : 'Liste archivée'}</Text>
       <Text style={s.note}>Courses prévues le {dateLabel(list.purchase_date)}</Text>
       {list.period && <Text style={s.note}>Repas du {dateLabel(list.period.start_date)} au {dateLabel(list.period.end_date)}. Copie indépendante du calendrier.</Text>}
       <View style={s.notice}><Text style={s.sectionTitle}>{list.totals.item_count} articles</Text>
-        <Text style={s.body}>{list.totals.remaining_item_count} à acheter · {list.totals.purchased_item_count} achetés · {list.totals.owned_item_count} déjà disponibles</Text>
-        <Text style={s.body}>Estimation indisponible</Text></View>
+        <SavedListTotals list={list} />
+        <Text style={s.note}>Estimations hors taxes et consignes non documentées ; prix payés non confirmés.</Text>
+      </View>
+      {list.assignment?.stale && <Text style={s.requiredItem}>Prix à recalculer. Les achats déjà enregistrés sont conservés.</Text>}
+      {editable && panel === null && <RecipeButton title="Recalculer les prix" variant="neutral" disabled={locked}
+        onPress={() => void send(recalculatePricesCommand(list))} />}
       {list.warnings.filter(w => w.code !== 'ESTIMATE_UNAVAILABLE').map((w, i) => <Text key={i} style={s.requiredItem}>{w.message}</Text>)}
-      <RecipeButton title="Renommer la liste" variant="neutral" disabled={locked} onPress={() => setListName(list.name)} />
-      {listName !== null && <>
-        <RecipeField label="Nouveau nom" value={listName} maxLength={120} editable={!locked} onChangeText={setListName} />
-        <RecipeButton title="Enregistrer le nom" disabled={locked || !listName.trim()} onPress={() => void save(path, { expected_revision: list.revision, name: listName.trim() }, 'PATCH')} />
+      {panel === 'rename' && <View style={{ gap: 12 }}>
+        <RecipeField label="Nouveau nom" value={listName ?? ''} maxLength={120} editable={!locked} onChangeText={setListName} />
+        <RecipeButton title="Enregistrer le nom" disabled={locked || !listName?.trim()} onPress={() => {
+          if (listName?.trim()) void save(path, { expected_revision: list.revision, name: listName.trim() }, 'PATCH').then(saved => { if (saved) setPanel(null); });
+        }} />
+        <RecipeButton title="Annuler" variant="neutral" disabled={command.busy || !!command.pending} onPress={() => { setPanel(null); setListName(null); }} />
+      </View>}
+      {panel === 'items' ? <ListItemsEditor list={list} disabled={locked} onCommand={send} onDone={() => setPanel(null)} /> : <>
+      {!list.items.some(i => !i.removed) && <Text style={s.body}>Aucun article.</Text>}
+      <ListCourses list={list} disabled={locked || panel === 'rename'} error={command.error} onCommand={send} />
       </>}
-      {editable ? <View style={[s.notice, { gap: 12 }]}>
-        <Text style={s.sectionTitle}>{editing ? 'Modifier l’article' : 'Ajouter un article'}</Text>
-        <RecipeField label="Article" value={name} maxLength={120} editable={!locked} onChangeText={setName} placeholder="Ex. Pain" />
-        <RecipeField label="Quantité (facultative)" value={amount} editable={!locked} onChangeText={setAmount} keyboardType="decimal-pad" placeholder="Ex. 2" />
-        <RecipeUnitPicker value={unit} onChange={setUnit} ingredientLabel={name || 'Article'} disabled={locked} allowedUnits={editing ? allowedUnits : undefined} />
-        <Text style={s.note}>Sans quantité, l’article reste à préciser. Les articles saisis librement restent sur des lignes distinctes. L’édition conserve le type d’unité du besoin.</Text>
-        <RecipeButton title={editing ? 'Enregistrer l’article' : 'Ajouter à la liste'} disabled={locked || !name.trim()} onPress={submit} />
-        {editing && <RecipeButton title="Annuler la modification" variant="neutral" disabled={command.busy || !!command.pending} onPress={() => { setEditing(null); setName(''); setAmount(''); setUnit(null); }} />}
-      </View> : list.status === 'archived' ? <RecipeButton title="Rouvrir cette liste" disabled={command.locked || loading} onPress={() => void save(`${path}/reopen`, { expected_revision: list.revision })} /> : null}
-      {!list.items.some(i => !i.removed) && <Text style={s.body}>Aucun article pour le moment. Ajoute ce dont tu as besoin.</Text>}
-      {list.items.filter(i => !i.removed).map(item => <View key={item.id} style={[s.choice, { borderWidth: 1, borderColor: recipeColors.border }]}>
-        <Text style={s.note}>{item.category}</Text><Text style={s.sectionTitle}>{item.name}</Text>
-        <Text style={s.body}>{quantityLabel(item.required)}</Text>
-        {item.contributions.filter(c => c.source === 'calendar').map(c => <Text key={c.id} style={s.note}>{c.recipe_name} · {c.meal_date ? dateLabel(c.meal_date) : ''} · {c.servings} portions</Text>)}
-        {editable && <>
-          {item.required.length <= 1 && <RecipeButton title={`Modifier ${item.name}`} variant="neutral" disabled={locked} onPress={() => edit(item)} />}
-          <RecipeButton title={`Retirer ${item.name}`} variant="neutral" disabled={locked} onPress={() => {
-            Alert.alert('Retirer cet article ?', item.name, [{ text: 'Annuler', style: 'cancel' }, { text: 'Retirer', onPress: () => void save(`${path}/items/${item.id}`, { expected_revision: list.revision, removed: true }, 'PATCH') }]);
-          }} />
-        </>}
-      </View>)}
-      {list.items.filter(i => i.removed).map(item => <View key={item.id} style={s.choice}>
-        <Text style={s.body}>{item.name} · retiré</Text>
-        <RecipeButton title={`Restaurer ${item.name}`} variant="neutral" disabled={locked} onPress={() => void save(`${path}/items/${item.id}`, { expected_revision: list.revision, removed: false }, 'PATCH')} />
-      </View>)}
       {list.status === 'draft' && <RecipeButton title="Utiliser cette liste" disabled={locked} onPress={() => void save(`${path}/activate`, { expected_revision: list.revision })} />}
     </>}
+    {options && list && <Modal visible transparent animationType="fade" onRequestClose={() => setOptions(false)}>
+      <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: '#0007' }}>
+        <Pressable accessibilityRole="button" accessibilityLabel="Fermer les options de la liste" onPress={() => setOptions(false)} style={{ flex: 1, minHeight: 48 }} />
+        <SafeAreaView accessibilityViewIsModal edges={['bottom', 'left', 'right']} style={{ maxHeight: '85%', backgroundColor: recipeColors.background, padding: 20, borderTopLeftRadius: 22, borderTopRightRadius: 22 }}>
+          <ScrollView contentContainerStyle={{ gap: 12 }}>
+            <Text accessibilityRole="header" style={s.sectionTitle}>Options de la liste</Text>
+            <RecipeButton title="Renommer la liste" variant="neutral" disabled={locked} onPress={() => openPanel('rename')} />
+            {editable ? <PinListAction id={id} disabled={locked} /> : <RecipeButton title="Épingler sur Accueil" variant="neutral" disabled onPress={() => {}} />}
+            <RecipeButton title="Utiliser comme modèle" variant="neutral" disabled={command.locked || loading} onPress={() => {
+              setOptions(false); navigation.navigate('ReuseList', { id, revision: list.revision, mode: 'template' });
+            }} />
+            {editable ? <RecipeButton title="Marquer comme terminée" variant="neutral" disabled={locked || list.status !== 'active'} onPress={finish} />
+              : <RecipeButton title="Rouvrir la liste" variant="neutral" disabled={command.locked || loading} onPress={() => {
+                setOptions(false); void save(`${path}/reopen`, { expected_revision: list.revision });
+              }} />}
+            <RecipeButton title="Modifier" variant="neutral" disabled={locked} onPress={() => openPanel('items')} />
+            <RecipeButton title="Fermer" variant="neutral" onPress={() => setOptions(false)} />
+          </ScrollView>
+        </SafeAreaView>
+      </View>
+    </Modal>}
   </RecipeScreen>;
 }

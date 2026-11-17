@@ -69,7 +69,7 @@ def test_two_changes_of_same_revision_have_one_winner(concurrent_database):
     assert sum(value == 'LIST_REVISION_CONFLICT' for value in results) == 1
     with Session(engine) as db:
         assert service.get_list(db, resource.id, ALICE).revision == 2
-        assert db.scalar(select(func.count()).select_from(ShoppingListRevision)) == 2
+        assert db.scalar(select(func.count()).select_from(ShoppingListRevision)) == 1
 
 
 def test_commit_followed_by_lost_response_is_replayed_without_duplicate(concurrent_database, monkeypatch):

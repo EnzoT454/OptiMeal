@@ -27,6 +27,7 @@ from backend.app.accounts.router import router as accounts_router
 from backend.app.accounts.deletion import AccountDeletion
 from backend.app.security import SupabaseAuth
 from backend.app.shopping_lists.router import router as shopping_lists_router
+from backend.app.shopping_lists.reuse_router import router as shopping_reuse_router
 from backend.app.shopping_lists.errors import ShoppingListError
 from fastapi.responses import JSONResponse
 
@@ -66,6 +67,7 @@ def create_app(*, settings: Settings | None = None, env_file: Path | None = ENV_
         app.state.offers_source = 'database' if config.offers_source == 'database' else 'json'
         # Adresse Supabase : sert à construire les liens publics des pages de circulaires.
         app.state.supabase_url = config.supabase_url
+        app.state.sale_reviews_path = config.sale_reviews_path
 
         try:
             app.state.public_catalog = load_catalog(
@@ -93,6 +95,7 @@ def create_app(*, settings: Settings | None = None, env_file: Path | None = ENV_
     app.include_router(planning_router)
     app.include_router(accounts_router)
     app.include_router(shopping_lists_router)
+    app.include_router(shopping_reuse_router)
     install_error_handlers(app)
 
     @app.exception_handler(ShoppingListError)

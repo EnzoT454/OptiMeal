@@ -1,3 +1,5 @@
+import type { NavigatorScreenParams } from '@react-navigation/native';
+import type { ShoppingPeriod } from './shoppingLists';
 import type { Circular, Offer } from './api';
 
 export type RecipeStackParams = {
@@ -11,17 +13,20 @@ export type PromoStackParams = {
 export type HomeStackParams = {
   Home: undefined;
   Paramètres: undefined;
+  Exclusions: undefined;
 };
 
 export type MainTabParams = {
   Accueil: undefined;
-  Recettes: undefined;
+  Recettes: NavigatorScreenParams<RecipeStackParams> | undefined;
   // vue = "epicerie" pour ouvrir directement la liste d'achats (depuis l'Accueil)
   Calendrier: { vue?: "repas" | "epicerie" } | undefined;
   Promos: undefined;
-  Liste: undefined;
+  Liste: NavigatorScreenParams<ListStackParams> | undefined;
 };
 
 export type ListStackParams = {
-  Lists: undefined; CreateList: undefined; ShoppingDetail: { id: string };
+  Lists: undefined; CreateList: { period?: ShoppingPeriod } | undefined; ShoppingDetail: { id: string };
+  History: undefined; TemplateDetail: { id: string };
+  ReuseList: { id: string; revision: number; mode: 'copy' | 'template' };
 };

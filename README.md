@@ -25,6 +25,9 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 - Recettes personnelles, recherche, filtres, partage public/privé et favoris.
 - Évaluations des recettes et classement par notes.
 - Calendrier hebdomadaire des repas.
+- Listes privées, comparaison, courses avec achats partiels, modèles pour les occasions (fête, barbecue, voyage, sortie), exclusions et historique des listes terminées.
+- Création des listes en deux étapes : ingrédients puis prix par magasin, panier Moins cher personnalisable et quantités arrondies au supérieur. Recalcul du complément en une action, avec conservation des achats effectués.
+- Liste épinglée sur Accueil et accès aux listes du Calendrier par période.
 - Promotions et consultation des circulaires.
 - Catalogue commun des produits et ingrédients.
 - Collecte Maxi et lecture locale des reçus.
@@ -33,7 +36,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 À développer ou à compléter :
 
 - Modes IA pour les recettes.
-- Listes d’épicerie par magasin et gestion du budget.
+- Gestion avancée du budget et validation finale des parcours de listes sur appareils.
 - Historique stable des plans et des prix.
 - Estimations de prix et contribution par reçu dans l’application.
 - Collecte automatisée Metro et Super C.
@@ -428,8 +431,14 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Démarrer le mobile](mobile/README.md)
 - [Migrations et imports](backend/docs/MIGRATIONS.md)
 - [Calendrier des repas et limites actuelles](backend/docs/PLANNING.md)
+- [Retrait de l’ancien moteur local des listes](backend/docs/SHOPPING_CLEANUP.md)
+- [Accès unifiés Accueil, Calendrier et Liste](backend/docs/SHOPPING_ACCESS.md)
+- [Onglet Liste : présentation et accès par compte/réseau](backend/docs/SHOPPING_OVERVIEW.md)
+- [Cache et reprise des coches après interruption](backend/docs/SHOPPING_OFFLINE.md)
 - [Listes d’épicerie : conception et étapes d’implémentation](backend/docs/SHOPPING_LISTS.md)
 - [Formats de vente et bases tarifaires vérifiables](backend/docs/SALE_NORMALIZATION.md)
+- [Moteur de calcul des achats : paquets, poids et promotions](backend/docs/PURCHASE_CALCULATION.md)
+- [Comparer les magasins et appliquer une proposition](backend/docs/SHOPPING_COMPARISONS.md)
 
 Le [site de suivi du projet](https://enzot454.github.io/OptiMeal/) regroupe nos objectifs, notre avancement et les références utilisées. Il reprend le [template du cours IFT3150](https://github.com/udem-diro/template-projet).
 
@@ -456,4 +465,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 16 novembre 2026*

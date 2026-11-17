@@ -1,8 +1,439 @@
 {
   "status": "lot_a_implemented",
   "examples": {
+    "shopping-list-recalculate-prices": {
+      "expected_revision": 4
+    },
+    "shopping-draft-pricing-write": {
+      "items": [
+        {
+          "name": "Riz",
+          "ingredient_id": "ing_riz_basmati_blanc",
+          "required": [
+            {
+              "amount": "750",
+              "unit": "g"
+            }
+          ]
+        }
+      ],
+      "purchase_date": "2026-11-15",
+      "choices": []
+    },
+    "shopping-draft-pricing-detail": {
+      "item": {
+        "fingerprint": "8889fe882c1a8a9bb8efeb24f23b65f18d39cfcdbe7193faaea732acd02e7a52",
+        "scenarios": [
+          {
+            "scenario": "maxi",
+            "needs": [
+              {
+                "item_ids": [
+                  "100c39c0-75e7-5625-aade-4cdc521411f5"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "750",
+                "status": "unpriced",
+                "manual": false,
+                "purchased_price_known": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0.00",
+            "purchased_known_amount": "0.00",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          },
+          {
+            "scenario": "metro",
+            "needs": [
+              {
+                "item_ids": [
+                  "100c39c0-75e7-5625-aade-4cdc521411f5"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "750",
+                "status": "unpriced",
+                "manual": false,
+                "purchased_price_known": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0.00",
+            "purchased_known_amount": "0.00",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          },
+          {
+            "scenario": "superc",
+            "needs": [
+              {
+                "item_ids": [
+                  "100c39c0-75e7-5625-aade-4cdc521411f5"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "750",
+                "status": "unpriced",
+                "manual": false,
+                "purchased_price_known": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0.00",
+            "purchased_known_amount": "0.00",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          },
+          {
+            "scenario": "cheapest",
+            "needs": [
+              {
+                "item_ids": [
+                  "100c39c0-75e7-5625-aade-4cdc521411f5"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "750",
+                "status": "unpriced",
+                "manual": false,
+                "purchased_price_known": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0.00",
+            "purchased_known_amount": "0.00",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          }
+        ],
+        "candidates": []
+      },
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-list-pin-write": {
+      "list_id": "00000000-0000-4000-8000-000000000001"
+    },
+    "shopping-list-pin-detail": {
+      "item": {
+        "list_id": "00000000-0000-4000-8000-000000000001"
+      },
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-list-duplicate-write": {
+      "source_revision": 4,
+      "name": "Copie indépendante",
+      "purchase_date": "2026-11-20"
+    },
+    "shopping-template-create": {
+      "source_list_id": "00000000-0000-4000-8000-000000000001",
+      "source_revision": 4,
+      "name": "Besoins réutilisables",
+      "icon": "basket"
+    },
+    "shopping-template-update": {
+      "expected_revision": 1,
+      "name": "Nouveau nom"
+    },
+    "shopping-template-instantiate": {
+      "expected_template_revision": 1,
+      "name": "Prochaines courses",
+      "purchase_date": "2026-11-20"
+    },
+    "shopping-template-detail": {
+      "item": {
+        "id": "00000000-0000-4000-8000-000000000020",
+        "name": "Besoins réutilisables",
+        "icon": "basket",
+        "revision": 1,
+        "items": [
+          {
+            "id": "00000000-0000-4000-8000-000000000002",
+            "ingredient_id": "ing_riz_basmati_blanc",
+            "name": "Riz",
+            "category": "Épicerie",
+            "required": [
+              {
+                "amount": "2000",
+                "unit": "g"
+              }
+            ],
+            "preferred_product_id": null
+          }
+        ],
+        "deleted": false,
+        "created_at": "2026-11-14T18:00:00Z",
+        "updated_at": "2026-11-14T18:05:00Z"
+      },
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-templates-page": {
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000020",
+          "name": "Besoins réutilisables",
+          "icon": "basket",
+          "revision": 1,
+          "items": [
+            {
+              "id": "00000000-0000-4000-8000-000000000002",
+              "ingredient_id": "ing_riz_basmati_blanc",
+              "name": "Riz",
+              "category": "Épicerie",
+              "required": [
+                {
+                  "amount": "2000",
+                  "unit": "g"
+                }
+              ],
+              "preferred_product_id": null
+            }
+          ],
+          "deleted": false,
+          "created_at": "2026-11-14T18:00:00Z",
+          "updated_at": "2026-11-14T18:05:00Z"
+        }
+      ],
+      "total": 1,
+      "limit": 20,
+      "offset": 0,
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-exclusion-write": {
+      "excluded": true
+    },
+    "shopping-exclusion-detail": {
+      "item": {
+        "ingredient_id": "ing_riz_basmati_blanc",
+        "name": "Riz",
+        "excluded": true,
+        "updated_at": "2026-11-14T18:05:00Z"
+      },
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-exclusions-page": {
+      "items": [
+        {
+          "ingredient_id": "ing_riz_basmati_blanc",
+          "name": "Riz",
+          "excluded": true,
+          "updated_at": "2026-11-14T18:05:00Z"
+        }
+      ],
+      "total": 1,
+      "limit": 20,
+      "offset": 0,
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-list-product-purchase-write": {
+      "expected_revision": 4,
+      "comparison_id": "00000000-0000-4000-8000-000000000010",
+      "item_id": "00000000-0000-4000-8000-000000000002",
+      "product_id": "maxi:demo:riz",
+      "purchased_units": 1
+    },
+    "shopping-list-complete-write": {
+      "expected_revision": 4,
+      "accept_remaining": true
+    },
+    "shopping-list-comparison-detail": {
+      "item": {
+        "id": "00000000-0000-4000-8000-000000000010",
+        "list_id": "00000000-0000-4000-8000-000000000001",
+        "source_revision": 4,
+        "purchase_date": "2026-11-15",
+        "catalog_fingerprint": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "state_fingerprint": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "expires_at": "2026-11-15T12:15:00Z",
+        "scenarios": [
+          {
+            "scenario": "maxi",
+            "needs": [
+              {
+                "item_ids": [
+                  "00000000-0000-4000-8000-000000000002"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "1300",
+                "status": "unpriced",
+                "manual": false,
+                "purchased_price_known": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0",
+            "purchased_known_amount": "0",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          },
+          {
+            "scenario": "metro",
+            "needs": [
+              {
+                "item_ids": [
+                  "00000000-0000-4000-8000-000000000002"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "1300",
+                "status": "unpriced",
+                "manual": false,
+                "purchased_price_known": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0",
+            "purchased_known_amount": "0",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          },
+          {
+            "scenario": "superc",
+            "needs": [
+              {
+                "item_ids": [
+                  "00000000-0000-4000-8000-000000000002"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "1300",
+                "status": "unpriced",
+                "manual": false,
+                "purchased_price_known": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0",
+            "purchased_known_amount": "0",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          },
+          {
+            "scenario": "cheapest",
+            "needs": [
+              {
+                "item_ids": [
+                  "00000000-0000-4000-8000-000000000002"
+                ],
+                "name": "Riz",
+                "ingredient_id": "ing_riz_basmati_blanc",
+                "unit": "g",
+                "remaining": "1300",
+                "status": "unpriced",
+                "manual": false,
+                "purchased_price_known": false,
+                "lines": [],
+                "amount": null,
+                "warnings": []
+              }
+            ],
+            "known_amount": "0",
+            "purchased_known_amount": "0",
+            "complete": false,
+            "store_totals": [],
+            "store_count": 0
+          }
+        ],
+        "candidates": []
+      },
+      "meta": {
+        "contract_version": "1.0",
+        "data_source": "postgresql",
+        "dataset_kind": "user_content",
+        "review_required": false,
+        "warnings": []
+      }
+    },
+    "shopping-list-apply-comparison": {
+      "expected_revision": 4,
+      "comparison_id": "00000000-0000-4000-8000-000000000010",
+      "scenario": "cheapest",
+      "accept_partial": true
+    },
+    "shopping-list-choice-write": {
+      "expected_revision": 4,
+      "product_id": null
+    },
     "shopping-list-create": {
-      "name": "Mes courses"
+      "name": "Mes courses",
+      "items": [
+        {
+          "ingredient_id": "ing_riz_basmati_blanc",
+          "name": "Riz",
+          "quantity": {
+            "amount": "500",
+            "unit": "g"
+          }
+        }
+      ],
+      "activate": true
     },
     "shopping-list-command-headers": {
       "idempotency_key": "00000000-0000-4000-8000-000000000009"
@@ -231,6 +662,7 @@
             "estimated_amount": null
           }
         ],
+        "product_purchases": [],
         "totals": {
           "currency": "CAD",
           "item_count": 2,
@@ -252,7 +684,10 @@
           }
         ],
         "created_at": "2026-11-14T18:00:00Z",
-        "updated_at": "2026-11-14T18:05:00Z"
+        "updated_at": "2026-11-14T18:05:00Z",
+        "choices": [],
+        "assignment": null,
+        "origin": null
       },
       "meta": {
         "contract_version": "1.0",
@@ -373,6 +808,7 @@
               "estimated_amount": null
             }
           ],
+          "product_purchases": [],
           "totals": {
             "currency": "CAD",
             "item_count": 2,
@@ -394,159 +830,15 @@
             }
           ],
           "created_at": "2026-11-14T18:00:00Z",
-          "updated_at": "2026-11-14T18:05:00Z"
+          "updated_at": "2026-11-14T18:05:00Z",
+          "choices": [],
+          "assignment": null,
+          "origin": null
         }
       ],
       "total": 1,
       "limit": 20,
       "offset": 0,
-      "meta": {
-        "contract_version": "1.0",
-        "data_source": "postgresql",
-        "dataset_kind": "user_content",
-        "review_required": false,
-        "warnings": []
-      }
-    },
-    "shopping-list-revision-detail": {
-      "item": {
-        "list_id": "00000000-0000-4000-8000-000000000001",
-        "revision": 4,
-        "command_id": "00000000-0000-4000-8000-000000000009",
-        "recorded_at": "2026-11-14T18:05:00Z",
-        "snapshot": {
-          "id": "00000000-0000-4000-8000-000000000001",
-          "name": "Courses de démonstration",
-          "source": "manual",
-          "status": "active",
-          "revision": 4,
-          "period": null,
-          "purchase_date": "2026-11-15",
-          "items": [
-            {
-              "id": "00000000-0000-4000-8000-000000000002",
-              "ingredient_id": "ing_riz_basmati_blanc",
-              "name": "Riz",
-              "category": "Épicerie",
-              "need_revision": 1,
-              "required": [
-                {
-                  "amount": "2000",
-                  "unit": "g"
-                }
-              ],
-              "owned": [
-                {
-                  "amount": "200",
-                  "unit": "g"
-                }
-              ],
-              "owned_unquantified_need_revision": null,
-              "contributions": [
-                {
-                  "id": "00000000-0000-4000-8000-000000000004",
-                  "source": "manual",
-                  "original_quantity": {
-                    "amount": "2",
-                    "unit": "kg"
-                  },
-                  "normalized_quantity": {
-                    "amount": "2000",
-                    "unit": "g"
-                  },
-                  "meal_entry_id": null,
-                  "recipe_id": null,
-                  "recipe_name": null,
-                  "recipe_version": null,
-                  "recipe_servings": null,
-                  "meal_date": null,
-                  "servings": null
-                }
-              ],
-              "removed": false,
-              "coverage_status": "partial",
-              "pricing_status": "unpriced"
-            },
-            {
-              "id": "00000000-0000-4000-8000-000000000003",
-              "ingredient_id": null,
-              "name": "Papier cuisson",
-              "category": "Autres",
-              "need_revision": 1,
-              "required": [],
-              "owned": [],
-              "owned_unquantified_need_revision": null,
-              "contributions": [
-                {
-                  "id": "00000000-0000-4000-8000-000000000005",
-                  "source": "manual",
-                  "original_quantity": null,
-                  "normalized_quantity": null,
-                  "meal_entry_id": null,
-                  "recipe_id": null,
-                  "recipe_name": null,
-                  "recipe_version": null,
-                  "recipe_servings": null,
-                  "meal_date": null,
-                  "servings": null
-                }
-              ],
-              "removed": false,
-              "coverage_status": "purchased",
-              "pricing_status": "unpriced"
-            }
-          ],
-          "purchases": [
-            {
-              "id": "00000000-0000-4000-8000-000000000006",
-              "item_id": "00000000-0000-4000-8000-000000000002",
-              "kind": "manual",
-              "purchased": true,
-              "coverage": [
-                {
-                  "amount": "500",
-                  "unit": "g"
-                }
-              ],
-              "confirmed_need_revision": null,
-              "product_id": null,
-              "estimated_amount": null
-            },
-            {
-              "id": "00000000-0000-4000-8000-000000000007",
-              "item_id": "00000000-0000-4000-8000-000000000003",
-              "kind": "manual",
-              "purchased": true,
-              "coverage": [],
-              "confirmed_need_revision": 1,
-              "product_id": null,
-              "estimated_amount": null
-            }
-          ],
-          "totals": {
-            "currency": "CAD",
-            "item_count": 2,
-            "remaining_item_count": 1,
-            "purchased_item_count": 1,
-            "owned_item_count": 0,
-            "partial_item_count": 1,
-            "unpriced_item_count": 2,
-            "uncovered_item_count": 1,
-            "budget_known_amount": "0",
-            "remaining_known_amount": "0",
-            "estimate_complete": false
-          },
-          "warnings": [
-            {
-              "code": "ESTIMATE_UNAVAILABLE",
-              "message": "Prix non calculés dans le lot A.",
-              "item_id": null
-            }
-          ],
-          "created_at": "2026-11-14T18:00:00Z",
-          "updated_at": "2026-11-14T18:05:00Z"
-        }
-      },
       "meta": {
         "contract_version": "1.0",
         "data_source": "postgresql",

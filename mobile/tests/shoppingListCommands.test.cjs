@@ -8,13 +8,19 @@ const ts = require('typescript');
 class ApiError extends Error { constructor(status, message) { super(message); this.status = status; } }
 function hook({ stored = null, send, userId = 'alice' } = {}) {
   const states = [], effects = [], writes = [], calls = [];
+  const storage = new Map([[userId, stored]]);
   let index = 0;
   const exports = {};
   const source = fs.readFileSync(path.join(__dirname, '../components/lists/useListCommand.ts'), 'utf8');
   const react = {
     useState(initial) { const i = index++; if (!(i in states)) states[i] = initial; return [states[i], value => { states[i] = value; }]; },
     useRef(initial) { const i = index++; if (!(i in states)) states[i] = { current: initial }; return states[i]; },
-    useEffect(fn) { const i = index++; if (!(i in states)) { states[i] = true; effects.push(fn); } },
+    useEffect(fn, deps) {
+      const i = index++;
+      if (!(i in states) || deps.some((value, n) => value !== states[i].deps[n])) {
+        effects.push(() => { states[i]?.cleanup?.(); states[i] = { deps, cleanup: fn() }; });
+      }
+    },
   };
   vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText, {
     exports, require(name) {
@@ -22,15 +28,15 @@ function hook({ stored = null, send, userId = 'alice' } = {}) {
       if (name.endsWith('AuthContext')) return { useAuth: () => ({ session: userId ? { user: { id: userId } } : null }) };
       if (name.endsWith('/api')) return { ApiError };
       if (name.endsWith('accountStorage')) return {
-        readAccountJSON: async () => stored,
-        writeAccountJSON: async (...args) => { writes.push(args); stored = args[2]; },
+        readAccountJSON: async account => storage.get(account) ?? null,
+        writeAccountJSON: async (...args) => { writes.push(args); storage.set(args[0], args[2]); },
       };
       if (name.endsWith('shoppingLists')) return { sendListCommand: async (...args) => { calls.push(args); return send(...args); } };
       throw new Error(name);
     }, Error,
   });
   function render() { index = 0; return exports.useListCommand('create'); }
-  return { render, async ready() { render(); for (const effect of effects.splice(0)) effect(); await new Promise(resolve => setImmediate(resolve)); }, calls, writes };
+  return { render, changeUser(value) { userId = value; }, async ready() { render(); for (const effect of effects.splice(0)) effect(); await new Promise(resolve => setImmediate(resolve)); }, calls, writes };
 }
 const command = { key: 'same-key', path: '/api/v1/shopping-lists', method: 'POST', body: { name: 'Courses' } };
 
@@ -83,4 +89,22 @@ test('un visiteur ne peut pas envoyer de commande', async () => {
   await view.ready();
   assert.equal(await view.render().run(command), null);
   assert.equal(view.calls.length, 0);
+});
+
+
+test('une réponse d’achat tardive ne revient pas dans le compte suivant', async () => {
+  let finish;
+  const view = hook({ send: () => new Promise(resolve => { finish = resolve; }) });
+  await view.ready();
+  const purchase = { ...command, method: 'PUT', path: '/api/v1/shopping-lists/list/product-purchases', body: { purchased_units: 1 } };
+  const pending = view.render().run(purchase);
+  await new Promise(resolve => setImmediate(resolve));
+  view.changeUser('bob');
+  assert.equal(view.render().locked, true);
+  await view.ready();
+  finish({ id: 'alice-list' });
+  assert.equal(await pending, null);
+  assert.equal(view.render().pending, null);
+  assert.equal(view.render().busy, false);
+  assert.equal(view.calls[0][1], 'alice');
 });

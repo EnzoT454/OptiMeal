@@ -1,0 +1,125 @@
+{
+  "$defs": {
+    "ShoppingDraftChoice": {
+      "additionalProperties": false,
+      "properties": {
+        "item_index": {
+          "maximum": 499,
+          "minimum": 0,
+          "title": "Item Index",
+          "type": "integer"
+        },
+        "product_id": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Product Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "item_index",
+        "product_id"
+      ],
+      "title": "ShoppingDraftChoice",
+      "type": "object"
+    },
+    "ShoppingDraftItem": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "anyOf": [
+            {
+              "pattern": "^ing_[a-z0-9_]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ingredient Id"
+        },
+        "required": {
+          "items": {
+            "$ref": "#/$defs/ShoppingQuantity"
+          },
+          "maxItems": 3,
+          "title": "Required",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ShoppingDraftItem",
+      "type": "object"
+    },
+    "ShoppingQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "kg",
+            "ml",
+            "L",
+            "unit",
+            "cup",
+            "tbsp",
+            "tsp"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingQuantity",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ShoppingDraftItem"
+      },
+      "maxItems": 500,
+      "minItems": 1,
+      "title": "Items",
+      "type": "array"
+    },
+    "purchase_date": {
+      "format": "date",
+      "title": "Purchase Date",
+      "type": "string"
+    },
+    "choices": {
+      "items": {
+        "$ref": "#/$defs/ShoppingDraftChoice"
+      },
+      "maxItems": 500,
+      "title": "Choices",
+      "type": "array"
+    }
+  },
+  "required": [
+    "items",
+    "purchase_date"
+  ],
+  "title": "ShoppingDraftPricingWrite",
+  "type": "object"
+}

@@ -31,6 +31,11 @@ import HomeScreen from './app/HomeScreen';
 import ListScreen from './app/ListScreen';
 import CreateListScreen from './app/CreateListScreen';
 import ShoppingListDetailScreen from './app/ShoppingListDetailScreen';
+import ShoppingHistoryScreen from './app/ShoppingHistoryScreen';
+import ListAccessRequired from './components/lists/ListAccessRequired';
+import ShoppingTemplateDetailScreen from './app/ShoppingTemplateDetailScreen';
+import ShoppingReuseScreen from './app/ShoppingReuseScreen';
+import ShoppingExclusionsScreen from './app/ShoppingExclusionsScreen';
 import { HomeStackParams, ListStackParams, MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
 
 const Tabs = createBottomTabNavigator<MainTabParams>();
@@ -50,14 +55,18 @@ function HomeNavigator() {
   return <Home.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
     <Home.Screen name="Home" component={HomeScreen} options={{ headerShown: false, title: 'Accueil' }} />
     <Home.Screen name="Paramètres" component={ProfileScreen} options={{ headerBackTitle: 'Accueil' }} />
+    <Home.Screen name="Exclusions" component={ShoppingExclusionsScreen} options={{ title: 'Ingrédients non suggérés', headerBackTitle: 'Paramètres' }} />
   </Home.Navigator>;
 }
 function ListNavigator() {
-  return <Lists.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
+  return <ListAccessRequired><Lists.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
     <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Liste' }} />
-    <Lists.Screen name="CreateList" component={CreateListScreen} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="CreateList" component={CreateListScreen} getId={({ params }) => params?.period ? `${params.period.start_date}:${params.period.end_date}` : 'manual'} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="History" component={ShoppingHistoryScreen} options={{ title: 'Historique', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="TemplateDetail" component={ShoppingTemplateDetailScreen} options={{ title: 'Modèle', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="ReuseList" component={ShoppingReuseScreen} options={{ title: 'Réutiliser', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="ShoppingDetail" component={ShoppingListDetailScreen} options={{ title: 'Ma liste', headerBackTitle: 'Liste' }} />
-  </Lists.Navigator>;
+  </Lists.Navigator></ListAccessRequired>;
 }
 function ProtectedAdd(props: NativeStackScreenProps<RecipeStackParams, 'Add'>) {
   return <AccountRequired reason="Connecte-toi pour ajouter tes propres recettes." onCancel={() => props.navigation.popToTop()}>
@@ -93,7 +102,7 @@ function PromoNavigator() {
     <Promos.Screen name="Follows" component={FollowsScreen} />
   </Promos.Navigator>;
 }
-// route.params.vue = "epicerie" quand l'Accueil ouvre directement la liste d'épicerie
+// Épicerie conserve la semaine du calendrier et présente ses listes enregistrées.
 function Calendar({ route }: { route?: { params?: { vue?: 'repas' | 'epicerie' } } } = {}) {
   return <AccountRequired reason="Connecte-toi pour planifier tes repas dans ton calendrier.">
     <CalendarScreen vue={route?.params?.vue} />

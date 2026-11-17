@@ -88,8 +88,8 @@ def aggregate_period(user: CurrentUser, period: ShoppingPeriod, purchase_date: d
                      excluded_ingredient_ids: frozenset[str] = frozenset()) -> ShoppingCalendarPreviewRead:
     """Calcul pur ; seules les sources déjà autorisées par le lecteur sont reçues.
 
-    Les exclusions sont une entrée serveur pour le futur lot C, jamais une
-    préférence envoyée librement par le mobile dans le contrat actuel.
+    Les exclusions sont des préférences privées chargées côté serveur, jamais
+    une liste envoyée librement par le mobile dans le contrat d’aperçu.
     """
     selected = sorted((m for m in meals if period.start_date <= m.date <= period.end_date),
                       key=lambda m: (m.date, str(m.id)))
@@ -106,6 +106,7 @@ def aggregate_period(user: CurrentUser, period: ShoppingPeriod, purchase_date: d
     totals, contributions, infos = defaultdict(lambda: Fraction(0)), defaultdict(list), {}
     rounded_ingredients, excluded_meals = set(), []
     included = notes = leftovers = 0
+    applied_exclusions = set()
     for meal in selected:
         if meal.is_leftover:
             leftovers += 1
@@ -122,6 +123,7 @@ def aggregate_period(user: CurrentUser, period: ShoppingPeriod, purchase_date: d
         included += 1
         for ingredient in recipe.ingredients:
             if ingredient.id in excluded_ingredient_ids:
+                applied_exclusions.add(ingredient.id)
                 continue
             value, unit = quantity_fraction(ingredient.quantity, ingredient.unit,
                                              servings=meal.servings, recipe_servings=recipe.servings)
@@ -162,12 +164,12 @@ def aggregate_period(user: CurrentUser, period: ShoppingPeriod, purchase_date: d
     if excluded_meals:
         warnings.append({'code': 'CALENDAR_PARTIAL',
                          'message': f'Liste partielle : {len(excluded_meals)} repas sans recette accessible.'})
-    if excluded_ingredient_ids:
+    if applied_exclusions:
         warnings.append({'code': 'CALENDAR_EXCLUSIONS', 'message': 'Des ingrédients sont exclus de cette génération.'})
     return ShoppingCalendarPreviewRead(
         period=period, purchase_date=purchase_date, preview_fingerprint=fingerprint,
         included_meal_count=included, skipped_note_count=notes, skipped_leftover_count=leftovers,
-        excluded_meals=excluded_meals, excluded_ingredient_ids=sorted(excluded_ingredient_ids),
+        excluded_meals=excluded_meals, excluded_ingredient_ids=sorted(applied_exclusions),
         items=items, warnings=warnings)
 
 
@@ -206,7 +208,9 @@ def _read_preview(db: Session, user: CurrentUser, body: ShoppingCalendarPreviewW
     """À utiliser seulement dans la transaction cohérente de l'opération appelante."""
     period = ShoppingPeriod(start_date=body.start_date, end_date=body.end_date)
     try:
-        return aggregate_period(user, period, body.purchase_date or today(), _read_period(db, user, period))
+        from .models import ShoppingListExclusion
+        exclusions = frozenset(db.scalars(select(ShoppingListExclusion.ingredient_id).where(ShoppingListExclusion.owner_id == user.id)))
+        return aggregate_period(user, period, body.purchase_date or today(), _read_period(db, user, period), excluded_ingredient_ids=exclusions)
     except (ValidationError, ValueError, ArithmeticError) as exc:
         raise ShoppingListError(503, 'CALENDAR_DATA_INVALID', 'Les besoins du calendrier sont invalides.') from exc
 
@@ -242,6 +246,8 @@ def _read_validated_preview(db: Session, user: CurrentUser,
         raise ShoppingListError(422, 'NO_PLANNED_MEALS', 'Aucun repas exploitable dans cette période.')
     if preview.excluded_meals and not body.accept_partial:
         raise ShoppingListError(422, 'PARTIAL_CALENDAR_CONFIRMATION_REQUIRED', 'Confirme les repas exclus avant la création.')
+    if not preview.items and preview.excluded_ingredient_ids and not body.accept_empty:
+        raise ShoppingListError(422, 'EMPTY_LIST_CONFIRMATION_REQUIRED', 'Les ingrédients sont exclus. Confirme la création d’une liste vide.')
     return preview
 
 

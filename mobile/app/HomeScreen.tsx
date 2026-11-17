@@ -1,25 +1,14 @@
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation, type NavigationProp } from "@react-navigation/native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { HomeStackParams } from "../types/navigation";
+import type { HomeStackParams, MainTabParams } from "../types/navigation";
 import { useAuth } from "../context/AuthContext";
 import { RecipeScreen, recipeColors as c, recipeStyles } from "../components/recipes";
-import { money, quantityPriceCondition, storeName } from "../components/promos";
 import { MEALS, MEAL_COLORS, MEAL_LABELS, dayFullName, getPlan, mealName, mondayOf, toISODate } from "../components/planning";
-import { useListeAchats } from "../components/useShoppingList";
-import ShoppingListStatus from "../components/ShoppingListStatus";
-import AddItemField from "../components/AddItemField";
-import { enPromo, prixOffre } from "../components/shoppingList";
+import PinnedShoppingList from "../components/lists/PinnedShoppingList";
 import type { MealPlanEntry } from "../types/api";
-
-// =====================================================================
-// Accueil : 3 cartes, une seule action par carte
-//   1. Aujourd'hui           → Calendrier (Repas)
-//   2. Ton épicerie          → Calendrier (Épicerie) + ajout rapide
-//   3. En promo dans ta liste → Calendrier (Épicerie)
-// =====================================================================
 
 function salutation(d: Date) {
   const h = d.getHours();
@@ -66,8 +55,7 @@ export default function HomeScreen({ navigation }: NativeStackScreenProps<HomeSt
 }
 
 function TableauDeBord() {
-  const navigation = useNavigation<any>();
-  const liste = useListeAchats();
+  const navigation = useNavigation<NavigationProp<MainTabParams>>();
   const [repasSemaine, setRepasSemaine] = useState<MealPlanEntry[]>([]);
   const [chargementRepas, setChargementRepas] = useState(true);
   const [erreurRepas, setErreurRepas] = useState(false);
@@ -75,28 +63,23 @@ function TableauDeBord() {
   // Recharger chaque fois qu'on revient sur l'Accueil
   useFocusEffect(useCallback(() => {
     let annule = false;
-    setErreurRepas(false);
+    setErreurRepas(false); setChargementRepas(true);
     getPlan(toISODate(mondayOf(new Date())))
       .then((plan) => { if (!annule) setRepasSemaine(plan.entries); })
       .catch(() => { if (!annule) setErreurRepas(true); })
       .finally(() => { if (!annule) setChargementRepas(false); });
-    liste.recharger();
     return () => { annule = true; };
-  }, [liste.recharger]));
+  }, []));
 
   const ouvrirRepas = () => navigation.navigate("Calendrier", { vue: "repas" });
-  const ouvrirEpicerie = () => navigation.navigate("Calendrier", { vue: "epicerie" });
+  const ouvrirListe = (id: string) => navigation.navigate('Liste', { screen: 'ShoppingDetail', params: { id }, initial: false });
+  const ouvrirListes = () => navigation.navigate('Liste', { screen: 'Lists' });
 
   const aujourdhui = toISODate(new Date());
   const repasDuJour = repasSemaine
     .filter((e) => e.date === aujourdhui)
     .sort((a, b) => MEALS.indexOf(a.meal) - MEALS.indexOf(b.meal));
 
-  const { aAcheter, totaux, magasin, nbAAcheter, chargement: chargementListe } = liste;
-  const lignesEnPromo = aAcheter
-    .map((ligne) => ({ ligne, offre: liste.offreDe(ligne) }))
-    .filter(({ offre }) => offre && enPromo(offre))
-    .slice(0, 3);
 
   return (
     <>
@@ -128,45 +111,7 @@ function TableauDeBord() {
         ))}
       </Pressable>
 
-      {/* ---- 2. Ton épicerie ---- */}
-      <View style={styles.carte}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Ton épicerie, ouvrir la liste" onPress={ouvrirEpicerie}>
-          <EnTete titre="Ton épicerie" />
-        </Pressable>
-
-        {chargementListe && liste.lignes.length === 0 && <ActivityIndicator color={c.green} />}
-        <ShoppingListStatus liste={liste} />
-
-        {!liste.erreur && (!chargementListe || liste.lignes.length > 0) && (
-          <Pressable accessibilityRole="button" onPress={ouvrirEpicerie} style={styles.tuiles}>
-            <Tuile valeur={String(nbAAcheter)} label="à acheter" />
-            <Tuile valeur={aAcheter.length > 0 ? `≈ ${money(totaux.total)}` : "–"} label={liste.nbRepasExclus > 0 ? "sous-total accessible" : `chez ${storeName(magasin)}`} />
-            <Tuile valeur={String(totaux.nbPromo)} label="en promo" promo />
-          </Pressable>
-        )}
-
-        <AddItemField contexte={liste.contexte} onAjouter={liste.ajouter} />
-      </View>
-
-      {/* ---- 3. En promo dans ta liste (seulement s'il y en a) ---- */}
-      {!liste.erreurChargement && lignesEnPromo.length > 0 && (
-        <Pressable accessibilityRole="button" accessibilityLabel="En promo dans ta liste, ouvrir la liste"
-          onPress={ouvrirEpicerie} style={({ pressed }) => [styles.carte, pressed && styles.appuye]}>
-          <EnTete titre="En promo dans ta liste" />
-          {lignesEnPromo.map(({ ligne, offre }) => (
-            <View key={ligne.ingredient_id} style={styles.promoLigne}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.promoNom} numberOfLines={1}>{ligne.nom}</Text>
-                {quantityPriceCondition(offre!) && <Text style={recipeStyles.body}>{quantityPriceCondition(offre!)}</Text>}
-              </View>
-              <Text style={styles.promoPrix}>{money(prixOffre(offre!))}</Text>
-              <View style={styles.etiquette}>
-                <Text style={styles.etiquetteTexte}>{storeName(offre!.retailer)}</Text>
-              </View>
-            </View>
-          ))}
-        </Pressable>
-      )}
+      <PinnedShoppingList onOpen={ouvrirListe} onLists={ouvrirListes} />
     </>
   );
 }
@@ -176,15 +121,6 @@ function EnTete({ titre }: { titre: string }) {
     <View style={styles.enTete}>
       <Text style={styles.titreCarte}>{titre}</Text>
       <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} />
-    </View>
-  );
-}
-
-function Tuile({ valeur, label, promo = false }: { valeur: string; label: string; promo?: boolean }) {
-  return (
-    <View style={[styles.tuile, promo && styles.tuilePromo]}>
-      <Text style={[styles.tuileValeur, promo && styles.textePromo]} numberOfLines={1} adjustsFontSizeToFit>{valeur}</Text>
-      <Text style={[styles.tuileLabel, promo && styles.textePromo]}>{label}</Text>
     </View>
   );
 }
@@ -208,16 +144,5 @@ const styles = StyleSheet.create({
   repasNom: { fontFamily: "DMSans_700Bold", fontSize: 15, lineHeight: 20, color: c.ink },
   repasMoment: { fontFamily: "DMSans_500Medium", fontSize: 12, lineHeight: 16 },
 
-  tuiles: { flexDirection: "row", gap: 8 },
-  tuile: { flex: 1, borderRadius: 12, paddingVertical: 10, paddingHorizontal: 8, backgroundColor: c.background },
-  tuilePromo: { backgroundColor: "#fff1d6" },
-  tuileValeur: { fontFamily: "DMSans_700Bold", fontSize: 20, lineHeight: 26, color: c.ink },
-  tuileLabel: { fontFamily: "DMSans_500Medium", fontSize: 12, lineHeight: 16, color: c.muted },
-  textePromo: { color: "#7a4106" },
 
-  promoLigne: { flexDirection: "row", alignItems: "center", gap: 10 },
-  promoNom: { flex: 1, fontFamily: "DMSans_500Medium", fontSize: 15, lineHeight: 20, color: c.ink },
-  promoPrix: { fontFamily: "DMSans_700Bold", fontSize: 15, lineHeight: 20, color: "#b45309" },
-  etiquette: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, backgroundColor: "#fff1d6" },
-  etiquetteTexte: { fontFamily: "DMSans_500Medium", fontSize: 11, lineHeight: 15, color: "#7a4106" },
 });

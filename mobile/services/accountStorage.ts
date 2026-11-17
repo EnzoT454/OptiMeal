@@ -4,11 +4,13 @@ export type LocalAccount = string | null;
 
 // Aucun repli vers les anciennes clés communes : leur propriétaire est inconnu.
 function accountKey(userId: LocalAccount, name: string): string {
+  if (userId && deletedAccounts.has(userId)) throw new Error('Ce compte a été supprimé de cet appareil.');
   if (!userId?.trim()) throw new Error('Connecte-toi pour enregistrer tes données personnelles.');
   return `optimeal.accounts.v1.${encodeURIComponent(userId)}.${name}`;
 }
 
 // Les modifications d'une même clé sont ordonnées, même depuis deux écrans.
+const deletedAccounts = new Set<string>();
 const pending = new Map<string, Promise<void>>();
 function change<T>(key: string, operation: () => Promise<T>): Promise<T> {
   const result = (pending.get(key) ?? Promise.resolve()).then(operation);
@@ -44,4 +46,14 @@ export async function updateAccountJSON<T>(
     await AsyncStorage.setItem(key, JSON.stringify(next));
     return next;
   });
+}
+
+// Called only after confirmed remote deletion. Block late writes before waiting
+// for already queued storage operations, then remove this account's namespace.
+export async function purgeAccountStorage(userId: string): Promise<void> {
+  deletedAccounts.add(userId);
+  const prefix = `optimeal.accounts.v1.${encodeURIComponent(userId)}.`;
+  await Promise.all([...pending].filter(([key]) => key.startsWith(prefix)).map(([, work]) => work));
+  const keys = (await AsyncStorage.getAllKeys()).filter(key => key.startsWith(prefix));
+  if (keys.length) await AsyncStorage.multiRemove(keys);
 }

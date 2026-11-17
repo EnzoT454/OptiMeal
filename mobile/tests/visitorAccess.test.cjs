@@ -28,7 +28,7 @@ function screen(file, { session = null, states = {}, apiFailure = false } = {}) 
     } };
     if (name.endsWith('services/supabase')) return { supabase: {} };
     if (name.endsWith('services/recipeForm')) return { recipeBadges: () => [], difficultyLabels: {} };
-    if (name === '@react-navigation/native') return { NavigationContainer: 'NavigationContainer', useFocusEffect: fn => effects.push(fn) };
+    if (name === '@react-navigation/native') return { NavigationContainer: 'NavigationContainer', useNavigation: () => ({ navigate: (...args) => navigations.push(args) }), useFocusEffect: fn => effects.push(fn) };
     if (name === '@react-navigation/native-stack') return { createNativeStackNavigator: () => navigator };
     if (name === '@react-navigation/bottom-tabs') return { createBottomTabNavigator: () => navigator };
     if (name === 'expo-font') return { useFonts: () => [true, null] };
@@ -67,12 +67,12 @@ test('sans compte, les cinq onglets sont disponibles sans formulaire de connexio
   assert.equal(rendered.find(n => n.type === 'NavigationContainer').key, 'visitor');
   const accueil = rendered.find(n => n.type === 'Route' && n.props.name === 'Accueil');
   const homeRoutes = nodes(accueil.props.component()).filter(n => n.type === 'Route');
-  assert.deepEqual(homeRoutes.map(n => n.props.name), ['Home', 'Paramètres']);
+  assert.deepEqual(homeRoutes.map(n => n.props.name), ['Home', 'Paramètres', 'Exclusions']);
   assert.equal(homeRoutes[1].props.component, './app/ProfileScreen');
   assert.equal(homeRoutes[1].props.options.headerBackTitle, 'Accueil');
   const liste = rendered.find(n => n.type === 'Route' && n.props.name === 'Liste');
   const listRoutes = nodes(liste.props.component()).filter(n => n.type === 'Route');
-  assert.deepEqual(listRoutes.map(n => n.props.name), ['Lists', 'CreateList', 'ShoppingDetail']);
+  assert.deepEqual(listRoutes.map(n => n.props.name), ['Lists', 'CreateList', 'History', 'TemplateDetail', 'ReuseList', 'ShoppingDetail']);
   assert.equal(listRoutes[0].props.component, './app/ListScreen');
 });
 
