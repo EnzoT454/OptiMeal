@@ -26,4 +26,4 @@ Des échantillons Metro et Super C sont disponibles au format JSON. L’extracti
 
 Un essai de récupération directe des données Maxi via PC Express a été réalisé sur cinq produits. 
 
-**Utilisation de l’IA :** Codex (OpenAI) a aidé à rédiger la documentation, à analyser et organiser les données, ainsi qu’à développer et vérifier des fonctionnalités du backend et du mobile. Les modes IA destinés aux utilisateurs restent à développer.
+**Utilisation de l’IA :** Codex (OpenAI) a aidé à rédiger la documentation, à analyser et organiser les données, ainsi qu’à développer et vérifier des fonctionnalités du backend et du mobile. Les modes IA destinés aux utilisateurs ont été retirés du périmètre.

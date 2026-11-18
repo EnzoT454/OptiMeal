@@ -6,9 +6,9 @@
 
 Nous développons OptiMeal dans le cadre du cours IFT3150 à l’Université de Montréal. L’idée est de réunir les recettes, les repas de la semaine et les prix des épiceries au même endroit pour faciliter la préparation des courses.
 
-L’application permettra de choisir ses recettes et ses portions, puis de préparer une liste d’achats par magasin en tenant compte du budget et des déplacements. Trois modes d’ajout sont prévus : ajouter une recette manuellement, trouver une idée et cuisiner avec ce qu’on a déjà. L’ajout manuel donnera le choix entre remplir un formulaire et saisir un texte que l’IA transformera dans le même format de recette, à vérifier avant de l’enregistrer.
+L’application permet de créer ses recettes manuellement, de choisir ses portions et de planifier les repas de la semaine. Elle regroupe ensuite les ingrédients dans une liste d’épicerie, compare les prix disponibles par magasin et permet de suivre les achats. Les besoins dont le prix est inconnu restent signalés.
 
-Lorsque les prix précis manquent, nous afficherons une fourchette estimée min–max, en signalant les articles dont le prix reste impossible à estimer. À la fin des courses, l’utilisateur pourra aussi photographier son reçu et confirmer les prix extraits pour contribuer aux estimations. Cette contribution sera facultative.
+Nous concentrons maintenant le travail sur la stabilisation de l’application et les tests utilisateurs. Les modes IA, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations et la contribution par reçu sont retirés du périmètre du projet.
 
 ## Technologies
 
@@ -35,10 +35,6 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 À développer ou à compléter :
 
 - Version stable de l’application pour commencer les tests utilisateurs.
-- Modes IA pour les recettes.
-- Gestion avancée du budget.
-- Historique stable des plans et des prix.
-- Estimations de prix et contribution par reçu dans l’application.
 - Collecte automatisée Metro et Super C.
 - Préférences de compte et recommandations économiques.
 - Validation complète sur iOS et Android.

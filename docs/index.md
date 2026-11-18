@@ -33,27 +33,29 @@ Le produit le moins cher ne constitue pas toujours le meilleur choix s’il impo
 
 ## Proposition et objectifs
 
-Nous proposons **OptiMeal**, une application sur iOS et Android qui réunira recettes, calendrier de repas et liste d’épicerie modifiable par magasin. L’utilisateur pourra préciser son budget, ses préférences alimentaires et les magasins qu’il souhaite visiter.
+Nous développons **OptiMeal**, une application sur iOS et Android qui réunit recettes, calendrier de repas et liste d’épicerie modifiable par magasin. Elle permet de préparer ses courses et de comparer les prix disponibles.
 
 Les principaux objectifs sont les suivants :
 
-- **Gérer et découvrir des recettes** : créer ses recettes, les rechercher, les ajouter aux favoris et évaluer les recettes publiques d’autres utilisateurs. Trois modes d’ajout sont prévus : manuel, selon une envie et à partir des ingrédients disponibles. Le mode manuel proposera un formulaire ou un texte à structurer par l’IA, avec vérification avant sauvegarde.
-- **Planifier les repas** : organiser une semaine, ajuster les portions et retrouver ses anciennes semaines dans son compte.
-- **Préparer les achats** : regrouper les ingrédients nécessaires dans une liste par magasin, en tenant compte des prix et des contraintes choisies, puis permettre de cocher, supprimer ou remplacer les articles.
-- **Aider aux choix économiques** : proposer des recettes selon les promotions, signaler les prix incertains et permettre de contribuer aux données de prix par un reçu vérifié, de façon facultative.
+- **Gérer et découvrir des recettes** : créer ses recettes manuellement, les rechercher, les publier, les ajouter aux favoris et évaluer les recettes publiques d’autres utilisateurs.
+- **Planifier les repas** : organiser une semaine et ajuster les portions dans son calendrier.
+- **Préparer les achats** : regrouper les ingrédients nécessaires, comparer les prix par magasin et suivre les achats dans une liste modifiable.
+- **Aider aux choix économiques** : consulter les promotions et les circulaires, retrouver les recettes associées aux promotions et signaler les besoins sans prix connu.
 
-Lorsque les prix précis manquent, l’application affichera une fourchette estimée et signalera les articles dont le coût ne peut pas être estimé.
+Le 17 novembre 2026, nous avons décidé de concentrer le projet sur la stabilisation du socle actuel et les tests utilisateurs. Les modes IA, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations et la contribution par reçu sont retirés du périmètre. L’historique des listes terminées et les outils de lecture locale des reçus restent disponibles.
+
+Les recettes, le calendrier, les promotions, les circulaires et les listes d’épicerie sont intégrés. La priorité est de vérifier les parcours complets sur iOS et Android, de corriger les problèmes rencontrés et de préparer une version stable pour les tests utilisateurs.
 
 
 ## Méthodologie
 
 Le travail sera réalisé par 2 étudiants sur environ 15 semaines, à raison de 20 heures par semaine chacun incluant développement, tests, réunions et documentation. Une marge pour les imprévus et du temps pour le rapport et la démonstration seront réservés.
 
-Nous avançons progressivement : étude des parcours et des sources de données, connexion entre le mobile et le serveur, puis intégration des comptes, des recettes, du calendrier et des listes d’achats. Le catalogue et les promotions alimentent les comparaisons de prix ; les estimations et les recommandations économiques restent à compléter. Chaque étape est intégrée et vérifiée, puis la charge restante est réévaluée.
+Nous avons avancé progressivement : étude des parcours et des sources de données, connexion entre le mobile et le serveur, puis intégration des comptes, des recettes, du calendrier et des listes d’achats. Le catalogue et les promotions alimentent les comparaisons de prix. Nous concentrons maintenant les efforts sur la vérification des parcours existants, les corrections et les retours des utilisateurs.
 
-L’interface utilise **React Native avec TypeScript et Expo**, le serveur **Python avec FastAPI**, et **Supabase** pour les comptes, la base **PostgreSQL** et les images. L’IA sera évaluée pour proposer des recettes, structurer un texte de recette et extraire les prix des pages web de Metro et Super C. Les résultats seront vérifiés ; les calculs de quantités et de prix sont effectués par le serveur.
+L’interface utilise **React Native avec TypeScript et Expo**, le serveur **Python avec FastAPI**, et **Supabase** pour les comptes, la base **PostgreSQL** et les images. Les calculs de quantités et de prix sont effectués par le serveur à partir des données du catalogue.
 
-Les reçus sont lus avec Apple Vision sur Mac et Tesseract + OpenCV, dont le fonctionnement sur Windows reste à vérifier. Apify reste la source retenue pour Maxi. Les échantillons Metro et Super C sont disponibles au format JSON ; leur validation et leur collecte automatisée restent à compléter.
+Les outils de lecture locale des reçus utilisent Apple Vision sur Mac et Tesseract + OpenCV, dont le fonctionnement sur Windows reste à vérifier. Leur intégration dans un parcours de contribution est abandonnée. Apify reste la source retenue pour Maxi. Les échantillons Metro et Super C sont disponibles au format JSON ; leur collecte automatisée reste à compléter, sans être la priorité de cette phase de stabilisation.
 
 Un jeu de données de démonstration clairement identifié permettra de tester le projet même si les sources externes sont indisponibles. Le travail sera versionné avec Git et documenté régulièrement sur la page de [suivi](suivi.md).
 
@@ -68,19 +70,19 @@ L’évaluation reposera sur des scénarios reproductibles et des données dont 
 
 | Aspect évalué | Stratégie et critères prévus |
 | --- | --- |
-| Fonctionnement de l’application | Exécuter sur iOS et Android les trois modes d’ajout, dont les options formulaire et texte du mode manuel, la contribution facultative par photo du reçu, la sauvegarde d’une semaine, la génération et la modification d’une liste. Relever les scénarios réussis, les échecs et les fonctions incomplètes. |
+| Fonctionnement de l’application | Exécuter sur iOS et Android les parcours de compte, de recettes manuelles, de favoris, de notation, de calendrier, de promotions et de listes d’épicerie. Relever les scénarios réussis et les échecs. |
 | Exactitude des listes | Comparer les quantités, les formats à acheter et les totaux à des calculs manuels sur de petits exemples. Vérifier que chaque besoin est couvert ou explicitement signalé comme manquant ou non vérifiable. |
 | Qualité des choix économiques | Sur un même jeu de prix connus, comparer le panier proposé à un panier de référence construit manuellement pour les mêmes besoins et contraintes. Mesurer l’écart de coût et le nombre de magasins, sans supposer un gain systématique. |
-| Fiabilité des données et de l’IA | Comparer les ingrédients, quantités, prix et dates extraits à des exemples annotés manuellement. Relever les omissions, ajouts incorrects et ambiguïtés ; vérifier la lecture des reçus, les fourchettes min–max et le signalement des prix inconnus et des offres expirées. |
-| Protection et conservation des données | Vérifier avec deux comptes que les données privées restent séparées et qu’une modification de recette ou de prix ne change pas les anciennes semaines. |
-| Utilisabilité et gestion des erreurs | Réaliser le parcours complet de planification et d’achat ; relever les blocages et vérifier les états de chargement, de contenu vide et d’erreur réseau, ainsi que la clarté des avertissements. |
+| Fiabilité des données | Vérifier les produits, formats, prix, dates et conditions des promotions du catalogue. Contrôler le signalement des prix inconnus et des offres expirées. |
+| Protection et conservation des données | Vérifier avec deux comptes que les données privées restent séparées, qu’une liste créée reste indépendante des changements du calendrier et qu’un recalcul conserve les achats enregistrés. |
+| Utilisabilité et gestion des erreurs | Faire essayer les parcours de recettes, de planification et d’achat à des utilisateurs ; recueillir leurs retours et relever les blocages. Vérifier les états de chargement, de contenu vide et d’erreur réseau, ainsi que la clarté des avertissements. |
 
 Les résultats, les limites observées et les fonctionnalités effectivement réalisées seront présentés dans la [synthèse](synthese.md). Des tests du backend et du mobile, des vérifications sur les données et les reçus ainsi que des essais sur téléphone ont été réalisés. L’évaluation complète sur iOS et Android et les tests utilisateurs restent à mener.
 
 
 ## Échéancier
 
-Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md). Les statuts correspondent à l’état au 17 novembre 2026. La priorité est de stabiliser l’application et de valider les parcours sur appareils avant de commencer les tests utilisateurs. Les dates des fonctionnalités restantes restent à planifier.
+Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md). Les statuts correspondent à l’état au 17 novembre 2026. La priorité est de stabiliser l’application et de valider les parcours sur appareils avant de commencer les tests utilisateurs. 
 
 | Activités | Début | Fin | Livrable | Statut |
 | --- | --- | --- | --- | --- |
@@ -101,8 +103,6 @@ Les périodes ci-dessous reprennent le travail présenté dans le [suivi de proj
 | Listes d’épicerie | 9 nov. | En cours | Création manuelle ou depuis le calendrier, prix par magasin, suivi des achats, modèles et historique des listes terminées | Intégré ; validation finale en cours |
 | Onglet Accueil | 16 nov. | En cours | Repas du jour et accès à la liste épinglée | Intégré ; validation finale en cours |
 | Version stable et tests utilisateurs | À planifier | À planifier | Validation sur iOS et Android, stabilisation et essais avec des utilisateurs | ⏳ À préparer |
-| Historique stable des plans et des prix | À planifier | À planifier | Conservation des anciennes semaines et des prix utilisés | ⏳ À développer |
-| Modes IA, budget, estimations et recommandations | À planifier | À planifier | Aide aux recettes, gestion avancée du budget, contribution par reçu et recommandations économiques | ⏳ À développer ou à compléter |
-| Collecte Metro et Super C et préférences de compte | À planifier | À planifier | Collecte automatisée des prix et préférences détaillées | ⏳ À développer |
+| Collecte Metro et Super C, préférences et recommandations | À planifier | À planifier | Collecte automatisée des prix, préférences détaillées et recommandations économiques | En attente ; priorité à la stabilisation |
 
 *Dernière mise à jour : 17 novembre 2026*

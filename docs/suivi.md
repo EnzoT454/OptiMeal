@@ -438,10 +438,11 @@ Chaque semaine décrit l’état du projet à cette période. Les décisions peu
 - Demander un compte et une connexion au serveur pour utiliser les listes ; retirer la synchronisation hors connexion.
 - Recalculer les prix uniquement sur demande, en conservant les achats enregistrés.
 - Conserver l’historique des listes terminées, sans consultation des anciennes versions d’une même liste.
+- Le 17 novembre, réduire le périmètre pour nous concentrer sur la stabilisation du socle actuel et les tests utilisateurs. Abandonner les modes IA, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations et la contribution par reçu. L’historique des listes terminées et les outils de lecture locale des reçus sont conservés.
 
 ### Prochaines étapes
 
 - Stabiliser l’application et valider les parcours complets sur iOS et Android pour commencer les tests utilisateurs.
-- Poursuivre les fonctions restantes : modes IA, budget avancé, historique stable des plans et des prix, estimations et contribution par reçu.
+- Préparer les scénarios de tests utilisateurs, recueillir les retours et corriger les problèmes prioritaires.
 
 *Dernière mise à jour : 17 novembre 2026*
