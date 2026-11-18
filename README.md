@@ -8,7 +8,7 @@ Nous développons OptiMeal dans le cadre du cours IFT3150 à l’Université de 
 
 L’application permet de créer ses recettes manuellement, de choisir ses portions et de planifier les repas de la semaine. Elle regroupe ensuite les ingrédients dans une liste d’épicerie, compare les prix disponibles par magasin et permet de suivre les achats. Les besoins dont le prix est inconnu restent signalés.
 
-Nous concentrons maintenant le travail sur la stabilisation de l’application et les tests utilisateurs. Les modes IA, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations et la contribution par reçu sont retirés du périmètre du projet.
+Nous concentrons maintenant le travail sur la stabilisation de l’application et les tests utilisateurs. 
 
 ## Technologies
 
