@@ -26,12 +26,14 @@ import CircularsScreen from './app/CircularsScreen';
 import CircularScreen from './app/CircularScreen';
 import CookWithPromosScreen from './app/CookWithPromosScreen';
 import CalendarScreen from './app/CalendarScreen';
-import FollowsScreen from './app/FollowsScreen'; 
+import FollowsScreen from './app/FollowsScreen';
 import HomeScreen from './app/HomeScreen';
 import ListScreen from './app/ListScreen';
 import CreateListScreen from './app/CreateListScreen';
 import ShoppingListDetailScreen from './app/ShoppingListDetailScreen';
 import { HomeStackParams, ListStackParams, MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
+
+const VERT = '#25603c';
 
 const Tabs = createBottomTabNavigator<MainTabParams>();
 const Recipes = createNativeStackNavigator<RecipeStackParams>();
@@ -47,13 +49,16 @@ const tabIcons: Record<keyof MainTabParams, { active: IconName; inactive: IconNa
   Liste: { active: 'list', inactive: 'list-outline' },
 };
 function HomeNavigator() {
-  return <Home.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
+  return <Home.Navigator screenOptions={{ headerTintColor: VERT }}>
     <Home.Screen name="Home" component={HomeScreen} options={{ headerShown: false, title: 'Accueil' }} />
     <Home.Screen name="Paramètres" component={ProfileScreen} options={{ headerBackTitle: 'Accueil' }} />
+    {/* La recette ouverte depuis l'Accueil : la flèche retour revient à l'Accueil */}
+    <Home.Screen name="Detail" component={RecipeDetailScreen as any} options={{ title: 'La recette', headerBackTitle: 'Accueil' }} />
+    <Home.Screen name="Editor" component={ProtectedEditor as any} options={{ headerShown: false }} />
   </Home.Navigator>;
 }
 function ListNavigator() {
-  return <Lists.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
+  return <Lists.Navigator screenOptions={{ headerTintColor: VERT }}>
     <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Liste' }} />
     <Lists.Screen name="CreateList" component={CreateListScreen} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="ShoppingDetail" component={ShoppingListDetailScreen} options={{ title: 'Ma liste', headerBackTitle: 'Liste' }} />
@@ -75,7 +80,7 @@ function ProtectedEditor(props: NativeStackScreenProps<RecipeStackParams, 'Edito
   </AccountRequired>;
 }
 function RecipeNavigator() {
-  return <Recipes.Navigator screenOptions={{ headerTintColor: '#25603c' }}>
+  return <Recipes.Navigator screenOptions={{ headerTintColor: VERT }}>
     <Recipes.Screen name="List" component={RecipeListScreen} options={{ headerShown: false }} />
     <Recipes.Screen name="Add" component={ProtectedAdd} options={{ headerShown: false }} />
     <Recipes.Screen name="ManualEntry" component={ProtectedManualEntry} options={{ headerShown: false }} />
@@ -84,13 +89,16 @@ function RecipeNavigator() {
   </Recipes.Navigator>;
 }
 function PromoNavigator() {
-  return <Promos.Navigator screenOptions={{ headerShown: false }}>
+  return <Promos.Navigator screenOptions={{ headerShown: false, headerTintColor: VERT }}>
     <Promos.Screen name="List" component={PromotionsScreen} />
     <Promos.Screen name="Detail" component={PromoDetailScreen} />
     <Promos.Screen name="Circulars" component={CircularsScreen} />
     <Promos.Screen name="Circular" component={CircularScreen} />
     <Promos.Screen name="Cook" component={CookWithPromosScreen} />
     <Promos.Screen name="Follows" component={FollowsScreen} />
+    {/* La recette ouverte depuis « Cuisiner avec les promos » : la flèche retour revient aux promos */}
+    <Promos.Screen name="Recette" component={RecipeDetailScreen as any} options={{ headerShown: true, title: 'La recette', headerBackTitle: 'Promos' }} />
+    <Promos.Screen name="Editor" component={ProtectedEditor as any} />
   </Promos.Navigator>;
 }
 // route.params.vue = "epicerie" quand l'Accueil ouvre directement la liste d'épicerie
@@ -103,14 +111,13 @@ function Content() {
   const { session, loading, signInReason, dismissSignIn } = useAuth();
   if (loading) return <Screen><Heading>OptiMeal</Heading><Text>Ouverture de ta session…</Text></Screen>;
   return <><NavigationContainer key={session?.user.id ?? 'visitor'}><Tabs.Navigator screenOptions={({ route }) => ({
-    tabBarActiveTintColor: '#25603c',
+    tabBarActiveTintColor: VERT,
     tabBarInactiveTintColor: '#65746a',
     tabBarIcon: ({ focused, color, size }) => <Ionicons
       name={tabIcons[route.name][focused ? 'active' : 'inactive']} size={size} color={color} />,
   })}>
-    <Tabs.Screen name="Accueil" component={HomeNavigator} options={{ headerShown: false }} />
-    <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false }} />
-    <Tabs.Screen name="Recettes" component={RecipeNavigator} options={{ headerShown: false }} />
+    <Tabs.Screen name="Accueil" component={HomeNavigator} options={{ headerShown: false, popToTopOnBlur: true }} />
+    <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false, popToTopOnBlur: true }} /><Tabs.Screen name="Recettes" component={RecipeNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Calendrier" component={Calendar} options={{ headerShown: false }} />
     <Tabs.Screen name="Liste" component={ListNavigator} options={{ headerShown: false }} />
   </Tabs.Navigator></NavigationContainer>

@@ -1,10 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ComponentProps } from 'react';
 import { Alert, Animated, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 import { supabase } from '../services/supabase';
+import type { Profile } from '../types/api';
 import { recipeColors as c } from './recipes';
 
 type NomIcone = ComponentProps<typeof MaterialCommunityIcons>['name'];
@@ -22,14 +24,22 @@ export default function MenuCompte({ visible, onFermer, sections }: {
 }) {
   const insets = useSafeAreaInsets();
   const { session, requestSignIn } = useAuth();
-  const position = useRef(new Animated.Value(-LARGEUR)).current;
+  const position = useRef(new Animated.Value(LARGEUR)).current;
+  const [nom, setNom] = useState<string | null>(null);
 
-  // À chaque ouverture : le panneau part de la gauche (hors écran) et glisse jusqu'à 0
+  // À chaque ouverture : le panneau glisse depuis la droite, et on relit le nom choisi dans Paramètres
   useEffect(() => {
     if (!visible) return;
-    position.setValue(-LARGEUR);
+    position.setValue(LARGEUR);
     Animated.timing(position, { toValue: 0, duration: 220, useNativeDriver: true }).start();
-  }, [visible]);
+
+    if (!session) { setNom(null); return; }
+    let actif = true;
+    api<Profile>('/api/v1/me')
+      .then((p) => { if (actif) setNom(p.display_name?.trim() || null); })
+      .catch(() => {});
+    return () => { actif = false; };
+  }, [visible, session?.user.id]);
 
   async function seDeconnecter() {
     onFermer();
@@ -49,25 +59,27 @@ export default function MenuCompte({ visible, onFermer, sections }: {
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onFermer} statusBarTranslucent>
       <View style={styles.fond}>
+        {/* La zone sombre à gauche : un appui ferme le menu */}
+        <Pressable style={{ flex: 1 }} accessibilityRole="button" accessibilityLabel="Fermer le menu" onPress={onFermer} />
+
         <Animated.View style={[styles.panneau, {
           paddingTop: insets.top + 16,
           paddingBottom: insets.bottom + 16,
           transform: [{ translateX: position }],
         }]}>
-          {/* En-tête : avatar + courriel du compte */}
           <View style={styles.entete}>
             <View style={styles.avatar}>
               <MaterialCommunityIcons name="account-outline" size={26} color={c.green} accessible={false} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text accessibilityRole="header" style={styles.titre}>Mon compte</Text>
-              <Text style={styles.courriel} numberOfLines={1}>
-                {session?.user.email ?? 'Non connecté'}
-              </Text>
+              <Text accessibilityRole="header" style={styles.titre} numberOfLines={1}>{nom ?? 'Mon compte'}</Text>
+              <Text style={styles.courriel} numberOfLines={1}>{session?.user.email ?? 'Non connecté'}</Text>
             </View>
+            <Pressable accessibilityRole="button" accessibilityLabel="Fermer le menu" onPress={onFermer} hitSlop={10}>
+              <MaterialCommunityIcons name="close" size={24} color={c.muted} />
+            </Pressable>
           </View>
 
-          {/* Sections reçues de l'écran qui ouvre le menu */}
           {sections.map((section) => (
             <View key={section.titre}>
               <Text style={styles.titreSection}>{section.titre}</Text>
@@ -85,7 +97,6 @@ export default function MenuCompte({ visible, onFermer, sections }: {
             </View>
           ))}
 
-          {/* Pousse le bas du menu tout en bas */}
           <View style={{ flex: 1 }} />
 
           <View style={styles.bas}>
@@ -104,9 +115,6 @@ export default function MenuCompte({ visible, onFermer, sections }: {
             )}
           </View>
         </Animated.View>
-
-        {/* La zone sombre à droite : un appui ferme le menu */}
-        <Pressable style={{ flex: 1 }} accessibilityRole="button" accessibilityLabel="Fermer le menu" onPress={onFermer} />
       </View>
     </Modal>
   );

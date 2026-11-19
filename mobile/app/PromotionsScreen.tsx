@@ -1,18 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Message } from '../components/ui';
-import {
-  RecipeButton, RecipeChip, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles,
-} from '../components/recipes';
+import { RecipeButton, RecipeChip, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
 import { ON_DATE, RETAILERS, discount, longDate } from '../components/promos';
 import { fetchAllOffers, fetchKeywords, isOnPromo, searchScore, searchWords } from '../components/search';
 import { PromoList, PromoView, ViewToggle, sectionStyle } from '../components/PromoCard';
 import { followedOnPromo, followsOffer } from '../components/follows';
 import { useFollows } from '../components/useFollows';
-import { FollowsChip } from '../components/FollowsChip';
+import { OngletsPromos } from '../components/OngletsPromos';
 import { CATEGORIES, CategoryRow } from '../components/categories';
 import type { Offer, Retailer } from '../types/api';
 import { PromoStackParams } from '../types/navigation';
@@ -88,27 +87,56 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
     <RecipeTitle>Promos</RecipeTitle>
     {!!followError && <Message text={followError} />}
 
-    <View style={recipeStyles.chips}>
-      <RecipeChip label="Promotions" selected />
-      <RecipeChip label="Circulaires" onPress={() => navigation.navigate('Circulars')} />
-      <FollowsChip count={alerts} onPress={() => navigation.navigate('Follows')} />
+    <OngletsPromos actif="promos" nbSuivis={alerts} />
+
+    {/* Recherche compacte : loupe, champ, et ✕ pour effacer */}
+    <View style={styles.recherche}>
+      <MaterialCommunityIcons name="magnify" size={22} color={recipeColors.muted} accessible={false} />
+      <TextInput
+        value={query}
+        onChangeText={setQuery}
+        placeholder="Poulet, lait, légumes…"
+        placeholderTextColor={recipeColors.muted}
+        style={styles.champ}
+        accessibilityLabel="Rechercher un produit"
+        returnKeyType="search"
+        autoCorrect={false}
+      />
+      {query.length > 0 && (
+        <Pressable accessibilityRole="button" accessibilityLabel="Effacer la recherche" onPress={() => setQuery('')} hitSlop={10}>
+          <MaterialCommunityIcons name="close-circle" size={20} color={recipeColors.muted} />
+        </Pressable>
+      )}
     </View>
 
-    <RecipeField label="Rechercher un produit" placeholder="Poulet, lait, légumes…" value={query} onChangeText={setQuery} />
+    {/* Bannière « Cuisiner avec les promos » : visible sans défiler (cachée pendant une recherche) */}
+    {!searching && (
+      <Pressable accessibilityRole="button" accessibilityHint="Ouvre des idées de recettes avec les rabais"
+        onPress={() => navigation.navigate('Cook')}
+        style={({ pressed }) => [styles.banniere, pressed && { opacity: 0.8 }]}>
+        <MaterialCommunityIcons name="silverware-fork-knife" size={22} color={recipeColors.green} accessible={false} />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.titreBanniere}>Cuisiner avec les promos</Text>
+          <Text style={styles.texteBanniere} numberOfLines={1}>Des recettes avec les rabais</Text>
+        </View>
+        <MaterialCommunityIcons name="chevron-right" size={22} color={recipeColors.green} accessible={false} />
+      </Pressable>
+    )}
 
     <CategoryRow selected={category} counts={counts} onChange={setCategory} />
 
-    <View style={recipeStyles.chips}>
-      <RecipeChip label="Tous" selected={!retailer} onPress={() => setRetailer(null)} />
-      {RETAILERS.map(r => <RecipeChip key={r.id} label={r.name} selected={retailer === r.id}
-        onPress={() => setRetailer(retailer === r.id ? null : r.id)} />)}
+    {/* Magasins + présentation sur une seule ligne */}
+    <View style={styles.ligneFiltres}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }} contentContainerStyle={styles.magasins}>
+        <RecipeChip label="Tous" selected={!retailer} onPress={() => setRetailer(null)} />
+        {RETAILERS.map(r => <RecipeChip key={r.id} label={r.name} selected={retailer === r.id}
+          onPress={() => setRetailer(retailer === r.id ? null : r.id)} />)}
+      </ScrollView>
+      <ViewToggle value={view} onChange={changeView} />
     </View>
 
-    <View style={{ gap: 4 }}>
-      <View style={styles.titleRow}>
-        <Text style={[recipeStyles.sectionTitle, { flex: 1 }]}>{categoryName ?? 'Cette semaine'}</Text>
-        <ViewToggle value={view} onChange={changeView} />
-      </View>
+    <View style={{ gap: 2 }}>
+      <Text style={recipeStyles.sectionTitle}>{categoryName ?? 'Cette semaine'}</Text>
       <Text style={recipeStyles.body}>
         {loading || error ? (evaluatedOn ? `Promos en cours le ${longDate(evaluatedOn)}` : 'Promos en cours')
           : searching ? `${promos.length} en promo · ${regular.length} au prix régulier`
@@ -139,10 +167,7 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
           {!promos.length && <Text style={recipeStyles.body}>Pas en promo cette semaine.</Text>}
           {list(regular)}
         </>}
-        <RecipeButton title="Cuisiner avec les promos" variant="neutral" style={styles.cookButton}
-          textStyle={{ color: recipeColors.green }} onPress={() => navigation.navigate('Cook')} />
-        <Text style={recipeStyles.note}>Prix relevés en ligne : ils peuvent varier en magasin.</Text>
-      </>}
+     </>}
   </RecipeScreen>;
 }
 
@@ -153,6 +178,16 @@ function plural(count: number, word: string) {
 const VIEW_KEY = 'optimeal.promosView';
 
 const styles = StyleSheet.create({
-  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  cookButton: { backgroundColor: recipeColors.light, borderWidth: 0 },
+  recherche: {
+    flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 48, paddingHorizontal: 12,
+    backgroundColor: 'white', borderRadius: 14, borderWidth: 1, borderColor: recipeColors.border,
+  },
+  champ: { flex: 1, fontFamily: 'DMSans_400Regular', fontSize: 16, color: recipeColors.ink, paddingVertical: 10 },
+
+  banniere: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: recipeColors.light, borderRadius: 16, paddingHorizontal: 14, paddingVertical: 12 },
+  titreBanniere: { fontFamily: 'DMSans_700Bold', fontSize: 15, lineHeight: 20, color: recipeColors.green },
+  texteBanniere: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: recipeColors.green },
+
+  ligneFiltres: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  magasins: { gap: 8, alignItems: 'center' },
 });

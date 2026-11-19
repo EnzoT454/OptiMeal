@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,75 +9,82 @@ import { supabase } from '../services/supabase';
 import { Profile } from '../types/api';
 import { Message } from '../components/ui';
 import { RecipeScreen, recipeColors as c } from '../components/recipes';
-import { storeName } from '../components/promos';
-import { ecrireMagasin, lireMagasin, type Magasin } from '../components/shoppingList';
 
 type NomIcone = ComponentProps<typeof MaterialCommunityIcons>['name'];
 
 const ROUGE = '#a32d2d';
-// 'auto' = le magasin le moins cher pour la liste (comme dans l'épicerie)
-const MAGASINS: Magasin[] = ['auto', 'maxi', 'metro', 'superc'];
-const nomMagasin = (m: Magasin) => (m === 'auto' ? 'Le moins cher' : storeName(m));
 
 export default function ProfileScreen() {
   const { session, requestSignIn, forgetDeletedAccount } = useAuth();
   const userId = session?.user.id;
 
   const [name, setName] = useState('');
-  const [message, setMessage] = useState('');
+  const [nomEnregistre, setNomEnregistre] = useState(''); // le nom tel qu'il est dans le compte
+  const [erreur, setErreur] = useState('');               // seulement les erreurs (en rouge)
+  const [confirme, setConfirme] = useState(false);        // "✓ Enregistré" pendant 2 secondes
   const [busy, setBusy] = useState(false);
-  const [magasin, setMagasin] = useState<Magasin | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmation, setConfirmation] = useState('');
+  const minuterie = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Charger le profil et le magasin chaque fois qu'on ouvre l'écran
+  const nomModifie = name.trim() !== nomEnregistre.trim();
+
+  // Arrêter la minuterie si on quitte l'écran
+  useEffect(() => () => { if (minuterie.current) clearTimeout(minuterie.current); }, []);
+
+  // Charger le profil chaque fois qu'on ouvre l'écran
   useFocusEffect(useCallback(() => {
     if (!userId) return;
     let active = true;
     api<Profile>('/api/v1/me')
-      .then(profile => { if (active) setName(profile.display_name ?? ''); })
-      .catch(e => { if (active) setMessage(e.message); });
-    lireMagasin(userId)
-      .then(m => { if (active) setMagasin(m); })
-      .catch(() => { if (active) setMagasin('auto'); });
+      .then(profile => {
+        if (!active) return;
+        setName(profile.display_name ?? '');
+        setNomEnregistre(profile.display_name ?? '');
+      })
+      .catch(e => { if (active) setErreur(e.message); });
     return () => { active = false; };
   }, [userId]));
 
   async function save() {
-    setBusy(true); setMessage('');
+    setBusy(true); setErreur('');
     try {
-      await api<Profile>('/api/v1/me', { method: 'PATCH', body: JSON.stringify({ display_name: name.trim() || null }) });
-      setMessage('Profil enregistré.');
-    } catch (e) { setMessage((e as Error).message); } finally { setBusy(false); }
-  }
-
-  async function choisirMagasin(m: Magasin) {
-    if (!userId) return;
-    const avant = magasin;
-    setMagasin(m); // affichage immédiat
-    try { await ecrireMagasin(userId, m); }
-    catch { setMagasin(avant); setMessage('Magasin non enregistré. Réessaie.'); }
+      const nouveau = name.trim();
+      await api<Profile>('/api/v1/me', { method: 'PATCH', body: JSON.stringify({ display_name: nouveau || null }) });
+      setName(nouveau);
+      setNomEnregistre(nouveau);
+      setConfirme(true);
+      if (minuterie.current) clearTimeout(minuterie.current);
+      minuterie.current = setTimeout(() => setConfirme(false), 2000);
+    } catch (e) { setErreur((e as Error).message); } finally { setBusy(false); }
   }
 
   async function logout() {
     setBusy(true);
-    try { const { error } = await supabase.auth.signOut({ scope: 'local' }); if (error) setMessage('Déconnexion impossible. Réessaie.'); }
-    catch { setMessage('Déconnexion impossible. Réessaie.'); } finally { setBusy(false); }
+    try { const { error } = await supabase.auth.signOut({ scope: 'local' }); if (error) setErreur('Déconnexion impossible. Réessaie.'); }
+    catch { setErreur('Déconnexion impossible. Réessaie.'); } finally { setBusy(false); }
   }
 
   async function deleteAccount() {
     if (!session || busy || confirmation !== 'SUPPRIMER') return;
-    setBusy(true); setMessage('');
+    setBusy(true); setErreur('');
     try {
       await api<void>('/api/v1/me', { method: 'DELETE', body: JSON.stringify({ confirmation: 'SUPPRIMER' }) }, false, 60000);
     } catch (e) {
-      setMessage((e as Error).message); setBusy(false); return;
+      setErreur((e as Error).message); setBusy(false); return;
     }
     // La suppression distante a réussi ; retirer aussi la session de cet appareil.
     try { await forgetDeletedAccount(); }
     catch { Alert.alert('Compte supprimé', 'Le compte a été supprimé, mais le nettoyage de la session sur cet appareil a rencontré une erreur.'); }
     finally { setBusy(false); }
   }
+
+  const aPropos = (
+    <Section titre="À propos">
+      <Ligne icone="food-apple-outline" titre="Application" valeur="OptiMeal" />
+      <Ligne icone="school-outline" titre="Projet" valeur="IFT3150 · UdeM" derniere />
+    </Section>
+  );
 
   // ---------- Visiteur (pas connecté) ----------
   if (!session) return (
@@ -93,6 +100,7 @@ export default function ProfileScreen() {
             onPress={() => requestSignIn('Connecte-toi pour accéder aux paramètres de ton profil.')} />
         </View>
       </View>
+      {aPropos}
     </RecipeScreen>
   );
 
@@ -105,49 +113,30 @@ export default function ProfileScreen() {
           <Text style={styles.etiquette}>Nom affiché</Text>
           <TextInput
             value={name}
-            onChangeText={setName}
+            onChangeText={(texte) => { setName(texte); setConfirme(false); }}
             maxLength={80}
             placeholder="Ton nom"
             placeholderTextColor={c.muted}
             style={styles.champ}
             accessibilityLabel="Nom affiché"
           />
-          <Bouton titre="Enregistrer" disabled={busy} onPress={() => void save()} />
+          <Bouton
+            titre={confirme ? '✓ Enregistré' : busy ? 'Enregistrement…' : 'Enregistrer'}
+            disabled={busy || !nomModifie}
+            succes={confirme}
+            onPress={() => void save()}
+          />
         </View>
       </Section>
 
-      <Section titre="Épicerie">
-        <View style={styles.bloc}>
-          <View style={styles.ligneTitre}>
-            <MaterialCommunityIcons name="storefront-outline" size={22} color={c.muted} accessible={false} />
-            <Text style={styles.texteLigne}>Magasin par défaut</Text>
-          </View>
-          <View style={styles.puces}>
-            {MAGASINS.map(m => {
-              const actif = magasin === m;
-              return (
-                <Pressable
-                  key={m}
-                  accessibilityRole="radio"
-                  accessibilityState={{ selected: actif }}
-                  onPress={() => void choisirMagasin(m)}
-                  style={[styles.puce, actif && styles.puceActive]}
-                >
-                  <Text style={[styles.textePuce, actif && styles.textePuceActive]}>{nomMagasin(m)}</Text>
-                </Pressable>
-              );
-            })}
-          </View>
-          <Text style={styles.note}>Utilisé pour estimer le prix de ta liste d'épicerie.</Text>
-        </View>
-      </Section>
+      <Message text={erreur} />
 
-      <Message text={message} />
+      {aPropos}
 
       <Section titre="Session">
         <Ligne icone="logout" titre="Se déconnecter de cet appareil" onPress={() => void logout()} disabled={busy} />
         <Ligne icone="delete-outline" titre="Supprimer mon compte" danger derniere disabled={busy}
-          onPress={() => { setConfirmDelete(true); setMessage(''); }} />
+          onPress={() => { setConfirmDelete(true); setErreur(''); }} />
       </Section>
 
       {confirmDelete && (
@@ -173,7 +162,7 @@ export default function ProfileScreen() {
             <Bouton titre={busy ? 'Suppression…' : 'Confirmer la suppression'} danger
               disabled={busy || confirmation !== 'SUPPRIMER'} onPress={() => void deleteAccount()} />
             <Bouton titre="Annuler" secondaire disabled={busy}
-              onPress={() => { setConfirmDelete(false); setConfirmation(''); setMessage(''); }} />
+              onPress={() => { setConfirmDelete(false); setConfirmation(''); setErreur(''); }} />
           </View>
         </View>
       )}
@@ -214,38 +203,47 @@ function Ligne({ icone, titre, valeur, onPress, danger = false, derniere = false
   );
 }
 
-function Bouton({ titre, onPress, disabled = false, danger = false, secondaire = false }: {
-  titre: string; onPress: () => void; disabled?: boolean; danger?: boolean; secondaire?: boolean;
+function Bouton({ titre, onPress, disabled = false, danger = false, secondaire = false, succes = false }: {
+  titre: string; onPress: () => void; disabled?: boolean; danger?: boolean; secondaire?: boolean; succes?: boolean;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
         styles.bouton,
         danger && { backgroundColor: ROUGE },
         secondaire && styles.boutonSecondaire,
-        (pressed || disabled) && { opacity: 0.6 },
+        succes && styles.boutonSucces,
+        disabled && !succes && styles.boutonInactif,
+        pressed && { opacity: 0.7 },
       ]}
     >
-      <Text style={[styles.texteBouton, secondaire && { color: c.ink }]}>{titre}</Text>
+      <Text style={[styles.texteBouton, secondaire && { color: c.ink }, disabled && !succes && styles.texteInactif]}>{titre}</Text>
     </Pressable>
   );
 }
 
+const OMBRE = {
+  shadowColor: '#1a2e22',
+  shadowOpacity: 0.06,
+  shadowRadius: 12,
+  shadowOffset: { width: 0, height: 4 },
+  elevation: 2,
+};
+
 const styles = StyleSheet.create({
   titreSection: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: c.muted, marginLeft: 4 },
-  carte: { backgroundColor: 'white', borderRadius: 16, borderWidth: 1, borderColor: c.border, overflow: 'hidden' },
-  carteDanger: { borderColor: ROUGE },
+  carte: { backgroundColor: 'white', borderRadius: 20, overflow: 'hidden', ...OMBRE },
+  carteDanger: { borderWidth: 1, borderColor: ROUGE },
   bloc: { padding: 16, gap: 10 },
   titreCarte: { fontFamily: 'DMSans_700Bold', fontSize: 17, lineHeight: 23, color: c.ink },
   texte: { fontFamily: 'DMSans_400Regular', fontSize: 14, lineHeight: 20, color: c.ink },
-  note: { fontFamily: 'DMSans_400Regular', fontSize: 12, lineHeight: 16, color: c.muted },
 
   ligne: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 52, paddingHorizontal: 16 },
   separateur: { borderBottomWidth: 1, borderBottomColor: c.border },
-  ligneTitre: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   texteLigne: { fontFamily: 'DMSans_500Medium', fontSize: 15, lineHeight: 20, color: c.ink },
   valeur: { fontFamily: 'DMSans_400Regular', fontSize: 14, lineHeight: 19, color: c.muted, maxWidth: '55%' },
   appuye: { backgroundColor: c.light },
@@ -256,13 +254,10 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: c.border, borderRadius: 12, paddingHorizontal: 12, minHeight: 48, backgroundColor: c.background,
   },
 
-  puces: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  puce: { paddingHorizontal: 14, minHeight: 40, justifyContent: 'center', borderRadius: 20, borderWidth: 1, borderColor: c.border, backgroundColor: 'white' },
-  puceActive: { backgroundColor: c.green, borderColor: c.green },
-  textePuce: { fontFamily: 'DMSans_500Medium', fontSize: 14, color: c.ink },
-  textePuceActive: { color: 'white' },
-
   bouton: { minHeight: 48, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: c.green, paddingHorizontal: 16 },
   boutonSecondaire: { backgroundColor: 'white', borderWidth: 1, borderColor: c.border },
+  boutonSucces: { backgroundColor: '#2e7d4f' },
+  boutonInactif: { backgroundColor: c.light },
   texteBouton: { fontFamily: 'DMSans_700Bold', fontSize: 15, color: 'white' },
+  texteInactif: { color: c.muted },
 });

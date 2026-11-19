@@ -3,8 +3,9 @@ import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from 'rea
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Message } from '../components/ui';
-import { RecipeButton, RecipeChip, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
+import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
 import { CIRCULAR_STYLE, RETAILERS, fetchCirculars, longDate, todayText } from '../components/promos';
+import { OngletsPromos } from '../components/OngletsPromos';
 import type { Circular } from '../types/api';
 import { PromoStackParams } from '../types/navigation';
 
@@ -27,14 +28,11 @@ export default function CircularsScreen({ navigation }: NativeStackScreenProps<P
   const today = todayText();
 
   return <RecipeScreen>
-    <RecipeTitle onBack={() => navigation.goBack()}>Circulaires</RecipeTitle>
-    <Text style={recipeStyles.intro}>Les circulaires de la semaine, magasin par magasin.</Text>
+    <RecipeTitle>Promos</RecipeTitle>
 
-    <View style={recipeStyles.chips}>
-      <RecipeChip label="Promotions" onPress={() => navigation.goBack()} />
-      <RecipeChip label="Circulaires" selected />
-      <RecipeChip label="Suivis" onPress={() => navigation.navigate('Follows')} />
-    </View>
+    <OngletsPromos actif="circulaires" />
+
+    <Text style={recipeStyles.body}>Les circulaires de la semaine, magasin par magasin.</Text>
 
     {loading ? <ActivityIndicator color={recipeColors.green} style={{ marginTop: 24 }} />
       : error ? <View style={recipeStyles.notice}>

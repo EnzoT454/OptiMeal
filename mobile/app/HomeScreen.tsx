@@ -1,34 +1,39 @@
 import { useCallback, useState } from "react";
-import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { HomeStackParams } from "../types/navigation";
 import { useAuth } from "../context/AuthContext";
 import { RecipeScreen, recipeColors as c, recipeStyles } from "../components/recipes";
-import { MEALS, MEAL_COLORS, MEAL_LABELS, dayFullName, getPlan, mealName, mondayOf, toISODate } from "../components/planning";
-import { fetchLists, quantityLabel } from "../services/shoppingLists";
-import { discount } from "../components/promos";
+import { MEALS, MEAL_COLORS, MEAL_LABELS, dayFullName, getPlan, mealName, mondayOf, recipeUnavailable, toISODate } from "../components/planning";
+import { fetchLists } from "../services/shoppingLists";
+import { storeName } from "../components/promos";
 import { fetchAllOffers, isOnPromo } from "../components/search";
 import { followsOffer } from "../components/follows";
 import { useFollows } from "../components/useFollows";
-import { PromoList } from "../components/PromoCard";
 import MenuCompte, { type SectionMenu } from "../components/MenuCompte";
 import type { MealPlanEntry, MealType, Offer } from "../types/api";
 import type { ShoppingListRead } from "../types/shoppingLists";
 
 // =====================================================================
-// Accueil : avatar (menu du compte) + 3 sections
-//   1. Aujourd'hui / Demain → les repas du jour qui compte maintenant
-//   2. Prochaines courses   → aperçu de la liste en cours la plus proche
-//   3. Promos suivies       → produits suivis en promo cette semaine
+// Accueil : en-tête (avatar à droite → menu du compte) + 3 sections
+//   1. Aujourd'hui / Demain → les repas du jour qui compte (appui = la recette)
+//   2. Mes listes en cours  → une ligne par liste (appui = la liste)
+//   3. Promos suivies       → 1 carte large, 2 cartes côte à côte, ou un carrousel (3 et plus)
 // =====================================================================
 
-// À partir de cette heure, l'Accueil montre les repas de demain
-const HEURE_BASCULE = 21;
+const HEURE_BASCULE = 21;       // à partir de 21 h, on montre les repas de demain
+const NB_LISTES_MAX = 3;
+const NB_PROMOS_MAX = 8;
+const JOURS_AVANT_MASQUER = 7;  // une liste passée depuis plus de 7 jours quitte l'Accueil
 
 // Heure à partir de laquelle un repas du jour est considéré comme passé
 const FIN_DU_REPAS: Record<MealType, number> = { dejeuner: 11, diner: 15, souper: 21, collation: 24 };
+
+const ORANGE_FONCE = "#7a4106";
+const ORANGE_PALE = "#fff1d6";
+const PRIX_PROMO = "#b45309";
 
 function salutation(d: Date) {
   const h = d.getHours();
@@ -54,20 +59,21 @@ function jourQuiCompte(maintenant: Date) {
   return { iso: toISODate(date), titre: demain ? "Demain" : "Aujourd'hui", estDemain: demain };
 }
 
-// Un repas d'aujourd'hui dont l'heure est passée
 function estPasse(e: MealPlanEntry, maintenant: Date) {
   return e.date === toISODate(maintenant) && maintenant.getHours() >= FIN_DU_REPAS[e.meal];
 }
 
-// "Ce soir" pour le souper d'aujourd'hui, sinon le moment du repas
 function libelleRepas(e: MealPlanEntry, maintenant: Date) {
   if (e.date === toISODate(maintenant) && e.meal === "souper" && !estPasse(e, maintenant)) return "Ce soir";
   return MEAL_LABELS[e.meal];
 }
 
-// Garde les listes en cours, la plus proche d'abord (à venir, puis en retard)
-function trierListes(listes: ShoppingListRead[], aujourdhui: string) {
-  const ouvertes = listes.filter((l) => l.status === "draft" || l.status === "active");
+// Listes encore en cours, la plus proche d'abord (à venir, puis en retard).
+// Une liste passée depuis plus de 7 jours n'est plus montrée ici (elle reste dans l'onglet Liste).
+function listesEnCours(listes: ShoppingListRead[], maintenant: Date) {
+  const aujourdhui = toISODate(maintenant);
+  const limite = toISODate(plusJours(maintenant, -JOURS_AVANT_MASQUER));
+  const ouvertes = listes.filter((l) => (l.status === "draft" || l.status === "active") && l.purchase_date >= limite);
   const aVenir = ouvertes.filter((l) => l.purchase_date >= aujourdhui)
     .sort((a, b) => a.purchase_date.localeCompare(b.purchase_date));
   const enRetard = ouvertes.filter((l) => l.purchase_date < aujourdhui)
@@ -75,46 +81,59 @@ function trierListes(listes: ShoppingListRead[], aujourdhui: string) {
   return [...aVenir, ...enRetard];
 }
 
-// "Courses aujourd'hui", "Courses demain", "Courses mercredi 18 nov.", "Courses prévues vendredi 14 nov."
-function quandCourses(iso: string, aujourdhui: string) {
-  const demain = toISODate(plusJours(new Date(), 1));
-  if (iso === aujourdhui) return "Courses aujourd'hui";
-  if (iso === demain) return "Courses demain";
-  const texte = dateDe(iso).toLocaleDateString("fr-CA", { weekday: "long", day: "numeric", month: "short" });
-  return iso < aujourdhui ? `Courses prévues ${texte}` : `Courses ${texte}`;
+// "Aujourd'hui", "Demain", "Lun. 16 nov."
+function dateCourte(iso: string, aujourdhui: string) {
+  if (iso === aujourdhui) return "Aujourd'hui";
+  if (iso === toISODate(plusJours(new Date(), 1))) return "Demain";
+  return majuscule(dateDe(iso).toLocaleDateString("fr-CA", { weekday: "short", day: "numeric", month: "short" }));
 }
 
-// "Repas du 16 au 22 nov."
-function periodeRepas(debut: string, fin: string) {
-  const d = dateDe(debut);
-  const f = dateDe(fin);
-  const mois = f.toLocaleDateString("fr-CA", { month: "short" });
-  return `Repas du ${d.getDate()} au ${f.getDate()} ${mois}`;
+// "≈ 21 $" si tous les prix sont connus, "au moins 21 $" sinon, rien si aucun prix connu
+function coutListe(l: ShoppingListRead): string | null {
+  const montant = Math.round(Number(l.totals.remaining_known_amount));
+  if (!Number.isFinite(montant) || montant <= 0) return null;
+  return l.totals.estimate_complete ? `≈ ${montant} $` : `au moins ${montant} $`;
 }
+
+// Prix et rabais d'une offre (montants en texte, ex. "2.49")
+function prixRegulier(o: Offer): number | null {
+  const n = Number(o.price.amount);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+function prixPromo(o: Offer): number | null {
+  const n = Number(o.promo_price?.amount);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+function rabais(o: Offer): number | null {
+  const base = prixRegulier(o);
+  const promo = prixPromo(o);
+  if (base === null || promo === null || base <= promo) return null;
+  return Math.round((1 - promo / base) * 100);
+}
+const enDollars = (n: number) => `${n.toFixed(2).replace(".", ",")} $`;
 
 export default function HomeScreen({ navigation }: NativeStackScreenProps<HomeStackParams, 'Home'>) {
   const { session } = useAuth();
   const maintenant = new Date();
   const [menuOuvert, setMenuOuvert] = useState(false);
 
-  const ouvrirParametres = () => navigation.navigate("Paramètres");
-
   const sectionsMenu: SectionMenu[] = [
     { titre: "Mon épicerie", elements: [
       { icone: "format-list-checks", titre: "Mes listes", onPress: () => navigation.getParent()?.navigate("Liste") },
-      { icone: "heart-outline", titre: "Produits suivis", onPress: () => navigation.getParent()?.navigate("Promos", { screen: "Follows" }) },
-      { icone: "storefront-outline", titre: "Magasins préférés", onPress: ouvrirParametres },
-      { icone: "wallet-outline", titre: "Budget de la semaine", onPress: ouvrirParametres },
-      { icone: "leaf", titre: "Préférences alimentaires", onPress: ouvrirParametres },
+      { icone: "bell-outline", titre: "Produits suivis", onPress: () => navigation.getParent()?.navigate("Promos", { screen: "Follows" }) },
     ]},
     { titre: "Application", elements: [
-      { icone: "cog-outline", titre: "Paramètres", onPress: ouvrirParametres },
+      { icone: "cog-outline", titre: "Paramètres", onPress: () => navigation.navigate("Paramètres") },
     ]},
   ];
 
   return (
     <RecipeScreen>
       <View style={styles.header}>
+        <View style={styles.greeting}>
+          <Text style={styles.date}>{majuscule(dayFullName(maintenant))}</Text>
+          <Text accessibilityRole="header" style={styles.salut}>{salutation(maintenant)}</Text>
+        </View>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Mon compte"
@@ -124,10 +143,6 @@ export default function HomeScreen({ navigation }: NativeStackScreenProps<HomeSt
         >
           <MaterialCommunityIcons name="account-outline" size={24} color={c.green} accessible={false} />
         </Pressable>
-        <View style={styles.greeting}>
-          <Text style={styles.date}>{majuscule(dayFullName(maintenant))}</Text>
-          <Text accessibilityRole="header" style={styles.salut}>{salutation(maintenant)}</Text>
-        </View>
       </View>
 
       {session ? (
@@ -163,10 +178,10 @@ function TableauDeBord() {
   const [listes, setListes] = useState<ShoppingListRead[]>([]);
   const [chargementListes, setChargementListes] = useState(true);
   const [erreurListes, setErreurListes] = useState(false);
-  const [essai, setEssai] = useState(0); // augmente pour relancer le chargement
+  const [essai, setEssai] = useState(0);
 
   // Produits suivis (onglet Promos) : même logique que FollowsScreen
-  const { follows, recharger: rechargerSuivis, toggle: basculerSuivi } = useFollows();
+  const { follows, recharger: rechargerSuivis } = useFollows();
   const [offres, setOffres] = useState<Offer[]>([]);
   const [chargementPromos, setChargementPromos] = useState(true);
   const [erreurPromos, setErreurPromos] = useState(false);
@@ -207,32 +222,36 @@ function TableauDeBord() {
 
   // Navigation
   const ouvrirSemaine = () => navigation.navigate("Calendrier", { vue: "repas" });
+  const ouvrirRepas = (e: MealPlanEntry) => {
+    if (e.recipe_id && !recipeUnavailable(e)) {
+      navigation.navigate("Detail", { id: e.recipe_id }); // écran recette dans l'Accueil
+    } else {
+      ouvrirSemaine(); // note libre ou recette supprimée
+    }
+  };
   const ouvrirListes = () => navigation.navigate("Liste", { screen: "Lists" });
   const creerListe = () => navigation.navigate("Liste", { screen: "CreateList", initial: false });
   const ouvrirListe = (id: string) => navigation.navigate("Liste", { screen: "ShoppingDetail", params: { id }, initial: false });
   const ouvrirSuivis = () => navigation.navigate("Promos", { screen: "Follows", initial: false });
   const ouvrirPromos = () => navigation.navigate("Promos", { screen: "List" });
-  const ouvrirOffre = (offre: Offer) => navigation.navigate("Promos", { screen: "Detail", params: { offer: offre }, initial: false });
+  const ouvrirOffre = (o: Offer) => navigation.navigate("Promos", { screen: "Detail", params: { offer: o }, initial: false });
   const reessayer = () => {
     setChargementRepas(true); setChargementListes(true); setChargementPromos(true);
     setEssai((n) => n + 1);
   };
 
-  // Les repas du jour qui compte
+  // Données affichées
   const repasDuJour = repas
     .filter((e) => e.date === jour.iso)
     .sort((a, b) => MEALS.indexOf(a.meal) - MEALS.indexOf(b.meal));
 
-  // Prochaines courses
-  const listesEnCours = trierListes(listes, aujourdhui);
-  const prochaine = listesEnCours[0];
+  const listesAffichees = listesEnCours(listes, maintenant).slice(0, NB_LISTES_MAX);
   const chargement = chargementListes || chargementRepas;
 
-  // Promos suivies : les 2 meilleurs rabais parmi les produits suivis
-  const estSuivi = (o: Offer) => follows.some((f) => followsOffer(f, o));
-  const suivisEnPromo = offres.filter(estSuivi).filter(isOnPromo)
-    .sort((a, b) => (discount(b) ?? 0) - (discount(a) ?? 0));
-  const promosAffichees = suivisEnPromo.slice(0, 2);
+  const suivisEnPromo = offres
+    .filter((o) => follows.some((f) => followsOffer(f, o)) && isOnPromo(o))
+    .sort((a, b) => (rabais(b) ?? 0) - (rabais(a) ?? 0))
+    .slice(0, NB_PROMOS_MAX);
 
   return (
     <>
@@ -251,13 +270,13 @@ function TableauDeBord() {
 
         {!chargementRepas && !erreurRepas && repasDuJour.length === 0 && (
           <Pressable accessibilityRole="button" onPress={ouvrirSemaine}
-            style={({ pressed }) => [styles.carteRepas, pressed && styles.appuye]}>
+            style={({ pressed }) => [styles.carteLigne, pressed && styles.appuye]}>
             <View style={[styles.vignette, styles.vignetteVide]}>
               <MaterialCommunityIcons name="plus" size={24} color={c.muted} accessible={false} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.repasNom}>Rien de prévu</Text>
-              <Text style={styles.repasDetail}>
+              <Text style={styles.nom}>Rien de prévu</Text>
+              <Text style={styles.detail}>
                 {jour.estDemain ? "Planifie tes repas de demain." : "Planifie tes repas d'aujourd'hui."}
               </Text>
             </View>
@@ -267,11 +286,12 @@ function TableauDeBord() {
 
         {!chargementRepas && !erreurRepas && repasDuJour.map((e) => {
           const passe = estPasse(e, maintenant);
+          const aRecette = !!e.recipe_id && !recipeUnavailable(e);
           return (
             <Pressable key={e.id} accessibilityRole="button"
-              accessibilityLabel={`${libelleRepas(e, maintenant)}, ${mealName(e)}, ouvrir ma semaine`}
-              onPress={ouvrirSemaine}
-              style={({ pressed }) => [styles.carteRepas, passe && styles.carteRepasPassee, pressed && styles.appuye]}>
+              accessibilityLabel={`${libelleRepas(e, maintenant)}, ${mealName(e)}${aRecette ? ", voir la recette" : ""}`}
+              onPress={() => ouvrirRepas(e)}
+              style={({ pressed }) => [styles.carteLigne, passe && styles.carteLignePassee, pressed && styles.appuye]}>
               <View style={passe && styles.contenuPasse}>
                 {e.recipe_image_url ? (
                   <Image source={{ uri: e.recipe_image_url }} style={styles.vignette} accessible={false} />
@@ -282,11 +302,13 @@ function TableauDeBord() {
                 )}
               </View>
               <View style={[{ flex: 1 }, passe && styles.contenuPasse]}>
-                <Text style={[styles.quand, passe && styles.quandPasse]}>
+                <Text style={[styles.surtitre, passe && { color: c.muted }]}>
                   {e.is_leftover ? "RESTES · " : ""}{libelleRepas(e, maintenant).toUpperCase()}
                 </Text>
-                <Text style={styles.repasNom} numberOfLines={1}>{mealName(e)}</Text>
-                <Text style={styles.repasDetail}>{e.servings} portion{e.servings > 1 ? "s" : ""}</Text>
+                <Text style={styles.nom} numberOfLines={1}>{mealName(e)}</Text>
+                <Text style={styles.detail}>
+                  {e.servings} portion{e.servings > 1 ? "s" : ""}{aRecette ? " · voir la recette" : ""}
+                </Text>
               </View>
               <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} />
             </Pressable>
@@ -294,10 +316,9 @@ function TableauDeBord() {
         })}
       </View>
 
-      {/* ================= 2. Prochaines courses ================= */}
+      {/* ================= 2. Mes listes en cours ================= */}
       <View style={styles.section}>
-        <TitreSection titre="Prochaines courses"
-          lien={listesEnCours.length > 1 ? `Mes ${listesEnCours.length} listes` : "Mes listes"} onLien={ouvrirListes} />
+        <TitreSection titre="Mes listes en cours" lien="Voir toutes" onLien={ouvrirListes} />
 
         {chargement && <View style={styles.carte}><ActivityIndicator color={c.green} /></View>}
 
@@ -308,17 +329,15 @@ function TableauDeBord() {
           </View>
         )}
 
-        {!chargement && !erreurListes && !prochaine && (
+        {!chargement && !erreurListes && listesAffichees.length === 0 && (
           <View style={styles.carte}>
-            <View style={styles.enTeteListe}>
+            <View style={styles.ligneIcone}>
               <View style={styles.tuileIcone}>
                 <MaterialCommunityIcons name={nbRepasSemaine > 0 ? "calendar-check" : "basket-outline"} size={22} color={c.green} accessible={false} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={styles.titreCarte}>
-                  {nbRepasSemaine > 0 ? "Ta semaine est planifiée" : "Aucune liste en cours"}
-                </Text>
-                <Text style={styles.repasDetail}>
+                <Text style={styles.nom}>{nbRepasSemaine > 0 ? "Ta semaine est planifiée" : "Aucune liste en cours"}</Text>
+                <Text style={styles.detail}>
                   {nbRepasSemaine > 0
                     ? `${nbRepasSemaine} repas planifié${nbRepasSemaine > 1 ? "s" : ""}, pas encore de liste.`
                     : "Planifie tes repas ou crée une liste à la main."}
@@ -335,8 +354,31 @@ function TableauDeBord() {
           </View>
         )}
 
-        {!chargement && !erreurListes && prochaine && (
-          <ApercuListe liste={prochaine} aujourdhui={aujourdhui} onOuvrir={() => ouvrirListe(prochaine.id)} />
+        {!chargement && !erreurListes && listesAffichees.length > 0 && (
+          <View style={[styles.carte, { paddingVertical: 4, gap: 0 }]}>
+            {listesAffichees.map((l, index) => {
+              const enRetard = l.purchase_date < aujourdhui;
+              const nb = l.totals.remaining_item_count;
+              const cout = coutListe(l);
+              return (
+                <Pressable key={l.id} accessibilityRole="button" accessibilityLabel={`Ouvrir la liste ${l.name}`}
+                  onPress={() => ouvrirListe(l.id)}
+                  style={({ pressed }) => [styles.ligneListe, index < listesAffichees.length - 1 && styles.separateur, pressed && styles.appuye]}>
+                  <View style={styles.tuileIcone}>
+                    <MaterialCommunityIcons name="basket-outline" size={22} color={c.green} accessible={false} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.nom} numberOfLines={1}>{majuscule(l.name)}</Text>
+                    <Text style={[styles.detail, enRetard && { color: PRIX_PROMO }]}>
+                      {enRetard ? "Prévue " : ""}{dateCourte(l.purchase_date, aujourdhui)} · {nb} article{nb > 1 ? "s" : ""}
+                    </Text>
+                  </View>
+                  {cout && <Text style={styles.cout}>{cout}</Text>}
+                  <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} />
+                </Pressable>
+              );
+            })}
+          </View>
         )}
       </View>
 
@@ -355,20 +397,20 @@ function TableauDeBord() {
 
         {!chargementPromos && !erreurPromos && follows.length === 0 && (
           <Pressable accessibilityRole="button" onPress={ouvrirPromos}
-            style={({ pressed }) => [styles.carteRepas, pressed && styles.appuye]}>
-            <View style={[styles.tuileIcone, { backgroundColor: "#fff1d6" }]}>
-              <MaterialCommunityIcons name="bell-outline" size={20} color="#7a4106" accessible={false} />
+            style={({ pressed }) => [styles.carteLigne, pressed && styles.appuye]}>
+            <View style={[styles.tuileIcone, { backgroundColor: ORANGE_PALE }]}>
+              <MaterialCommunityIcons name="bell-outline" size={20} color={ORANGE_FONCE} accessible={false} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={styles.repasNom}>Suis tes produits préférés</Text>
-              <Text style={styles.repasDetail}>Tu verras ici quand ils sont en promo.</Text>
+              <Text style={styles.nom}>Suis tes produits préférés</Text>
+              <Text style={styles.detail}>Tu verras ici quand ils sont en promo.</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} />
           </Pressable>
         )}
 
         {!chargementPromos && !erreurPromos && follows.length > 0 && suivisEnPromo.length === 0 && (
-          <View style={styles.carteRepas}>
+          <View style={styles.carteLigne}>
             <View style={styles.tuileIcone}>
               <MaterialCommunityIcons name="bell-sleep-outline" size={20} color={c.green} accessible={false} />
             </View>
@@ -378,69 +420,87 @@ function TableauDeBord() {
           </View>
         )}
 
-        {!chargementPromos && !erreurPromos && promosAffichees.length > 0 && (
-          <PromoList offers={promosAffichees} view="grid" onOpen={ouvrirOffre}
-            isFollowed={estSuivi} onToggleFollow={basculerSuivi} />
+        {/* 1 produit : une carte pleine largeur */}
+        {!chargementPromos && !erreurPromos && suivisEnPromo.length === 1 && (
+          <CartePromoLarge offre={suivisEnPromo[0]} onPress={() => ouvrirOffre(suivisEnPromo[0])} />
+        )}
+
+        {/* 2 produits : deux cartes côte à côte */}
+        {!chargementPromos && !erreurPromos && suivisEnPromo.length === 2 && (
+          <View style={styles.deuxColonnes}>
+            {suivisEnPromo.map((o) => (
+              <CartePromo key={o.id} offre={o} pleineLargeur onPress={() => ouvrirOffre(o)} />
+            ))}
+          </View>
+        )}
+
+        {/* 3 produits ou plus : le carrousel */}
+        {!chargementPromos && !erreurPromos && suivisEnPromo.length >= 3 && (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carrousel}>
+            {suivisEnPromo.map((o) => <CartePromo key={o.id} offre={o} onPress={() => ouvrirOffre(o)} />)}
+          </ScrollView>
         )}
       </View>
     </>
   );
 }
 
-// Aperçu de la liste : en-tête + 3 premiers articles + lien
-function ApercuListe({ liste, aujourdhui, onOuvrir }: {
-  liste: ShoppingListRead; aujourdhui: string; onOuvrir: () => void;
-}) {
-  const t = liste.totals;
-  const montant = Math.round(Number(t.remaining_known_amount));
-
-  const restants = (liste.items ?? []).filter((i) => !i.removed && (i.coverage_status === "remaining" || i.coverage_status === "partial"));
-  const apercu = restants.slice(0, 3);
-  const autres = restants.length - apercu.length;
-
-  let detail = `${quandCourses(liste.purchase_date, aujourdhui)} · ${t.remaining_item_count} article${t.remaining_item_count > 1 ? "s" : ""}`;
-  if (montant > 0) detail += t.estimate_complete ? ` · ≈ ${montant} $` : ` · ${montant} $ connus`;
-
+// Petite carte : photo, rabais, nom, magasin, prix promo.
+// pleineLargeur = partage la largeur avec une autre carte (cas de 2 produits)
+function CartePromo({ offre, onPress, pleineLargeur = false }: { offre: Offer; onPress: () => void; pleineLargeur?: boolean }) {
+  const pct = rabais(offre);
+  const prix = prixPromo(offre);
   return (
-    <Pressable accessibilityRole="button" accessibilityLabel={`Ouvrir la liste ${liste.name}`} onPress={onOuvrir}
-      style={({ pressed }) => [styles.carte, pressed && styles.appuye]}>
-      <View style={styles.enTeteListe}>
-        <View style={styles.tuileIcone}>
-          <MaterialCommunityIcons name="basket-outline" size={22} color={c.green} accessible={false} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.titreCarte} numberOfLines={1}>{majuscule(liste.name)}</Text>
-          <Text style={styles.repasDetail}>{detail}</Text>
-          {liste.period && (
-            <Text style={styles.repasDetail}>{periodeRepas(liste.period.start_date, liste.period.end_date)}</Text>
+    <Pressable accessibilityRole="button"
+      accessibilityLabel={`${offre.product_name}, ${storeName(offre.retailer)}${prix ? `, ${enDollars(prix)}` : ""}`}
+      onPress={onPress} style={({ pressed }) => [styles.cartePromo, pleineLargeur && styles.cartePromoFlexible, pressed && styles.appuye]}>
+      <View style={styles.photoPromo}>
+        {offre.image_url ? (
+          <Image source={{ uri: offre.image_url }} style={styles.imagePromo} resizeMode="contain" accessible={false} />
+        ) : (
+          <MaterialCommunityIcons name="tag-outline" size={28} color={ORANGE_FONCE} accessible={false} />
+        )}
+        {pct !== null && (
+          <View style={styles.pastille}><Text style={styles.textePastille}>−{pct} %</Text></View>
+        )}
+      </View>
+      <View style={styles.infosPromo}>
+        <Text style={styles.nomPromo} numberOfLines={2}>{offre.product_name}</Text>
+        <Text style={styles.detail}>{storeName(offre.retailer)}</Text>
+        {prix !== null && <Text style={styles.prixPromo}>{enDollars(prix)}</Text>}
+      </View>
+    </Pressable>
+  );
+}
+
+// Grande carte pour un seul produit : photo à gauche, tout le détail à droite
+function CartePromoLarge({ offre, onPress }: { offre: Offer; onPress: () => void }) {
+  const pct = rabais(offre);
+  const prix = prixPromo(offre);
+  const base = prixRegulier(offre);
+  return (
+    <Pressable accessibilityRole="button"
+      accessibilityLabel={`${offre.product_name}, ${storeName(offre.retailer)}${prix ? `, ${enDollars(prix)}` : ""}`}
+      onPress={onPress} style={({ pressed }) => [styles.carteLarge, pressed && styles.appuye]}>
+      <View style={styles.photoLarge}>
+        {offre.image_url ? (
+          <Image source={{ uri: offre.image_url }} style={styles.imagePromo} resizeMode="contain" accessible={false} />
+        ) : (
+          <MaterialCommunityIcons name="tag-outline" size={32} color={ORANGE_FONCE} accessible={false} />
+        )}
+      </View>
+      <View style={{ flex: 1, gap: 3 }}>
+        <Text style={styles.magasin}>{storeName(offre.retailer).toUpperCase()}</Text>
+        <Text style={styles.nomPromo} numberOfLines={2}>{offre.product_name}</Text>
+        <View style={styles.lignePrix}>
+          {prix !== null && <Text style={styles.prixPromo}>{enDollars(prix)}</Text>}
+          {base !== null && prix !== null && base > prix && <Text style={styles.prixBarre}>{enDollars(base)}</Text>}
+          {pct !== null && (
+            <View style={styles.pastilleEnLigne}><Text style={styles.textePastille}>−{pct} %</Text></View>
           )}
         </View>
       </View>
-
-      {apercu.length === 0 ? (
-        <Text style={styles.texteDoux}>Tout est acheté.</Text>
-      ) : (
-        <View>
-          {apercu.map((i, index) => (
-            <View key={i.id} style={[styles.article, index < apercu.length - 1 && styles.articleSepare]}>
-              <Text style={styles.nomArticle} numberOfLines={1}>{majuscule(i.name)}</Text>
-              {i.required.length > 0 && (
-                <Text style={styles.quantite} numberOfLines={1}>{quantityLabel(i.required)}</Text>
-              )}
-            </View>
-          ))}
-        </View>
-      )}
-
-      <View style={styles.piedListe}>
-        <Text style={styles.texteDoux}>
-          {autres > 0 ? `+${autres} autre${autres > 1 ? "s" : ""} article${autres > 1 ? "s" : ""}` : ""}
-        </Text>
-        <View style={styles.lienFleche}>
-          <Text style={styles.lien}>Voir la liste</Text>
-          <MaterialCommunityIcons name="arrow-right" size={16} color={c.green} accessible={false} />
-        </View>
-      </View>
+      <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} />
     </Pressable>
   );
 }
@@ -477,11 +537,10 @@ const styles = StyleSheet.create({
   titreSectionLigne: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   titreSection: { fontFamily: "DMSans_700Bold", fontSize: 19, lineHeight: 25, color: c.ink },
   lien: { fontFamily: "DMSans_700Bold", fontSize: 14, lineHeight: 19, color: c.green },
-  lienFleche: { flexDirection: "row", alignItems: "center", gap: 4 },
 
   carte: { backgroundColor: "white", borderRadius: 20, padding: 16, gap: 12, ...OMBRE },
-  carteRepas: { backgroundColor: "white", borderRadius: 20, padding: 12, flexDirection: "row", alignItems: "center", gap: 14, ...OMBRE },
-  carteRepasPassee: { backgroundColor: "#f3f3f0", shadowOpacity: 0, elevation: 0 },
+  carteLigne: { backgroundColor: "white", borderRadius: 20, padding: 12, flexDirection: "row", alignItems: "center", gap: 14, ...OMBRE },
+  carteLignePassee: { backgroundColor: "#f3f3f0", shadowOpacity: 0, elevation: 0 },
   contenuPasse: { opacity: 0.55 },
   appuye: { opacity: 0.75 },
   titreCarte: { fontFamily: "DMSans_700Bold", fontSize: 16, lineHeight: 22, color: c.ink },
@@ -489,19 +548,36 @@ const styles = StyleSheet.create({
 
   vignette: { width: 72, height: 72, borderRadius: 16, alignItems: "center", justifyContent: "center", backgroundColor: c.light },
   vignetteVide: { backgroundColor: "transparent", borderWidth: 1.5, borderStyle: "dashed", borderColor: c.border },
-  quand: { fontFamily: "DMSans_700Bold", fontSize: 12, lineHeight: 16, color: c.green, letterSpacing: 0.4 },
-  quandPasse: { color: c.muted },
-  repasNom: { fontFamily: "DMSans_700Bold", fontSize: 17, lineHeight: 23, color: c.ink },
-  repasDetail: { fontFamily: "DMSans_500Medium", fontSize: 13, lineHeight: 18, color: c.muted },
+  surtitre: { fontFamily: "DMSans_700Bold", fontSize: 12, lineHeight: 16, color: c.green, letterSpacing: 0.4 },
+  nom: { fontFamily: "DMSans_700Bold", fontSize: 16, lineHeight: 22, color: c.ink },
+  detail: { fontFamily: "DMSans_500Medium", fontSize: 13, lineHeight: 18, color: c.muted },
 
-  enTeteListe: { flexDirection: "row", alignItems: "center", gap: 12 },
+  ligneIcone: { flexDirection: "row", alignItems: "center", gap: 12 },
+  ligneListe: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12 },
+  separateur: { borderBottomWidth: 1, borderBottomColor: c.border },
   tuileIcone: { width: 44, height: 44, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: c.light },
-  article: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 10 },
-  articleSepare: { borderBottomWidth: 1, borderBottomColor: c.border },
-  nomArticle: { flex: 1, fontFamily: "DMSans_500Medium", fontSize: 15, lineHeight: 20, color: c.ink },
-  quantite: { fontFamily: "DMSans_500Medium", fontSize: 13, lineHeight: 18, color: c.muted, maxWidth: 120 },
-  piedListe: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingTop: 10, borderTopWidth: 1, borderTopColor: c.border },
+  cout: { fontFamily: "DMSans_700Bold", fontSize: 14, lineHeight: 19, color: c.ink },
 
   boutonVert: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, backgroundColor: c.green, borderRadius: 12, minHeight: 46, paddingHorizontal: 16 },
   texteBoutonVert: { fontFamily: "DMSans_700Bold", fontSize: 15, lineHeight: 20, color: "white" },
+
+  // Promos : carrousel (3+), deux colonnes (2), carte large (1)
+  carrousel: { gap: 12, paddingVertical: 4, paddingRight: 4 },
+  deuxColonnes: { flexDirection: "row", gap: 12 },
+  cartePromo: { width: 148, backgroundColor: "white", borderRadius: 18, overflow: "hidden", ...OMBRE },
+  cartePromoFlexible: { width: undefined, flex: 1 },
+  photoPromo: { height: 104, backgroundColor: "#faf8f3", alignItems: "center", justifyContent: "center" },
+  imagePromo: { width: "84%", height: "84%" },
+  pastille: { position: "absolute", top: 8, left: 8, backgroundColor: ORANGE_PALE, borderRadius: 8, paddingHorizontal: 7, paddingVertical: 2 },
+  pastilleEnLigne: { backgroundColor: ORANGE_PALE, borderRadius: 8, paddingHorizontal: 7, paddingVertical: 2 },
+  textePastille: { fontFamily: "DMSans_700Bold", fontSize: 12, lineHeight: 16, color: ORANGE_FONCE },
+  infosPromo: { padding: 10, gap: 2 },
+  nomPromo: { fontFamily: "DMSans_700Bold", fontSize: 14, lineHeight: 19, color: c.ink, minHeight: 38 },
+  prixPromo: { fontFamily: "DMSans_700Bold", fontSize: 16, lineHeight: 21, color: PRIX_PROMO, marginTop: 2 },
+
+  carteLarge: { flexDirection: "row", alignItems: "center", gap: 14, backgroundColor: "white", borderRadius: 20, padding: 12, ...OMBRE },
+  photoLarge: { width: 96, height: 96, borderRadius: 16, backgroundColor: "#faf8f3", alignItems: "center", justifyContent: "center" },
+  magasin: { fontFamily: "DMSans_700Bold", fontSize: 11, lineHeight: 14, color: c.green, letterSpacing: 0.5 },
+  lignePrix: { flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" },
+  prixBarre: { fontFamily: "DMSans_500Medium", fontSize: 13, lineHeight: 18, color: c.muted, textDecorationLine: "line-through" },
 });

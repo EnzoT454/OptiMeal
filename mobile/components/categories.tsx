@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { recipeColors } from './recipes';
 
@@ -16,11 +16,19 @@ export const CATEGORIES = [
 
 type IconName = (typeof CATEGORIES)[number]['icon'];
 
+const MARGE = 20;          // marge de l'écran (la rangée déborde jusqu'au bord)
+const ESPACE = 6;          // espace entre deux catégories
+const VISIBLES = 4.5;      // 4 catégories entières + la moitié de la 5e : on voit qu'on peut défiler
+
 // Rangée d'icônes rondes qui défile horizontalement. Toucher une catégorie la sélectionne, retoucher l'enlève.
 // counts : nombre de promos par catégorie ; une catégorie vide est grisée.
 export function CategoryRow({ selected, counts, onChange }: {
   selected: number | null; counts: Record<number, number>; onChange: (id: number | null) => void;
 }) {
+  const { width } = useWindowDimensions();
+  // Largeur d'une catégorie calculée selon l'écran, pour que la coupure tombe au milieu d'un cercle
+  const largeur = Math.floor((width - MARGE - ESPACE * Math.floor(VISIBLES)) / VISIBLES);
+
   return <ScrollView horizontal showsHorizontalScrollIndicator={false}
     style={styles.scroll} contentContainerStyle={styles.row}>
     {CATEGORIES.map(c => {
@@ -28,7 +36,7 @@ export function CategoryRow({ selected, counts, onChange }: {
       const empty = !counts[c.id];
       return <Pressable key={c.id} accessibilityRole="button" accessibilityState={{ selected: active }}
         accessibilityLabel={`${c.name}, ${counts[c.id] ?? 0} promo${(counts[c.id] ?? 0) > 1 ? 's' : ''}`}
-        onPress={() => onChange(active ? null : c.id)} style={[styles.item, empty && !active && styles.empty]}>
+        onPress={() => onChange(active ? null : c.id)} style={[styles.item, { width: largeur }, empty && !active && styles.empty]}>
         <View style={[styles.circle, active && styles.circleActive]}>
           <MaterialCommunityIcons name={c.icon as IconName} size={28} color={active ? 'white' : recipeColors.green} />
         </View>
@@ -42,9 +50,9 @@ export function CategoryRow({ selected, counts, onChange }: {
 
 const styles = StyleSheet.create({
   // Déborde jusqu'aux bords de l'écran pour bien montrer qu'on peut faire défiler.
-  scroll: { marginHorizontal: -20 },
-  row: { paddingHorizontal: 20, gap: 6 },
-  item: { width: 76, alignItems: 'center', gap: 6 },
+  scroll: { marginHorizontal: -MARGE },
+  row: { paddingHorizontal: MARGE, gap: ESPACE },
+  item: { alignItems: 'center', gap: 6 },
   empty: { opacity: 0.4 },
   circle: { width: 60, height: 60, borderRadius: 30, alignItems: 'center', justifyContent: 'center', backgroundColor: recipeColors.light },
   circleActive: { backgroundColor: recipeColors.green },
