@@ -52,7 +52,10 @@ function screen({ detailFailure, listPages, detail = id => recipes.find(recipe =
   });
   function render() {
     cursor = 0;
-    return exports.default({ navigation: { getParent: () => ({ navigate: (...args) => navigations.push(args) }), goBack() {} } });
+    return exports.default({ navigation: {
+      navigate: (...args) => navigations.push(args),
+      getParent: () => ({ navigate: (...args) => navigations.push(args) }), goBack() {},
+    } });
   }
   function focus() { cleanup?.(); cleanup = effect(); }
   async function load() { render(); focus(); await new Promise(setImmediate); return render(); }
@@ -68,14 +71,17 @@ const button = (tree, title) => nodes(tree).find(node => node.props?.title === t
 
 test('promos : notes réelles visibles, classement par ingrédients conservé et fiche partagée sans vote automatique', async () => {
   const s = screen(); const tree = await s.load(); const text = content(tree);
-  assert.match(text, /★ 2,3\/5 · 3 évaluations/);
-  assert.match(text, /★ 5,0\/5 · 1 évaluation/);
+  // Note courte à côté de l'économie : « ★ 2,3 » (moyenne arrondie à une décimale)
+  assert.match(text, /Soupe ★ 2,3/);
+  assert.match(text, /Salade ★ 5,0/);
   assert.ok(text.indexOf('Soupe') < text.indexOf('Salade'));
-  const cards = nodes(tree).filter(node => node.props?.accessibilityHint === 'Ouvre la recette');
-  cards[0].props.onPress();
-  assert.equal(s.navigations[0][0], 'Recettes');
-  assert.equal(s.navigations[0][1].screen, 'Detail');
-  assert.equal(s.navigations[0][1].params.id, 'recipe_soupe');
+  // La carte se déplie, puis « Voir la recette » ouvre la recette dans l'onglet Promos (retour aux promos).
+  const cartes = nodes(tree).filter(node => node.props?.accessibilityHint === 'Montre les produits en promo');
+  cartes[0].props.onPress();
+  const voir = nodes(s.render()).find(node => node.props?.accessibilityHint === 'Ouvre la recette');
+  voir.props.onPress();
+  assert.equal(s.navigations[0][0], 'Recette');
+  assert.equal(s.navigations[0][1].id, 'recipe_soupe');
   assert.equal(s.calls.length, 3); // Une page et les deux détails déjà nécessaires aux ingrédients.
   assert.ok(s.calls.every(call => !call.options && !call.url.endsWith('/rating')));
 });
@@ -83,16 +89,17 @@ test('promos : notes réelles visibles, classement par ingrédients conservé et
 test('promos : absence de vote affichée sans valeur zéro', async () => {
   const s = screen({ detail: id => ({ ...recipes.find(recipe => recipe.id === id), rating: emptyRating }) });
   const text = content(await s.load());
-  assert.match(text, /Pas encore évaluée/);
-  assert.doesNotMatch(text, /0,0\/5/);
+  // Sans évaluation : aucune étoile et jamais de fausse note zéro
+  assert.doesNotMatch(text, /★/);
+  assert.doesNotMatch(text, /0,0/);
 });
 
 test('promos : recharger les notes au retour de la fiche', async () => {
-  let count = 1;
-  const s = screen({ detail: id => ({ ...recipes.find(recipe => recipe.id === id), rating: { ...emptyRating, average: '4.5', count } }) });
-  assert.match(content(await s.load()), /1 évaluation/);
-  count = 2;
-  assert.match(content(await s.load()), /2 évaluations/);
+  let average = '4.5';
+  const s = screen({ detail: id => ({ ...recipes.find(recipe => recipe.id === id), rating: { ...emptyRating, average, count: 1 } }) });
+  assert.match(content(await s.load()), /★ 4,5/);
+  average = '3';
+  assert.match(content(await s.load()), /★ 3,0/);
   assert.equal(s.promoCalls, 2);
 });
 

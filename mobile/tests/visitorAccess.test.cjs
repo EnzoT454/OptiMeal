@@ -19,7 +19,7 @@ function screen(file, { session = null, states = {}, apiFailure = false } = {}) 
   const ui = new Proxy({}, { get: (_, name) => name === '__esModule' ? true : String(name) });
   const requireMock = name => {
     if (name === 'react/jsx-runtime') return { jsx, jsxs: jsx, Fragment: 'Fragment' };
-    if (name === 'react') return { useCallback: fn => fn, useRef: current => ({ current }),
+    if (name === 'react') return { useCallback: fn => fn, useEffect: () => {}, useRef: current => ({ current }),
       useState: initial => [Object.hasOwn(states, stateIndex) ? states[stateIndex++] : (stateIndex++, initial), () => {}] };
     if (name.includes('AuthContext')) return { useAuth: () => auth, AuthProvider: 'AuthProvider' };
     if (name.endsWith('services/api')) return { api: (...args) => {
@@ -32,7 +32,8 @@ function screen(file, { session = null, states = {}, apiFailure = false } = {}) 
     if (name === '@react-navigation/native-stack') return { createNativeStackNavigator: () => navigator };
     if (name === '@react-navigation/bottom-tabs') return { createBottomTabNavigator: () => navigator };
     if (name === 'expo-font') return { useFonts: () => [true, null] };
-    if (name === 'react-native') return { Text: 'Text', View: 'View', Pressable: 'Pressable', Modal: 'Modal', Alert: { alert() {} } };
+    if (name === 'react-native') return { Text: 'Text', View: 'View', Pressable: 'Pressable', Modal: 'Modal', TextInput: 'TextInput',
+      StyleSheet: { create: value => value }, Alert: { alert() {} } };
     if (name === 'react-native-safe-area-context') return { SafeAreaProvider: 'SafeAreaProvider', SafeAreaView: 'SafeAreaView' };
     if (name === 'expo-status-bar') return { StatusBar: 'StatusBar' };
     if (name.includes('components/ui') || name.includes('components/recipes')) return ui;
@@ -55,7 +56,8 @@ function nodes(tree) {
   if (typeof tree.type === 'function') return nodes(tree.type(tree.props));
   return [tree, ...nodes(tree.props?.children)];
 }
-const button = (tree, title) => nodes(tree).find(n => n.props?.title === title);
+// Un bouton se trouve par son titre (Button de ui) ou par son libellé d'accessibilité (boutons personnalisés).
+const button = (tree, title) => nodes(tree).find(n => n.props?.title === title || n.props?.accessibilityLabel === title);
 const user = { user: { id: 'account-a', email: 'a@example.test' } };
 
 test('sans compte, les cinq onglets sont disponibles sans formulaire de connexion initial', () => {
@@ -67,7 +69,8 @@ test('sans compte, les cinq onglets sont disponibles sans formulaire de connexio
   assert.equal(rendered.find(n => n.type === 'NavigationContainer').key, 'visitor');
   const accueil = rendered.find(n => n.type === 'Route' && n.props.name === 'Accueil');
   const homeRoutes = nodes(accueil.props.component()).filter(n => n.type === 'Route');
-  assert.deepEqual(homeRoutes.map(n => n.props.name), ['Home', 'Paramètres', 'Exclusions']);
+  // Detail et Editor : la recette ouverte depuis l'Accueil reste dans l'onglet Accueil.
+  assert.deepEqual(homeRoutes.map(n => n.props.name), ['Home', 'Paramètres', 'Exclusions', 'Detail', 'Editor']);
   assert.equal(homeRoutes[1].props.component, './app/ProfileScreen');
   assert.equal(homeRoutes[1].props.options.headerBackTitle, 'Accueil');
   const liste = rendered.find(n => n.type === 'Route' && n.props.name === 'Liste');

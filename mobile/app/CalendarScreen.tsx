@@ -7,7 +7,7 @@ import AddMealSheet from "../components/AddMealSheet";
 import MealActionsSheet, { type Placement } from "../components/MealActionsSheet";
 import MonthGrid, { semainesDuMois } from "../components/MonthGrid";
 import { RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from "../components/recipes";
-import CalendarLists from "../components/lists/CalendarLists";
+import EpicerieSemaine from "../components/EpicerieSemaine";
 import type { MainTabParams } from "../types/navigation";
 
 // Le texte du calendrier grandit au maximum de 20 % avec la taille de police du téléphone,
@@ -18,7 +18,7 @@ import {
   addDays, addEntry, dayName, getPlan, mealName, mondayOf, recipeUnavailable, removeEntry, toISODate, updateEntry,
 } from "../components/planning";
 
-// Le jeudi décide à quel mois appartient une semaine (ex. 28 oct. → 3 nov. = novembre)
+// Le jeudi décide à quel mois appartient une semaine (ex. 28 oct. – 3 nov. = novembre)
 const jeudiDe = (lundi: Date) => addDays(lundi, 3);
 
 // La semaine à afficher quand on arrive sur un mois : celle d'aujourd'hui si c'est ce mois-ci,
@@ -48,7 +48,7 @@ function semaineRelative(lundi: Date): string {
   return ecart > 0 ? `Dans ${ecart} semaines` : `Il y a ${-ecart} semaines`;
 }
 
-// La vue demandée conserve la semaine sélectionnée ; Épicerie ouvre les listes sauvegardées.
+// La vue demandée conserve la semaine sélectionnée ; Épicerie montre l'épicerie de la semaine.
 export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "epicerie" } = {}) {
   const navigation = useNavigation<NavigationProp<MainTabParams>>();
 
@@ -81,7 +81,7 @@ export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "
   // ---- Repas | Épicerie ----
   const [vue, setVue] = useState<"repas" | "epicerie">("repas");
 
-  // L'Accueil peut ouvrir directement l'Épicerie : navigate("Calendrier", { vue: "epicerie" })
+  // L'Accueil peut ouvrir directement l'épicerie : navigate("Calendrier", { vue: "epicerie" })
   useEffect(() => {
     if (vueDemandee) {
       setVue(vueDemandee);
@@ -206,7 +206,7 @@ export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "
     <RecipeScreen compact>
       <RecipeTitle>Calendrier</RecipeTitle>
 
-      {/* ---- Repas et listes de la période sélectionnée ---- */}
+      {/* ---- Repas | Épicerie de la semaine sélectionnée ---- */}
       <View style={styles.selecteur} accessibilityRole="tablist">
         {(["repas", "epicerie"] as const).map((v) => {
           const choisi = vue === v;
@@ -216,26 +216,26 @@ export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "
               <Text style={[styles.optionTexte, choisi && styles.optionTexteChoisi]} maxFontSizeMultiplier={MAX}>
                 {v === "repas" ? "Repas" : "Épicerie"}
               </Text>
-
             </Pressable>
           );
         })}
       </View>
+      {/* ---- « Novembre ⌃ » (+ la grille) : seulement dans Repas ---- */}
+      {vue === "repas" && (
+        <MonthGrid
+          mois={mois}
+          choisi={debut}
+          points={points}
+          ouvert={moisOuvert}
+          onBasculer={() => setMoisOuvert(!moisOuvert)}
+          onMois={changerMois}
+          onJour={allerAuJour}
+          estAujourdhui={cetteSemaine}
+          onAujourdhui={allerAujourdhui}
+        />
+      )}
 
-      {/* ---- ‹ Novembre ⌄ › (+ la grille quand elle est ouverte) ---- */}
-      <MonthGrid
-        mois={mois}
-        choisi={debut}
-        points={points}
-        ouvert={moisOuvert}
-        onBasculer={() => setMoisOuvert(!moisOuvert)}
-        onMois={changerMois}
-        onJour={allerAuJour}
-        estAujourdhui={cetteSemaine}
-        onAujourdhui={allerAujourdhui}
-      />
-
-      {/* ---- ‹ Semaine du 2 au 8 nov. › ---- */}
+      {/* ---- « Semaine du 2 au 8 nov. » ---- */}
       <View style={styles.semaine}>
         <Pressable onPress={() => allerSemaine(addDays(lundi, -7))} hitSlop={12} style={styles.fleche} accessibilityLabel="Semaine précédente">
           <Ionicons name="chevron-back" size={18} color={recipeColors.green} />
@@ -251,55 +251,60 @@ export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "
         </Pressable>
       </View>
 
-      {vue === 'epicerie' && <CalendarLists period={{ start_date: debut, end_date: fin }}
-        onCreate={() => navigation.navigate('Liste', { screen: 'CreateList', params: { period: { start_date: debut, end_date: fin } }, initial: false })}
-        onOpen={id => navigation.navigate('Liste', { screen: 'ShoppingDetail', params: { id }, initial: false })} />}
-      {vue === 'repas' && (<>
-      {chargement && <ActivityIndicator color={recipeColors.green} style={{ marginTop: 12 }} />}
-      {erreur !== null && (
-        <View style={recipeStyles.notice}>
-          <Text style={styles.erreur} maxFontSizeMultiplier={MAX}>{erreur}</Text>
-        </View>
+      {/* ---- Épicerie : les ingrédients de la semaine, calculés en direct ---- */}
+      {vue === "epicerie" && (
+        <EpicerieSemaine
+          period={{ start_date: debut, end_date: fin }}
+          onCreate={() => navigation.navigate("Liste", { screen: "CreateList", params: { period: { start_date: debut, end_date: fin } }, initial: false })}
+          onOpen={(id) => navigation.navigate("Liste", { screen: "ShoppingDetail", params: { id }, initial: false })}
+        />
       )}
 
-      {/* ---- Les 7 jours de la semaine, d'un bord à l'autre ---- */}
-      {!chargement && (
-        <View style={styles.liste}>
-          {jours.map((jour, i) => {
-            const iso = toISODate(jour);
-            const estAujourdhui = iso === aujourdhui;
-            const repasDuJour = entries
-              .filter((e) => e.date === iso)
-              .sort((a, b) => MEALS.indexOf(a.meal) - MEALS.indexOf(b.meal));
+      {vue === "repas" && (<>
+        {chargement && <ActivityIndicator color={recipeColors.green} style={{ marginTop: 12 }} />}
+        {erreur !== null && (
+          <View style={recipeStyles.notice}>
+            <Text style={styles.erreur} maxFontSizeMultiplier={MAX}>{erreur}</Text>
+          </View>
+        )}
 
-            return (
-              <View key={iso} style={[styles.jour, i > 0 && styles.separateur]}>
-                {/* Gros chiffre + jour de la semaine */}
-                <View style={styles.date}>
-                  <View style={[styles.rond, estAujourdhui && styles.rondAujourdhui]}>
-                    <Text style={[styles.chiffre, estAujourdhui && { color: "white" }]} maxFontSizeMultiplier={MAX}>{jour.getDate()}</Text>
+        {/* ---- Les 7 jours de la semaine, d'un bord à l'autre ---- */}
+        {!chargement && (
+          <View style={styles.liste}>
+            {jours.map((jour, i) => {
+              const iso = toISODate(jour);
+              const estAujourdhui = iso === aujourdhui;
+              const repasDuJour = entries
+                .filter((e) => e.date === iso)
+                .sort((a, b) => MEALS.indexOf(a.meal) - MEALS.indexOf(b.meal));
+
+              return (
+                <View key={iso} style={[styles.jour, i > 0 && styles.separateur]}>
+                  {/* Gros chiffre + jour de la semaine */}
+                  <View style={styles.date}>
+                    <View style={[styles.rond, estAujourdhui && styles.rondAujourdhui]}>
+                      <Text style={[styles.chiffre, estAujourdhui && { color: "white" }]} maxFontSizeMultiplier={MAX}>{jour.getDate()}</Text>
+                    </View>
+                    <Text style={[styles.jourNom, estAujourdhui && { color: recipeColors.green }]} maxFontSizeMultiplier={MAX}>
+                      {dayName(jour).toLowerCase()}
+                    </Text>
                   </View>
-                  <Text style={[styles.jourNom, estAujourdhui && { color: recipeColors.green }]} maxFontSizeMultiplier={MAX}>
-                    {dayName(jour).toLowerCase()}
-                  </Text>
+
+                  {/* Les repas (rien si le jour est vide : la ligne reste fine) */}
+                  <View style={styles.repas}>
+                    {repasDuJour.map((e) => (
+                      <CarteRepas key={e.id} repas={e} onPress={() => setRepasOuvert(e)} />
+                    ))}
+                  </View>
+
+                  <Pressable onPress={() => setJourAjout(jour)} hitSlop={10} style={styles.plus} accessibilityLabel={`Ajouter un repas le ${jour.getDate()}`}>
+                    <Ionicons name="add" size={18} color={recipeColors.green} />
+                  </Pressable>
                 </View>
-
-                {/* Les repas (rien si le jour est vide : la ligne reste fine) */}
-                <View style={styles.repas}>
-                  {repasDuJour.map((e) => (
-                    <CarteRepas key={e.id} repas={e} onPress={() => setRepasOuvert(e)} />
-                  ))}
-                </View>
-
-                <Pressable onPress={() => setJourAjout(jour)} hitSlop={10} style={styles.plus} accessibilityLabel={`Ajouter un repas le ${jour.getDate()}`}>
-                  <Ionicons name="add" size={18} color={recipeColors.green} />
-                </Pressable>
-              </View>
-            );
-          })}
-
-        </View>
-      )}
+              );
+            })}
+          </View>
+        )}
       </>)}
 
       <AddMealSheet jour={jourAjout} onClose={() => setJourAjout(null)} onAdd={ajouter} />

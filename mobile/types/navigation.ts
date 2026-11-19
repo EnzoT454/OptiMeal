@@ -8,11 +8,17 @@ export type RecipeStackParams = {
 
 export type PromoStackParams = {
   List: undefined; Detail: { offer: Offer }; Circulars: undefined; Circular: { circular: Circular }; Cook: undefined; Follows: undefined;
+  // La recette ouverte depuis « Cuisiner avec les promos » : la flèche retour revient aux promos.
+  // ("Detail" est déjà pris par le détail d'une promo, d'où le nom "Recette".)
+  Recette: { id: string };
+  Editor: { id?: string } | undefined;
 };
 
 export type HomeStackParams = {
   Home: undefined;
   Paramètres: undefined;
+  Detail: { id: string };
+  Editor: { id?: string } | undefined;
   Exclusions: undefined;
 };
 

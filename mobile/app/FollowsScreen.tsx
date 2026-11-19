@@ -5,13 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Message } from '../components/ui';
-import { RecipeButton, RecipeChip, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
+import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
 import { discount, storeName } from '../components/promos';
 import { fetchAllOffers, isOnPromo } from '../components/search';
 import { followKey, followsOffer } from '../components/follows';
 import { useFollows } from '../components/useFollows';
 import { PromoList, PromoView, ViewToggle, sectionStyle } from '../components/PromoCard';
-import { FollowsChip } from '../components/FollowsChip';
+import { OngletsPromos } from '../components/OngletsPromos';
 import type { Offer } from '../types/api';
 import { PromoStackParams } from '../types/navigation';
 
@@ -56,11 +56,7 @@ export default function FollowsScreen({ navigation }: NativeStackScreenProps<Pro
     <RecipeTitle>Promos</RecipeTitle>
     {!!followError && <Message text={followError} />}
 
-    <View style={recipeStyles.chips}>
-      <RecipeChip label="Promotions" onPress={() => navigation.navigate('List')} />
-      <RecipeChip label="Circulaires" onPress={() => navigation.navigate('Circulars')} />
-      <FollowsChip count={onPromo.length} selected />
-    </View>
+    <OngletsPromos actif="suivis" nbSuivis={onPromo.length} />
 
     {loading ? <ActivityIndicator color={recipeColors.green} style={{ marginTop: 24 }} />
       : error ? <View style={recipeStyles.notice}>
@@ -73,7 +69,7 @@ export default function FollowsScreen({ navigation }: NativeStackScreenProps<Pro
         <Text style={recipeStyles.body}>
           Touche la cloche d’un produit : il apparaîtra ici, et tu verras tout de suite quand il passe en promo dans son magasin.
         </Text>
-        <RecipeButton title="Voir les promos" onPress={() => navigation.navigate('List')} />
+        <RecipeButton title="Voir les promos" onPress={() => navigation.popToTop()} />
       </View>
       : <>
         <View style={styles.titleRow}>
