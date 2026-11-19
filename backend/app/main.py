@@ -8,7 +8,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import text
 from sqlalchemy.orm import Session
-
+from backend.app.follows.router import router as follows_router
 from backend.app.config import ENV_FILE, Settings, load_settings
 from backend.app.database import Database, get_db
 from backend.app.catalog.router import router as catalog_router
@@ -93,6 +93,7 @@ def create_app(*, settings: Settings | None = None, env_file: Path | None = ENV_
     app.include_router(public_router)
     app.include_router(recipes_router)
     app.include_router(planning_router)
+    app.include_router(follows_router)
     app.include_router(accounts_router)
     app.include_router(shopping_lists_router)
     app.include_router(shopping_reuse_router)
