@@ -159,6 +159,70 @@ npm start -- --dev-client
 Scanner le QR code pour ouvrir l’application installée. Le [guide mobile](mobile/README.md)
 détaille la configuration, les prérequis sur téléphone et le lancement sur simulateur.
 
+### Sur ordinateur avec un format de téléphone
+
+La version web permet de consulter l’application dans Chrome et de choisir
+les dimensions d’un iPhone, d’un Samsung Galaxy ou d’un autre appareil.
+Les dépendances et les valeurs publiques Supabase doivent être configurées
+comme indiqué ci-dessus. Dans `mobile/.env`, utiliser pour le navigateur :
+
+```dotenv
+EXPO_PUBLIC_API_URL=http://localhost:8001
+```
+
+Dans un premier terminal, depuis la racine avec l’environnement Python activé :
+
+```text
+python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8001
+```
+
+Dans un deuxième terminal, depuis la racine :
+
+```bash
+cd mobile
+npm run web
+```
+
+Ouvrir l’adresse indiquée par Expo, généralement `http://localhost:8081`,
+dans Chrome. Pour choisir le format d’écran :
+
+1. Ouvrir les outils développeur avec **⌘ + ⌥ + I** sur Mac ou **Ctrl + Maj + I** sur Windows/Linux.
+2. Activer la barre d’outils des appareils avec **⌘ + Maj + M** sur Mac ou **Ctrl + Maj + M** sur Windows/Linux.
+3. Dans **Dimensions**, choisir un iPhone ou un Samsung Galaxy. Le choix **Edit / Modifier** permet d’afficher d’autres modèles ; **Responsive** permet de saisir une largeur et une hauteur.
+
+Cet aperçu reproduit les dimensions d’écran de la version web. Les parcours
+natifs doivent aussi être vérifiés sur simulateur, émulateur ou téléphone.
+Voir le [guide du mode appareil de Chrome](https://developer.chrome.com/docs/devtools/device-mode/).
+
+### Sur simulateur iPhone ou émulateur Android
+
+Garder le backend lancé dans son terminal. Depuis `mobile/`, sur macOS avec
+Xcode et un simulateur iOS installé :
+
+```bash
+npm run ios -- --device
+```
+
+Choisir un simulateur iPhone dans la liste proposée. Pour Android, créer et
+démarrer un appareil virtuel dans le gestionnaire d’appareils d’Android Studio,
+puis lancer depuis `mobile/` :
+
+```bash
+npm run android -- --device
+```
+
+Choisir l’émulateur démarré. L’adresse de l’API dans `mobile/.env` dépend de
+l’appareil utilisé :
+
+| Appareil | `EXPO_PUBLIC_API_URL` |
+| --- | --- |
+| Navigateur ou simulateur iPhone sur le Mac | `http://localhost:8001` |
+| Émulateur Android standard d’Android Studio | `http://10.0.2.2:8001` |
+| Téléphone physique sur le même réseau | `http://<IP-locale-de-l’ordinateur>:8001` |
+
+Après une modification de `mobile/.env`, arrêter Expo et relancer la commande
+correspondant au mode utilisé.
+
 ## Tests
 
 Backend, depuis la racine avec l’environnement virtuel activé :
@@ -469,4 +533,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 17 novembre 2026*
+*Dernière mise à jour : 19 novembre 2026*
