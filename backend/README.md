@@ -312,6 +312,17 @@ python -m pytest backend/tests -q
 
 Les tests couvrent les modules existants sans collecte externe ni appel payant. Ils ne prouvent pas l’exactitude des prix en magasin.
 
+Les tests des limites promotionnelles utilisent une offre fixe et des copies
+temporaires du catalogue : une actualisation hebdomadaire des prix ne doit pas
+changer leurs résultats attendus. Les tests PostgreSQL nécessitent une base
+locale jetable configurée avec `OPTIMEAL_TEST_DATABASE_URL` ; sans elle, ils
+sont ignorés. Voir le [guide des migrations](docs/MIGRATIONS.md#tests).
+
+Après un ajout ou une modification de route ou de schéma API, régénérer les
+contrats avec `python -m backend.cli.export_shared_contracts` et inclure les
+exports modifiés dans le commit. Vérifier ensuite leur cohérence avec
+`python -m backend.cli.export_shared_contracts --check`.
+
 Le 1er novembre, Hamza a aussi confirmé sur iOS le mode visiteur, la connexion
 à la demande, la photo obligatoire à la création, les photos des produits et
 la suppression du compte. Ces ajouts restent à reproduire sur Android ; les
