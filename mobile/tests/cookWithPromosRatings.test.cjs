@@ -52,7 +52,10 @@ function screen({ detailFailure, listPages, detail = id => recipes.find(recipe =
   });
   function render() {
     cursor = 0;
-    return exports.default({ navigation: { getParent: () => ({ navigate: (...args) => navigations.push(args) }), goBack() {} } });
+    return exports.default({ navigation: {
+      navigate: (...args) => navigations.push(args),
+      getParent: () => ({ navigate: (...args) => navigations.push(args) }), goBack() {},
+    } });
   }
   function focus() { cleanup?.(); cleanup = effect(); }
   async function load() { render(); focus(); await new Promise(setImmediate); return render(); }
@@ -71,11 +74,13 @@ test('promos : notes réelles visibles, classement par ingrédients conservé et
   assert.match(text, /★ 2,3\/5 · 3 évaluations/);
   assert.match(text, /★ 5,0\/5 · 1 évaluation/);
   assert.ok(text.indexOf('Soupe') < text.indexOf('Salade'));
-  const cards = nodes(tree).filter(node => node.props?.accessibilityHint === 'Ouvre la recette');
-  cards[0].props.onPress();
-  assert.equal(s.navigations[0][0], 'Recettes');
-  assert.equal(s.navigations[0][1].screen, 'Detail');
-  assert.equal(s.navigations[0][1].params.id, 'recipe_soupe');
+  // La carte se déplie, puis « Voir la recette » ouvre la recette dans l'onglet Promos (retour aux promos).
+  const cartes = nodes(tree).filter(node => node.props?.accessibilityHint === 'Montre les produits en promo');
+  cartes[0].props.onPress();
+  const voir = nodes(s.render()).find(node => node.props?.accessibilityHint === 'Ouvre la recette');
+  voir.props.onPress();
+  assert.equal(s.navigations[0][0], 'Recette');
+  assert.equal(s.navigations[0][1].id, 'recipe_soupe');
   assert.equal(s.calls.length, 3); // Une page et les deux détails déjà nécessaires aux ingrédients.
   assert.ok(s.calls.every(call => !call.options && !call.url.endsWith('/rating')));
 });

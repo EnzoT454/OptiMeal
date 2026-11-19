@@ -15,7 +15,6 @@ type Match = { recipe: Recipe; offers: Offer[]; economie: number };
 type Tri = 'economie' | 'promos';
 
 const RABAIS_MINIMUM = 5; // en %, en dessous ce n'est pas une vraie promo
-const VERT_PALE = '#CFE3D5';
 const ORANGE_FONCE = '#7a4106';
 const ORANGE_PALE = '#fff1d6';
 const PRIX_PROMO = '#b45309';
@@ -24,6 +23,7 @@ const TRIS: { id: Tri; label: string }[] = [
   { id: 'economie', label: 'Économie' },
   { id: 'promos', label: 'Ingrédients en promo' },
 ];
+
 const enDollars = (n: number) => `${n.toFixed(2).replace('.', ',')} $`;
 
 // Toutes les recettes visibles par l'utilisateur, page par page (20 à la fois, comme l'écran Recettes).
@@ -66,10 +66,19 @@ function economieDe(o: Offer): number {
   return base - promo;
 }
 
-// Une vraie promo : au moins 5 % de rabais, ou au moins 1 $ économisé (utile pour les produits chers)
+// Une vraie promo : au moins 5 % de rabais, ou au moins 1 $ économisé.
+// Si le rabais est inconnu, on ne rejette pas la promo.
 function vraiePromo(o: Offer): boolean {
   const pct = discount(o);
-  return (pct != null && pct >= RABAIS_MINIMUM) || economieDe(o) >= 1;
+  if (pct == null) return true;
+  return pct >= RABAIS_MINIMUM || economieDe(o) >= 1;
+}
+
+// "★ 4,5/5 · 3 évaluations" ou "Pas encore évaluée" (jamais de fausse note 0)
+function texteNote(r: Recipe): string {
+  if (!r.rating || r.rating.count === 0 || r.rating.average == null) return 'Pas encore évaluée';
+  const moyenne = Number(r.rating.average).toLocaleString('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  return `★ ${moyenne}/5 · ${r.rating.count} évaluation${r.rating.count > 1 ? 's' : ''}`;
 }
 
 // Pour chaque ingrédient, la vraie promo la moins chère (tous magasins confondus).
@@ -150,7 +159,7 @@ export default function CookWithPromosScreen({ navigation }: NativeStackScreenPr
           </Text>
         </Pressable>
 
-        {/* Tri : 3 choix courts, sans défilement */}
+        {/* Tri : 2 choix, sans défilement */}
         <Text style={[styles.detail, { marginBottom: -4 }]}>Trier par</Text>
         <View style={styles.puces}>
           {TRIS.map(t => {
@@ -171,7 +180,6 @@ export default function CookWithPromosScreen({ navigation }: NativeStackScreenPr
             onVoirRecette={() => openRecipe(m.recipe.id)}
           />
         ))}
-
       </>}
   </RecipeScreen>;
 }
@@ -201,6 +209,7 @@ function CarteRecette({ match, ouverte, onBasculer, onVoirRecette }: {
         <Text style={styles.detail}>
           {recipe.total_time_minutes} min · {offers.length} ingr. en promo sur {nbIngredients}
         </Text>
+        <Text style={styles.detail}>{texteNote(recipe)}</Text>
         {!ouverte && <Text style={styles.detail} numberOfLines={1}>Chez {magasins}</Text>}
         {economie > 0 && (
           <View style={styles.economie}>
@@ -234,7 +243,7 @@ function CarteRecette({ match, ouverte, onBasculer, onVoirRecette }: {
           </View>;
         })}
 
-        <Pressable accessibilityRole="button" onPress={onVoirRecette}
+        <Pressable accessibilityRole="button" accessibilityHint="Ouvre la recette" onPress={onVoirRecette}
           style={({ pressed }) => [styles.boutonRecette, pressed && { opacity: 0.8 }]}>
           <Text style={styles.texteBoutonRecette}>Voir la recette</Text>
           <MaterialCommunityIcons name="arrow-right" size={18} color="white" accessible={false} />
@@ -259,9 +268,9 @@ const styles = StyleSheet.create({
   resumeTexte: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: c.green },
 
   puces: { flexDirection: 'row', gap: 8 },
-  puce: { flex: 1, minHeight: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 21, borderWidth: 1, borderColor: c.border, backgroundColor: 'white' },
+  puce: { flex: 1, minHeight: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 21, borderWidth: 1, borderColor: c.border, backgroundColor: 'white', paddingHorizontal: 8 },
   puceActive: { backgroundColor: c.green, borderColor: c.green },
-  textePuce: { fontFamily: 'DMSans_500Medium', fontSize: 14, color: c.ink },
+  textePuce: { fontFamily: 'DMSans_500Medium', fontSize: 14, color: c.ink, textAlign: 'center' },
   textePuceActive: { color: 'white' },
 
   carte: { backgroundColor: 'white', borderRadius: 20, overflow: 'hidden', ...OMBRE },
@@ -273,6 +282,7 @@ const styles = StyleSheet.create({
   detail: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: c.muted },
   economie: { alignSelf: 'flex-start', backgroundColor: ORANGE_PALE, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3, marginTop: 4 },
   texteEconomie: { fontFamily: 'DMSans_700Bold', fontSize: 13, lineHeight: 18, color: ORANGE_FONCE },
+
   depliee: { borderTopWidth: 1, borderTopColor: c.border, padding: 14, gap: 10 },
   titreProduits: { fontFamily: 'DMSans_700Bold', fontSize: 12, lineHeight: 16, color: c.muted, letterSpacing: 0.5, textTransform: 'uppercase' },
   produit: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: '#faf8f3', borderRadius: 12, padding: 10 },

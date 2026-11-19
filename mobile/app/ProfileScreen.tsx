@@ -21,13 +21,14 @@ export default function ProfileScreen() {
   const { session, requestSignIn, forgetDeletedAccount } = useAuth();
   const userId = session?.user.id;
 
+  // L'ordre des 5 premiers états est celui d'origine : les tests y accèdent par position.
   const [name, setName] = useState('');
-  const [nomEnregistre, setNomEnregistre] = useState(''); // le nom tel qu'il est dans le compte
   const [erreur, setErreur] = useState('');               // seulement les erreurs (en rouge)
-  const [confirme, setConfirme] = useState(false);        // "✓ Enregistré" pendant 2 secondes
   const [busy, setBusy] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmation, setConfirmation] = useState('');
+  const [nomEnregistre, setNomEnregistre] = useState(''); // le nom tel qu'il est dans le compte
+  const [confirme, setConfirme] = useState(false);        // "✓ Enregistré" pendant 2 secondes
   const minuterie = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const nomModifie = name.trim() !== nomEnregistre.trim();
@@ -218,6 +219,7 @@ function Bouton({ titre, onPress, disabled = false, danger = false, secondaire =
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={titre}
       accessibilityState={{ disabled }}
       disabled={disabled}
       onPress={onPress}
