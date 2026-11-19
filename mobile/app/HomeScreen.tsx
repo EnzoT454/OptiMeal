@@ -121,6 +121,7 @@ export default function HomeScreen({ navigation }: NativeStackScreenProps<HomeSt
     { titre: "Mon épicerie", elements: [
       { icone: "format-list-checks", titre: "Mes listes", onPress: () => navigation.getParent()?.navigate("Liste") },
       { icone: "bell-outline", titre: "Produits suivis", onPress: () => navigation.getParent()?.navigate("Promos", { screen: "Follows" }) },
+      { icone: "cancel", titre: "Ingrédients non suggérés", onPress: () => navigation.navigate("Exclusions") },
     ]},
     { titre: "Application", elements: [
       { icone: "cog-outline", titre: "Paramètres", onPress: () => navigation.navigate("Paramètres") },

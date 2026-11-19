@@ -5,11 +5,11 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Message } from '../components/ui';
 import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
 import { CIRCULAR_STYLE, RETAILERS, fetchCirculars, longDate, todayText } from '../components/promos';
-import { OngletsPromos } from '../components/OngletsPromos';
 import type { Circular } from '../types/api';
 import { PromoStackParams } from '../types/navigation';
 
 // Les vraies circulaires de la semaine (PDF du magasin découpé en images, servi par /api/v1/circulars).
+// On y arrive par le lien « Voir les circulaires » de la page Promos : la flèche y revient.
 export default function CircularsScreen({ navigation }: NativeStackScreenProps<PromoStackParams, 'Circulars'>) {
   const [circulars, setCirculars] = useState<Circular[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,9 +28,7 @@ export default function CircularsScreen({ navigation }: NativeStackScreenProps<P
   const today = todayText();
 
   return <RecipeScreen>
-    <RecipeTitle>Promos</RecipeTitle>
-
-    <OngletsPromos actif="circulaires" />
+    <RecipeTitle onBack={() => navigation.goBack()}>Circulaires</RecipeTitle>
 
     <Text style={recipeStyles.body}>Les circulaires de la semaine, magasin par magasin.</Text>
 

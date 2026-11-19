@@ -71,8 +71,9 @@ const button = (tree, title) => nodes(tree).find(node => node.props?.title === t
 
 test('promos : notes réelles visibles, classement par ingrédients conservé et fiche partagée sans vote automatique', async () => {
   const s = screen(); const tree = await s.load(); const text = content(tree);
-  assert.match(text, /★ 2,3\/5 · 3 évaluations/);
-  assert.match(text, /★ 5,0\/5 · 1 évaluation/);
+  // Note courte à côté de l'économie : « ★ 2,3 » (moyenne arrondie à une décimale)
+  assert.match(text, /Soupe ★ 2,3/);
+  assert.match(text, /Salade ★ 5,0/);
   assert.ok(text.indexOf('Soupe') < text.indexOf('Salade'));
   // La carte se déplie, puis « Voir la recette » ouvre la recette dans l'onglet Promos (retour aux promos).
   const cartes = nodes(tree).filter(node => node.props?.accessibilityHint === 'Montre les produits en promo');
@@ -88,16 +89,17 @@ test('promos : notes réelles visibles, classement par ingrédients conservé et
 test('promos : absence de vote affichée sans valeur zéro', async () => {
   const s = screen({ detail: id => ({ ...recipes.find(recipe => recipe.id === id), rating: emptyRating }) });
   const text = content(await s.load());
-  assert.match(text, /Pas encore évaluée/);
-  assert.doesNotMatch(text, /0,0\/5/);
+  // Sans évaluation : aucune étoile et jamais de fausse note zéro
+  assert.doesNotMatch(text, /★/);
+  assert.doesNotMatch(text, /0,0/);
 });
 
 test('promos : recharger les notes au retour de la fiche', async () => {
-  let count = 1;
-  const s = screen({ detail: id => ({ ...recipes.find(recipe => recipe.id === id), rating: { ...emptyRating, average: '4.5', count } }) });
-  assert.match(content(await s.load()), /1 évaluation/);
-  count = 2;
-  assert.match(content(await s.load()), /2 évaluations/);
+  let average = '4.5';
+  const s = screen({ detail: id => ({ ...recipes.find(recipe => recipe.id === id), rating: { ...emptyRating, average, count: 1 } }) });
+  assert.match(content(await s.load()), /★ 4,5/);
+  average = '3';
+  assert.match(content(await s.load()), /★ 3,0/);
   assert.equal(s.promoCalls, 2);
 });
 

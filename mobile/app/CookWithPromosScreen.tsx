@@ -6,6 +6,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Message } from '../components/ui';
 import { RecipeButton, RecipeScreen, RecipeTitle, recipeColors as c, recipeStyles } from '../components/recipes';
 import { currentPrice, discount, fetchPromos, storeName } from '../components/promos';
+import { OngletsPromos } from '../components/OngletsPromos';
 import { api, ApiError } from '../services/api';
 import type { Detail, Offer, Page, Recipe, RecipeSummary } from '../types/api';
 import { PromoStackParams } from '../types/navigation';
@@ -20,8 +21,8 @@ const ORANGE_PALE = '#fff1d6';
 const PRIX_PROMO = '#b45309';
 
 const TRIS: { id: Tri; label: string }[] = [
-  { id: 'economie', label: 'Économie' },
-  { id: 'promos', label: 'Ingrédients en promo' },
+  { id: 'economie', label: "Plus d'économies" },
+  { id: 'promos', label: 'Plus de promos' },
 ];
 
 const enDollars = (n: number) => `${n.toFixed(2).replace('.', ',')} $`;
@@ -74,11 +75,11 @@ function vraiePromo(o: Offer): boolean {
   return pct >= RABAIS_MINIMUM || economieDe(o) >= 1;
 }
 
-// "★ 4,5/5 · 3 évaluations" ou "Pas encore évaluée" (jamais de fausse note 0)
-function texteNote(r: Recipe): string {
-  if (!r.rating || r.rating.count === 0 || r.rating.average == null) return 'Pas encore évaluée';
+// "★ 4,5" si la recette a des évaluations, sinon rien (jamais de fausse note 0)
+function texteNote(r: Recipe): string | null {
+  if (!r.rating || r.rating.count === 0 || r.rating.average == null) return null;
   const moyenne = Number(r.rating.average).toLocaleString('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  return `★ ${moyenne}/5 · ${r.rating.count} évaluation${r.rating.count > 1 ? 's' : ''}`;
+  return `★ ${moyenne}`;
 }
 
 // Pour chaque ingrédient, la vraie promo la moins chère (tous magasins confondus).
@@ -135,7 +136,9 @@ export default function CookWithPromosScreen({ navigation }: NativeStackScreenPr
   const meilleure = matches.reduce((max, m) => Math.max(max, m.economie), 0);
 
   return <RecipeScreen>
-    <RecipeTitle onBack={() => navigation.goBack()}>Cuisiner avec les promos</RecipeTitle>
+    {/* Même en-tête que Promos et Suivis : c'est une vue de la page Promos */}
+    <RecipeTitle>Promos</RecipeTitle>
+    <OngletsPromos actif="idees" />
 
     {loading ? <ActivityIndicator color={c.green} style={{ marginTop: 24 }} />
       : error ? <View style={recipeStyles.notice}>
@@ -147,26 +150,25 @@ export default function CookWithPromosScreen({ navigation }: NativeStackScreenPr
         <Text style={recipeStyles.body}>Aucun ingrédient de tes recettes n’est en promo cette semaine.</Text>
       </View>
       : <>
-        {/* Résumé : un appui remet le tri par économies */}
+        {/* Résumé sur une ligne : un appui remet le tri par économies */}
         <Pressable accessibilityRole="button" accessibilityHint="Trie les recettes par économies"
           onPress={() => setTri('economie')} style={({ pressed }) => [styles.resume, pressed && { opacity: 0.85 }]}>
-          <Text style={styles.resumeSurtitre}>Cette semaine</Text>
-          <Text style={styles.resumeTitre}>
-            {meilleure >= 1 ? `Jusqu'à ${Math.round(meilleure)} $ d'économies sur une recette` : 'Des recettes en promo'}
-          </Text>
-          <Text style={styles.resumeTexte}>
-            {matches.length} recette{matches.length > 1 ? 's' : ''} avec des ingrédients en promo
+          <MaterialCommunityIcons name="tag-outline" size={18} color={c.green} accessible={false} />
+          <Text style={styles.resumeTexte} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
+            {meilleure >= 1 ? `Jusqu'à ${Math.round(meilleure)} $ d'économies · ` : ''}
+            {matches.length} recette{matches.length > 1 ? 's' : ''}
           </Text>
         </Pressable>
 
-        {/* Tri : 2 choix, sans défilement */}
-        <Text style={[styles.detail, { marginBottom: -4 }]}>Trier par</Text>
+        {/* Tri : 2 puces courtes sur une ligne */}
         <View style={styles.puces}>
           {TRIS.map(t => {
             const actif = t.id === tri;
             return <Pressable key={t.id} accessibilityRole="radio" accessibilityState={{ selected: actif }}
+              accessibilityLabel={`Trier : ${t.label}`}
               onPress={() => setTri(t.id)} style={[styles.puce, actif && styles.puceActive]}>
-              <Text style={[styles.textePuce, actif && styles.textePuceActive]}>{t.label}</Text>
+              <Text style={[styles.textePuce, actif && styles.textePuceActive]} numberOfLines={1}
+                adjustsFontSizeToFit minimumFontScale={0.85} maxFontSizeMultiplier={1.2}>{t.label}</Text>
             </Pressable>;
           })}
         </View>
@@ -184,13 +186,14 @@ export default function CookWithPromosScreen({ navigation }: NativeStackScreenPr
   </RecipeScreen>;
 }
 
-// Carte d'une recette : un appui la déplie pour montrer quoi acheter, où, et à quel prix
+// Carte compacte : nom, puis économie et note, puis « temps · promos ».
+// Un appui la déplie pour montrer quoi acheter, où, et à quel prix.
 function CarteRecette({ match, ouverte, onBasculer, onVoirRecette }: {
   match: Match; ouverte: boolean; onBasculer: () => void; onVoirRecette: () => void;
 }) {
   const { recipe, offers, economie } = match;
   const nbIngredients = new Set(recipe.ingredients.map(i => i.ingredient_id)).size;
-  const magasins = [...new Set(offers.map(o => storeName(o.retailer)))].join(', ');
+  const note = texteNote(recipe);
 
   return <View style={styles.carte}>
     <Pressable accessibilityRole="button" accessibilityState={{ expanded: ouverte }}
@@ -200,25 +203,29 @@ function CarteRecette({ match, ouverte, onBasculer, onVoirRecette }: {
         <Image source={{ uri: recipe.image_url }} style={styles.photo} accessible={false} />
       ) : (
         <View style={[styles.photo, styles.photoVide]}>
-          <MaterialCommunityIcons name="silverware-fork-knife" size={26} color={c.green} accessible={false} />
+          <MaterialCommunityIcons name="silverware-fork-knife" size={24} color={c.green} accessible={false} />
         </View>
       )}
 
       <View style={styles.infos}>
         <Text style={styles.nom} numberOfLines={2}>{recipe.name}</Text>
-        <Text style={styles.detail}>
-          {recipe.total_time_minutes} min · {offers.length} ingr. en promo sur {nbIngredients}
-        </Text>
-        <Text style={styles.detail}>{texteNote(recipe)}</Text>
-        {!ouverte && <Text style={styles.detail} numberOfLines={1}>Chez {magasins}</Text>}
-        {economie > 0 && (
-          <View style={styles.economie}>
-            <Text style={styles.texteEconomie}>Tu économises ≈ {enDollars(economie)}</Text>
+        {/* Économie et note sur la même ligne : la note n'est plus coupée en bout de ligne */}
+        {(economie > 0 || note) && (
+          <View style={styles.ligneBadges}>
+            {economie > 0 && (
+              <View style={styles.economie}>
+                <Text style={styles.texteEconomie} numberOfLines={1}>−{enDollars(economie)} en promo</Text>
+              </View>
+            )}
+            {note && <Text style={styles.note} accessibilityLabel={`Note ${note.replace('★ ', '')} sur 5`}>{note}</Text>}
           </View>
         )}
+        <Text style={styles.detail} numberOfLines={2}>
+          {recipe.total_time_minutes} min · {offers.length}/{nbIngredients} en promo
+        </Text>
       </View>
 
-      <MaterialCommunityIcons name={ouverte ? 'chevron-up' : 'chevron-down'} size={24} color={c.muted} accessible={false} />
+      <MaterialCommunityIcons name={ouverte ? 'chevron-up' : 'chevron-down'} size={22} color={c.muted} accessible={false} />
     </Pressable>
 
     {ouverte && (
@@ -262,25 +269,25 @@ const OMBRE = {
 };
 
 const styles = StyleSheet.create({
-  resume: { backgroundColor: c.light, borderRadius: 20, padding: 18, gap: 2 },
-  resumeSurtitre: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: c.green },
-  resumeTitre: { fontFamily: 'DMSans_700Bold', fontSize: 22, lineHeight: 29, color: c.green },
-  resumeTexte: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: c.green },
+  resume: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: c.light, borderRadius: 14, paddingHorizontal: 14, paddingVertical: 10 },
+  resumeTexte: { flex: 1, fontFamily: 'DMSans_700Bold', fontSize: 15, lineHeight: 20, color: c.green },
 
   puces: { flexDirection: 'row', gap: 8 },
-  puce: { flex: 1, minHeight: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 21, borderWidth: 1, borderColor: c.border, backgroundColor: 'white', paddingHorizontal: 8 },
+  puce: { flex: 1, minHeight: 38, alignItems: 'center', justifyContent: 'center', borderRadius: 19, borderWidth: 1, borderColor: c.border, backgroundColor: 'white', paddingHorizontal: 10 },
   puceActive: { backgroundColor: c.green, borderColor: c.green },
   textePuce: { fontFamily: 'DMSans_500Medium', fontSize: 14, color: c.ink, textAlign: 'center' },
   textePuceActive: { color: 'white' },
 
-  carte: { backgroundColor: 'white', borderRadius: 20, overflow: 'hidden', ...OMBRE },
-  entete: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 12 },
-  photo: { width: 88, height: 88, borderRadius: 16, backgroundColor: c.light },
+  carte: { backgroundColor: 'white', borderRadius: 18, overflow: 'hidden', ...OMBRE },
+  entete: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 10 },
+  photo: { width: 72, height: 72, borderRadius: 14, backgroundColor: c.light },
   photoVide: { alignItems: 'center', justifyContent: 'center' },
-  infos: { flex: 1, gap: 3 },
-  nom: { fontFamily: 'DMSans_700Bold', fontSize: 16, lineHeight: 21, color: c.ink },
-  detail: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: c.muted },
-  economie: { alignSelf: 'flex-start', backgroundColor: ORANGE_PALE, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3, marginTop: 4 },
+  infos: { flex: 1, gap: 2 },
+  nom: { fontFamily: 'DMSans_700Bold', fontSize: 15, lineHeight: 20, color: c.ink },
+  detail: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 17, color: c.muted },
+  ligneBadges: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginVertical: 2 },
+  economie: { backgroundColor: ORANGE_PALE, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2 },
+  note: { fontFamily: 'DMSans_700Bold', fontSize: 13, lineHeight: 18, color: c.ink },
   texteEconomie: { fontFamily: 'DMSans_700Bold', fontSize: 13, lineHeight: 18, color: ORANGE_FONCE },
 
   depliee: { borderTopWidth: 1, borderTopColor: c.border, padding: 14, gap: 10 },

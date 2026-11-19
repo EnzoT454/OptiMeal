@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { supabase } from '../services/supabase';
 import { Profile } from '../types/api';
-import type { HomeStackParams } from '../types/navigation';
 import { Message } from '../components/ui';
 import { RecipeScreen, recipeColors as c } from '../components/recipes';
 
@@ -17,7 +15,6 @@ type NomIcone = ComponentProps<typeof MaterialCommunityIcons>['name'];
 const ROUGE = '#a32d2d';
 
 export default function ProfileScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { session, requestSignIn, forgetDeletedAccount } = useAuth();
   const userId = session?.user.id;
 
@@ -83,12 +80,8 @@ export default function ProfileScreen() {
     finally { setBusy(false); }
   }
 
-  const aPropos = (
-    <Section titre="À propos">
-      <Ligne icone="food-apple-outline" titre="Application" valeur="OptiMeal" />
-      <Ligne icone="school-outline" titre="Projet" valeur="IFT3150 · UdeM" derniere />
-    </Section>
-  );
+  // Petit pied de page discret (remplace la section « À propos »)
+  const piedDePage = <Text style={styles.piedDePage}>OptiMeal</Text>;
 
   // ---------- Visiteur (pas connecté) ----------
   if (!session) return (
@@ -104,17 +97,28 @@ export default function ProfileScreen() {
             onPress={() => requestSignIn('Connecte-toi pour accéder aux paramètres de ton profil.')} />
         </View>
       </View>
-      {aPropos}
+      {piedDePage}
     </RecipeScreen>
   );
 
   // ---------- Connecté ----------
   return (
     <RecipeScreen>
-      <Section titre="Compte">
-        <Ligne icone="email-outline" titre="Courriel" valeur={session.user.email ?? ''} />
+      {/* Carte du profil : initiale, nom et courriel complet */}
+      <View style={[styles.carte, styles.profil]}>
+        <View style={styles.avatar}>
+          {nomEnregistre.trim()
+            ? <Text style={styles.initiale}>{nomEnregistre.trim().charAt(0).toUpperCase()}</Text>
+            : <MaterialCommunityIcons name="account-outline" size={28} color={c.green} accessible={false} />}
+        </View>
+        <View style={{ flex: 1, gap: 2 }}>
+          <Text style={styles.nomProfil} numberOfLines={1}>{nomEnregistre.trim() || 'Ton compte'}</Text>
+          <Text style={styles.courriel} numberOfLines={1} ellipsizeMode="middle">{session.user.email ?? ''}</Text>
+        </View>
+      </View>
+
+      <Section titre="Nom affiché">
         <View style={styles.bloc}>
-          <Text style={styles.etiquette}>Nom affiché</Text>
           <TextInput
             value={name}
             onChangeText={(texte) => { setName(texte); setConfirme(false); }}
@@ -124,27 +128,22 @@ export default function ProfileScreen() {
             style={styles.champ}
             accessibilityLabel="Nom affiché"
           />
-          <Bouton
-            titre={confirme ? '✓ Enregistré' : busy ? 'Enregistrement…' : 'Enregistrer'}
-            disabled={busy || !nomModifie}
-            succes={confirme}
-            onPress={() => void save()}
-          />
+          {/* Le bouton apparaît seulement quand il y a quelque chose à enregistrer */}
+          {(nomModifie || confirme || busy) && (
+            <Bouton
+              titre={confirme ? '✓ Enregistré' : busy ? 'Enregistrement…' : 'Enregistrer'}
+              disabled={busy || !nomModifie}
+              succes={confirme}
+              onPress={() => void save()}
+            />
+          )}
         </View>
       </Section>
 
       <Message text={erreur} />
 
-      {/* Ajout de ton collègue : les ingrédients que l'app ne doit plus suggérer */}
-      <Section titre="Épicerie">
-        <Ligne icone="food-off-outline" titre="Ingrédients non suggérés" derniere
-          onPress={() => navigation.navigate('Exclusions')} disabled={busy} />
-      </Section>
-
-      {aPropos}
-
       <Section titre="Session">
-        <Ligne icone="logout" titre="Se déconnecter de cet appareil" onPress={() => void logout()} disabled={busy} />
+        <Ligne icone="logout" titre="Se déconnecter" onPress={() => void logout()} disabled={busy} />
         <Ligne icone="delete-outline" titre="Supprimer mon compte" danger derniere disabled={busy}
           onPress={() => { setConfirmDelete(true); setErreur(''); }} />
       </Section>
@@ -176,6 +175,8 @@ export default function ProfileScreen() {
           </View>
         </View>
       )}
+
+      {piedDePage}
     </RecipeScreen>
   );
 }
@@ -198,7 +199,7 @@ function Ligne({ icone, titre, valeur, onPress, danger = false, derniere = false
   const contenu = (
     <>
       <MaterialCommunityIcons name={icone} size={22} color={danger ? ROUGE : c.muted} accessible={false} />
-      <Text style={[styles.texteLigne, { flex: 1 }, danger && { color: ROUGE }]}>{titre}</Text>
+      <Text style={[styles.texteLigne, { flex: 1 }, danger && { color: ROUGE }]} numberOfLines={1}>{titre}</Text>
       {valeur ? <Text style={styles.valeur} numberOfLines={1}>{valeur}</Text> : null}
       {onPress && !danger ? <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} /> : null}
     </>
@@ -258,6 +259,12 @@ const styles = StyleSheet.create({
   texteLigne: { fontFamily: 'DMSans_500Medium', fontSize: 15, lineHeight: 20, color: c.ink },
   valeur: { fontFamily: 'DMSans_400Regular', fontSize: 14, lineHeight: 19, color: c.muted, maxWidth: '55%' },
   appuye: { backgroundColor: c.light },
+  profil: { flexDirection: 'row', alignItems: 'center', gap: 14, padding: 16 },
+  avatar: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', backgroundColor: c.light },
+  initiale: { fontFamily: 'DMSans_700Bold', fontSize: 24, lineHeight: 30, color: c.green },
+  nomProfil: { fontFamily: 'DMSans_700Bold', fontSize: 18, lineHeight: 24, color: c.ink },
+  courriel: { fontFamily: 'DMSans_400Regular', fontSize: 14, lineHeight: 19, color: c.muted },
+  piedDePage: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: c.muted, textAlign: 'center', marginTop: 16 },
 
   etiquette: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: c.muted },
   champ: {

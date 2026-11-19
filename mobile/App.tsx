@@ -57,8 +57,7 @@ function HomeNavigator() {
   return <Home.Navigator screenOptions={{ headerTintColor: VERT }}>
     <Home.Screen name="Home" component={HomeScreen} options={{ headerShown: false, title: 'Accueil' }} />
     <Home.Screen name="Paramètres" component={ProfileScreen} options={{ headerBackTitle: 'Accueil' }} />
-    <Home.Screen name="Exclusions" component={ShoppingExclusionsScreen} options={{ title: 'Ingrédients non suggérés', headerBackTitle: 'Paramètres' }} />
-    {/* La recette ouverte depuis l'Accueil : la flèche retour revient à l'Accueil */}
+    <Home.Screen name="Exclusions" component={ShoppingExclusionsScreen} options={{ title: 'Ingrédients non suggérés', headerBackTitle: 'Accueil' }} />{/* La recette ouverte depuis l'Accueil : la flèche retour revient à l'Accueil */}
     <Home.Screen name="Detail" component={RecipeDetailScreen as any} options={{ title: 'La recette', headerBackTitle: 'Accueil' }} />
     <Home.Screen name="Editor" component={ProtectedEditor as any} options={{ headerShown: false }} />
   </Home.Navigator>;

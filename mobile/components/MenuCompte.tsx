@@ -11,7 +11,7 @@ import { recipeColors as c } from './recipes';
 
 type NomIcone = ComponentProps<typeof MaterialCommunityIcons>['name'];
 
-export type ElementMenu = { icone: NomIcone; titre: string; onPress: () => void; danger?: boolean };
+export type ElementMenu = { icone: NomIcone; titre: string; sousTitre?: string; onPress: () => void; danger?: boolean };
 export type SectionMenu = { titre: string; elements: ElementMenu[] };
 
 const LARGEUR = 300;
@@ -87,11 +87,15 @@ export default function MenuCompte({ visible, onFermer, sections }: {
                 <Pressable
                   key={el.titre}
                   accessibilityRole="button"
+                  accessibilityLabel={el.sousTitre ? `${el.titre}. ${el.sousTitre}` : el.titre}
                   onPress={() => { onFermer(); el.onPress(); }}
                   style={({ pressed }) => [styles.ligne, pressed && styles.appuye]}
                 >
                   <MaterialCommunityIcons name={el.icone} size={22} color={el.danger ? ROUGE : c.muted} accessible={false} />
-                  <Text style={[styles.texteLigne, el.danger && { color: ROUGE }]}>{el.titre}</Text>
+                  <View style={{ flex: 1, paddingVertical: el.sousTitre ? 6 : 0 }}>
+                    <Text style={[styles.texteLigne, el.danger && { color: ROUGE }]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>{el.titre}</Text>
+                    {!!el.sousTitre && <Text style={styles.sousTitre}>{el.sousTitre}</Text>}
+                  </View>
                 </Pressable>
               ))}
             </View>
@@ -130,6 +134,7 @@ const styles = StyleSheet.create({
   titreSection: { fontFamily: 'DMSans_500Medium', fontSize: 12, lineHeight: 16, color: c.muted, marginTop: 12, marginBottom: 4 },
   ligne: { flexDirection: 'row', alignItems: 'center', gap: 14, minHeight: 48, paddingHorizontal: 8, borderRadius: 10 },
   texteLigne: { fontFamily: 'DMSans_500Medium', fontSize: 15, lineHeight: 20, color: c.ink },
+  sousTitre: { fontFamily: 'DMSans_400Regular', fontSize: 12, lineHeight: 16, color: c.muted },
   appuye: { backgroundColor: c.light },
   bas: { borderTopWidth: 1, borderTopColor: c.border, paddingTop: 8 },
 });
