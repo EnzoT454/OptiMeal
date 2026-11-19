@@ -31,6 +31,11 @@ import HomeScreen from './app/HomeScreen';
 import ListScreen from './app/ListScreen';
 import CreateListScreen from './app/CreateListScreen';
 import ShoppingListDetailScreen from './app/ShoppingListDetailScreen';
+import ShoppingHistoryScreen from './app/ShoppingHistoryScreen';
+import ListAccessRequired from './components/lists/ListAccessRequired';
+import ShoppingTemplateDetailScreen from './app/ShoppingTemplateDetailScreen';
+import ShoppingReuseScreen from './app/ShoppingReuseScreen';
+import ShoppingExclusionsScreen from './app/ShoppingExclusionsScreen';
 import { HomeStackParams, ListStackParams, MainTabParams, PromoStackParams, RecipeStackParams } from './types/navigation';
 
 const VERT = '#25603c';
@@ -52,17 +57,21 @@ function HomeNavigator() {
   return <Home.Navigator screenOptions={{ headerTintColor: VERT }}>
     <Home.Screen name="Home" component={HomeScreen} options={{ headerShown: false, title: 'Accueil' }} />
     <Home.Screen name="Paramètres" component={ProfileScreen} options={{ headerBackTitle: 'Accueil' }} />
+    <Home.Screen name="Exclusions" component={ShoppingExclusionsScreen} options={{ title: 'Ingrédients non suggérés', headerBackTitle: 'Paramètres' }} />
     {/* La recette ouverte depuis l'Accueil : la flèche retour revient à l'Accueil */}
     <Home.Screen name="Detail" component={RecipeDetailScreen as any} options={{ title: 'La recette', headerBackTitle: 'Accueil' }} />
     <Home.Screen name="Editor" component={ProtectedEditor as any} options={{ headerShown: false }} />
   </Home.Navigator>;
 }
 function ListNavigator() {
-  return <Lists.Navigator screenOptions={{ headerTintColor: VERT }}>
+  return <ListAccessRequired><Lists.Navigator screenOptions={{ headerTintColor: VERT }}>
     <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Liste' }} />
-    <Lists.Screen name="CreateList" component={CreateListScreen} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="CreateList" component={CreateListScreen} getId={({ params }) => params?.period ? `${params.period.start_date}:${params.period.end_date}` : 'manual'} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="History" component={ShoppingHistoryScreen} options={{ title: 'Historique', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="TemplateDetail" component={ShoppingTemplateDetailScreen} options={{ title: 'Modèle', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="ReuseList" component={ShoppingReuseScreen} options={{ title: 'Réutiliser', headerBackTitle: 'Liste' }} />
     <Lists.Screen name="ShoppingDetail" component={ShoppingListDetailScreen} options={{ title: 'Ma liste', headerBackTitle: 'Liste' }} />
-  </Lists.Navigator>;
+  </Lists.Navigator></ListAccessRequired>;
 }
 function ProtectedAdd(props: NativeStackScreenProps<RecipeStackParams, 'Add'>) {
   return <AccountRequired reason="Connecte-toi pour ajouter tes propres recettes." onCancel={() => props.navigation.popToTop()}>
@@ -101,7 +110,7 @@ function PromoNavigator() {
     <Promos.Screen name="Editor" component={ProtectedEditor as any} />
   </Promos.Navigator>;
 }
-// route.params.vue = "epicerie" quand l'Accueil ouvre directement la liste d'épicerie
+// Épicerie conserve la semaine du calendrier et présente ses listes enregistrées.
 function Calendar({ route }: { route?: { params?: { vue?: 'repas' | 'epicerie' } } } = {}) {
   return <AccountRequired reason="Connecte-toi pour planifier tes repas dans ton calendrier.">
     <CalendarScreen vue={route?.params?.vue} />
@@ -117,7 +126,8 @@ function Content() {
       name={tabIcons[route.name][focused ? 'active' : 'inactive']} size={size} color={color} />,
   })}>
     <Tabs.Screen name="Accueil" component={HomeNavigator} options={{ headerShown: false, popToTopOnBlur: true }} />
-    <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false, popToTopOnBlur: true }} /><Tabs.Screen name="Recettes" component={RecipeNavigator} options={{ headerShown: false }} />
+    <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false, popToTopOnBlur: true }} />
+    <Tabs.Screen name="Recettes" component={RecipeNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Calendrier" component={Calendar} options={{ headerShown: false }} />
     <Tabs.Screen name="Liste" component={ListNavigator} options={{ headerShown: false }} />
   </Tabs.Navigator></NavigationContainer>

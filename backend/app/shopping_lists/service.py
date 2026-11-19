@@ -1,11 +1,11 @@
 """Services transactionnels du lot A : listes manuelles et copies du calendrier.
 
 Chaque mutation possède sa transaction et termine par commit ou rollback.
-Les lectures utilisent les instantanés immuables, afin de ne pas reconstruire
+Les lectures utilisent uniquement l’état courant, afin de ne pas reconstruire
 une liste depuis plusieurs états concurrents. Aucun appel réseau ou collecte.
 """
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from decimal import Decimal, localcontext
 from hashlib import sha256
 import json
@@ -32,7 +32,7 @@ from .schemas import (
     ShoppingItemAdd, ShoppingItemRead, ShoppingItemUpdate, ShoppingListCreate,
     ShoppingListRead, ShoppingListUpdate, ShoppingManualPurchaseRead,
     ShoppingManualPurchaseWrite, ShoppingPossessionWrite, ShoppingQuantity,
-    ShoppingRevisionRead, ShoppingTotals,
+    ShoppingTotals,
 )
 
 
@@ -61,10 +61,19 @@ def get_list(db: Session, list_id: UUID, user: CurrentUser) -> ShoppingListRead:
 
 
 def list_lists(db: Session, user: CurrentUser, *, status: str | None = None,
-               limit: int = 20, offset: int = 0) -> tuple[list[ShoppingListRead], int]:
+               limit: int = 20, offset: int = 0, collection: str | None = None,
+               start_date: date | None = None, end_date: date | None = None) -> tuple[list[ShoppingListRead], int]:
     if not 1 <= limit <= 100 or offset < 0 or status not in (None, 'draft', 'active', 'completed', 'archived'):
         raise ShoppingListError(422, 'VALIDATION_ERROR', 'Filtres ou pagination invalides.')
+    if collection not in (None, 'current', 'history') or (collection is not None and status is not None):
+        raise ShoppingListError(422, 'VALIDATION_ERROR', 'Choisis une collection ou un statut.')
+    if (start_date is None) != (end_date is None) or (start_date is not None and end_date < start_date):
+        raise ShoppingListError(422, 'VALIDATION_ERROR', 'Indique une période complète et ordonnée.')
     conditions = [ShoppingList.owner_id == user.id]
+    if start_date is not None:
+        conditions.extend((ShoppingList.start_date == start_date, ShoppingList.end_date == end_date))
+    if collection is not None:
+        conditions.append(ShoppingList.status.in_(('draft', 'active') if collection == 'current' else ('completed', 'archived')))
     if status is not None:
         conditions.append(ShoppingList.status == status)
     query = select(ShoppingListRevision.snapshot).join(ShoppingList, and_(
@@ -73,16 +82,6 @@ def list_lists(db: Session, user: CurrentUser, *, status: str | None = None,
     )).where(*conditions).order_by(ShoppingList.updated_at.desc(), ShoppingList.id).limit(limit).offset(offset)
     total = db.scalar(select(func.count()).select_from(ShoppingList).where(*conditions))
     return [ShoppingListRead.model_validate(value) for value in db.scalars(query)], total
-
-
-def get_revision(db: Session, list_id: UUID, revision: int, user: CurrentUser) -> ShoppingRevisionRead:
-    row = db.execute(select(ShoppingListRevision.__table__).join(
-        ShoppingList, ShoppingList.id == ShoppingListRevision.list_id,
-    ).where(ShoppingList.id == list_id, ShoppingList.owner_id == user.id,
-            ShoppingListRevision.revision == revision)).mappings().one_or_none()
-    if row is None:
-        _not_found()
-    return ShoppingRevisionRead.model_validate({**dict(row), 'recorded_at': row['recorded_at'].astimezone(timezone.utc)})
 
 
 def _quantities(rows, owner_key: str):
@@ -107,7 +106,7 @@ def _coverage_status(required, owned, owned_confirmation, purchase, need_revisio
     confirmation = purchase.confirmed_need_revision if purchase and purchase.purchased else None
     stale = (owned_confirmation is not None and owned_confirmation != need_revision or
              confirmation is not None and confirmation != need_revision or
-             bool((set(available) | set(bought)) - set(needs)))
+             bool((set(available) | set(bought)) - set(needs)) and not (not needs and confirmation == need_revision))
     if not needs:
         status = ('owned' if owned_confirmation == need_revision else
                   'purchased' if confirmation == need_revision else 'remaining')
@@ -144,12 +143,14 @@ def _snapshot(db: Session, list_id: UUID, user: CurrentUser, source_warnings=Non
     purchases_read = [ShoppingManualPurchaseRead(
         **{k: p[k] for k in ('id', 'item_id', 'purchased', 'confirmed_need_revision')},
         coverage=coverage[p['id']]) for p in purchases]
-    by_item = {p.item_id: p for p in purchases_read}
+    from .courses import read_purchases, purchase_coverage
+    product_purchases = read_purchases(db, list_id)
+    by_item = purchase_coverage(purchases_read, product_purchases)
     # Les avertissements d'import appartiennent à l'instantané d'origine.
     # Les avertissements de couverture, eux, sont recalculés à chaque commande.
     previous = db.scalar(select(ShoppingListRevision.snapshot).where(
         ShoppingListRevision.list_id == list_id).order_by(ShoppingListRevision.revision.desc()).limit(1))
-    durable_codes = {'CALENDAR_PARTIAL', 'CALENDAR_EXCLUSIONS', 'QUANTITY_ROUNDED'}
+    durable_codes = {'CALENDAR_PARTIAL', 'CALENDAR_EXCLUSIONS', 'QUANTITY_ROUNDED', 'COPY_PRODUCT_CHOICES', 'COPY_INGREDIENT_UNAVAILABLE'}
     warnings = ([w for w in source_warnings if w.code in durable_codes]
                 if source_warnings is not None else [
                     w for w in (previous or {}).get('warnings', []) if w['code'] in durable_codes])
@@ -178,11 +179,18 @@ def _snapshot(db: Session, list_id: UUID, user: CurrentUser, source_warnings=Non
         partial_item_count=sum(i.coverage_status == 'partial' for i in active),
         unpriced_item_count=unpriced, uncovered_item_count=uncovered,
         budget_known_amount='0', remaining_known_amount='0', estimate_complete=not (unpriced or uncovered))
-    return ShoppingListRead(
-        **{k: row[k] for k in ('id', 'name', 'source', 'status', 'revision', 'purchase_date')},
+    if product_purchases:
+        from fractions import Fraction
+        from .comparisons import _amount
+        bought_amount = _amount(sum((Fraction(Decimal(p.estimated_amount)) for p in product_purchases), Fraction()))
+        totals = totals.model_copy(update={'budget_known_amount': bought_amount})
+    resource = ShoppingListRead(
+        **{k: row[k] for k in ('id', 'name', 'source', 'status', 'revision', 'purchase_date', 'origin')},
         created_at=row['created_at'].astimezone(timezone.utc), updated_at=row['updated_at'].astimezone(timezone.utc),
         period={'start_date': row['start_date'], 'end_date': row['end_date']} if row['source'] == 'calendar' else None,
-        items=result, purchases=purchases_read, totals=totals, warnings=warnings)
+        items=result, purchases=purchases_read, product_purchases=product_purchases, totals=totals, warnings=warnings)
+    from .comparisons import decorate
+    return decorate(db, resource)
 
 
 def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,
@@ -204,6 +212,10 @@ def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,
         profile = db.execute(select(Profile.deletion_pending).where(Profile.id == user.id).with_for_update()).one()
         if profile.deletion_pending:
             raise ShoppingListError(409, 'ACCOUNT_DELETION_PENDING', 'Suppression du compte en cours.')
+        from .models import ShoppingResourceCommand
+        if db.scalar(select(ShoppingResourceCommand.idempotency_key).where(
+                ShoppingResourceCommand.owner_id == user.id, ShoppingResourceCommand.idempotency_key == key)):
+            raise ShoppingListError(409, 'IDEMPOTENCY_KEY_REUSED', 'Cette clé appartient déjà à une autre commande.')
         current = _owned_list(db, list_id, user, lock=True) if list_id else None
         previous = db.execute(select(ShoppingListCommand.__table__).where(
             ShoppingListCommand.owner_id == user.id, ShoppingListCommand.idempotency_key == key)).mappings().one_or_none()
@@ -218,6 +230,9 @@ def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,
                                     list_id=list_id, expected_revision=body.expected_revision, current_revision=current['revision'])
         if current is not None and operation not in ('activate', 'archive', 'reopen') and current['status'] not in ('draft', 'active'):
             raise ShoppingListError(409, 'LIST_STATE_CONFLICT', 'Rouvre la liste avant de la modifier.')
+        if current is not None:
+            from .comparisons import upgrade_assignment
+            upgrade_assignment(db, get_list(db, list_id, user))
         target_id = action(list_id)
         if current is not None:
             db.execute(update(ShoppingList).where(ShoppingList.id == target_id).values(
@@ -226,6 +241,7 @@ def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,
         payload = result.model_dump(mode='json')
         db.execute(insert(ShoppingListCommand).values(owner_id=user.id, idempotency_key=key,
                                                      list_id=target_id, signature=signature, result=payload))
+        db.execute(delete(ShoppingListRevision).where(ShoppingListRevision.list_id == target_id))
         db.execute(insert(ShoppingListRevision).values(list_id=target_id, revision=result.revision,
             command_id=key, recorded_at=result.updated_at, snapshot=payload))
         db.commit()
@@ -235,17 +251,44 @@ def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,
         raise
 
 
-def create_list(db: Session, user: CurrentUser, body: ShoppingListCreate, key: UUID) -> ShoppingListRead:
+def _initial_items(db, list_id, items, start_position=1, resolve_names=False):
+    if resolve_names:
+        from .draft_pricing import resolve_items
+        items = resolve_items(db, items)
+    for position, item in enumerate(items, start=start_position):
+        ingredient = db.get(Ingredient, item.ingredient_id) if item.ingredient_id else None
+        if item.ingredient_id and ingredient is None:
+            raise ShoppingListError(422, 'INGREDIENT_NOT_FOUND', 'Ingrédient introuvable dans le référentiel.')
+        item_id = uuid4()
+        db.execute(insert(ShoppingListItem).values(id=item_id, list_id=list_id,
+            ingredient_id=item.ingredient_id, name=item.name, category=ingredient.category if ingredient else 'Autres',
+            position=position, need_revision=1))
+        _contribution(db, item_id, item.quantity)
+        if item.quantity:
+            quantity = _normalize(item.quantity)
+            db.execute(insert(ShoppingListQuantity).values(item_id=item_id, kind='required',
+                unit=quantity.unit, amount=Decimal(quantity.amount)))
+
+
+def create_list(db: Session, user: CurrentUser, body: ShoppingListCreate, key: UUID, price_source=None) -> ShoppingListRead:
     def create(_):
         list_id = uuid4()
         now = datetime.now(timezone.utc)
         db.execute(insert(ShoppingList).values(id=list_id, owner_id=user.id, name=body.name, source='manual',
-            status='draft', revision=1, purchase_date=body.purchase_date or today(), created_at=now, updated_at=now))
+            status='active' if body.activate else 'draft', revision=1, purchase_date=body.purchase_date or today(), created_at=now, updated_at=now))
+        if body.activate and not body.items:
+            raise ShoppingListError(422, 'EMPTY_LIST', 'Ajoute au moins un article avant de créer la liste.')
+        _initial_items(db, list_id, body.items, resolve_names=body.pricing is not None)
+        if body.pricing is not None:
+            from .draft_pricing import attach
+            if price_source is None:
+                raise ShoppingListError(503, 'CATALOG_UNAVAILABLE', 'Catalogue indisponible.')
+            attach(db, list_id, user, body.pricing, price_source)
         return list_id
     return _mutate(db, user, key, 'create', body, None, create)
 
 
-def create_from_calendar(db: Session, user: CurrentUser, body: ShoppingFromCalendar, key: UUID) -> ShoppingListRead:
+def create_from_calendar(db: Session, user: CurrentUser, body: ShoppingFromCalendar, key: UUID, price_source=None) -> ShoppingListRead:
     """Relecture et sauvegarde atomiques ; chaque import possède ses propres IDs."""
     from sqlalchemy.exc import IntegrityError, OperationalError
     from .calendar import _read_validated_preview
@@ -256,12 +299,24 @@ def create_from_calendar(db: Session, user: CurrentUser, body: ShoppingFromCalen
 
     def create(_):
         preview = _read_validated_preview(db, user, body)
+        excluded = set(body.excluded_item_ids)
+        if excluded - {item.id for item in preview.items}:
+            raise ShoppingListError(422, 'INVALID_PREVIEW_ITEM', 'Un article retiré ne correspond pas à cet aperçu.')
+        adjustments = {item.item_id: item.required for item in body.adjusted_items}
+        if len(adjustments) != len(body.adjusted_items) or set(adjustments) - {item.id for item in preview.items if item.id not in excluded}:
+            raise ShoppingListError(422, 'INVALID_PREVIEW_ITEM', 'Correction dupliquée ou hors de cet aperçu.')
+        selected = [item.model_copy(update={'required': adjustments.get(item.id, item.required)})
+                    for item in preview.items if item.id not in excluded]
+        if len(selected) + len(body.items) > 500:
+            raise ShoppingListError(422, 'LIST_TOO_LARGE', 'Une liste peut contenir au maximum 500 articles.')
+        if body.activate and not selected and not body.items:
+            raise ShoppingListError(422, 'EMPTY_LIST', 'Ajoute au moins un article avant de créer la liste.')
         list_id, now = uuid4(), datetime.now(timezone.utc)
         db.execute(insert(ShoppingList).values(id=list_id, owner_id=user.id, name=body.name,
-            source='calendar', status='draft', revision=1, start_date=body.start_date,
+            source='calendar', status='active' if body.activate else 'draft', revision=1, start_date=body.start_date,
             end_date=body.end_date, purchase_date=preview.purchase_date, created_at=now, updated_at=now))
         identities = {}
-        for position, item in enumerate(preview.items, start=1):
+        for position, item in enumerate(selected, start=1):
             item_id = identities[item.id] = uuid4()
             db.execute(insert(ShoppingListItem).values(id=item_id, list_id=list_id,
                 ingredient_id=item.ingredient_id, name=item.name, category=item.category,
@@ -273,8 +328,14 @@ def create_from_calendar(db: Session, user: CurrentUser, body: ShoppingFromCalen
                 contribution = contribution.model_copy(update={'id': uuid4()})
                 db.execute(insert(ShoppingListContribution).values(id=contribution.id,
                     item_id=item_id, position=index, data=contribution.model_dump(mode='json')))
+        _initial_items(db, list_id, body.items, len(selected) + 1, resolve_names=body.pricing is not None)
+        if body.pricing is not None:
+            from .draft_pricing import attach
+            if price_source is None:
+                raise ShoppingListError(503, 'CATALOG_UNAVAILABLE', 'Catalogue indisponible.')
+            attach(db, list_id, user, body.pricing, price_source)
         warnings[:] = [w.model_copy(update={'item_id': identities.get(w.item_id)})
-                       for w in preview.warnings]
+                       for w in preview.warnings if w.item_id is None or w.item_id in identities]
         return list_id
 
     for attempt in range(3):
@@ -306,7 +367,7 @@ def update_list(db: Session, list_id: UUID, user: CurrentUser, body: ShoppingLis
 def change_status(db: Session, list_id: UUID, user: CurrentUser, operation: str,
                   body: ShoppingCommand, key: UUID) -> ShoppingListRead:
     transitions = {'activate': ({'draft'}, 'active'), 'archive': ({'draft', 'active'}, 'archived'),
-                   'reopen': ({'archived'}, 'active')}
+                   'reopen': ({'archived', 'completed'}, 'active')}
     if operation not in transitions:
         raise ShoppingListError(422, 'VALIDATION_ERROR', 'Transition inconnue.')
     def change(target):

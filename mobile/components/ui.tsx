@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { Pressable, ScrollView, StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from 'react-native';
+import { AccessibilityState, Pressable, ScrollView, StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from 'react-native';
 
 export function Screen({ children, contentStyle }: PropsWithChildren<{ contentStyle?: StyleProp<ViewStyle> }>) {
   return <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={[styles.screen, contentStyle]}>{children}</ScrollView>;
@@ -9,8 +9,8 @@ export function Message({ text }: { text: string }) { return text ? <Text access
 export function Field({ label, labelStyle, containerStyle, style, ...props }: TextInputProps & { label: string; labelStyle?: StyleProp<TextStyle>; containerStyle?: StyleProp<ViewStyle> }) {
   return <View style={containerStyle}><Text style={[styles.label, labelStyle]}>{label}</Text><TextInput accessibilityLabel={label} style={[styles.input, style]} {...props} /></View>;
 }
-export function Button({ title, onPress, disabled = false, style, textStyle }: { title: string; onPress: () => void; disabled?: boolean; style?: StyleProp<ViewStyle>; textStyle?: StyleProp<TextStyle> }) {
-  return <Pressable accessibilityRole="button" accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
+export function Button({ title, onPress, disabled = false, style, textStyle, accessibilityState }: { accessibilityState?: AccessibilityState; title: string; onPress: () => void; disabled?: boolean; style?: StyleProp<ViewStyle>; textStyle?: StyleProp<TextStyle> }) {
+  return <Pressable accessibilityRole="button" accessibilityState={{ ...accessibilityState, disabled }} disabled={disabled} onPress={onPress}
     style={[styles.button, style, disabled && { opacity: 0.5 }]}><Text style={[styles.buttonText, textStyle]}>{title}</Text></Pressable>;
 }
 export const styles = StyleSheet.create({

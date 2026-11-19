@@ -1,0 +1,20 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "accept_remaining": {
+      "default": false,
+      "title": "Accept Remaining",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "expected_revision"
+  ],
+  "title": "ShoppingCompleteWrite",
+  "type": "object"
+}

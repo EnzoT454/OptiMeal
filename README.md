@@ -6,13 +6,13 @@
 
 Nous développons OptiMeal dans le cadre du cours IFT3150 à l’Université de Montréal. L’idée est de réunir les recettes, les repas de la semaine et les prix des épiceries au même endroit pour faciliter la préparation des courses.
 
-L’application permettra de choisir ses recettes et ses portions, puis de préparer une liste d’achats par magasin en tenant compte du budget et des déplacements. Trois modes d’ajout sont prévus : ajouter une recette manuellement, trouver une idée et cuisiner avec ce qu’on a déjà. L’ajout manuel donnera le choix entre remplir un formulaire et saisir un texte que l’IA transformera dans le même format de recette, à vérifier avant de l’enregistrer.
+L’application permet de créer ses recettes manuellement, de choisir ses portions et de planifier les repas de la semaine. Elle regroupe ensuite les ingrédients dans une liste d’épicerie, compare les prix disponibles par magasin et permet de suivre les achats. Les besoins dont le prix est inconnu restent signalés.
 
-Lorsque les prix précis manquent, nous afficherons une fourchette estimée min–max, en signalant les articles dont le prix reste impossible à estimer. À la fin des courses, l’utilisateur pourra aussi photographier son reçu et confirmer les prix extraits pour contribuer aux estimations. Cette contribution sera facultative.
+Nous concentrons maintenant le travail sur la stabilisation de l’application et les tests utilisateurs. 
 
 ## Technologies
 
-- **Mobile :**  React Native · TypeScript · Expo , pour iOS et Android
+- **Mobile :** React Native · TypeScript · Expo, pour iOS et Android
 - **Backend :** Python · FastAPI
 - **Données :** PostgreSQL et Supabase Storage
 - **Documentation :** Zensical · GitHub Pages
@@ -22,9 +22,11 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 Éléments réalisés :
 
 - Comptes, profil et mode visiteur.
-- Recettes personnelles, recherche, filtres, partage public/privé et favoris.
+- Recettes personnelles, recherche, filtres, recettes privées, publication et favoris.
 - Évaluations des recettes et classement par notes.
 - Calendrier hebdomadaire des repas.
+- Listes d’épicerie privées, comparaison des prix par magasin et suivi des achats.
+- Modèles de listes, historique et accès depuis l’Accueil et le Calendrier.
 - Promotions et consultation des circulaires.
 - Catalogue commun des produits et ingrédients.
 - Collecte Maxi et lecture locale des reçus.
@@ -32,10 +34,7 @@ Lorsque les prix précis manquent, nous afficherons une fourchette estimée min�
 
 À développer ou à compléter :
 
-- Modes IA pour les recettes.
-- Listes d’épicerie par magasin et gestion du budget.
-- Historique stable des plans et des prix.
-- Estimations de prix et contribution par reçu dans l’application.
+- Version stable de l’application pour commencer les tests utilisateurs.
 - Collecte automatisée Metro et Super C.
 - Préférences de compte et recommandations économiques.
 - Validation complète sur iOS et Android.
@@ -91,7 +90,7 @@ $env:CATALOG_IMPORT_PATH = "data/catalog/maxi/<collecte>/catalog.json"
 ```
 
 Sans collecte configurée, `/health` fonctionne et les routes historiques
-`/catalog` et `/catalog/offers` renvoient une erreur 503. Les nouvelles routes
+`/catalog` et `/catalog/offers` renvoient une erreur 503. La route
 `/api/v1/ingredients` charge le catalogue JSON commun. `/api/v1/offers` et son
 détail lisent ce JSON par défaut, ou PostgreSQL avec `OFFERS_SOURCE=database`
 dans `backend/.env`, sans repli sur JSON si la base est indisponible.
@@ -223,11 +222,11 @@ OptiMeal/
 │   │   │   └── service.py            # Lecture par semaine et mutations privées
 │   │   ├── shopping_lists/           # Listes privées persistantes, copies du calendrier et édition mobile
 │   │   │   ├── router.py             # Routes privées des listes et aperçus du calendrier
-│   │   │   ├── schemas.py            # Contrats des besoins, achats et révisions
+│   │   │   ├── schemas.py            # Contrats des listes, besoins et achats
 │   │   │   ├── contracts.py          # Registre et exemples exportés
-│   │   │   ├── models.py             # Tables privées des listes et de leur historique
+│   │   │   ├── models.py             # Tables privées des listes, articles et achats
 │   │   │   └── service.py            # Mutations manuelles, isolation et commandes rejouables
-│   │   ├── common/                   # Contrats et routes communs ; calculs à développer
+│   │   ├── common/                   # Contrats, routes et conversions partagés
 │   │   │   ├── public_router.py      # Routes ingrédients, offres et circulaires
 │   │   │   ├── public_data.py        # Prépare le catalogue JSON et les offres PostgreSQL
 │   │   │   ├── contracts.py          # Pagination, erreurs et conventions partagées
@@ -309,7 +308,11 @@ OptiMeal/
 │   │       ├── 0014_recipe_kitchen_units.py # Tasses et cuillères
 │   │       ├── 0015_permanent_public_recipes.py # Conservation des recettes publiques après suppression du compte
 │   │       ├── 0016_offer_quantity_limits.py # Prix promotionnels limités aux premières unités
-│   │       └── 0017_shopping_lists.py # Listes privées ; appliquée à Supabase le 14 novembre 2026
+│   │       ├── 0017_shopping_lists.py # Listes privées
+│   │       ├── 0018_shopping_comparisons.py # Comparaisons et choix de produits
+│   │       ├── 0019_shopping_courses.py # Suivi des achats
+│   │       ├── 0020_shopping_reuse.py # Modèles et réutilisation des listes
+│   │       └── 0021_shopping_list_pin.py # Liste épinglée sur Accueil
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express
@@ -347,11 +350,15 @@ OptiMeal/
 │       ├── test_pcx_probe.py         # Récupération des fiches du pilote PC Express
 │       ├── test_maxi_web_matching.py # Correspondances entre reçus Maxi et fiches web
 │       ├── test_planning.py          # Dates et contrats du calendrier
-│       └── test_shopping_lists.py    # Futurs tests des listes
-├── mobile/                           # Expo, comptes, recettes et promotions
+│       ├── test_shopping_list_storage.py # Persistance et isolation des listes
+│       ├── test_shopping_list_http.py # Routes privées des listes
+│       ├── test_shopping_creation_pricing.py # Prix à la création des listes
+│       ├── test_shopping_courses.py  # Suivi des achats
+│       └── test_shopping_recalculation.py # Recalcul des prix et conservation des achats
+├── mobile/                           # Application Expo
 │   ├── README.md                     # Lancement et essai sur appareil
 │   ├── App.tsx                       # Onglets publics et connexion à la demande
-│   ├── app/                          # Comptes, recettes, promos, circulaires et calendrier
+│   ├── app/                          # Écrans des comptes, recettes, promos, calendrier et listes
 │   ├── context/AuthContext.tsx       # État du compte et gestion de la session
 │   ├── types/                        # Types TypeScript de l’API et de la navigation
 │   ├── components/                   # Composants réutilisables du mobile
@@ -428,8 +435,14 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 - [Démarrer le mobile](mobile/README.md)
 - [Migrations et imports](backend/docs/MIGRATIONS.md)
 - [Calendrier des repas et limites actuelles](backend/docs/PLANNING.md)
+- [Retrait de l’ancien moteur local des listes](backend/docs/SHOPPING_CLEANUP.md)
+- [Accès unifiés Accueil, Calendrier et Liste](backend/docs/SHOPPING_ACCESS.md)
+- [Onglet Liste : présentation et accès par compte/réseau](backend/docs/SHOPPING_OVERVIEW.md)
+- [Création et enregistrement des listes](backend/docs/SHOPPING_CREATION.md)
 - [Listes d’épicerie : conception et étapes d’implémentation](backend/docs/SHOPPING_LISTS.md)
 - [Formats de vente et bases tarifaires vérifiables](backend/docs/SALE_NORMALIZATION.md)
+- [Moteur de calcul des achats : paquets, poids et promotions](backend/docs/PURCHASE_CALCULATION.md)
+- [Recalcul des prix et conservation des achats](backend/docs/SHOPPING_COMPARISONS.md)
 
 Le [site de suivi du projet](https://enzot454.github.io/OptiMeal/) regroupe nos objectifs, notre avancement et les références utilisées. Il reprend le [template du cours IFT3150](https://github.com/udem-diro/template-projet).
 
@@ -456,4 +469,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 17 novembre 2026*

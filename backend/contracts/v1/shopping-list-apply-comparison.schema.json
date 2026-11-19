@@ -1,0 +1,37 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "comparison_id": {
+      "format": "uuid",
+      "title": "Comparison Id",
+      "type": "string"
+    },
+    "scenario": {
+      "enum": [
+        "maxi",
+        "metro",
+        "superc",
+        "cheapest"
+      ],
+      "title": "Scenario",
+      "type": "string"
+    },
+    "accept_partial": {
+      "default": false,
+      "title": "Accept Partial",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "expected_revision",
+    "comparison_id",
+    "scenario"
+  ],
+  "title": "ShoppingApplyComparison",
+  "type": "object"
+}

@@ -19,6 +19,8 @@ title: Suivi du projet
 
 Cette page sera mise à jour chaque semaine avec les avancées, les difficultés, les choix effectués et les prochaines étapes, en lien avec les rencontres de supervision.
 
+Chaque semaine décrit l’état du projet à cette période. Les décisions peuvent évoluer dans les semaines suivantes.
+
 ## Semaine 1 (31 août – 6 septembre)
 
 ### Objectifs de la période
@@ -385,3 +387,62 @@ Cette page sera mise à jour chaque semaine avec les avancées, les difficultés
 ### Limites et prochaines étapes
 
 - Poursuivre l’historique stable des plans, les listes d’épicerie et l’onglet Accueil ; les modes IA, estimations et contributions restent prévus.
+
+---
+
+## Semaine 11 (9 – 15 novembre)
+
+### Objectifs de la période
+
+- Commencer les listes d’épicerie enregistrées dans le compte.
+- Compléter les informations de durée des recettes et les conditions des promotions.
+
+### Travail réalisé
+
+- Ajout des durées par étape dans les recettes et calcul de la durée totale.
+- Prise en compte des promotions limitées aux premières unités, avec un prix distinct après la limite.
+- Mise en place des listes privées : création manuelle ou à partir du calendrier, modification des articles et sauvegarde sur le serveur.
+
+### Décisions et ajustements
+
+- Conserver une liste créée depuis le calendrier indépendamment des changements ultérieurs des repas.
+- Garder les prix et formats manquants explicitement signalés, sans inventer de valeurs.
+
+### Prochaines étapes
+
+- Compléter la comparaison des prix, le suivi des achats et les accès depuis l’Accueil et le Calendrier.
+- Compléter onglet Accueil.
+- Vérifier les nouveaux parcours sur appareils.
+
+---
+
+## Semaine 12 (16 – 22 novembre, en cours)
+
+### Objectifs de la période
+
+- Relier la création des listes, les prix par magasin et le suivi des courses.
+- Intégrer les modèles de listes, l’historique et les accès depuis les autres onglets.
+- Compléter onglet Accueil.
+
+### Travail réalisé
+
+- **Listes d’épicerie** : création en deux étapes, ingrédients puis prix par magasin, avec un panier Moins cher personnalisable.
+- **Courses** : suivi des achats partiels et recalcul des prix du reste à acheter, en conservant les achats déjà effectués.
+- **Organisation** : modèles pour les occasions, historique des listes terminées, liste épinglée sur l’Accueil et accès aux listes depuis le Calendrier.
+- **Vérifications** : tests du backend et du mobile, vérification TypeScript et génération des versions iOS et Android ; les essais complets sur appareils restent à consigner.
+- **Accueil** : Ajout aperçu de la semaine, produits suivis en promos et aperçu des listes d'épicerie.
+
+### Décisions et ajustements
+
+- Calculer les quantités et les prix sur le serveur, en arrondissant au nombre de produits à acheter.
+- Demander un compte et une connexion au serveur pour utiliser les listes ; retirer la synchronisation hors connexion.
+- Recalculer les prix uniquement sur demande, en conservant les achats enregistrés.
+- Conserver l’historique des listes terminées, sans consultation des anciennes versions d’une même liste.
+- Le 17 novembre, réduire le périmètre pour nous concentrer sur la stabilisation du socle actuel et les tests utilisateurs. Abandonner les modes IA, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations et la contribution par reçu. L’historique des listes terminées et les outils de lecture locale des reçus sont conservés.
+
+### Prochaines étapes
+
+- Stabiliser l’application et valider les parcours complets sur iOS et Android pour commencer les tests utilisateurs.
+- Préparer les scénarios de tests utilisateurs, recueillir les retours et corriger les problèmes prioritaires.
+
+*Dernière mise à jour : 17 novembre 2026*

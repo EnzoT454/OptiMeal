@@ -1,7 +1,82 @@
 # Listes d’épicerie — contrats du lot A
 
-**Date : 14 novembre 2026.**  
+## Création en deux étapes et prix directs — 16 novembre 2026
+
+Ce parcours remplace la création en une étape décrite dans les notes précédentes.
+
+1. **Ingrédients** : nom et date, saisie manuelle ou calendrier. Les quantités du
+   calendrier se modifient directement ; les besoins peuvent être retirés et des
+   articles ajoutés. **Suivant** calcule les prix sans enregistrer de brouillon.
+2. **Prix par magasin** : Maxi, Metro, Super C, puis **Moins cher** en dernier.
+   Toucher une carte affiche les produits exacts. Le panier Moins cher les
+   regroupe par magasin. Toucher un produit ouvre les alternatives ; choisir un
+   autre produit/magasin recalcule le panier Moins cher. Les totaux propres à une
+   enseigne restent distincts de cette personnalisation. **Précédent** conserve
+   les ingrédients et permet de corriger la saisie avant un nouveau calcul.
+3. **Créer la liste** confirme le panier sélectionné et enregistre la liste active,
+   ses besoins et ses prix ensemble. Il ne s’agit pas d’une troisième page.
+   Aucun minuteur, cache de liste ou historique des versions n’est réintroduit.
+
+### Calcul demandé
+
+- Sans quantité : prix direct d’un produit. Avec quantité : nombre entier de
+  produits arrondi au supérieur, puis coût de ces produits. Exemple : 750 g,
+  format 500 g à 3 $ → 2 produits, total 6 $. Une quantité exactement divisible
+  n’ajoute pas de produit. Les calculs utilisent des décimaux/fractions exacts.
+- Les besoins d’un même ingrédient se regroupent avant l’arrondi et les limites
+  promotionnelles. Plusieurs lignes sans quantité demandent chacune un produit.
+- Le prix direct utilise le prix régulier ou la promotion valide à la date des
+  courses, avec son prix après limite. Le moins cher minimise le total à acheter,
+  et ne compare pas seulement les prix affichés d’un produit de chaque format.
+- Le format doit correspondre à la dimension demandée pour convertir des g/ml.
+  Un nombre de produits utilise l’unité de vente lorsque le format n’est pas
+  exprimé en pièces. Aucun prix ou format absent n’est inventé : le besoin reste
+  sans prix, et un panier incomplet exige une confirmation explicite.
+- Le calcul direct conserve la source et son statut de vérification. Il ne
+  transforme pas une référence sans attestation en référence vérifiée. Le moteur
+  historique de couverture attestée reste distinct pour les autres parcours.
+
+### API et persistance
+
+`POST /api/v1/shopping-lists/creation-prices` est privé et sans écriture. Il reçoit
+les ingrédients/quantités, la date et les choix par indice. Il retourne les quatre
+scénarios, les produits alternatifs, leurs prix/nombres à acheter et une empreinte.
+Un nom libre est relié au catalogue uniquement si son nom ou alias exact donne
+une identité unique ; les noms inconnus restent sans prix.
+
+Les créations manuelle/calendrier acceptent `pricing` (empreinte, scénario, choix,
+confirmation d’un sous-total) ; le calendrier accepte aussi `adjusted_items`.
+Le serveur relit le catalogue et recalcule les montants : aucun prix client n’est
+accepté. Prix, besoins ou choix différents de l’empreinte → conflit et annulation
+complète, sans liste partielle. La reprise idempotente ne relance pas le calcul.
+Les achats produits conservent ces prix directs et couvrent aussi les besoins
+sans quantité avec une confirmation liée au besoin courant ; une décoche annule
+leur couverture et rétablit le montant restant.
+
+Aucune migration ni dépendance supplémentaire. Le backend doit être déployé avec
+le mobile pour les nouveaux contrats. Supabase n’est pas modifié par ce travail.
+
+Les sections précédentes ci-dessous gardent leur contexte historique.
+
+**Ajustement du 16 novembre 2026 :** les créations acceptent `items` et `activate` ;
+le calendrier accepte aussi `excluded_item_ids`. Le mobile valide une liste
+complète et active en une requête. Les routes et schémas de consultation des
+révisions sont retirés ; `revision` reste un compteur de concurrence interne.
+Voir [la création complète](SHOPPING_CREATION.md).
+
+Les contrats préparatoires ci-dessous sont complétés par les
+[comparaisons de l’étape 8](SHOPPING_COMPARISONS.md) et le
+[parcours de courses de l’étape 9](SHOPPING_COURSES.md) : achats produits
+avec instantanés, couverture, estimations conservées et clôture explicite.
+Les validations historiques ci-dessous conservent leur contexte.
+
+**Date : 16 novembre 2026.**
+
 **Statut : routes du lot A et parcours mobile disponibles ; migration 0017 appliquée et vérifiée sur Supabase le 14 novembre 2026.**
+
+Les extensions de l’étape 8 (comparaison, application et choix manuels), ainsi
+que les champs additifs `choices` et `assignment` des lectures, sont décrites dans
+[SHOPPING_COMPARISONS.md](SHOPPING_COMPARISONS.md) et les exports courants.
 
 Ce document précise l’étape 2 du [plan des listes](SHOPPING_LISTS.md).
 Il fixe les échanges du premier lot et les invariants de persistance. Les
@@ -59,7 +134,7 @@ persistées utilisent `data_source=postgresql`, `dataset_kind=user_content`.
 Une pagination initiale retourne les ressources complètes, sans requête de détail
 obligatoire par carte. Une future projection légère devra être documentée.
 
-## 3. Commandes, révisions et idempotence
+## 3. Commandes, concurrence et idempotence
 
 ### 3.1. En-tête et corps distincts
 
@@ -70,10 +145,11 @@ Le mobile génère une clé une seule fois par intention et la conserve lors des
 reprises, y compris après renouvellement de session sur 401.
 
 Les créations utilisent `ShoppingListCreate` ou `ShoppingFromCalendar`, sans
-`expected_revision`. La liste et son premier instantané sont créés en **révision 1**.
+`expected_revision`. La liste et son état courant sont créés avec le compteur interne **revision 1**.
 Une mutation d’une liste existante utilise `ShoppingCommand.expected_revision`.
-Chaque nouvelle commande acceptée produit une révision suivante, même si elle
-fixe un état déjà identique ; le rejeu de la même clé ne produit aucune révision.
+Chaque nouvelle commande acceptée incrémente ce compteur et remplace l’état
+courant ; aucune ancienne version n’est accumulée. Le rejeu de la même clé
+ne change pas le compteur.
 
 ### 3.2. Transaction implémentée à l’étape 3
 
@@ -88,7 +164,7 @@ Ordre fixé :
    rejeter une ancienne révision. Même clé et autre signature : conflit.
 4. Sinon verrouiller la liste, vérifier `expected_revision`, appliquer la mutation
    et vérifier les invariants métier.
-5. Enregistrer état courant, nouvelle révision et résultat de commande ensemble.
+5. Remplacer l’état courant et enregistrer le compteur et le résultat de commande ensemble.
 
 Les commandes de création concurrentes avec la même clé doivent aussi être
 protégées par l’unicité `(compte, clé)` et une transaction ; ne pas créer deux listes
@@ -316,11 +392,11 @@ pour toutes les mutations persistantes, pas pour l’aperçu sans sauvegarde.
 | Méthode et chemin, après `/api/v1` | Corps | Réponse et statut prévus |
 | --- | --- | --- |
 | `GET /shopping-lists` | Filtres `status`, `limit=20` (1–100), `offset=0` | `Page[ShoppingListRead]`, 200 ; tri `updated_at DESC, id` |
-| `POST /shopping-lists` | `ShoppingListCreate` | `Detail[ShoppingListRead]`, 201, brouillon révision 1 |
+| `POST /shopping-lists` | `ShoppingListCreate` | `Detail[ShoppingListRead]`, 201, active si `activate=true`, sinon brouillon |
 | `GET /shopping-lists/{id}` | Aucun | `Detail[ShoppingListRead]`, 200 |
 | `PATCH /shopping-lists/{id}` | `ShoppingListUpdate` | `Detail[ShoppingListRead]`, 200 |
 | `POST /shopping-lists/calendar-preview` | `ShoppingCalendarPreviewWrite` | `Detail[ShoppingCalendarPreviewRead]`, 200, aucune liste créée |
-| `POST /shopping-lists/from-calendar` | `ShoppingFromCalendar` | `Detail[ShoppingListRead]`, 201, brouillon révision 1 |
+| `POST /shopping-lists/from-calendar` | `ShoppingFromCalendar` | `Detail[ShoppingListRead]`, 201, active si `activate=true`, sinon brouillon |
 | `POST /shopping-lists/{id}/items` | `ShoppingItemAdd` | `Detail[ShoppingListRead]`, 200, ajout ou fusion atomique |
 | `PATCH /shopping-lists/{id}/items/{item_id}` | `ShoppingItemUpdate` | `Detail[ShoppingListRead]`, 200 |
 | `PUT /shopping-lists/{id}/items/{item_id}/manual-purchase` | `ShoppingManualPurchaseWrite` | `Detail[ShoppingListRead]`, 200 |
@@ -328,7 +404,6 @@ pour toutes les mutations persistantes, pas pour l’aperçu sans sauvegarde.
 | `POST /shopping-lists/{id}/activate` | `ShoppingCommand` | `Detail[ShoppingListRead]`, 200 ; brouillon vers actif |
 | `POST /shopping-lists/{id}/archive` | `ShoppingCommand` | `Detail[ShoppingListRead]`, 200 ; brouillon/actif vers archivé |
 | `POST /shopping-lists/{id}/reopen` | `ShoppingCommand` | `Detail[ShoppingListRead]`, 200 ; archivé vers actif |
-| `GET /shopping-lists/{id}/revisions/{revision}` | Aucun | `Detail[ShoppingRevisionRead]`, 200 |
 
 Le type de statut prévoit `completed` pour le futur lot C, mais le lot A ne
 propose ni clôture définitive, ni modèle, ni comparaison. Une transition non

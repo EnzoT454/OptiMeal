@@ -1,18 +1,65 @@
 # Mobile OptiMeal
 
+Dans Liste, le « + » est réservé au bouton **+ Créer une liste** ; les titres des
+pages de création n’en portent plus. Des séparateurs et espacements distinguent
+En cours, Historique et Mes modèles.
+
+**Ton épicerie** sur Accueil utilise le même résumé compact avec icônes que Liste :
+articles, magasins, date et coût total, avec le nom de la liste épinglée.
+
+Le détail montre les produits et prix sauvegardés, avec les achats déjà effectués
+visibles par défaut. Une seule action **Recalculer les prix** recalcule le reste
+avec les prix directs et l’arrondi supérieur, en conservant les achats passés.
+Les anciens boutons/panneau de comparaison sont retirés. **Le prendre ailleurs**
+ouvre les alternatives et enregistre le changement avec ce même recalcul.
+
+Le détail des listes possède un menu **…** : renommer, épingler sur Accueil,
+utiliser comme modèle, marquer comme terminée et modifier les articles
+(ajout/suppression). Une liste terminée peut être rouverte depuis ce menu.
+
+L’[onglet Liste](../backend/docs/SHOPPING_OVERVIEW.md) exige un compte et une
+vérification réseau à l’entrée. Ordre : **+ Créer une liste → En cours → Historique → Mes modèles**.
+Les listes en cours et historiques utilisent des résumés avec icônes : articles,
+magasins, date des courses et coût total (ou sous-total indiqué par « ≥ »).
+La [création complète](../backend/docs/SHOPPING_CREATION.md) prépare les articles
+dans **1. Ingrédients**, avec ajustement direct des quantités du calendrier.
+**Suivant** ouvre **2. Prix par magasin** : Maxi, Metro, Super C, puis Moins cher.
+Toucher un magasin affiche ses produits ; Moins cher les regroupe par magasin.
+Toucher un produit permet de changer son magasin et de recalculer le panier.
+Le prix direct est multiplié par le nombre de produits arrondi au supérieur.
+La validation finale enregistre une liste active avec les prix choisis en une
+requête. Aucun brouillon intermédiaire n’est créé par ce parcours.
+
+Synchronisation, cache des listes, contrôles périodiques et anciennes versions
+consultables sont retirés. Les achats s’enregistrent lors de l’action ; les
+lectures se font à l’ouverture. L’historique des listes terminées reste limité
+à trois lignes sur l’accueil, avec **Voir tout** vers la page complète.
+Les modèles pour les occasions gardent leur menu **…** : modifier le nom,
+supprimer le modèle, ajouter un produit. La reprise d’une demande incertaine
+reste manuelle et idempotente. Les anciens états de file/cache ne sont plus lus.
+Les sections datées ci-dessous décrivent aussi les étapes historiques ; ces
+choix actuels remplacent les propositions de synchronisation et de révisions.
+
+Le [parcours de courses](../backend/docs/SHOPPING_COURSES.md) de l’onglet Liste
+est livré dans le dépôt : fiches défilantes, coches de produits, achats partiels,
+possession annulable et compléments. La migration 0019 est appliquée et vérifiée
+sur Supabase depuis le 16 novembre 2026 ; essais des nouveaux écrans sur appareils
+à compléter. Calendrier ouvre les listes sauvegardées pour la période sélectionnée.
+
 La barre de navigation contient Accueil, Promos, Recettes, Calendrier et Liste.
 Les paramètres s’ouvrent depuis la roue dentée en haut à droite de l’accueil,
 avec un retour vers celui-ci. Cet accès reste disponible sans compte.
 L’onglet Liste permet de créer un brouillon manuel ou une copie indépendante
 d’une période du calendrier avec aperçu et confirmation des exclusions, puis
-de compléter et reprendre ses listes enregistrées. Les visiteurs voient la
-présentation et peuvent se connecter à la demande. Les réponses incertaines
+de compléter et reprendre ses listes enregistrées. Les visiteurs doivent se connecter avant d’accéder à Liste. Les réponses incertaines
 se reprennent avec la même commande, enregistrée localement par compte.
 Le serveur doit disposer de la migration `0017_shopping_lists` et des routes du
 lot A. Cette migration est appliquée et vérifiée sur la base Supabase configurée
-depuis le 14 novembre 2026. L’ancienne Épicerie reste accessible dans Calendrier et depuis Accueil
-pendant la transition. Les prix et comparaisons viennent aux étapes suivantes ;
-le nouveau détail affiche « Estimation indisponible ».
+depuis le 14 novembre 2026. Accueil et Calendrier ouvrent désormais les listes par identifiant. Le détail permet maintenant de comparer Maxi, Metro, Super C et Moins cher,
+puis d'appliquer explicitement une proposition. Les choix manuels sont conservés
+et les prix inconnus restent signalés. Cette extension nécessite la migration
+`0018_shopping_comparisons`, appliquée et vérifiée sur Supabase le 16 novembre
+2026 après les tests locaux. Voir le [guide des comparaisons](../backend/docs/SHOPPING_COMPARISONS.md).
 Voir [le suivi de l’étape 5](../backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
 `expo-crypto`, compatible SDK 58, génère les UUID des commandes idempotentes ;
 il est inclus dans Expo Go. Un client de développement compilé avant son ajout
@@ -700,125 +747,73 @@ et [React Navigation](https://reactnavigation.org/docs/getting-started/).
 
 ## Liste d’achats : chargement incomplet et erreurs locales
 
-Le chargement publie la liste seulement après la réussite de toutes les lectures :
-planning, recettes, catalogue, offres et données personnelles locales. Une panne
-réseau, une erreur serveur, une erreur d’authentification ou une réponse de
-recette invalide interrompt ce chargement. La dernière liste chargée dans cet
-écran est conservée avec un avertissement ; elle peut différer du calendrier
-actuel. Il ne s’agit pas d’un cache persistant utilisable après redémarrage.
-Sans chargement préalable réussi, l’écran affiche une erreur plutôt qu’une liste
-vide présentée comme complète. « Réessayer le chargement » relance ces lectures.
+Les listes sont sauvegardées par FastAPI. Leur création depuis le calendrier
+passe par un aperçu explicite qui signale les repas indisponibles ; modifier le
+calendrier ne modifie pas les besoins déjà enregistrés. Une panne de lecture
+reste une erreur, jamais une liste vide inventée.
 
-Seul un HTTP `404` de recette autorise son exclusion. Chaque repas concerné,
-y compris un repas dont la recette supprimée a laissé une référence nulle, est
-compté dans « Liste partielle ». Les notes libres et les restes ne sont pas
-comptés. Les ingrédients accessibles restent consultables, mais le montant est
-nommé « Sous-total des repas accessibles ». L’écran n’annonce pas « Bonne
-épicerie » ou « Ta liste de la semaine est vide » lorsque des repas sont exclus.
-L’Accueil présente également cet avertissement.
+Le détail conserve un cache complet par compte et une file persistante d’états
+cibles d’achat pour la reprise après interruption. L’entrée dans Liste exige
+toujours une session et une connexion au serveur. Les coches locales sont signalées en attente ; les compteurs et
+montants restent ceux confirmés par le serveur. Après réponse perdue, la reprise
+réutilise exactement la même commande. Un conflit incompatible demande une
+décision explicite. Une lecture réussie ne confirme pas une écriture incertaine.
+Voir [le parcours hors connexion](../backend/docs/SHOPPING_OFFLINE.md).
 
-Une écriture locale échouée conserve l’état affiché avant la modification et
-signale « Modification non enregistrée ». Le champ d’ajout attend la confirmation
-avant d’effacer la saisie. « Réessayer l’enregistrement » relance la dernière
-modification échouée ; recharger les données ou réussir une autre modification
-ne masque pas cet échec. Les reprises de coches fixent l’état demandé, sans
-inverser une deuxième fois une écriture qui aurait réussi avant de signaler une
-erreur. La reprise appartient au compte d’origine et devient inutilisable après
-un changement de compte.
+Les formulaires et erreurs restent visibles après refus. Les commandes et caches
+appartiennent au compte d’origine ; un changement de compte masque immédiatement
+les anciennes données. Le parcours de récupération des anciens ajouts privés a été retiré.
 
-Les tests `shoppingListFailures.test.cjs` et `shoppingListStatus.test.cjs`
-couvrent ces scénarios avec services TypeScript réels, stockage et réseau
-simulés. Pour une vérification manuelle sur appareil :
-
-1. Planifier deux recettes contenant des ingrédients distincts et ouvrir l’Épicerie.
-2. Couper le réseau et actualiser : vérifier le message, les anciennes lignes
-   conservées et le libellé « Dernier montant chargé ».
-3. Rétablir le réseau et réessayer le chargement : vérifier la liste actualisée.
-4. Supprimer une recette planifiée, puis recharger : vérifier « Liste partielle »,
-   le nombre de repas exclus et l’absence de message de courses terminées.
-5. Avec un stockage simulant un rejet de `setItem`, ajouter un article, cocher une
-   ligne et modifier le garde-manger : vérifier les erreurs et l’état inchangé.
-   Rétablir le stockage et réessayer l’enregistrement ; vérifier la persistance
-   après rechargement et la conservation de la saisie tant que l’ajout échoue.
-6. Changer de compte après une écriture échouée : vérifier qu’aucune reprise
-   de l’ancien compte n’est proposée ou exécutée pour le nouveau.
+Tests actuels : `shoppingListCommands.test.cjs`, `shoppingOffline.test.cjs`,
+`offlineCoursesHook.test.cjs`, `shoppingCourses.test.cjs`,
+`shoppingAccess.test.cjs`. Les anciens tests de
+chargement/calcul local et de sa vue ont été retirés avec ce parcours à l’étape 14.
 
 ## Identité des produits suivis et choisis
 
-Les suivis et les choix manuels enregistrent `Offer.product_id`, la clé
-commerciale déjà fournie par l’API : enseigne, magasin et référence marchand.
-Ils n’enregistrent plus l’empreinte `Offer.id`, qui peut changer avec le prix
-ou la date du relevé. Les cloches, la liste Suivis, le détail du produit et le
-compteur de promotions comparent cette clé stable. Un produit absent du
-catalogue garde son suivi ; il réapparaît si la même référence revient.
+Les suivis utilisent `Offer.product_id`, l’identité stable enseigne, magasin et
+référence marchand. Une mise à jour du prix ou de la date peut changer `Offer.id`
+sans casser le suivi. Les cloches, Suivis, le détail et le compteur comparent cette
+identité ; une référence temporairement absente reste conservée.
 
-Dans l’Épicerie, toucher un produit conserve ce choix, même s’il est actuellement
-le moins cher. « Choisir automatiquement le moins cher » efface la préférence.
-Si le produit choisi est absent, la référence reste enregistrée, un avertissement
-invite à vérifier le choix et le produit calculé par défaut est affiché en attendant.
-Les choix restent séparés par compte et par semaine.
+Les anciens suivis par empreinte sont réassociés seulement par correspondance
+exacte avec une offre connue. Les conversions et changements de cloche partagent
+la file d’écritures du compte, avec conservation des noms, dates et références
+introuvables. Ces dernières restent des anciens suivis à réassocier ; aucun
+rapprochement par nom ou prix n’est tenté.
 
-Les données existantes sont converties lors du chargement du catalogue, dans
-les mêmes clés privées du compte. Une ancienne empreinte est convertie seulement
-si elle correspond exactement à une offre encore connue. Les conversions et
-les actions sur les cloches passent par la même file d’écritures ; elles ne
-remplacent pas une modification concurrente. Les doublons identifiés sont réunis.
-Les noms et dates de suivi sont conservés.
+Dans les nouvelles listes, les choix de produits sont privés à une liste
+identifiée. Les commandes de comparaison conservent ces choix ou demandent un
+retour explicite au mode automatique. Un produit absent reste signalé, sans
+remplacement silencieux. Les anciennes préférences hebdomadaires ne sont pas
+converties en choix actuels.
 
-Une empreinte déjà périmée ne permet pas de retrouver avec certitude sa référence
-marchand. Le suivi est conservé et affiché comme « Ancien suivi à réassocier » ;
-l’utilisateur peut retrouver le produit dans Promos, le suivre à nouveau puis
-retirer l’ancien suivi. Aucun rapprochement par nom ou prix n’est tenté. Un ancien
-choix introuvable reste conservé avec un avertissement dans l’Épicerie : choisir
-à nouveau le produit ou activer le choix automatique permet de le remplacer.
-Les anciennes clés communes sans propriétaire restent ignorées.
-
-Tests : `productIdentity.test.cjs` et `backend/tests/test_product_identity.py`.
-Pour tester sur appareil : suivre un produit et en choisir un dans l’Épicerie,
-actualiser ses prix et sa date dans le catalogue, puis recharger Promos, Suivis
-et l’Épicerie. Vérifier les cloches, le compteur, le choix conservé et le nouveau
-prix. Redémarrer l’application et vérifier à nouveau. Tester aussi deux références
-de même nom, deux magasins, un produit retiré puis réintroduit, les anciennes
-données convertibles et non convertibles, et un changement de compte.
+Tests : `productIdentity.test.cjs`, `listComparison.test.cjs`,
+`shoppingCourses.test.cjs` et `backend/tests/test_product_identity.py`.
+Les essais manuels de retrait/réapparition d’une référence, de prix modifié et
+de changement de compte restent à consigner sur les deux plateformes.
 
 ## Données locales par compte
 
-Les articles ajoutés à la liste d’achats, les coches, les ingrédients déjà
-disponibles, le garde-manger, les choix de produits, le magasin choisi et les
-produits suivis sont enregistrés sur le téléphone pour le compte connecté.
-Chaque compte possède ses propres clés AsyncStorage, préfixées par son
-identifiant Supabase. Les coches, « J’en ai déjà » et choix de produits restent
-également séparés par semaine.
+Les listes et achats sont sauvegardés côté serveur et isolés par propriétaire.
+Sur le téléphone, `services/accountStorage.ts` sépare cache complet, commandes,
+préférence épinglée et suivis par identifiant Supabase. Les écritures
+d’une même clé sont ordonnées, même entre écrans. Le cache et les résultats
+asynchrones d’un ancien compte ne remplacent pas ceux du compte courant.
 
-`services/accountStorage.ts` reçoit explicitement le compte propriétaire et
-ordonne les modifications d’une même clé. `useShoppingList` et `useFollows`
-masquent les anciennes données dès le changement de compte et ignorent les
-résultats asynchrones de la session précédente. Une écriture déjà commencée
-reste attachée à son compte d’origine. Les suivis passent par ce même contrôle
-dans Promos, Suivis et le détail d’un produit.
+Sans compte, aucune donnée privée n’est chargée ou écrite. Une déconnexion masque
+les données locales ; une reconnexion au même compte retrouve son cache et ses
+commandes. Après suppression distante confirmée, la purge bloque les écritures
+tardives et retire l’espace de ce compte. Les listes et la préférence épinglée
+sont partagées entre appareils par le serveur ; les suivis restent locaux.
 
-Sans compte, aucune donnée personnelle locale n’est lue ou enregistrée.
-Toucher une cloche propose la connexion. Une reconnexion au même compte
-retrouve ses données sur ce téléphone ; cette correction n’ajoute pas de
-synchronisation entre appareils.
+Les anciennes clés `shoppingList.*` sont conservées. L’ancien import des ajouts manuels et du garde-manger est retiré. Les clés communes sans propriétaire ne sont ni lues ni attribuées au
+premier compte connecté. Le retrait de l’ancien moteur ne déclenche aucune purge.
 
-Les anciennes clés communes, sans identifiant de propriétaire, sont conservées
-mais ignorées. Elles ne sont pas attribuées au premier compte qui se connecte :
-leur propriétaire ne peut pas être établi. Les anciens articles et suivis
-peuvent donc ne plus apparaître après la mise à jour ; aucune migration
-automatique ne les transmet à un autre utilisateur.
-
-Les tests `localAccountIsolation.test.cjs`, exécutés par `npm test`, couvrent
-deux comptes, le visiteur, une reconnexion, les anciennes clés, les erreurs de
-stockage, les écritures concurrentes et les réponses tardives. Les essais
-suivants restent à reproduire sur iOS et Android :
-
-1. Sous A, ajouter un article, cocher une ligne, choisir un produit et suivre une offre.
-2. Se déconnecter : vérifier que les suivis de A ne sont plus visibles.
-3. Sous B, vérifier l’absence des données de A, puis enregistrer des données différentes.
-4. Revenir sous A : retrouver ses données sans celles de B.
-5. Fermer puis relancer l’application et vérifier la même séparation.
-6. Sans compte, toucher une cloche et annuler la connexion : aucun suivi ne doit être créé.
+Tests : `localAccountIsolation.test.cjs`, `accountPurge.test.cjs`,
+`shoppingOffline.test.cjs` et les tests des accès.
+Essais appareils : créer et cocher sous A, passer en visiteur puis sous B,
+revenir sous A, redémarrer, vérifier les reprises et le refus d’accès sans réseau. Les résultats iOS/Android restent à consigner.
 
 ## Prix promotionnels avec limite de quantité
 
@@ -834,4 +829,4 @@ avant son redémarrage. Le prix promotionnel est utilisé uniquement pendant
 une période confirmée active. Les contrôles automatisés couvrent cet affichage ;
 les essais sur appareil restent à effectuer.
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 16 novembre 2026*

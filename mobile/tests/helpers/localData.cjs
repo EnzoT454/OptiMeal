@@ -7,8 +7,11 @@ class ApiError extends Error { constructor(status, message) { super(message); th
 // Vrais services et hooks TypeScript ; stockage et identité sont simulés.
 function runtime(options = {}) {
   const data = options.data ?? new Map(), cache = new Map(), writes = [], prompts = [], reads = [];
-  let userId = 'compte-a', week = '2026-11-09', hooks;
+  let uuid = 0;
+  let userId = 'compte-a', hooks;
   const storage = {
+    async getAllKeys() { return [...data.keys()]; },
+    async multiRemove(keys) { for (const key of keys) data.delete(key); },
     async getItem(key) {
       reads.push(key); if (options.beforeGet) await options.beforeGet(key);
       return data.get(key) ?? null;
@@ -27,15 +30,11 @@ function runtime(options = {}) {
     } }).outputText, { exports, require(name) {
       if (name === '@react-native-async-storage/async-storage') return { __esModule: true, default: storage };
       if (name === 'react') return hooks;
+      if (name === 'expo-crypto') return { randomUUID: () => `local-test-${++uuid}` };
       if (name.endsWith('/AuthContext')) return { useAuth: () => ({
         session: userId ? { user: { id: userId } } : null, requestSignIn: reason => prompts.push(reason),
       }) };
       if (name.endsWith('/api')) return { ApiError, api: options.api ?? (async () => ({ items: [], total: 0 })) };
-      if (name.endsWith('/planning')) return {
-        getPlan: () => options.plan ? options.plan() : Promise.resolve({ entries: [] }),
-        mondayOf: d => d, toISODate: () => week, fromISODate: d => new Date(d), dayName: () => 'lundi',
-      };
-      if (name.endsWith('/promos')) return { ON_DATE: undefined };
       if (name.endsWith('/search')) return { isOnPromo: o => options.isOnPromo?.(o) ?? false };
       if (name.startsWith('.')) return load(path.normalize(path.join(path.dirname(relative), name)) + '.ts');
       throw new Error('Unexpected import: ' + name);
@@ -74,7 +73,7 @@ function runtime(options = {}) {
     };
   }
   return { ApiError, data, writes, reads, prompts, load, hook,
-    account: value => { userId = value; }, week: value => { week = value; } };
+    account: value => { userId = value; } };
 }
 
 module.exports = { runtime };

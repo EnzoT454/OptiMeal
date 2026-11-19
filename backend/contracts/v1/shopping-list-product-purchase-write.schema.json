@@ -1,0 +1,41 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "comparison_id": {
+      "format": "uuid",
+      "title": "Comparison Id",
+      "type": "string"
+    },
+    "item_id": {
+      "format": "uuid",
+      "title": "Item Id",
+      "type": "string"
+    },
+    "product_id": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Product Id",
+      "type": "string"
+    },
+    "purchased_units": {
+      "maximum": 1000000,
+      "minimum": 0,
+      "title": "Purchased Units",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "expected_revision",
+    "comparison_id",
+    "item_id",
+    "product_id",
+    "purchased_units"
+  ],
+  "title": "ShoppingProductPurchaseWrite",
+  "type": "object"
+}

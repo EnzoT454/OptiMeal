@@ -7,7 +7,42 @@ dans `backend/alembic/versions/` et leur application dans `public.alembic_versio
 
 ## Installer le schéma et charger le référentiel
 
-La tête du dépôt est `0017_shopping_lists`. Elle crée les huit tables privées
+La tête du dépôt est **0021_shopping_list_pin**. Elle ajoute une liste épinglée
+privée par compte, une référence composée empêchant l’épinglage d’une liste
+étrangère, RLS et cascades. Après validation sur PostgreSQL local jetable, **0021 a été appliquée et vérifiée
+sur Supabase le 16 novembre 2026, depuis 0020 déjà présente**. Révision confirmée
+sur une nouvelle connexion après commit, schéma conforme et RLS vérifiée.
+Les empreintes et comptages des 25 tables préexistantes ainsi que le nombre
+de comptes Auth sont inchangés. Voir
+[les accès Accueil et Calendrier](SHOPPING_ACCESS.md).
+
+La migration **0020_shopping_reuse** ajoute les modèles privés, exclusions,
+commandes idempotentes et origine des copies. Sa présence sur Supabase a été
+constatée avant l’application de 0021. Voir [le guide de réutilisation](SHOPPING_REUSE.md).
+
+La migration précédente est **0019_shopping_courses**, qui ajoute les achats produits
+privés avec instantanés et couvertures. Après tests locaux, elle a été
+**appliquée et vérifiée sur Supabase le 16 novembre 2026**, depuis 0018.
+Révision confirmée après commit sur une nouvelle connexion ; schéma conforme
+aux modèles, RLS active sans politique mobile, deux clés étrangères et index
+vérifiés. Les empreintes et comptages des 21 tables applicatives préexistantes
+et le nombre de comptes Auth sont conservés ; la nouvelle table est vide.
+Voir [le guide des courses](SHOPPING_COURSES.md).
+
+La migration précédente est **0018_shopping_comparisons**. Elle ajoute les
+simulations privées, les choix manuels et les répartitions enregistrées ; RLS
+reste activée et les simulations sont immuables. Migration vérifiée sur PostgreSQL
+local, puis **appliquée sur Supabase le 16 novembre 2026**, depuis 0017 dans
+une transaction. Révision confirmée après commit sur une nouvelle connexion,
+schéma conforme aux modèles (`alembic check`), RLS active sans politique mobile
+sur les trois nouvelles tables et déclencheur d'immutabilité des simulations
+actif. Les empreintes et comptages des 18 tables applicatives préexistantes et
+le nombre de comptes Auth sont conservés. Aucun prix ni donnée utilisateur
+n'a été modifié. Le retour à 0017 refuse
+d’effacer des choix ou répartitions existants. Voir le
+[guide des comparaisons](SHOPPING_COMPARISONS.md).
+
+`0017_shopping_lists` crée les huit tables privées
 du premier lot des listes : listes, articles, quantités, contributions, achats
 manuels, quantités achetées, révisions et commandes idempotentes. Les modèles
 sont enregistrés dans les métadonnées Alembic. RLS est activée sans accès mobile
@@ -464,4 +499,4 @@ Sans cette variable, les tests PostgreSQL restent volontairement ignorés :
 ils ne doivent jamais utiliser automatiquement la base Supabase du projet.
 L’option `-rs` affiche la raison de chaque test ignoré.
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 16 novembre 2026*

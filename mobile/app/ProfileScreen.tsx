@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
 import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { supabase } from '../services/supabase';
 import { Profile } from '../types/api';
+import type { HomeStackParams } from '../types/navigation';
 import { Message } from '../components/ui';
 import { RecipeScreen, recipeColors as c } from '../components/recipes';
 
@@ -15,6 +17,7 @@ type NomIcone = ComponentProps<typeof MaterialCommunityIcons>['name'];
 const ROUGE = '#a32d2d';
 
 export default function ProfileScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { session, requestSignIn, forgetDeletedAccount } = useAuth();
   const userId = session?.user.id;
 
@@ -130,6 +133,12 @@ export default function ProfileScreen() {
       </Section>
 
       <Message text={erreur} />
+
+      {/* Ajout de ton collègue : les ingrédients que l'app ne doit plus suggérer */}
+      <Section titre="Épicerie">
+        <Ligne icone="food-off-outline" titre="Ingrédients non suggérés" derniere
+          onPress={() => navigation.navigate('Exclusions')} disabled={busy} />
+      </Section>
 
       {aPropos}
 

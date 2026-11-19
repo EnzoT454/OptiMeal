@@ -1,4 +1,186 @@
 {
+  "$defs": {
+    "ShoppingBaseQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "ml",
+            "unit"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingBaseQuantity",
+      "type": "object"
+    },
+    "ShoppingCalendarAdjustment": {
+      "additionalProperties": false,
+      "properties": {
+        "item_id": {
+          "format": "uuid",
+          "title": "Item Id",
+          "type": "string"
+        },
+        "required": {
+          "items": {
+            "$ref": "#/$defs/ShoppingBaseQuantity"
+          },
+          "maxItems": 3,
+          "title": "Required",
+          "type": "array"
+        }
+      },
+      "required": [
+        "item_id"
+      ],
+      "title": "ShoppingCalendarAdjustment",
+      "type": "object"
+    },
+    "ShoppingCreationPricing": {
+      "additionalProperties": false,
+      "properties": {
+        "fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "scenario": {
+          "enum": [
+            "maxi",
+            "metro",
+            "superc",
+            "cheapest"
+          ],
+          "title": "Scenario",
+          "type": "string"
+        },
+        "choices": {
+          "items": {
+            "$ref": "#/$defs/ShoppingDraftChoice"
+          },
+          "maxItems": 500,
+          "title": "Choices",
+          "type": "array"
+        },
+        "accept_partial": {
+          "default": false,
+          "title": "Accept Partial",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "fingerprint",
+        "scenario"
+      ],
+      "title": "ShoppingCreationPricing",
+      "type": "object"
+    },
+    "ShoppingDraftChoice": {
+      "additionalProperties": false,
+      "properties": {
+        "item_index": {
+          "maximum": 499,
+          "minimum": 0,
+          "title": "Item Index",
+          "type": "integer"
+        },
+        "product_id": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Product Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "item_index",
+        "product_id"
+      ],
+      "title": "ShoppingDraftChoice",
+      "type": "object"
+    },
+    "ShoppingInitialItem": {
+      "additionalProperties": false,
+      "properties": {
+        "ingredient_id": {
+          "anyOf": [
+            {
+              "pattern": "^ing_[a-z0-9_]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ingredient Id"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ShoppingQuantity"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "ShoppingInitialItem",
+      "type": "object"
+    },
+    "ShoppingQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "kg",
+            "ml",
+            "L",
+            "unit",
+            "cup",
+            "tbsp",
+            "tsp"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingQuantity",
+      "type": "object"
+    }
+  },
   "additionalProperties": false,
   "properties": {
     "start_date": {
@@ -30,6 +212,47 @@
       "title": "Name",
       "type": "string"
     },
+    "pricing": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ShoppingCreationPricing"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ShoppingInitialItem"
+      },
+      "maxItems": 500,
+      "title": "Items",
+      "type": "array"
+    },
+    "excluded_item_ids": {
+      "items": {
+        "format": "uuid",
+        "type": "string"
+      },
+      "maxItems": 500,
+      "title": "Excluded Item Ids",
+      "type": "array"
+    },
+    "adjusted_items": {
+      "items": {
+        "$ref": "#/$defs/ShoppingCalendarAdjustment"
+      },
+      "maxItems": 500,
+      "title": "Adjusted Items",
+      "type": "array"
+    },
+    "activate": {
+      "default": false,
+      "title": "Activate",
+      "type": "boolean"
+    },
     "preview_fingerprint": {
       "pattern": "^[a-f0-9]{64}$",
       "title": "Preview Fingerprint",
@@ -38,6 +261,11 @@
     "accept_partial": {
       "default": false,
       "title": "Accept Partial",
+      "type": "boolean"
+    },
+    "accept_empty": {
+      "default": false,
+      "title": "Accept Empty",
       "type": "boolean"
     }
   },

@@ -1,0 +1,245 @@
+{
+  "$defs": {
+    "ResponseMeta": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Contract Version",
+          "type": "string"
+        },
+        "data_source": {
+          "default": "local_json",
+          "enum": [
+            "local_json",
+            "postgresql"
+          ],
+          "title": "Data Source",
+          "type": "string"
+        },
+        "dataset_kind": {
+          "enum": [
+            "source_snapshot",
+            "demo",
+            "user_content",
+            "mixed"
+          ],
+          "title": "Dataset Kind",
+          "type": "string"
+        },
+        "review_required": {
+          "default": true,
+          "title": "Review Required",
+          "type": "boolean"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        }
+      },
+      "required": [
+        "dataset_kind"
+      ],
+      "title": "ResponseMeta",
+      "type": "object"
+    },
+    "ShoppingBaseQuantity": {
+      "additionalProperties": false,
+      "properties": {
+        "amount": {
+          "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]+)?$",
+          "title": "Amount",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "g",
+            "ml",
+            "unit"
+          ],
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "unit"
+      ],
+      "title": "ShoppingBaseQuantity",
+      "type": "object"
+    },
+    "ShoppingTemplateItem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "ingredient_id": {
+          "anyOf": [
+            {
+              "pattern": "^ing_[a-z0-9_]+$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Ingredient Id"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "category": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Category",
+          "type": "string"
+        },
+        "required": {
+          "items": {
+            "$ref": "#/$defs/ShoppingBaseQuantity"
+          },
+          "maxItems": 3,
+          "title": "Required",
+          "type": "array"
+        },
+        "preferred_product_id": {
+          "anyOf": [
+            {
+              "maxLength": 512,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Preferred Product Id"
+        }
+      },
+      "required": [
+        "id",
+        "ingredient_id",
+        "name",
+        "category",
+        "required"
+      ],
+      "title": "ShoppingTemplateItem",
+      "type": "object"
+    },
+    "ShoppingTemplateRead": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "icon": {
+          "enum": [
+            "basket",
+            "cart",
+            "leaf",
+            "restaurant",
+            "home"
+          ],
+          "title": "Icon",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/ShoppingTemplateItem"
+          },
+          "maxItems": 500,
+          "title": "Items",
+          "type": "array"
+        },
+        "deleted": {
+          "default": false,
+          "title": "Deleted",
+          "type": "boolean"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "updated_at": {
+          "format": "date-time",
+          "title": "Updated At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "icon",
+        "revision",
+        "items",
+        "created_at",
+        "updated_at"
+      ],
+      "title": "ShoppingTemplateRead",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ShoppingTemplateRead"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "total": {
+      "minimum": 0,
+      "title": "Total",
+      "type": "integer"
+    },
+    "limit": {
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Limit",
+      "type": "integer"
+    },
+    "offset": {
+      "minimum": 0,
+      "title": "Offset",
+      "type": "integer"
+    },
+    "meta": {
+      "$ref": "#/$defs/ResponseMeta"
+    }
+  },
+  "required": [
+    "items",
+    "total",
+    "limit",
+    "offset",
+    "meta"
+  ],
+  "title": "Page[ShoppingTemplateRead]",
+  "type": "object"
+}

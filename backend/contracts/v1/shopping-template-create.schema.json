@@ -1,0 +1,45 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "source_list_id": {
+      "format": "uuid",
+      "title": "Source List Id",
+      "type": "string"
+    },
+    "source_revision": {
+      "minimum": 1,
+      "title": "Source Revision",
+      "type": "integer"
+    },
+    "name": {
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "icon": {
+      "default": "basket",
+      "enum": [
+        "basket",
+        "cart",
+        "leaf",
+        "restaurant",
+        "home"
+      ],
+      "title": "Icon",
+      "type": "string"
+    },
+    "include_choices": {
+      "default": false,
+      "title": "Include Choices",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "source_list_id",
+    "source_revision",
+    "name"
+  ],
+  "title": "ShoppingTemplateCreate",
+  "type": "object"
+}
