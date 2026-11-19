@@ -12,10 +12,11 @@ import RecipeImage from '../components/RecipeImage';
 import { useAuth } from '../context/AuthContext';
 
 type Section = Exclude<RecipeScope, 'accessible'>;
-const sections: { value: Section; label: string }[] = [
-  { value: 'discover', label: 'Découvrir' },
-  { value: 'mine', label: 'Mes recettes' },
-  { value: 'favorites', label: 'Favoris' },
+// largeur : « Mes recettes » est plus long, il reçoit un peu plus de place
+const sections: { value: Section; label: string; largeur: number }[] = [
+  { value: 'discover', label: 'Découvrir', largeur: 1 },
+  { value: 'mine', label: 'Mes recettes', largeur: 1.3 },
+  { value: 'favorites', label: 'Favoris', largeur: 0.9 },
 ];
 const filters = [
   { label: 'Toutes', icon: 'view-grid-outline' },
@@ -100,9 +101,11 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
     <View style={{ flexDirection: 'row', padding: 4, gap: 4, borderRadius: 14, backgroundColor: recipeColors.light }}>
       {sections.map(option => <Pressable key={option.value} accessibilityRole="tab" accessibilityLabel={option.label}
         accessibilityState={{ selected: activeSection === option.value }} onPress={() => selectSection(option.value)}
-        style={{ flex: 1, minHeight: 48, paddingHorizontal: 6, paddingVertical: 12, borderRadius: 10,
+        style={{ flex: option.largeur, minHeight: 48, paddingHorizontal: 6, paddingVertical: 12, borderRadius: 10,
           justifyContent: 'center', alignItems: 'center', backgroundColor: activeSection === option.value ? recipeColors.green : 'transparent' }}>
-        <Text style={[recipeStyles.body, { fontFamily: 'DMSans_700Bold', textAlign: 'center', color: activeSection === option.value ? 'white' : recipeColors.green }]}>{option.label}</Text>
+        {/* Une seule ligne : avec une grande police, le texte rapetisse au lieu d'être coupé au milieu d'un mot */}
+        <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75} maxFontSizeMultiplier={1.2}
+          style={[recipeStyles.body, { fontFamily: 'DMSans_700Bold', textAlign: 'center', color: activeSection === option.value ? 'white' : recipeColors.green }]}>{option.label}</Text>
       </Pressable>)}
     </View>
     <RecipeField label="Rechercher" placeholder={activeSection === 'mine' ? 'Rechercher dans mes recettes' : activeSection === 'favorites' ? 'Rechercher dans mes favoris' : 'Rechercher une recette publique'}
@@ -118,8 +121,9 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
     {filter === 'Petit budget' ? <View style={recipeStyles.notice}>
       <Text style={recipeStyles.sectionTitle}>Petit budget</Text><Text style={recipeStyles.body}>Disponible prochainement.</Text>
     </View> : <>
-    <View style={recipeStyles.row}><Text style={[recipeStyles.sectionTitle, { flex: 1 }]}>{activeSection === 'discover' ? 'Recettes à découvrir' : activeSection === 'mine' ? 'Mes recettes' : 'Mes favoris'}</Text>
-      <Text style={recipeStyles.count}>{busy ? '…' : `${total} recette${total > 1 ? 's' : ''}`}</Text></View>
+    <View style={recipeStyles.row}><Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} maxFontSizeMultiplier={1.2}
+      style={[recipeStyles.sectionTitle, { flex: 1 }]}>{activeSection === 'discover' ? 'Recettes à découvrir' : activeSection === 'mine' ? 'Mes recettes' : 'Mes favoris'}</Text>
+      <Text style={recipeStyles.count} maxFontSizeMultiplier={1.2}>{busy ? '…' : `${total} recette${total > 1 ? 's' : ''}`}</Text></View>
     {activeSection !== 'mine' && <View accessibilityRole="radiogroup" accessibilityLabel="Trier les recettes" style={recipeStyles.chips}>
       {sortOptions.map(option => <Pressable key={option.value} accessibilityRole="radio" accessibilityLabel={option.label}
         accessibilityState={{ checked: activeSort === option.value }} onPress={() => {
