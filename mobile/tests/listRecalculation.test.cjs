@@ -32,9 +32,9 @@ const quote = () => ({ fingerprint: 'prices', scenarios: [{ scenario: 'cheapest'
     { item_id: 'rice', product_id: 'superc:1:rice', retailer: 'superc', name: 'Riz inconnu', units: null, amount: null, format: null, issue: 'Prix inconnu' },
     { item_id: 'milk', product_id: 'milk', retailer: 'maxi', name: 'Lait', units: 1, amount: '2.00' },
   ] });
-function panel({ respond, result = true } = {}) {
+function panel({ respond, result = true, resource, otherStoresOnly = false } = {}) {
   const api = services(), hooks = [], effects = [], reads = [], commands = [];
-  let list = { id: 'list', revision: 4 }, cursor = 0, closed = 0;
+  let list = resource ?? { id: 'list', revision: 4 }, cursor = 0, closed = 0;
   const auth = { session: { user: { id: 'alice' } } }, exports = {}, jsx = (type, props) => ({ type, props: props ?? {} });
   vm.runInNewContext(ts.transpileModule(source('components/lists/ListProductAlternatives.tsx'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
@@ -53,7 +53,7 @@ function panel({ respond, result = true } = {}) {
     if (name.endsWith('shoppingLists')) return { ...api, fetchPriceOptions: async (...args) => { reads.push(args); return respond ? respond(...args) : quote(); } };
     throw new Error(name);
   } });
-  const render = () => { cursor = 0; const tree = exports.default({ list, itemId: 'rice', disabled: false,
+  const render = () => { cursor = 0; const tree = exports.default({ list, itemId: 'rice', disabled: false, otherStoresOnly,
     onCommand: async command => { commands.push(command); return result; }, onClose: () => { closed++; } }); while (effects.length) effects.shift()(); return tree; };
   return { render, reads, commands, auth, closed: () => closed, async ready() { render(); await flush(); return render(); },
     changeRevision() { list = { ...list, revision: list.revision + 1 }; render(); }, unmount() { for (const hook of hooks) hook.cleanup?.(); } };
@@ -72,7 +72,8 @@ test('les alternatives s’ouvrent directement, uniquement pour l’ingrédient 
 });
 test('choisir un autre magasin recalcule le panier sans envoyer de montant ou modifier les achats côté client', async () => {
   const p = panel(); await p.ready(); button(p, 'Metro · Autre riz').props.onPress(); await flush();
-  assert.deepEqual(JSON.parse(JSON.stringify(p.commands[0].body)), { expected_revision: 4, scenario: 'cheapest', choices: [{ item_id: 'rice', product_id: 'metro:1:rice' }] });
+  assert.deepEqual(JSON.parse(JSON.stringify(p.commands[0].body)), { expected_revision: 4, product_id: 'metro:1:rice' });
+  assert.equal(p.commands[0].path, '/api/v1/shopping-lists/list/items/rice/selected-product');
   assert.equal(p.closed(), 1);
 });
 test('un produit sans prix est désactivé et un enregistrement refusé garde les alternatives ouvertes', async () => {
@@ -100,4 +101,14 @@ test('échec réseau : réessayer explicitement, avec protection contre les doub
   await p.ready(); const press = button(p, 'Réessayer').props.onPress;
   press(); press(); assert.equal(p.reads.length, 2);
   finish(quote()); await flush(); assert.ok(button(p, 'Maxi · Riz'));
+});
+
+
+test('autres magasins : masque le magasin choisi et conserve les équivalents du même ingrédient', async () => {
+  const p = panel({ otherStoresOnly: true, resource: { id: 'list', revision: 4,
+    choices: [{ item_id: 'rice', product_id: 'maxi:1:rice' }],
+    assignment: { selected_products: { 'maxi:1:rice': { retailer: 'maxi', store_id: null } } } } });
+  await p.ready(); assert.equal(button(p, 'Maxi · Riz'), undefined);
+  assert.ok(button(p, 'Metro · Autre riz')); assert.equal(button(p, 'Maxi · Lait'), undefined);
+  button(p, 'Metro · Autre riz').props.onPress(); await flush(); assert.equal(p.closed(), 1);
 });

@@ -310,6 +310,17 @@
               "default": 0,
               "title": "Offset"
             }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "default": "",
+              "title": "Q"
+            }
           }
         ],
         "responses": {
@@ -3138,6 +3149,124 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ShoppingItemAdd"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingListRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/shopping-lists/{list_id}/items/{item_id}/selected-product": {
+      "put": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Select Product",
+        "operationId": "select_product_api_v1_shopping_lists__list_id__items__item_id__selected_product_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "List Id"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingChoiceWrite"
               }
             }
           }
@@ -9003,6 +9132,13 @@
             "type": "boolean",
             "title": "Stale",
             "default": false
+          },
+          "selected_products": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/SourceProduct"
+            },
+            "type": "object",
+            "title": "Selected Products"
           }
         },
         "additionalProperties": false,
@@ -10219,6 +10355,21 @@
             ],
             "title": "Purchase Date"
           },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "articles",
+                  "products"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
           "name": {
             "type": "string",
             "maxLength": 120,
@@ -10372,6 +10523,19 @@
             ],
             "title": "Merge",
             "default": "add"
+          },
+          "product_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 512,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Id"
           }
         },
         "additionalProperties": false,
@@ -10500,6 +10664,24 @@
             "minimum": 1.0,
             "title": "Expected Revision"
           },
+          "refresh_prices": {
+            "type": "boolean",
+            "title": "Refresh Prices",
+            "default": false
+          },
+          "product_units": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 1000000.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Units"
+          },
           "name": {
             "anyOf": [
               {
@@ -10544,6 +10726,21 @@
       },
       "ShoppingListCreate": {
         "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "articles",
+                  "products"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
           "name": {
             "type": "string",
             "maxLength": 120,
@@ -10595,6 +10792,21 @@
       },
       "ShoppingListRead": {
         "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "articles",
+                  "products"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
           "id": {
             "type": "string",
             "format": "uuid",
@@ -11197,6 +11409,11 @@
             "minimum": 1.0,
             "title": "Expected Revision"
           },
+          "refresh_date": {
+            "type": "boolean",
+            "title": "Refresh Date",
+            "default": false
+          },
           "scenario": {
             "anyOf": [
               {
@@ -11221,6 +11438,23 @@
             "type": "array",
             "maxItems": 500,
             "title": "Choices"
+          },
+          "expected_fingerprint": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Fingerprint"
+          },
+          "accept_partial": {
+            "type": "boolean",
+            "title": "Accept Partial",
+            "default": false
           }
         },
         "additionalProperties": false,
@@ -11393,6 +11627,11 @@
             "type": "boolean",
             "title": "Include Choices",
             "default": false
+          },
+          "activate": {
+            "type": "boolean",
+            "title": "Activate",
+            "default": false
           }
         },
         "additionalProperties": false,
@@ -11470,6 +11709,21 @@
       },
       "ShoppingTemplateRead": {
         "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "articles",
+                  "products"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
           "id": {
             "type": "string",
             "format": "uuid",

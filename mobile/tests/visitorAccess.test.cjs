@@ -75,7 +75,7 @@ test('sans compte, les cinq onglets sont disponibles sans formulaire de connexio
   assert.equal(homeRoutes[1].props.options.headerBackTitle, 'Accueil');
   const liste = rendered.find(n => n.type === 'Route' && n.props.name === 'Liste');
   const listRoutes = nodes(liste.props.component()).filter(n => n.type === 'Route');
-  assert.deepEqual(listRoutes.map(n => n.props.name), ['Lists', 'CreateList', 'History', 'TemplateDetail', 'ReuseList', 'ShoppingDetail']);
+  assert.deepEqual(listRoutes.map(n => n.props.name), ['Lists', 'CreateList', 'Comparison', 'AllLists', 'History', 'TemplateDetail', 'ReuseList', 'ShoppingDetail']);
   assert.equal(listRoutes[0].props.component, './app/ListScreen');
 });
 

@@ -21,6 +21,11 @@
       "default": false,
       "title": "Include Choices",
       "type": "boolean"
+    },
+    "activate": {
+      "default": false,
+      "title": "Activate",
+      "type": "boolean"
     }
   },
   "required": [

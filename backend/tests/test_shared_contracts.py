@@ -54,6 +54,16 @@ def test_offers_namespace_raw_format_and_exact_prices(client):
     assert client.get('/api/v1/offers?store_id=superc:605&limit=100').json()['total'] == 31
 
 
+def test_offer_search_is_paginated_and_filters_names_or_ingredient_aliases(client):
+    first = client.get('/api/v1/offers?q=tomate&limit=1').json()
+    second = client.get('/api/v1/offers?q=tomate&limit=1&offset=1').json()
+    assert first['total'] >= 3 and len(first['items']) == 1
+    assert first['items'][0]['ingredient_id'] == second['items'][0]['ingredient_id'] == 'ing_tomate_fraiche'
+    assert first['items'][0]['product_id'] != second['items'][0]['product_id']
+    assert client.get('/api/v1/offers?q=introuvable_xyz&limit=8').json()['total'] == 0
+    assert client.get('/api/v1/offers', params={'q': 'x' * 201}).status_code == 422
+
+
 @pytest.mark.parametrize('query', ['limit=0', 'limit=101', 'offset=-1', 'retailer=inconnu',
                                   'ingredient_id=4', 'on_date=2026-02-30'])
 def test_invalid_parameters_have_shared_errors(client, query):

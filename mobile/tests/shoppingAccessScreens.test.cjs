@@ -31,6 +31,7 @@ function screen(file, options = {}) {
       if (name.endsWith('AuthContext')) return { useAuth: () => ({ session: user ? { user: { id: user } } : null }) };
       if (name.endsWith('useListCommand')) return { useListCommand: scope => ({ ready: true, busy: false, pending: options.pending ?? null, error: '', locked: false,
         run: async command => { calls.push(['command', scope, command]); return options.result ?? { list_id: 'selected', id: 'saved' }; } }) };
+      if (name.endsWith('InstantListCreation')) return { __esModule: true, default: 'InstantCreate' };
       if (name.endsWith('CreationPrices')) return { __esModule: true, default: 'CreationPrices' };
       if (name.endsWith('IngredientPicker') || name.endsWith('RecipeUnitPicker')) return { __esModule: true, default: name };
       if (name.endsWith('courseQuantities')) return { positiveAmount: value => /^([1-9][0-9]*)([.,][0-9]+)?$/.test(value) ? value.replace(',', '.') : null };
@@ -53,7 +54,7 @@ function screen(file, options = {}) {
       throw new Error(name);
     },
   });
-  const render = () => { index = 0; return exports.default(props); };
+  const render = () => { index = 0; let tree = exports.default(props); if (typeof tree?.type === 'function') tree = tree.type(tree.props); return tree; };
   return { render, calls, list, navigations, set user(value) { user = value; },
     async ready() { render(); effects.splice(0).forEach(fn => fn()); await tick(); return render(); } };
 }
@@ -84,19 +85,33 @@ test('Calendrier charge la période explicite, puis ouvre exactement la liste pr
   const call = h.calls.find(c => c[0] === 'lists'); assert.equal(call[1], 20); assert.equal(call[3], period); assert.equal(call[4], 'alice');
   nodes(h.render()).find(n => n.type === 'SavedListCard').props.onOpen(); assert.deepEqual(opened, ['selected']);
 });
-test('résumé commun : afficher les décimaux serveur et le sous-total incomplet sans prix inventé', () => {
-  // Load totals through the same source, selecting its named export below.
+test('résumé commun : compteurs accessibles avec icônes et statut dans le bloc', () => {
   const source = fs.readFileSync(path.join(__dirname, '../components/lists/SavedListCard.tsx'), 'utf8');
   const exports = {}, jsx = (type, props) => ({ type, props });
-  vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText, { exports, require: name => name === 'react/jsx-runtime' ? { jsx, jsxs: jsx } : name === 'react-native' ? { Text: 'Text', Pressable: 'Pressable' } : name.endsWith('/recipes') ? { recipeStyles: {} } : { dateLabel: x => x } });
+  vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX } }).outputText, { exports, require(name) {
+    if (name === 'react/jsx-runtime') return { jsx, jsxs: jsx };
+    if (name === 'react-native') return { Text: 'Text', View: 'View', Pressable: 'Pressable' };
+    if (name.includes('@expo/vector-icons')) return { __esModule: true, default: 'Icon' };
+    if (name.endsWith('/recipes')) return { recipeStyles: {}, recipeColors: {} };
+    if (name.endsWith('shoppingPresentation')) return require('./helpers/loadShoppingPresentation.cjs')();
+    if (name.endsWith('ShoppingPriceSummary')) return { __esModule: true, default: 'PriceSummary' };
+    return { dateLabel: x => x };
+  } });
   const h = screen('components/lists/CalendarLists.tsx', { props: { period: { start_date: '', end_date: '' } } });
-  const rendered = text(exports.SavedListTotals({ list: h.list }));
-  assert.match(rendered, /Sous-total connu/); assert.match(rendered, /19,90/); assert.match(rendered, /9,95/);
+  const list = { ...h.list, kind: 'products' };
+  const tree = exports.SavedListTotals({ list });
+  assert.equal(nodes(tree).find(n => n.type === 'PriceSummary').props.list, list);
+  assert.match(text(tree), /Liste en cours/);
+  for (const label of ['4 produits', '2 à acheter', '1 achetés', '1 disponibles', '0 magasins']) assert.ok(nodes(tree).some(n => n.props.accessibilityLabel === label));
+  assert.equal(nodes(tree).filter(n => n.type === 'Icon').length, 6);
+  const articles = exports.SavedListTotals({ list: { ...list, kind: 'articles' } });
+  assert.equal(nodes(articles).some(n => n.type === 'PriceSummary'), false);
 });
 
 test('épinglage : état cible explicite, commande privée et relecture après réponse', async () => {
   const h = screen('components/lists/PinListAction.tsx', { props: { id: 'selected', disabled: false } });
   await h.ready();
+  assert.doesNotMatch(text(h.render()), /Cette liste est épinglée/);
   nodes(h.render()).find(n => n.props.title === 'Ne plus épingler sur Accueil').props.onPress(); await tick();
   const [, scope, command] = h.calls.find(c => c[0] === 'command');
   assert.equal(scope, 'pin'); assert.equal(command.method, 'PUT'); assert.equal(command.body.list_id, null);
@@ -108,135 +123,69 @@ test('épinglage incertain : reprendre exactement l’ancienne cible, même depu
   await h.ready(); nodes(h.render()).find(n => n.props.title === 'Reprendre l’épinglage').props.onPress(); await tick();
   assert.equal(h.calls.find(c => c[0] === 'command')[2], pending);
 });
-test('création depuis Calendrier : préremplir la période demandée et l’envoyer à l’aperçu', async () => {
-  const period = { start_date: '2027-01-04', end_date: '2027-01-10' };
-  const h = screen('app/CreateListScreen.tsx', { props: { route: { params: { period } }, navigation: {} } });
-  h.render(); const fields = nodes(h.render()).filter(n => n.type === 'DateField');
-  assert.equal(fields.find(n => n.props.label === 'Premier jour inclus').props.value, period.start_date);
-  assert.equal(fields.find(n => n.props.label === 'Dernier jour inclus').props.value, period.end_date);
-  nodes(h.render()).find(n => n.props.title === 'Voir l’aperçu').props.onPress(); await tick();
-  assert.equal(h.calls.find(c => c[0] === 'preview')[1].start_date, period.start_date);
-});
-
 const button = (h, title) => nodes(h.render()).find(n => n.props.title === title);
 const field = (h, label) => nodes(h.render()).find(n => n.props.label === label);
-const creation = options => screen('app/CreateListScreen.tsx', { ...options, props: { route: { params: undefined }, navigation: { replace() {} } } });
-test('création manuelle : préparer tous les articles sans écriture puis envoyer une seule liste active complète', async () => {
-  const h = creation(); h.render();
-  field(h, 'Nom de la liste').props.onChangeText('Barbecue');
-  assert.equal(button(h, 'Suivant').props.disabled, true);
-  field(h, 'Article').props.onChangeText('Pain');
-  button(h, 'Ajouter l’article').props.onPress();
-  field(h, 'Article').props.onChangeText('Serviettes');
-  button(h, 'Ajouter l’article').props.onPress();
-  assert.equal(h.calls.filter(c => c[0] === 'command').length, 0);
-  assert.equal(button(h, 'Suivant').props.disabled, false);
-  await button(h, 'Suivant').props.onPress(); await tick();
-  assert.equal(h.calls.filter(c => c[0] === 'command').length, 0);
-  nodes(h.render()).find(n => n.type === 'CreationPrices').props.onSelect('cheapest');
-  button(h, 'Créer la liste').props.onPress(); await tick();
-  const commands = h.calls.filter(c => c[0] === 'command');
-  assert.equal(commands.length, 1);
-  assert.equal(commands[0][2].path, '/api/v1/shopping-lists');
-  assert.deepEqual(JSON.parse(JSON.stringify(commands[0][2].body)), { name: 'Barbecue', purchase_date: '2026-11-16', activate: true,
-    items: [{ name: 'Pain', ingredient_id: null, quantity: null }, { name: 'Serviettes', ingredient_id: null, quantity: null }],
-    pricing: { fingerprint: 'quoted-prices', scenario: 'cheapest', choices: [], accept_partial: false } });
-});
-test('création : modifier ou retirer un article reste local et une saisie inachevée bloque la validation', async () => {
-  const h = creation(); h.render();
-  field(h, 'Nom de la liste').props.onChangeText('Voyage');
-  field(h, 'Article').props.onChangeText('Pain'); button(h, 'Ajouter l’article').props.onPress();
-  button(h, 'Modifier Pain').props.onPress();
-  field(h, 'Article').props.onChangeText('Bagels');
-  assert.equal(button(h, 'Suivant').props.disabled, true);
-  button(h, 'Enregistrer l’article').props.onPress();
-  assert.ok(button(h, 'Modifier Bagels')); assert.equal(button(h, 'Modifier Pain'), undefined);
-  button(h, 'Retirer Bagels').props.onPress();
-  assert.equal(button(h, 'Suivant').props.disabled, true);
-  assert.equal(h.calls.filter(c => c[0] === 'command').length, 0);
-});
-test('création calendrier : vérifier, retirer un besoin et compléter les articles avant un seul enregistrement', async () => {
+function calendar(options = {}) {
   const period = { start_date: '2027-01-04', end_date: '2027-01-10' };
-  const preview = { period, preview_fingerprint: 'proof', included_meal_count: 1, skipped_note_count: 0, skipped_leftover_count: 0,
-    excluded_meals: [], excluded_ingredient_ids: [], warnings: [], items: [{ id: 'rice', name: 'Riz', required: [{ amount: '500', unit: 'g' }], contributions: [] }] };
-  const h = screen('app/CreateListScreen.tsx', { preview, props: { route: { params: { period } }, navigation: { replace() {} } } });
-  h.render(); field(h, 'Nom de la liste').props.onChangeText('Semaine');
-  await button(h, 'Voir l’aperçu').props.onPress(); await tick();
-  button(h, 'Retirer Riz de l’aperçu').props.onPress();
-  assert.equal(button(h, 'Suivant').props.disabled, true);
-  field(h, 'Article').props.onChangeText('Pain'); button(h, 'Ajouter l’article').props.onPress();
-  await button(h, 'Suivant').props.onPress(); await tick();
-  nodes(h.render()).find(n => n.type === 'CreationPrices').props.onSelect('cheapest');
+  const preview = { period, preview_fingerprint: 'proof', included_meal_count: 1, skipped_note_count: 1,
+    skipped_leftover_count: 1, excluded_meals: [], excluded_ingredient_ids: [], warnings: [],
+    items: [{ id: 'rice', name: 'Riz', ingredient_id: 'ing_riz', required: [{ amount: '500', unit: 'g' }], contributions: [] }] };
+  return screen('app/CreateListScreen.tsx', { preview, ...options, props: { route: { params: { period } }, navigation: { replace() {} } } });
+}
+test('calendrier : période transmise et création sans seconde revue de prix', async () => {
+  const h = calendar(); await h.ready();
+  assert.equal(field(h, 'Premier jour inclus'), undefined);
+  assert.equal(field(h, 'Dernier jour inclus'), undefined);
+  field(h, 'Quantité de Riz (g)').props.onChangeText('750');
   button(h, 'Créer la liste').props.onPress(); await tick();
   const intent = h.calls.find(c => c[0] === 'command')[2];
   assert.equal(intent.path, '/api/v1/shopping-lists/from-calendar');
-  assert.equal(intent.body.activate, true); assert.equal(intent.body.items.length, 1);
-  assert.deepEqual(Array.from(intent.body.excluded_item_ids), ['rice']);
-});
-
-test('prix de création : revenir aux ingrédients conserve la saisie et ne sauvegarde aucun brouillon', async () => {
-  const h = creation(); h.render();
-  field(h, 'Nom de la liste').props.onChangeText('Voyage');
-  field(h, 'Article').props.onChangeText('Pain'); button(h, 'Ajouter l’article').props.onPress();
-  await button(h, 'Suivant').props.onPress(); await tick();
-  assert.equal(field(h, 'Nom de la liste'), undefined);
-  assert.equal(button(h, 'Créer la liste').props.disabled, true);
-  button(h, 'Précédent').props.onPress();
-  assert.equal(field(h, 'Nom de la liste').props.value, 'Voyage');
-  assert.ok(button(h, 'Modifier Pain'));
-  assert.equal(h.calls.filter(c => c[0] === 'command').length, 0);
-});
-test('prix de création : un choix de produit relance le calcul et sauvegarde le panier personnalisé', async () => {
-  const h = creation(); h.render();
-  field(h, 'Nom de la liste').props.onChangeText('Courses');
-  field(h, 'Article').props.onChangeText('Pain'); button(h, 'Ajouter l’article').props.onPress();
-  await button(h, 'Suivant').props.onPress(); await tick();
-  nodes(h.render()).find(n => n.type === 'CreationPrices').props.onPick({ item_index: 0, product_id: 'metro:1:pain' }); await tick();
-  const read = h.calls.filter(c => c[0] === 'prices').at(-1);
-  assert.deepEqual(JSON.parse(JSON.stringify(read[1].choices)), [{ item_index: 0, product_id: 'metro:1:pain' }]);
-  assert.equal(read[2], 'alice');
-  button(h, 'Créer la liste').props.onPress(); await tick();
-  const intent = h.calls.find(c => c[0] === 'command')[2];
-  assert.equal(intent.body.pricing.scenario, 'cheapest');
-  assert.equal(intent.body.pricing.choices[0].product_id, 'metro:1:pain');
-});
-test('échec du calcul : conserver les ingrédients et ne créer aucune liste', async () => {
-  const h = creation({ priceLoad: async () => { throw new Error('Réseau indisponible'); } }); h.render();
-  field(h, 'Nom de la liste').props.onChangeText('Courses');
-  field(h, 'Article').props.onChangeText('Pain'); button(h, 'Ajouter l’article').props.onPress();
-  await button(h, 'Suivant').props.onPress(); await tick();
-  assert.equal(field(h, 'Nom de la liste').props.value, 'Courses');
-  assert.equal(button(h, 'Créer la liste'), undefined);
-  assert.equal(h.calls.filter(c => c[0] === 'command').length, 0);
-});
-test('calendrier : ajuster une quantité directement avant de voir les prix', async () => {
-  const period = { start_date: '2027-01-04', end_date: '2027-01-10' };
-  const preview = { period, preview_fingerprint: 'proof', included_meal_count: 1, skipped_note_count: 0, skipped_leftover_count: 0,
-    excluded_meals: [], excluded_ingredient_ids: [], warnings: [], items: [{ id: 'rice', ingredient_id: 'ing_riz', name: 'Riz', required: [{ amount: '500', unit: 'g' }], contributions: [] }] };
-  const h = screen('app/CreateListScreen.tsx', { preview, props: { route: { params: { period } }, navigation: { replace() {} } } });
-  h.render(); field(h, 'Nom de la liste').props.onChangeText('Semaine');
-  await button(h, 'Voir l’aperçu').props.onPress(); await tick();
-  field(h, 'Quantité de Riz (g)').props.onChangeText('-1');
-  await button(h, 'Suivant').props.onPress(); await tick();
+  assert.equal(intent.body.start_date, '2027-01-04');
+  assert.equal(intent.body.adjusted_items[0].required[0].amount, '750');
+  assert.equal(intent.body.activate, true);
+  assert.equal(intent.body.pricing, undefined);
   assert.equal(h.calls.filter(c => c[0] === 'prices').length, 0);
-  field(h, 'Quantité de Riz (g)').props.onChangeText('750');
-  await button(h, 'Suivant').props.onPress(); await tick();
-  assert.equal(h.calls.find(c => c[0] === 'prices')[1].items[0].required[0].amount, '750');
-  nodes(h.render()).find(n => n.type === 'CreationPrices').props.onSelect('maxi');
+});
+test('calendrier : une quantité incorrecte conserve le contexte et bloque la sauvegarde', async () => {
+  const h = calendar(); await h.ready();
+  field(h, 'Quantité de Riz (g)').props.onChangeText('-1');
   button(h, 'Créer la liste').props.onPress(); await tick();
-  assert.equal(h.calls.find(c => c[0] === 'command')[2].body.adjusted_items[0].required[0].amount, '750');
+  assert.equal(h.calls.filter(c => c[0] === 'command').length, 0);
+  assert.equal(field(h, 'Quantité de Riz (g)').props.value, '-1');
+  assert.match(text(h.render()), /Vérifie les quantités/);
+});
+test('calendrier : retirer le seul besoin ne produit pas une copie sans provenance fictive', async () => {
+  const h = calendar(); await h.ready();
+  button(h, 'Retirer Riz de l’aperçu').props.onPress();
+  assert.equal(button(h, 'Créer la liste').props.disabled, true);
+  assert.equal(h.calls.filter(c => c[0] === 'command').length, 0);
 });
 
-test('un panier incomplet exige une confirmation avant l’enregistrement', async () => {
-  const h = creation({ quote: { fingerprint: 'partial', candidates: [], scenarios: [{ scenario: 'cheapest', complete: false }] } });
-  h.render(); field(h, 'Nom de la liste').props.onChangeText('Courses');
-  field(h, 'Article').props.onChangeText('Inconnu'); button(h, 'Ajouter l’article').props.onPress();
-  await button(h, 'Suivant').props.onPress(); await tick();
-  nodes(h.render()).find(n => n.type === 'CreationPrices').props.onSelect('cheapest');
-  button(h, 'Créer la liste').props.onPress();
+// La création manuelle et calendrier n’imposent aucun choix de prix.
+test('création instantanée : une commande active vide, sans devis ni choix de prix', async () => {
+  const ids = [];
+  const h = screen('components/lists/InstantListCreation.tsx', { props: { onCreated: id => ids.push(id) } });
+  await h.ready(); await tick();
+  const calls = h.calls.filter(c => c[0] === 'command');
+  assert.equal(calls.length, 1);
+  assert.deepEqual(JSON.parse(JSON.stringify(calls[0][2].body)), { kind: 'articles', name: 'Mes courses', activate: true, items: [] });
+  assert.deepEqual(ids, ['saved']);
+  await h.ready();
+  assert.equal(h.calls.filter(c => c[0] === 'command').length, 1);
+});
+test('création instantanée : une commande restaurée attend la reprise explicite', async () => {
+  const pending = { key: 'original', body: { name: 'Mes courses' }, path: '/api/v1/shopping-lists' };
+  const h = screen('components/lists/InstantListCreation.tsx', { pending, props: { onCreated() {} } });
+  await h.ready();
   assert.equal(h.calls.filter(c => c[0] === 'command').length, 0);
-  const confirmation = h.calls.find(c => c[0] === 'alert');
-  assert.equal(confirmation[3][0].text, 'Annuler');
-  confirmation[3][1].onPress(); await tick();
-  assert.equal(h.calls.find(c => c[0] === 'command')[2].body.pricing.accept_partial, true);
+  button(h, 'Reprendre la création').props.onPress(); await tick();
+  assert.equal(h.calls.find(c => c[0] === 'command')[2], pending);
+});
+
+
+test('créer une liste propose Articles ou Produits avant toute écriture', async () => {
+  const h = screen('app/CreateListScreen.tsx', { props: { route: { params: undefined } } }); await h.ready();
+  assert.equal(h.calls.some(call => call[0] === 'command'), false);
+  button(h, 'Liste de produits').props.onPress();
+  assert.equal(h.render().props.kind, 'products');
 });

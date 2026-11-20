@@ -18,7 +18,7 @@ from .purchases import _ceil, _cents, _money, _quantity
 from .schemas import (
     ShoppingAppliedComparison, ShoppingCalculatedLine,
     ShoppingComparedNeed, ShoppingComparisonRead, ShoppingDraftItem, ShoppingDraftPricingRead,
-    ShoppingDraftPricingWrite, ShoppingDraftProduct, ShoppingProductChoice,
+    ShoppingDraftPricingWrite, ShoppingDraftProduct,
 )
 
 
@@ -189,18 +189,22 @@ def attach(db, list_id, user, pricing, source):
     identities = {item_identity(index): item.id for index, item in enumerate(resource.items)}
     scenarios = [s.model_copy(update={'needs': [n.model_copy(update={'item_ids': [identities[i] for i in n.item_ids]}) for n in s.needs]}) for s in quote.scenarios]
     selected = next(s for s in scenarios if s.scenario == pricing.scenario)
+    # Les listes de produits figent tous les choix du scénario, sans toucher aux anciens clients.
+    chosen_needs = [n for n in selected.needs if n.lines and (resource.kind == 'products' or
+        pricing.scenario == 'cheapest' and n.manual)]
+    for need in chosen_needs:
+        for item_id in need.item_ids:
+            db.execute(insert(ShoppingListChoice).values(list_id=list_id, item_id=item_id, product_id=need.lines[0].sale.product_id))
+    # Relire les choix dans l'ordre canonique du stockage (UUID), et non celui des rayons.
+    # Sinon un panier de plusieurs ingrédients peut être périmé dès sa première lecture.
+    resource = service._snapshot(db, list_id, user)
     comparison = ShoppingComparisonRead(id=uuid4(), list_id=list_id, source_revision=resource.revision,
         purchase_date=resource.purchase_date, catalog_fingerprint=quote.fingerprint, state_fingerprint=state_fingerprint(resource),
         expires_at=datetime.now(timezone.utc) + timedelta(minutes=15), scenarios=scenarios, candidates=[])
     db.execute(insert(ShoppingListComparison).values(id=comparison.id, list_id=list_id, data=comparison.model_dump(mode='json')))
-    if pricing.scenario == 'cheapest':
-        for need in selected.needs:
-            if need.manual and need.lines:
-                for item_id in need.item_ids:
-                    db.execute(insert(ShoppingListChoice).values(list_id=list_id, item_id=item_id, product_id=need.lines[0].sale.product_id))
-        resource = resource.model_copy(update={'choices': [ShoppingProductChoice(item_id=i, product_id=n.lines[0].sale.product_id)
-            for n in selected.needs if n.manual and n.lines for i in n.item_ids]})
     assignment = ShoppingAppliedComparison(comparison_id=comparison.id, source_revision=resource.revision,
         purchase_date=resource.purchase_date, state_fingerprint=comparison.state_fingerprint, scenario=selected,
-        planning_fingerprint=planning_fingerprint(resource, comparison.id, selected))
+        planning_fingerprint=planning_fingerprint(resource, comparison.id, selected),
+        selected_products={line.sale.product_id: line.sale.raw_source for need in selected.needs for line in need.lines}
+            if resource.kind == 'products' else {})
     db.execute(insert(ShoppingListAssignment).values(list_id=list_id, comparison_id=comparison.id, data=assignment.model_dump(mode='json')))

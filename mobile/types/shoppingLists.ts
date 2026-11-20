@@ -1,3 +1,4 @@
+export type ShoppingListKind = 'articles' | 'products';
 // Contrats des routes du lot A : listes privées et import calendrier.
 // Référence : backend/docs/SHOPPING_LISTS_CONTRACTS.md et schémas exportés v1.
 export type ShoppingInputUnit = 'g' | 'kg' | 'ml' | 'L' | 'unit' | 'cup' | 'tbsp' | 'tsp';
@@ -9,14 +10,15 @@ export interface ShoppingPeriod { start_date: string; end_date: string; }
 export interface ShoppingCommandHeaders { idempotency_key: string; }
 export interface ShoppingCommand { expected_revision: number; }
 export interface ShoppingInitialItem { ingredient_id?: string | null; name: string; quantity?: ShoppingQuantity | null; }
-export interface ShoppingListCreate { name: string; purchase_date?: string | null; items?: ShoppingInitialItem[]; activate?: boolean; pricing?: ShoppingCreationPricing | null; }
+export interface ShoppingListCreate { kind?: ShoppingListKind | null; name: string; purchase_date?: string | null; items?: ShoppingInitialItem[]; activate?: boolean; pricing?: ShoppingCreationPricing | null; }
 export interface ShoppingListUpdate extends ShoppingCommand { name?: string; purchase_date?: string; }
 export interface ShoppingItemAdd extends ShoppingCommand {
   ingredient_id?: string | null; name: string; quantity?: ShoppingQuantity | null;
-  merge?: 'add' | 'separate';
+  merge?: 'add' | 'separate'; product_id?: string | null;
 }
 export interface ShoppingItemUpdate extends ShoppingCommand {
   name?: string; quantity?: ShoppingQuantity | null; removed?: boolean;
+  refresh_prices?: boolean; product_units?: number;
 }
 export interface ShoppingCoverage {
   quantities?: ShoppingBaseQuantity[]; confirms_unquantified?: boolean;
@@ -26,7 +28,7 @@ export interface ShoppingManualPurchaseWrite extends ShoppingCommand {
   purchased: boolean; coverage: ShoppingCoverage;
 }
 export interface ShoppingCalendarPreviewWrite extends ShoppingPeriod { purchase_date?: string | null; }
-export interface ShoppingFromCalendar extends ShoppingCalendarPreviewWrite {
+export interface ShoppingFromCalendar extends ShoppingCalendarPreviewWrite { kind?: ShoppingListKind | null;
   name: string; preview_fingerprint: string; accept_partial?: boolean; accept_empty?: boolean;
   items?: ShoppingInitialItem[]; excluded_item_ids?: string[]; activate?: boolean;
   adjusted_items?: { item_id: string; required: ShoppingBaseQuantity[] }[]; pricing?: ShoppingCreationPricing | null;
@@ -56,7 +58,7 @@ export interface ShoppingTotals {
   budget_known_amount: string; remaining_known_amount: string; estimate_complete: boolean;
 }
 export interface ShoppingWarning { code: string; message: string; item_id: string | null; }
-export interface ShoppingListRead {
+export interface ShoppingListRead { kind?: ShoppingListKind | null;
   id: string; name: string; source: 'manual' | 'calendar'; status: ShoppingListStatus;
   revision: number; period: ShoppingPeriod | null; purchase_date: string;
   items: ShoppingItemRead[]; purchases: ShoppingManualPurchaseRead[]; product_purchases?: ShoppingProductPurchaseRead[]; totals: ShoppingTotals;
@@ -163,6 +165,7 @@ export interface ShoppingChoiceWrite extends ShoppingCommand { product_id: strin
 export interface ShoppingAppliedComparison {
   comparison_id: string; source_revision: number; purchase_date: string;
   state_fingerprint: string; scenario: ShoppingScenario; planning_fingerprint?: string | null; stale: boolean;
+  selected_products?: Record<string, { name: string; retailer: 'maxi' | 'metro' | 'superc'; store_id?: string | null; image_url?: string | null; quantity: string | null; unit: string | null; price: string | null; promo_price?: string | null }>;
 }
 
 export interface ShoppingProductPurchaseWrite extends ShoppingCommand {
@@ -180,7 +183,7 @@ export interface ShoppingTemplateItem {
   id: string; ingredient_id: string | null; name: string; category: string;
   required: ShoppingBaseQuantity[]; preferred_product_id: string | null;
 }
-export interface ShoppingTemplateRead {
+export interface ShoppingTemplateRead { kind?: ShoppingListKind | null;
   id: string; name: string; icon: ShoppingTemplateIcon; revision: number;
   items: ShoppingTemplateItem[]; deleted: boolean; created_at: string; updated_at: string;
 }
@@ -192,7 +195,7 @@ export interface ShoppingTemplateUpdate {
   expected_revision: number; name?: string; icon?: ShoppingTemplateIcon; items?: ShoppingTemplateItem[];
 }
 export interface ShoppingTemplateInstantiate {
-  expected_template_revision: number; name: string; purchase_date: string; include_choices?: boolean;
+  expected_template_revision: number; name: string; purchase_date: string; include_choices?: boolean; activate?: boolean;
 }
 export interface ShoppingDuplicateWrite {
   source_revision: number; name: string; purchase_date: string; include_choices?: boolean;
@@ -211,5 +214,7 @@ export interface ShoppingDraftProduct {
 export interface ShoppingDraftPricingRead { fingerprint: string; scenarios: ShoppingScenario[]; candidates: ShoppingDraftProduct[]; }
 
 export interface ShoppingRecalculatePricesWrite extends ShoppingCommand {
+  refresh_date?: boolean;
+  expected_fingerprint?: string | null; accept_partial?: boolean;
   scenario?: ShoppingScenarioName | null; choices?: { item_id: string; product_id: string | null }[];
 }

@@ -27,10 +27,12 @@ function harness(file, initialProps = {}) {
       if (name === 'react-native-safe-area-context') return { SafeAreaView: 'SafeAreaView' };
       if (name.endsWith('/AuthContext')) return { useAuth: () => ({ session: { user: { id: 'alice' } } }) };
       if (name.endsWith('/api')) return { api: async () => ({ items: [{ id: 'ing_riz', name: 'Riz', aliases: [], category: 'Épicerie' }] }) };
+      if (name.endsWith('/ProductImage')) return { ProductImage: 'ProductImage' };
       if (name.endsWith('/IngredientPicker')) return { default: 'IngredientPicker', __esModule: true };
       if (name.endsWith('/recipes')) return { RecipeButton: 'RecipeButton', RecipeField: 'RecipeField', recipeStyles: {}, recipeColors: {} };
       if (name.endsWith('/RecipeUnitPicker')) return { default: 'RecipeUnitPicker', __esModule: true };
       if (name.endsWith('/ListExclusionAction')) return { default: 'ListExclusionAction', __esModule: true };
+      if (name.endsWith('/ListQuickAdd')) return { default: 'ListQuickAdd', __esModule: true };
       if (name.endsWith('/ListProductAlternatives')) return { default: 'ListProductAlternatives', __esModule: true };
       if (name.endsWith('/shoppingLists')) return {
         listsPath: '/api/v1/shopping-lists', quantityLabel: values => values.map(q => `${q.amount} ${q.unit}`).join(' + '), dateLabel: x => x,
@@ -126,18 +128,21 @@ test('une proposition périmée bloque un nouvel achat ; un achat historique res
 });
 
 test('filtrer les magasins et ouvrir les achats enregistrés ne modifie jamais la liste', () => {
-  const { list } = fixture();
+  const { list } = fixture(); list.totals = { remaining_item_count: 1, purchased_item_count: 0 };
+  list.totals ??= { remaining_item_count: 1, purchased_item_count: 0 };
   const h = harness('components/lists/ListCourses.tsx', { list, disabled: false });
   button(h, 'Maxi').props.onPress();
-  assert.equal(button(h, 'Masquer les achats enregistrés').props.accessibilityState.expanded, true);
-  button(h, 'Masquer les achats enregistrés').props.onPress();
-  assert.equal(button(h, 'Voir les achats enregistrés').props.accessibilityState.expanded, false);
+  assert.equal(button(h, 'Achetés (0) · Voir').props.accessibilityState.expanded, false);
+  button(h, 'Achetés (0) · Voir').props.onPress();
+  assert.equal(button(h, 'Achetés (0) · Masquer').props.accessibilityState.expanded, true);
   assert.equal(h.commands.length, 0);
 });
 
 test('fiche : déclarer une possession partielle, puis l’annuler, transmet une couverture de cette liste', async () => {
-  const { list, item } = fixture();
+  const { list, item } = fixture(); list.items.push({ ...item, id: 'other', ingredient_id: null });
   const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false, onClose() {} });
+  assert.equal(button(h, 'J’en ai déjà'), undefined);
+  button(h, 'Options avancées').props.onPress();
   button(h, 'J’en ai déjà').props.onPress();
   field(h, 'Quantité en g').props.onChangeText('250,5');
   await button(h, 'Enregistrer la quantité déclarée').props.onPress();
@@ -148,24 +153,28 @@ test('fiche : déclarer une possession partielle, puis l’annuler, transmet une
 });
 
 test('fiche : un nouveau besoin sans quantité ne réutilise pas une ancienne confirmation', async () => {
-  const { list, item } = fixture(); item.required = []; item.need_revision = 2;
+  const { list, item } = fixture(); list.items.push({ ...item, id: 'other', ingredient_id: null }); item.required = []; item.need_revision = 2;
   const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false });
+  assert.equal(button(h, 'J’en ai déjà'), undefined);
+  button(h, 'Options avancées').props.onPress();
   button(h, 'J’en ai déjà').props.onPress();
   await button(h, 'Confirmer pour ce besoin sans quantité').props.onPress();
   assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, coverage: { confirms_unquantified: true } });
 });
 
-test('fiche : erreurs serveur visibles, retrait annulable et quantités achetées préservées quand le besoin change', async () => {
-  const { list, item } = fixture();
+test('fiche article : édition séparée du nom et de la quantité, retrait annulable', async () => {
+  const { list, item } = fixture(); list.kind = 'articles';
   const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false, commandError: 'La liste a changé.' });
   assert.ok(nodes(h.render()).find(n => n.props.accessibilityRole === 'alert'));
-  button(h, 'Modifier le besoin').props.onPress();
-  field(h, 'Besoin total en g').props.onChangeText('1500');
-  await button(h, 'Enregistrer le besoin en g').props.onPress();
-  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, quantity: { amount: '1500', unit: 'g' } });
-  button(h, 'Retirer de la liste').props.onPress();
-  assert.equal(h.alerts[0][2][0].text, 'Annuler');
-  assert.equal(h.commands.length, 1);
+  assert.equal(button(h, 'Modifier le besoin'), undefined); assert.equal(button(h, 'Options avancées'), undefined);
+  button(h, 'Modifier le nom').props.onPress(); field(h, 'Nom de l’article').props.onChangeText('Riz complet');
+  button(h, 'Enregistrer le nom').props.onPress(); await flush();
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, name: 'Riz complet' });
+  button(h, 'Définir la quantité').props.onPress(); field(h, 'Quantité').props.onChangeText('1500');
+  await button(h, 'Enregistrer la quantité').props.onPress(); await flush();
+  assert.deepEqual(json(h.commands[1].body), { expected_revision: 8, quantity: { amount: '1500', unit: 'g' } });
+  button(h, 'Retirer de la liste').props.onPress(); assert.equal(h.commands.length, 2);
+  button(h, 'Annuler').props.onPress(); assert.equal(button(h, 'Confirmer le retrait'), undefined);
 });
 
 test('les achats affichés proviennent uniquement de l’état confirmé par le serveur', () => {
@@ -190,7 +199,7 @@ test('un achat au prix direct affiche un nombre de produits et conserve la comma
 });
 
 const flush = () => new Promise(setImmediate);
-const editorFixture = () => { const f = fixture(); f.list.totals = { item_count: 1 }; return f; };
+const editorFixture = () => { const f = fixture(); f.list.kind = 'articles'; f.list.totals = { item_count: 1 }; return f; };
 test('édition des articles : un ajout envoie nom et quantité et conserve les achats existants', async () => {
   const { list } = editorFixture();
   const h = harness('components/lists/ListItemsEditor.tsx', { list, disabled: false, onDone() {} });
@@ -243,7 +252,8 @@ test('édition des articles : un ajout refusé garde les champs pour la correcti
 });
 
 test('la liste affiche les produits et prix sauvegardés sans calcul ou commande préalable', () => {
-  const { list } = fixture();
+  const { list } = fixture(); list.totals = { remaining_item_count: 1, purchased_item_count: 0 };
+  list.totals ??= { remaining_item_count: 1, purchased_item_count: 0 };
   const h = harness('components/lists/ListCourses.tsx', { list, disabled: false });
   const product = nodes(h.render()).find(n => n.props.row?.line?.sale.product_id === 'maxi:1:rice');
   assert.ok(product); assert.equal(product.props.row.line.amount, '6.00');
@@ -256,15 +266,99 @@ test('les montants affichés distinguent le reste à acheter du coût des achats
   const { list, row } = fixture();
   row.purchasedUnits = 1; row.purchasedAmount = '3.00'; row.purchasedQuantity = '500';
   const h = harness('components/lists/ProductPurchase.tsx', { list, row, disabled: false, display: 'remaining' });
-  const contents = tree => nodes(tree).flatMap(n => [].concat(n.props.children ?? [])).filter(v => typeof v === 'string').join(' ');
-  assert.match(contents(h.render()), /1 paquet/); assert.match(contents(h.render()), /3,00/); assert.doesNotMatch(contents(h.render()), /6,00/);
+  const contents = tree => nodes(tree).flatMap(n => [].concat(n.props.children ?? [])).filter(v => typeof v === 'string' || typeof v === 'number').join(' ');
+  assert.match(contents(h.render()), /1\s+produit/); assert.match(contents(h.render()), /3,00/); assert.doesNotMatch(contents(h.render()), /6,00/);
   row.comparisonId = 'old';
   assert.match(contents(h.render({ list, row, disabled: false, display: 'purchased' })), /3,00/);
 });
-test('les achats enregistrés sont visibles dès l’ouverture avec leurs prix sauvegardés', () => {
+test('les achats enregistrés sont dépliables avec leurs prix sauvegardés', () => {
   const { list, line } = fixture();
   list.product_purchases = [{ comparison_id: 'old', item_ids: ['rice'], line, purchased_units: 1, purchased_quantity: '500', estimated_amount: '3.00', allocations: [{ item_id: 'rice', quantity: { amount: '500', unit: 'g' } }] }];
+  list.totals ??= { remaining_item_count: 1, purchased_item_count: 0 };
   const h = harness('components/lists/ListCourses.tsx', { list, disabled: false });
+  button(h, 'Achetés (0) · Voir').props.onPress();
   const old = nodes(h.render()).find(n => n.props.row?.comparisonId === 'old');
   assert.ok(old); assert.equal(old.props.display, 'purchased'); assert.equal(old.props.row.purchasedAmount, '3.00');
 });
+
+
+test('les articles retirés restent restaurables depuis les courses sans bouton Modifier', async () => {
+  const { list } = fixture(); list.kind = 'articles'; list.totals = { item_count: 1, remaining_item_count: 1 }; list.items.push({ ...list.items[0], id: 'removed', name: 'Pain', removed: true });
+  const h = harness('components/lists/ListCourses.tsx', { list, disabled: false });
+  assert.equal(button(h, 'Restaurer Pain'), undefined);
+  button(h, 'Articles retirés (1)').props.onPress();
+  await button(h, 'Restaurer Pain').props.onPress();
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, removed: false });
+  assert.equal(h.commands[0].path, '/api/v1/shopping-lists/list/items/removed');
+});
+
+
+test('fiche produit : quatre actions, nom du catalogue et aucune édition ou actualisation', () => {
+  const { list, item } = fixture(); list.kind = 'products';
+  const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false });
+  for (const title of ['Choisir dans un autre magasin', 'J’en ai déjà', 'Retirer de la liste']) assert.ok(button(h, title));
+  assert.ok(nodes(h.render()).find(n => n.type === 'ListExclusionAction' && typeof n.props.onExcluded === 'function'));
+  for (const title of ['Fermer la fiche', 'Modifier le besoin', 'Actualiser les prix', 'Options avancées', 'Choisir un produit']) assert.equal(button(h, title), undefined);
+  button(h, 'Choisir dans un autre magasin').props.onPress();
+  assert.equal(nodes(h.render()).find(n => n.type === 'ListProductAlternatives').props.otherStoresOnly, true);
+});
+
+test('fiche produit : J’en ai déjà est annulable et retire uniquement après confirmation serveur', async () => {
+  const { list, item } = fixture(); list.kind = 'products'; let closed = 0;
+  const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false, onClose() { closed++; } });
+  button(h, 'J’en ai déjà').props.onPress();
+  assert.equal(h.commands.length, 0); button(h, 'Annuler').props.onPress();
+  assert.equal(button(h, 'Confirmer le retrait'), undefined);
+  button(h, 'J’en ai déjà').props.onPress(); button(h, 'Confirmer le retrait').props.onPress(); await flush();
+  assert.equal(h.commands[0].path, '/api/v1/shopping-lists/list/items/rice');
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, removed: true, refresh_prices: true });
+  assert.equal(closed, 1); assert.equal(item.removed, false);
+});
+
+test('fiche produit : un refus de retrait garde la fiche et les achats inchangés', async () => {
+  const { list, item } = fixture(); list.kind = 'products'; let closed = 0;
+  const before = json(list);
+  const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false,
+    onCommand: async () => false, onClose() { closed++; } });
+  button(h, 'J’en ai déjà').props.onPress(); button(h, 'Confirmer le retrait').props.onPress(); await flush();
+  assert.equal(closed, 0); assert.deepEqual(json(list), before);
+});
+
+
+test('quantité produit : seuls les entiers sont envoyés, sans prix ni unité de masse', async () => {
+  const { list, item } = fixture(); list.kind = 'products';
+  const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false });
+  button(h, 'Définir la quantité').props.onPress();
+  assert.equal(nodes(h.render()).some(n => n.type === 'RecipeUnitPicker'), false);
+  field(h, 'Nombre de produits').props.onChangeText('1,5');
+  button(h, 'Enregistrer la quantité').props.onPress(); await flush(); assert.equal(h.commands.length, 0);
+  field(h, 'Nombre de produits').props.onChangeText('3');
+  button(h, 'Enregistrer la quantité').props.onPress(); await flush();
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, product_units: 3, refresh_prices: true });
+});
+
+test('fiche article : J’en ai déjà et exclusion retirent avec la même logique que les produits', async () => {
+  const { list, item } = fixture(); list.kind = 'articles'; let closed = 0;
+  const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false, onClose() { closed++; } });
+  for (const title of ['Modifier le nom', 'Définir la quantité', 'J’en ai déjà', 'Retirer de la liste']) assert.ok(button(h, title));
+  const exclusion = nodes(h.render()).find(n => n.type === 'ListExclusionAction');
+  assert.equal(exclusion.props.itemLabel, 'article'); assert.equal(typeof exclusion.props.onExcluded, 'function');
+  button(h, 'J’en ai déjà').props.onPress(); assert.equal(h.commands.length, 0);
+  button(h, 'Confirmer le retrait').props.onPress(); await flush();
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, removed: true }); assert.equal(closed, 1);
+});
+
+
+for (const kind of ['products', undefined]) {
+  test(`liste produits ${kind ?? 'historique'} : pas de répétition des ingrédients quantifiés sous les produits`, () => {
+    const { list, item } = fixture(); list.kind = kind;
+    list.totals = { remaining_item_count: 1, purchased_item_count: 0 };
+    const before = json(list);
+    const h = harness('components/lists/ListCourses.tsx', { list, disabled: false });
+    const tree = nodes(h.render());
+    assert.equal(tree.some(n => n.props.accessibilityLabel === `Vérifier le complément de ${item.name}`), false);
+    assert.ok(tree.some(n => typeof n.type === 'function' && n.props.row?.line.sale.product_id === 'maxi:1:rice'));
+    assert.ok(button(h, 'Achetés (0) · Voir'));
+    assert.deepEqual(json(list), before);
+  });
+}

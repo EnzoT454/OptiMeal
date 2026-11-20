@@ -1,6 +1,138 @@
 # Listes d’épicerie — contrats du lot A
 
-## Création en deux étapes et prix directs — 16 novembre 2026
+## Séparation Articles / Produits — ajustements courants
+
+La migration `0023_shopping_list_kind` ajoute `kind` nullable sur `shopping_list`
+et `shopping_list_template`, avec contrainte `articles|products|NULL`. Appliquer
+cette migration avant de démarrer le nouveau backend. Elle a été testée sur une base locale jetable ; sa présence sur la base
+configurée et la cohérence du schéma ont été confirmées le 20 novembre 2026
+(voir [les migrations](MIGRATIONS.md)).
+
+Les créations manuelles et calendrier acceptent `kind: articles|products`. Le
+mobile envoie toujours le type ; la vue Épicerie de Calendrier envoie products
+avec un scénario chiffré, tandis que le formulaire historique d’articles depuis
+Accueil conserve kind: articles. Le type est immuable
+et figure dans les lectures/snapshots. Une validation commune, avant commit de
+toute mutation, refuse les mélanges (`422 LIST_KIND_CONFLICT`) : aucun produit
+retenu dans articles ; chaque élément actif de products doit avoir un choix
+explicite. Échec = rollback de toute la commande, sans révision publiée.
+
+Sur une liste typée products, PATCH item refuse le changement de nom avec
+`422 PRODUCT_NAME_IMMUTABLE` ; les articles restent renommables. Les retraits
+révisionnés et restaurables restent possibles, sans effacement d’achats. Le
+mobile utilise selected-product pour changer de magasin avec recalcul serveur.
+Les routes historiques de possession et d’achats ne sont pas retirées. Ne plus
+suggérer conserve la préférence par ingrédient, puis le mobile retire l’élément
+avec un second PATCH ; chaque écriture garde sa clé de reprise.
+
+PATCH item accepte désormais `refresh_prices: true` : pour une liste typée
+products (ou une ancienne liste sans type dont tous les éléments ont un produit), le serveur recalcule les choix courants au jour courant dans la même
+transaction que le retrait/modification. Un échec annule toute la mutation et
+le rejeu utilise la réponse initiale sans recalcul ni double retrait. Le mobile
+l’envoie pour J’en ai déjà, Ne plus suggérer et Retirer. Une liste d’articles
+n’accède pas au moteur de prix.
+
+`product_units` est un entier strict de 1 à 1 000 000, réservé aux listes products
+et incompatible avec `quantity` dans une même commande. Il désigne le nombre
+total d’emballages de vente du produit choisi, même pour les paquets de plusieurs
+pièces. Le serveur remplace le besoin par le format multiplié par ce nombre et
+recalcule atomiquement, en conservant les instantanés/allocations des achats.
+Le champ `quantity` et les routes de possession historiques restent disponibles.
+Aucune migration de stockage n’est nécessaire ; les contrats JSON/OpenAPI et le
+type mobile ShoppingItemUpdate sont actualisés.
+
+`recalculate-prices` accepte `refresh_date: true` : date de calcul mise au jour
+courant dans la même transaction, références choisies et achats antérieurs
+conservés. L’ajout ciblé à une liste typée products évalue aussi au jour courant.
+La date interne subsiste pour les moteurs de promotion et la compatibilité,
+sans date de courses imposée dans le mobile.
+
+Les sauvegardes de Mes listes sont toujours renvoyées et créées avec
+`kind: articles`. Les produits sont convertis en ingrédients (nom/catégorie du
+référentiel quand disponible, sinon nom historique), avec quantités conservées
+et `preferred_product_id: null`. Aucun magasin, prix, achat ou possession n’est
+copié. `include_choices` reste accepté pour la compatibilité mais est ignoré
+pour la création et l’instanciation des sauvegardes ; la duplication directe
+conserve son propre contrat historique.
+
+Les anciennes sauvegardes products/NULL et les résultats de commandes rejouées
+sont projetés en articles à la lecture. Aucune écriture ni nouvelle révision
+n’est déclenchée par une lecture. Une modification persiste la normalisation
+avec la révision et l’idempotence habituelles ; les identifiants et quantités
+existants restent conservés. L’ajout d’article utilise le PATCH existant, avec
+la collection complète et `expected_revision`. L’instanciation crée toujours
+une liste d’articles ; le contrôle propriétaire et les reprises restent actifs.
+Aucune migration supplémentaire n’est nécessaire.
+
+Les listes de courses antérieures sans `kind` restent `NULL` et suivent les
+contrats historiques : aucune réécriture de leurs achats ou statuts. Le mobile
+reconnaît les anciennes listes mixtes et bloque de nouveaux ajouts dans celles-ci.
+
+## Calendrier → liste de produits chiffrée
+
+Le mobile utilise `creation-prices` puis `from-calendar` avec `kind: products`,
+`activate: true`, période, empreinte calendrier et `pricing` (empreinte/scénario).
+Les besoins sans produit chiffrable sont confirmés et transmis dans
+`excluded_item_ids` ; un devis du sous-ensemble retenu est obligatoire car son
+empreinte diffère. Les produits/prix/emballages doivent rester ceux présentés.
+Aucun besoin sans choix produit n’est accepté, même avec accept_partial.
+
+`draft_pricing.attach` conserve maintenant tous les choix du scénario pour une
+liste products, quel que soit le scénario, ainsi que selected_products pour les
+fiches/noms/magasins. Après insertion des choix, attach relit l’instantané
+serveur avec les choix ordonnés par UUID avant de calculer les empreintes de
+l’état et du panier. L’ordre des rayons dans le devis ne doit pas être utilisé
+pour hacher les choix : cela produisait un faux COMPARISON_STALE dès la création
+avec plusieurs ingrédients. Le devis est calculé dans la transaction de
+création et le panier est utilisable pour cocher immédiatement, sans second
+recalcul mobile. Les
+créations historiques sans type gardent leur contrat, les empreintes sont
+revérifiées atomiquement et les reprises retournent le résultat initial. Aucun
+nouveau champ de contrat ni migration ; les sources calendrier restent intactes.
+
+## Historique : contrats de la première refonte du 19 novembre 2026
+
+Le parcours mobile courant est décrit dans le [guide des listes](SHOPPING_GUIDE.md).
+La [note de refonte](SHOPPING_REFACTOR.md) détaille les décisions et validations.
+Les sections datées du 16 novembre ci-dessous décrivent les anciens parcours,
+toujours pris en charge par les API ; elles ne prescrivent plus le mobile actuel.
+
+- `POST /api/v1/shopping-lists` accepte `items: []`, `activate: true`, sans
+  `pricing`. La liste active vide est persistée. L’omission d’`activate` continue
+  de créer un brouillon. Aucun ancien statut n’est réécrit.
+- `POST /api/v1/shopping-lists/{id}/items` conserve l’ajout générique/libre et
+  `merge: add|separate`. Le nouveau `product_id` facultatif exige un
+  `ingredient_id` compatible. Ajout et sélection sont atomiques ; une sélection
+  invalide annule l’ajout. Omettre ce champ ne charge ni n’applique les prix.
+- `PUT /api/v1/shopping-lists/{id}/items/{item_id}/selected-product` reçoit
+  `expected_revision` et `product_id` non nul. Il applique le choix ciblé et
+  conserve les autres références explicitement retenues ainsi que les achats.
+  Aucun produit n’est attribué aux autres besoins génériques. Le retour au choix
+  automatique reste disponible par l’ancienne route `choice` puis recalcul.
+- `GET /api/v1/shopping-lists/{id}/price-options` reste une lecture sans écriture.
+  `POST .../recalculate-prices` accepte désormais `expected_fingerprint` et
+  `accept_partial: false` par défaut. Avec empreinte, un aperçu périmé est refusé
+  (409) et un panier incomplet exige `accept_partial: true`. Les anciens appels
+  sans empreinte restent compatibles. Les prix et calculs restent côté serveur.
+- `ShoppingAppliedComparison.selected_products` est un dictionnaire optionnel
+  par `product_id`, vide par défaut : instantané `SourceProduct` conservant aussi
+  l’identité d’un produit choisi dont le prix est indisponible. Ce n’est pas une
+  preuve de prix ni une nouvelle ligne facturée.
+- `POST /api/v1/shopping-list-templates/{id}/instantiate` accepte `activate: true`
+  pour une copie active dans la même transaction. Par défaut la copie reste
+  brouillon ; achats, possession et prix ne sont jamais copiés.
+- `GET /api/v1/offers?q=...&on_date=...&limit=8&offset=0` recherche les noms
+  commerciaux et noms/alias des ingrédients, avant pagination. `q` est borné à
+  200 caractères ; filtres magasin, enseigne et promotion restent disponibles.
+
+Les nouvelles mutations réutilisent JWT/propriétaire, révision attendue,
+`Idempotency-Key`, transactions et reprise des commandes existants. Les champs
+ajoutés ont des valeurs par défaut ; le JSON de panier existant suffit. **Aucune
+migration ni modification des données historiques n’est requise.** Les anciens
+endpoints de création chiffrée, comparaison et application restent disponibles.
+Les exports JSON/OpenAPI dans `backend/contracts/v1` sont régénérés.
+
+## Historique : création en deux étapes et prix directs — 16 novembre 2026
 
 Ce parcours remplace la création en une étape décrite dans les notes précédentes.
 

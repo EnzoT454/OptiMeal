@@ -19,7 +19,9 @@ export default function ListAccessRequired({ children }: PropsWithChildren) {
   const retry = useRef<() => void>(() => {});
   useFocusEffect(useCallback(() => {
     let active = true, running = false;
-    setAccess(null); setChecking(!!user);
+    // Garder le navigateur déjà autorisé monté pendant la nouvelle vérification.
+    // Son démontage perdait la destination demandée depuis Accueil.
+    setChecking(!!user);
     async function check() {
       if (!user || running || !active) return;
       running = true; setChecking(true);
@@ -43,7 +45,7 @@ export default function ListAccessRequired({ children }: PropsWithChildren) {
   const value = access?.token === token ? access : null;
   if (value?.allowed) return <>{children}</>;
   return <RecipeScreen>
-    <RecipeTitle>Liste</RecipeTitle>
+    <RecipeTitle>Listes</RecipeTitle>
     {checking ? <ActivityIndicator color={recipeColors.green} accessibilityLabel="Vérification de la connexion" /> : <>
       <Text style={s.body}>Une connexion est nécessaire pour accéder aux listes.</Text>
       {!!value?.error && <Text accessibilityRole="alert" style={s.requiredItem}>{value.error}</Text>}

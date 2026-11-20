@@ -50,7 +50,7 @@ function screen(file, options = {}) {
     if (name.endsWith('useShoppingPage')) return { useShoppingPage: () => ({ ...pages, loading: false, error: '', load: async () => {} }) };
     if (name.endsWith('shoppingLists')) return { listsPath: '/api/v1/shopping-lists', localDate: () => '2026-11-20',
       quantityLabel: values => values.map(v => `${v.amount} ${v.unit}`).join(' + '), dateLabel: v => v,
-      recalculatePricesCommand: list => ({ key: 'recalculate', path: `/api/v1/shopping-lists/${list.id}/recalculate-prices`, method: 'POST', body: { expected_revision: list.revision } }),
+      recalculatePricesCommand: (list, options = {}) => ({ key: 'recalculate', path: `/api/v1/shopping-lists/${list.id}/recalculate-prices`, method: 'POST', body: { expected_revision: list.revision, ...options } }),
       listCommand: (path, body, method = 'POST') => ({ key: 'stable-key', path, body, method }),
       fetchList: async (...args) => { reads.push('current'); return options.fetchList ? options.fetchList(...args) : source; },
       fetchLists: async (offset, collection) => { reads.push({ offset, collection }); return pages; },
@@ -59,7 +59,13 @@ function screen(file, options = {}) {
       templateIcons: { basket: '🧺', cart: '🛒', leaf: '🌿', restaurant: '🍽', home: '🏠' }, timestampLabel: v => v,
       fetchTemplate: async () => { if (options.templateUnavailable) throw new Error('Modèle introuvable.'); return template; },
     };
-    if (name.endsWith('courseQuantities')) return { positiveAmount: value => { const normalized = value.replace(',', '.'); return /^(0|[1-9][0-9]*)(\.[0-9]+)?$/.test(normalized) && /[1-9]/.test(normalized) ? normalized : null; } };
+    if (name.endsWith('shoppingNavigation')) {
+      const result = {};
+      vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(__dirname, '../services/shoppingNavigation.ts'), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText, { exports: result });
+      return result;
+    }
+    if (name.endsWith('shoppingPresentation')) return require('./helpers/loadShoppingPresentation.cjs')();
+      if (name.endsWith('courseQuantities')) return { positiveAmount: value => { const normalized = value.replace(',', '.'); return /^(0|[1-9][0-9]*)(\.[0-9]+)?$/.test(normalized) && /[1-9]/.test(normalized) ? normalized : null; } };
     if (name.endsWith('/api')) return { api: async () => ({ items: [] }) };
     if (name.endsWith('/recipes')) return { RecipeButton: 'Button', RecipeField: 'Field', RecipeScreen: 'Screen', RecipeTitle: 'Title', recipeStyles: {}, recipeColors: {} };
     if (name.endsWith('/ui')) return { Message: 'Message' };
@@ -68,7 +74,7 @@ function screen(file, options = {}) {
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
   }).outputText, { exports, require: requireMock, Date, Object, Error });
-  const navigation = { navigate: (...args) => navigations.push(args), replace: (...args) => navigations.push(args), push: (...args) => navigations.push(args), setOptions: value => Object.assign(headerOptions, value), goBack: () => navigations.push(['back']) };
+  const navigation = { reset: state => navigations.push(['reset', state]), navigate: (...args) => navigations.push(args), replace: (...args) => navigations.push(args), push: (...args) => navigations.push(args), setOptions: value => Object.assign(headerOptions, value), goBack: () => navigations.push(['back']) };
   function render(next = props) { props = next; cursor = 0; const tree = exports.default({ navigation, ...props }); while (effects.length) effects.shift()(); return tree; }
   return { render, async ready() { render(); await flush(); return render(); }, commands, navigations, alerts, reads, template, auth, header: () => headerOptions.headerRight() };
 }
@@ -87,13 +93,13 @@ test('copier une révision envoie uniquement identité, besoins demandés et nou
   assert.deepEqual(json(h.navigations[0]), ['ShoppingDetail', { id: 'copy' }]);
 });
 
-test('les choix de produits ne sont repris qu’après sélection explicite', async () => {
-  const h = screen('app/ShoppingReuseScreen.tsx', { props: { route: { params: { id: 'list', revision: 8, mode: 'template' } } } });
-  await h.ready(); checkbox(h).props.onPress();
-  await button(h, 'Enregistrer le modèle').props.onPress();
-  assert.equal(h.commands[0].body.include_choices, true);
+test('sauvegarder une liste de produits demande des articles sans préférence commerciale', async () => {
+  const h = screen('app/ShoppingReuseScreen.tsx', { source: { ...fixture(), kind: 'products' }, props: { route: { params: { id: 'list', revision: 8, mode: 'template' } } } });
+  await h.ready();
+  assert.equal(checkbox(h), undefined);
+  await button(h, 'Enregistrer dans mes listes').props.onPress();
+  assert.equal(h.commands[0].body.include_choices, false);
   assert.equal(h.commands[0].body.source_list_id, 'list');
-  assert.equal(h.commands[0].body.icon, 'basket');
   assert.equal(h.commands[0].body.purchases, undefined);
 });
 
@@ -109,59 +115,53 @@ const modelScreen = options => screen('app/ShoppingTemplateDetailScreen.tsx', { 
 
 test('le modèle affiche ses produits et propose les trois actions dans le menu d’en-tête', async () => {
   const h = modelScreen(); await h.ready();
-  assert.equal(h.header().props.accessibilityLabel, 'Options du modèle');
-  assert.equal(button(h, 'Supprimer le modèle'), undefined);
+  assert.equal(h.header().props.accessibilityLabel, 'Options de la liste sauvegardée');
+  assert.equal(button(h, 'Supprimer la liste sauvegardée'), undefined);
   assert.equal(button(h, 'Modifier le modèle'), undefined);
   assert.equal(button(h, 'Créer une liste depuis ce modèle'), undefined);
   assert.equal(field(h, 'Nom de la nouvelle liste'), undefined);
   assert.equal(nodes(h.render()).some(n => n.type === 'ListDateField'), false);
   assert.ok(nodes(h.render()).some(n => n.props.accessibilityLabel === 'Modifier Riz'));
   openMenu(h);
-  for (const title of ['Modifier le nom', 'Supprimer le modèle', 'Ajouter un produit']) assert.ok(button(h, title));
+  for (const title of ['Modifier le nom', 'Supprimer la liste sauvegardée', 'Ajouter un article']) assert.ok(button(h, title));
   button(h, 'Fermer').props.onPress();
-  assert.equal(button(h, 'Supprimer le modèle'), undefined);
+  assert.equal(button(h, 'Supprimer la liste sauvegardée'), undefined);
 });
 
 test('renommer un modèle ne renvoie ni ses produits ni son icône', async () => {
   const h = modelScreen(); await h.ready(); openMenu(h);
   button(h, 'Modifier le nom').props.onPress();
-  field(h, 'Nom du modèle').props.onChangeText('Barbecue');
+  field(h, 'Nom de la liste sauvegardée').props.onChangeText('Barbecue');
   await button(h, 'Enregistrer le nom').props.onPress(); await flush();
   assert.equal(h.commands[0].method, 'PATCH');
   assert.deepEqual(json(h.commands[0].body), { expected_revision: 2, name: 'Barbecue' });
   assert.equal(h.template.name, 'Hebdomadaire');
 });
 
-test('ajouter un produit enregistre directement les besoins dans le modèle sans créer de liste', async () => {
-  const h = modelScreen(); await h.ready(); openMenu(h);
-  button(h, 'Ajouter un produit').props.onPress();
-  field(h, 'Produit').props.onChangeText('Serviettes');
-  await button(h, 'Ajouter au modèle').props.onPress(); await flush();
-  assert.equal(h.commands.length, 1);
-  assert.equal(h.commands[0].method, 'PATCH');
-  assert.equal(h.commands[0].path, '/api/v1/shopping-list-templates/template');
-  assert.equal(h.commands[0].body.expected_revision, 2);
-  assert.equal(h.commands[0].body.items.length, 2);
-  assert.deepEqual(json(h.commands[0].body.items[1]), { id: 'uuid-1', name: 'Serviettes', ingredient_id: null, category: 'Autres', required: [], preferred_product_id: null });
-  assert.deepEqual(json(h.commands[0].body.items[0]), h.template.items[0]);
-  assert.equal(h.template.items.length, 1);
-  assert.equal(h.navigations.length, 0);
+test('Ajouter un article ouvre la barre de recherche et adopte seulement le résultat serveur', async () => {
+  const template = templateFixture();
+  const h = modelScreen({ template, result: command => ({ ...template, revision: 3, items: command.body.items }) }); await h.ready(); openMenu(h);
+  button(h, 'Ajouter un article').props.onPress();
+  const quick = () => nodes(h.render()).find(n => n.type === '../components/lists/ListQuickAdd');
+  assert.ok(quick()); assert.equal(quick().props.autoFocus, true);
+  assert.equal(field(h, 'Article'), undefined); assert.equal(button(h, 'Choisir dans le catalogue'), undefined);
+  const added = { id: 'new', name: 'Serviettes', ingredient_id: null, category: 'Autres', required: [], preferred_product_id: null };
+  const saved = await quick().props.onCommand({ key: 'add-key', method: 'PATCH', path: '/api/v1/shopping-list-templates/template', body: { expected_revision: 2, items: [...template.items, added] } });
+  assert.equal(saved, true); assert.equal(h.commands[0].method, 'PATCH');
+  assert.equal(quick().props.template.items.length, 2); assert.equal(template.items.length, 1);
+  quick().props.onDone(); assert.equal(quick(), undefined);
 });
 
-test('annuler un ajout ne modifie pas le modèle et une quantité invalide bloque l’enregistrement', async () => {
-  const h = modelScreen(); await h.ready(); openMenu(h);
-  button(h, 'Ajouter un produit').props.onPress();
-  field(h, 'Produit').props.onChangeText('Riz');
+test('une quantité invalide en édition garde l’article et bloque l’enregistrement', async () => {
+  const h = modelScreen(); await h.ready();
+  nodes(h.render()).find(n => n.props.accessibilityLabel === 'Modifier Riz').props.onPress();
   field(h, 'Quantité (facultative)').props.onChangeText('-5');
-  await button(h, 'Ajouter au modèle').props.onPress();
-  assert.equal(h.commands.length, 0);
-  assert.ok(nodes(h.render()).some(n => n.props.accessibilityRole === 'alert'));
-  button(h, 'Annuler').props.onPress();
-  assert.equal(field(h, 'Produit'), undefined);
-  assert.equal(h.template.items.length, 1);
+  await button(h, 'Enregistrer l’article').props.onPress();
+  assert.equal(h.commands.length, 0); assert.ok(nodes(h.render()).some(n => n.props.accessibilityRole === 'alert'));
+  button(h, 'Annuler').props.onPress(); assert.equal(field(h, 'Article'), undefined);
 });
 
-test('modifier un produit conserve les autres dimensions et la préférence de produit', async () => {
+test('modifier un article conserve les dimensions et retire une ancienne préférence produit', async () => {
   const template = templateFixture();
   template.items[0].required.push({ amount: '2', unit: 'unit' });
   template.items[0].preferred_product_id = 'maxi:1:rice';
@@ -169,9 +169,9 @@ test('modifier un produit conserve les autres dimensions et la préférence de p
   nodes(h.render()).find(n => n.props.accessibilityLabel === 'Modifier Riz').props.onPress();
   field(h, 'Quantité (facultative)').props.onChangeText('750');
   nodes(h.render()).find(n => n.props.allowedUnits).props.onChange('g');
-  await button(h, 'Enregistrer le produit').props.onPress(); await flush();
+  await button(h, 'Enregistrer l’article').props.onPress(); await flush();
   assert.deepEqual(json(h.commands[0].body.items[0].required), [{ amount: '2', unit: 'unit' }, { amount: '750', unit: 'g' }]);
-  assert.equal(h.commands[0].body.items[0].preferred_product_id, 'maxi:1:rice');
+  assert.equal(h.commands[0].body.items[0].preferred_product_id, null);
   assert.equal(template.items[0].required[0].amount, '500');
 });
 
@@ -179,20 +179,31 @@ test('retirer les quantités est explicite et ne retire pas le produit', async (
   const h = modelScreen(); await h.ready();
   nodes(h.render()).find(n => n.props.accessibilityLabel === 'Modifier Riz').props.onPress();
   button(h, 'Retirer les quantités').props.onPress();
-  await button(h, 'Enregistrer le produit').props.onPress(); await flush();
+  await button(h, 'Enregistrer l’article').props.onPress(); await flush();
   assert.equal(h.commands[0].body.items[0].required.length, 0);
   assert.equal(h.commands[0].body.items[0].id, 'item');
   assert.equal(h.template.items[0].required[0].amount, '500');
 });
 
-test('supprimer un modèle demande confirmation et transmet une révision sans supprimer une liste', async () => {
-  const h = modelScreen(); await h.ready(); openMenu(h);
-  button(h, 'Supprimer le modèle').props.onPress();
-  assert.equal(h.commands.length, 0);
-  assert.equal(h.alerts[0][2][0].text, 'Annuler');
-  await h.alerts[0][2][1].onPress(); await flush();
+for (const kind of [undefined, null, 'products']) test(`suppression sauvegarde ${kind ?? 'ancienne'} : confirmation dans l’écran puis DELETE révisionné`, async () => {
+  const template = { ...templateFixture(), kind };
+  const h = modelScreen({ template, result: () => ({ ...template, revision: 3, deleted: true }) }); await h.ready(); openMenu(h);
+  button(h, 'Supprimer la liste sauvegardée').props.onPress();
+  assert.equal(h.commands.length, 0); assert.equal(h.alerts.length, 0);
+  assert.ok(button(h, 'Annuler'));
+  assert.equal(nodes(h.render()).some(n => n.props.accessibilityViewIsModal), false);
+  await button(h, 'Supprimer la liste sauvegardée').props.onPress(); await flush();
   assert.equal(h.commands[0].method, 'DELETE');
+  assert.equal(h.commands[0].path, '/api/v1/shopping-list-templates/template');
   assert.deepEqual(json(h.commands[0].body), { expected_revision: 2 });
+  assert.deepEqual(json(h.navigations), [['back']]);
+});
+
+test('annuler la suppression d’une ancienne sauvegarde ne transmet aucune commande', async () => {
+  const h = modelScreen(); await h.ready(); openMenu(h);
+  button(h, 'Supprimer la liste sauvegardée').props.onPress();
+  button(h, 'Annuler').props.onPress();
+  assert.equal(h.commands.length, 0); assert.equal(button(h, 'Annuler'), undefined);
 });
 
 test('Ne plus suggérer confirme sa portée future et ne modifie pas la liste courante', async () => {
@@ -223,9 +234,9 @@ test('une liste terminée charge son état courant et masque les mutations de li
   openMenu(h);
   assert.equal(button(h, 'Archiver la liste'), undefined);
   assert.equal(button(h, 'Renommer la liste').props.disabled, true);
-  assert.equal(button(h, 'Modifier').props.disabled, true);
+  assert.equal(button(h, 'Modifier'), undefined);
   assert.ok(button(h, 'Rouvrir la liste'));
-  button(h, 'Utiliser comme modèle').props.onPress();
+  button(h, 'Enregistrer dans mes listes').props.onPress();
   assert.deepEqual(json(h.navigations[0]), ['ReuseList', { id: 'list', revision: 8, mode: 'template' }]);
 });
 
@@ -295,11 +306,11 @@ test('détail : les actions de liste sont dans le menu … de l’en-tête', asy
   assert.equal(button(h, 'Terminer les courses'), undefined);
   assert.equal(button(h, 'Renommer la liste'), undefined);
   openMenu(h);
-  for (const title of ['Renommer la liste', 'Utiliser comme modèle', 'Marquer comme terminée', 'Modifier']) assert.ok(button(h, title));
+  for (const title of ['Renommer la liste', 'Enregistrer dans mes listes', 'Marquer comme terminée']) assert.ok(button(h, title));
   const pin = nodes(h.render()).find(n => n.type === '../components/lists/PinListAction');
   assert.equal(pin.props.id, 'list'); assert.equal(pin.props.disabled, false);
 });
-test('le menu permet un renommage limité au nom et à la révision courante', async () => {
+test('le menu permet de modifier le nom et la date avec la révision courante', async () => {
   const h = listScreen(); await h.ready(); openMenu(h);
   button(h, 'Renommer la liste').props.onPress();
   assert.equal(button(h, 'Modifier'), undefined);
@@ -309,27 +320,26 @@ test('le menu permet un renommage limité au nom et à la révision courante', a
   assert.equal(h.commands[0].method, 'PATCH');
   assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, name: 'Barbecue' });
 });
-test('marquer comme terminée exige confirmation si des articles restent à acheter', async () => {
-  const source = { ...fixture(), status: 'active', totals: { ...fixture().totals, remaining_item_count: 1 } };
-  const h = listScreen({ source }); await h.ready(); openMenu(h);
+test('terminer avec des éléments restants confirme dans l’écran puis masque la copie', async () => {
+  const source = { ...fixture(), status: 'active', origin: { kind: 'template', id: 'saved-template' }, totals: { ...fixture().totals, remaining_item_count: 1 } };
+  const h = listScreen({ source, result: () => ({ ...source, status: 'completed', revision: 9 }) }); await h.ready(); openMenu(h);
   button(h, 'Marquer comme terminée').props.onPress();
-  assert.equal(h.commands.length, 0); assert.equal(h.alerts[0][2][0].text, 'Continuer les courses');
-  h.alerts[0][2][1].onPress(); await flush();
+  assert.equal(h.commands.length, 0); assert.equal(h.alerts.length, 0);
+  assert.ok(button(h, 'Continuer les courses'));
+  await button(h, 'Terminer quand même').props.onPress(); await flush();
   assert.equal(h.commands[0].path, '/api/v1/shopping-lists/list/complete');
   assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, accept_remaining: true });
+  assert.deepEqual(json(h.navigations[0]), ['Lists', { section: 'recent' }]);
+  assert.equal(h.commands.some(c => c.path.includes('shopping-list-templates')), false);
 });
-test('modifier ouvre l’éditeur d’articles et met à jour son contenu après réponse serveur', async () => {
-  const result = { ...fixture(), status: 'active', revision: 9, items: [...fixture().items, { id: 'bread', name: 'Pain', required: [], removed: false }] };
-  const h = listScreen({ result: () => result }); await h.ready(); openMenu(h);
-  button(h, 'Modifier').props.onPress();
-  const editor = () => nodes(h.render()).find(n => n.type === '../components/lists/ListItemsEditor');
-  assert.ok(editor());
-  assert.equal(nodes(h.render()).some(n => n.type === '../components/lists/ListCourses'), false);
-  await editor().props.onCommand({ key: 'add', path: '/api/v1/shopping-lists/list/items', method: 'POST', body: { expected_revision: 8, name: 'Pain' } });
-  assert.equal(editor().props.list.items.length, 2);
-  editor().props.onDone();
-  assert.equal(editor(), undefined);
-  assert.ok(nodes(h.render()).some(n => n.type === '../components/lists/ListCourses'));
+test('le menu allégé se ferme en touchant le fond et ne propose ni Modifier ni Fermer', async () => {
+  const h = listScreen(); await h.ready(); openMenu(h);
+  assert.equal(button(h, 'Modifier'), undefined); assert.equal(button(h, 'Fermer'), undefined);
+  nodes(h.render()).find(n => n.props.accessibilityLabel === 'Fermer les options de la liste').props.onPress();
+  assert.equal(button(h, 'Renommer la liste'), undefined);
+  openMenu(h);
+  nodes(h.render()).find(n => n.props.accessibilityViewIsModal).props.onAccessibilityEscape();
+  assert.equal(button(h, 'Renommer la liste'), undefined);
 });
 test('une liste terminée peut être rouverte depuis le même menu', async () => {
   const h = listScreen({ source: fixture() }); await h.ready(); openMenu(h);
@@ -340,26 +350,112 @@ test('une liste terminée peut être rouverte depuis le même menu', async () =>
 test('une réponse de modification tardive n’est pas adoptée après un changement de compte', async () => {
   let finish;
   const h = listScreen({ fetchList: (id, user) => ({ ...fixture(), status: 'active', name: user }), result: () => new Promise(resolve => { finish = resolve; }) });
-  await h.ready(); openMenu(h); button(h, 'Modifier').props.onPress();
-  const editor = nodes(h.render()).find(n => n.type === '../components/lists/ListItemsEditor');
-  const pending = editor.props.onCommand({ key: 'add', path: '/items', method: 'POST', body: {} });
+  await h.ready();
+  const courses = nodes(h.render()).find(n => n.type === '../components/lists/ListCourses');
+  const pending = courses.props.onCommand({ key: 'add', path: '/items', method: 'POST', body: {} });
   h.auth.session = { user: { id: 'bob' } }; await h.ready();
   finish({ ...fixture(), revision: 9, name: 'alice-private' });
   assert.equal(await pending, false);
-  const courses = nodes(h.render()).find(n => n.type === '../components/lists/ListCourses');
-  assert.equal(courses.props.list.name, 'bob');
+  const updatedCourses = nodes(h.render()).find(n => n.type === '../components/lists/ListCourses');
+  assert.equal(updatedCourses.props.list.name, 'bob');
 });
 
-test('le détail propose une seule action de recalcul et adopte directement le résultat serveur', async () => {
-  const result = { ...fixture(), status: 'active', revision: 9, totals: { ...fixture().totals, budget_known_amount: '6.00' } };
-  const h = listScreen({ result: () => result }); await h.ready();
-  assert.equal(button(h, 'Comparer les magasins'), undefined);
-  assert.equal(button(h, 'Comparer les achats'), undefined);
-  assert.equal(nodes(h.render()).filter(n => n.props.title === 'Recalculer les prix').length, 1);
-  button(h, 'Recalculer les prix').props.onPress(); await flush();
-  assert.equal(h.commands.length, 1);
-  assert.equal(h.commands[0].path, '/api/v1/shopping-lists/list/recalculate-prices');
-  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8 });
-  const courses = nodes(h.render()).find(n => n.type === '../components/lists/ListCourses');
-  assert.equal(courses.props.list.totals.budget_known_amount, '6.00');
+test('actualiser les prix est réservé aux produits et désactivé pendant les ajouts', async () => {
+  const source = { ...fixture(), kind: 'products', status: 'active' };
+  const h = listScreen({ source }); await h.ready();
+  const quick = () => nodes(h.render()).find(n => n.type === '../components/lists/ListQuickAdd');
+  assert.ok(button(h, 'Actualiser les prix')); assert.equal(button(h, 'Comparer les prix'), undefined);
+  quick().props.onEditingChange(true);
+  assert.equal(button(h, 'Actualiser les prix').props.disabled, true);
+  quick().props.onEditingChange(false);
+  assert.equal(button(h, 'Actualiser les prix').props.disabled, false);
+  await button(h, 'Actualiser les prix').props.onPress();
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, refresh_date: true });
+  const articles = listScreen({ source: { ...fixture(), kind: 'articles', status: 'active' } }); await articles.ready();
+  assert.equal(button(articles, 'Actualiser les prix'), undefined);
+  assert.equal(nodes(articles.render()).some(n => n.type === 'ListDateField'), false);
+});
+
+
+test('le détail réserve le statut au résumé et place la note des prix après les courses', async () => {
+  const h = listScreen({ source: { ...fixture(), kind: 'products', status: 'active' } }); await h.ready();
+  const all = nodes(h.render());
+  const body = all.flatMap(n => [].concat(n.props.children ?? [])).filter(v => typeof v === 'string').join(' ');
+  assert.doesNotMatch(body, /Liste en cours|Liste de produits|prix estimés/);
+  assert.ok(all.some(n => n.props.list?.id === 'list'));
+  assert.ok(all.findIndex(n => n.type === '../components/lists/ShoppingPriceNotice') > all.findIndex(n => n.type === '../components/lists/ListCourses'));
+});
+
+
+test('Terminer la liste apparaît à zéro restant, avant les prix, et conserve les achats', async () => {
+  const source = { ...fixture(), kind: 'products', status: 'active' };
+  const h = listScreen({ source, result: () => ({ ...source, revision: 9, status: 'completed' }) }); await h.ready();
+  const all = nodes(h.render());
+  assert.ok(all.findIndex(n => n.props.title === 'Terminer la liste') < all.findIndex(n => n.props.title === 'Actualiser les prix'));
+  await button(h, 'Terminer la liste').props.onPress(); await flush();
+  assert.equal(h.commands[0].path, '/api/v1/shopping-lists/list/complete');
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, accept_remaining: false });
+  assert.equal(button(h, 'Terminer la liste'), undefined);
+  assert.equal(button(h, 'Actualiser les prix'), undefined);
+});
+
+test('Terminer la liste n’est pas proposé sur une liste vide, incomplète ou déjà terminée', async () => {
+  for (const source of [
+    { ...fixture(), status: 'active', totals: { ...fixture().totals, item_count: 0 } },
+    { ...fixture(), status: 'active', totals: { ...fixture().totals, remaining_item_count: 1 } },
+    fixture(),
+  ]) {
+    const h = listScreen({ source }); await h.ready();
+    assert.equal(button(h, 'Terminer la liste'), undefined);
+  }
+});
+
+
+test('Utiliser cette liste instancie une copie active et ouvre son propre identifiant', async () => {
+  const template = templateFixture();
+  const h = modelScreen({ template, result: command => command.path.endsWith('/instantiate') ? { ...fixture(), id: 'new-copy', status: 'active' } : null }); await h.ready();
+  await button(h, 'Utiliser cette liste').props.onPress(); await flush();
+  assert.equal(h.commands[0].path, '/api/v1/shopping-list-templates/template/instantiate');
+  assert.equal(h.commands[0].body.activate, true);
+  assert.deepEqual(json(h.navigations[0]), ['reset', { index: 1, routes: [{ name: 'Lists', params: { section: 'recent' } }, { name: 'ShoppingDetail', params: { id: 'new-copy' } }] }]);
+  assert.equal(template.deleted, false);
+});
+
+
+test('copie de produits : une invitation à actualiser remplace les avertissements par produit puis disparaît', async () => {
+  const warnings = Array.from({ length: 3 }, () => ({ code: 'COPY_PRODUCT_CHOICES', message: 'Choix de produit conservé ; compare pour vérifier.' }));
+  warnings.push({ code: 'COVERAGE_NEEDS_REVIEW', message: 'Vérifier la quantité achetée.' });
+  const source = { ...fixture(), kind: 'products', status: 'active', warnings };
+  const h = listScreen({ source, result: () => ({ ...source, revision: 9, assignment: { stale: false, scenario: { needs: [] } } }) }); await h.ready();
+  const content = () => nodes(h.render()).flatMap(n => [].concat(n.props.children ?? [])).filter(v => typeof v === 'string').join(' ');
+  assert.equal((content().match(/Veuillez actualiser les prix\./g) ?? []).length, 1);
+  assert.doesNotMatch(content(), /Choix de produit conservé/);
+  assert.match(content(), /Vérifier la quantité achetée/);
+  await button(h, 'Actualiser les prix').props.onPress(); await flush();
+  assert.doesNotMatch(content(), /Veuillez actualiser les prix|Choix de produit conservé/);
+  assert.match(content(), /Vérifier la quantité achetée/);
+});
+
+
+test('exclure un produit confirme la portée compte et retire seulement après sauvegarde de la préférence', async () => {
+  let removed = 0;
+  const h = screen('components/lists/ListExclusionAction.tsx', { result: () => ({ excluded: true }),
+    props: { ingredientId: 'ing_riz', name: 'Riz', disabled: false, onExcluded: async () => { removed++; return true; } } });
+  button(h, 'Ne plus suggérer').props.onPress();
+  assert.match(JSON.stringify(h.render()), /paramètres de votre compte/); assert.match(JSON.stringify(h.render()), /retiré de cette liste/);
+  assert.equal(removed, 0); assert.equal(h.commands.length, 0);
+  button(h, 'Confirmer la préférence').props.onPress(); await flush(); assert.equal(removed, 1);
+  assert.deepEqual(json(h.commands[0].body), { excluded: true });
+});
+
+test('une préférence refusée ne retire pas le produit et un retrait refusé reste reprenable', async () => {
+  let removed = 0;
+  const props = { ingredientId: 'ing_riz', name: 'Riz', disabled: false, onExcluded: async () => { removed++; return false; } };
+  const failure = screen('components/lists/ListExclusionAction.tsx', { props });
+  button(failure, 'Ne plus suggérer').props.onPress(); button(failure, 'Confirmer la préférence').props.onPress(); await flush();
+  assert.equal(removed, 0);
+  const h = screen('components/lists/ListExclusionAction.tsx', { props, result: () => ({ excluded: true }) });
+  button(h, 'Ne plus suggérer').props.onPress(); button(h, 'Confirmer la préférence').props.onPress(); await flush();
+  assert.equal(removed, 1); button(h, 'Retirer le produit exclu de cette liste').props.onPress(); await flush();
+  assert.equal(removed, 2); assert.equal(h.commands.length, 1);
 });

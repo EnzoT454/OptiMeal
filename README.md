@@ -25,8 +25,8 @@ Nous concentrons maintenant le travail sur la stabilisation de l’application e
 - Recettes personnelles, recherche, filtres, recettes privées, publication et favoris.
 - Évaluations des recettes et classement par notes.
 - Calendrier hebdomadaire des repas.
-- Listes d’épicerie privées, comparaison des prix par magasin et suivi des achats.
-- Modèles de listes, historique et accès depuis l’Accueil et le Calendrier.
+- Listes d’épicerie d’articles ou de produits, ajout par recherche et suivi des achats.
+- Création depuis le calendrier, comparaison des prix par magasin et listes sauvegardées réutilisables.
 - Promotions et consultation des circulaires.
 - Catalogue commun des produits et ingrédients.
 - Collecte Maxi et lecture locale des reçus.
@@ -487,6 +487,8 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 
 - [Validation de la notation et migrations Supabase](backend/docs/RATINGS_VALIDATION.md)
 - [Comprendre le fonctionnement de l’application et du dépôt](README-fonctionnement.md)
+- [Fonctionnement détaillé de l’onglet Liste : parcours, calculs et interface](backend/docs/SHOPPING_GUIDE.md)
+- [Refonte Liste : audit, lots, contrats, tests et critères d’acceptation](backend/docs/SHOPPING_REFACTOR.md)
 - [Structure et utilisation des données locales](backend/docs/DATA.md)
 - [Catalogue pilote : utilisation et résultats](backend/docs/CATALOG.md)
 - [Évaluer API Anything pour les prix et promotions](backend/docs/API_ANYTHING.md)

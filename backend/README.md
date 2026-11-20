@@ -6,6 +6,12 @@ Le [guide d’évaluation d’API Anything](docs/API_ANYTHING.md) prépare les f
 essais de récupération des prix sur les sites marchands et Glouton. Cette
 piste reste expérimentale et ne remplace pas les sources actuelles.
 
+La [refonte Liste du 19 novembre](docs/SHOPPING_REFACTOR.md) ajoute la création
+active vide, la sélection ciblée d’un produit et la comparaison facultative.
+La séparation Articles / Produits exige désormais la migration `0023_shopping_list_kind`, testée localement et confirmée sur la base configurée le 20 novembre 2026 ; contrats historiques et achats conservés.
+Mes listes conserve uniquement des articles : conversion des produits en ingrédients à la sauvegarde et à la lecture des anciennes sauvegardes, sans reprendre les choix commerciaux. L’ajout utilise le PATCH révisionné existant ; aucune nouvelle migration.
+Voir le [guide des listes](docs/SHOPPING_GUIDE.md) et les [contrats courants](docs/SHOPPING_LISTS_CONTRACTS.md).
+
 Le [plan des listes d’épicerie](docs/SHOPPING_LISTS.md) décrit les parcours,
 calculs et validations. Le lot A est livré : routes privées sous
 `/api/v1/shopping-lists`, brouillons manuels, aperçu puis import indépendant du
@@ -14,7 +20,8 @@ calendrier, édition, révisions et commandes idempotentes. Voir les
 [suivi de l’étape 5](docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
 La migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis
 le 14 novembre 2026. Les comparaisons et le [parcours de courses](docs/SHOPPING_COURSES.md) sont livrés dans le dépôt. Les migrations jusqu’à 0019 sont appliquées et vérifiées sur Supabase. Les prix réels demandent des attestations commerciales. L’[étape 13](docs/SHOPPING_ACCESS.md) relie Accueil et Calendrier aux listes identifiées,
-avec épinglage privé et filtrage par période exacte. La tête du dépôt est 0021 ;
+avec épinglage privé et filtrage par période exacte. La tête du dépôt est `0023_shopping_list_kind` (séparation Articles / Produits),
+confirmée sur la base configurée le 20 novembre 2026 avec un schéma conforme aux modèles ;
 0021 a été appliquée et vérifiée sur Supabase le 16 novembre 2026, depuis 0020 déjà présente.
 
 La [normalisation des ventes](docs/SALE_NORMALIZATION.md), étape 6, sépare contenu
@@ -28,7 +35,7 @@ Le [moteur d’achats](docs/PURCHASE_CALCULATION.md) et les [comparaisons](docs/
 Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
 privées par défaut et publication volontaire définitive. Une recette publique
 ne peut plus être rendue privée ni supprimée par son auteur.
-La migration `0020_shopping_reuse`, pour les [modèles, exclusions, copies et historique](docs/SHOPPING_REUSE.md), est présente sur Supabase. La tête du dépôt et la révision distante vérifiée sont `0021_shopping_list_pin`.
+La migration `0020_shopping_reuse`, pour les [modèles, exclusions, copies et historique](docs/SHOPPING_REUSE.md), est présente sur Supabase. La révision distante antérieurement vérifiée est `0021_shopping_list_pin` ; ce contrôle n’atteste pas le déploiement de `0022_product_follows`.
 Les autres routes utilisent les migrations jusqu’à `0016_offer_quantity_limits` :
 `0009_recipe_visibility` ajoute le partage et
 `0010_preserve_meals` conserve les repas après suppression de leur recette. Les

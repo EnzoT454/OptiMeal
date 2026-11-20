@@ -1,5 +1,5 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
-import type { ShoppingPeriod } from './shoppingLists';
+import type { ShoppingListKind, ShoppingPeriod } from './shoppingLists';
 import type { Circular, Offer } from './api';
 
 export type RecipeStackParams = {
@@ -32,7 +32,7 @@ export type MainTabParams = {
 };
 
 export type ListStackParams = {
-  Lists: undefined; CreateList: { period?: ShoppingPeriod } | undefined; ShoppingDetail: { id: string };
-  History: undefined; TemplateDetail: { id: string };
+  Lists: { section?: 'recent' | 'saved' } | undefined; CreateList: { period?: ShoppingPeriod; kind?: ShoppingListKind } | undefined; ShoppingDetail: { id: string };
+  AllLists: { section?: 'recent' | 'saved' } | undefined; Comparison: { id: string }; History: undefined; TemplateDetail: { id: string };
   ReuseList: { id: string; revision: number; mode: 'copy' | 'template' };
 };

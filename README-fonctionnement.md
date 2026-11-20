@@ -1,47 +1,16 @@
 # Comprendre le fonctionnement d’OptiMeal
 
-Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il suit des actions concrètes : se connecter, enregistrer une recette avec une photo, consulter les promotions et ouvrir une circulaire.
+Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il décrit le code relu au **20 novembre 2026**, notamment les parcours d’Accueil, de Promos, du Calendrier, des Listes et des produits suivis. Les confirmations fonctionnelles restent datées séparément.
 
-Il décrit le code au **10 novembre 2026** et les confirmations sur téléphone disponibles au **5 novembre 2026**, y compris les cartes compactes de Recettes, les favoris directement sur les cartes et le filtre Faciles. La présence d’un parcours dans le code ne signifie pas qu’il a été vérifié sur tous les appareils ; les essais confirmés et les fonctions encore prévues sont présentés séparément. Les schémas sont écrits en Mermaid et peuvent être lus dans un aperçu Markdown compatible, notamment sur GitHub.
+Le parcours principal relie les recettes, les repas planifiés et les achats : choisir ses portions, regrouper les ingrédients, comparer les produits des magasins et suivre ses courses. Le [guide détaillé de Liste](backend/docs/SHOPPING_GUIDE.md) complète ce document avec les boutons, les parcours et les règles de calcul de cet onglet.
 
-**Listes — état au 16 novembre 2026 :** compte et réseau sont nécessaires à
-l’entrée. L’onglet affiche **+ Créer une liste → En cours → Historique → Mes modèles**.
-La création comporte deux étapes : **Ingrédients**, puis **Prix par magasin**.
-L’utilisateur ajoute les articles ou ajuste directement les besoins du calendrier,
-puis clique sur **Suivant**. Les totaux Maxi, Metro, Super C et Moins cher sont
-présentés dans cet ordre ; chaque magasin ouvre ses produits exacts. Moins cher
-regroupe les produits par magasin et permet de changer un choix au toucher.
-Le nombre de produits est arrondi au supérieur et multiplié par leur prix direct.
-**Créer la liste** enregistre ensuite le panier choisi en une seule transaction. Les listes
-restent indépendantes des changements futurs du calendrier.
-Les courses affichent directement les produits/prix sauvegardés et permettent
-coches, achats partiels, possession et compléments. **Recalculer les prix** est
-l’unique action de calcul : prix directs du complément, arrondi supérieur, achats
-passés conservés. Les deux anciens boutons de comparaison sont retirés. Les modèles sauvegardent les besoins d’une occasion
-(fête, barbecue, voyage, sortie) avec un menu **…** pour renommer, supprimer et
-ajouter un produit.
-La synchronisation, le cache de listes, les contrôles périodiques et la consultation
-des anciennes versions sont retirés. L’historique des listes terminées/archivées
-reste, avec trois lignes puis **Voir tout**. Les compteurs internes protègent
-encore contre les modifications concurrentes. La reprise d’une demande incertaine
-est manuelle et conserve sa clé pour éviter les doublons.
-Supabase reste vérifié à 0021 ; aucune nouvelle migration n’est nécessaire.
-Voir [le parcours de création](backend/docs/SHOPPING_CREATION.md) et
-[la présentation de Liste](backend/docs/SHOPPING_OVERVIEW.md).
-Les tableaux datés plus anciens ci-dessous conservent leur contexte historique.
+La présence d’une fonction dans le code ne prouve pas sa validation sur tous les appareils ni l’application de sa migration sur Supabase. Les confirmations connues sont distinguées des vérifications encore nécessaires. Les schémas Mermaid peuvent être consultés dans un aperçu Markdown compatible.
+
+Le cadrage du **17 novembre 2026** retire les modes IA destinés aux utilisateurs, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations statistiques et la contribution par reçu. Les montants calculés à partir du catalogue, l’historique des listes terminées et les outils locaux de lecture des reçus sont conservés. Les choix IA ou Petit budget encore visibles avec un message d’attente ne constituent pas des fonctions disponibles.
 
 ## 1. Les grandes parties de l’application
 
-**Complément du 14 novembre 2026 :** les offres peuvent conserver un prix
-promotionnel limité aux premières unités, avec un prix distinct après limite.
-L’exemple Maxi de l’huile d’olive est enregistré à 7,77 $ pour les quatre
-premières unités, puis 10 $ par unité supplémentaire, du 12 au 18 novembre
-inclusivement. Les dates sont confirmées par l’utilisateur ; Apify ne les
-fournit pas. La migration `0016_offer_quantity_limits` est appliquée sur Supabase.
-Les conditions sont affichées avec les prix dans le mobile ; les essais de
-cet affichage sur téléphone restent à effectuer. Les
-[contrats](backend/docs/CONTRACTS.md#prix-promotionnel-avec-limite-de-quantité)
-décrivent les champs et les calculs, distincts du futur moteur complet des listes.
+Les offres peuvent inclure un prix promotionnel limité aux premières unités, avec un prix après limite. Les calculs des listes tiennent compte de ces conditions et de la date des courses. Un prix ou un format absent reste inconnu ; il n’est pas remplacé par une valeur inventée.
 
 Le **frontend** est l’application mobile : il affiche les écrans et reçoit les actions de l’utilisateur. Le **backend** est le serveur : il répond aux demandes du mobile, vérifie les droits et lit ou enregistre les données.
 
@@ -77,7 +46,7 @@ Le mobile contacte directement Auth et Storage. Pour les tables métier, comme l
 
 ## 2. Où fonctionne chaque partie pendant le développement ?
 
-Dans le montage local décrit par le dépôt, l’application fonctionne sur le téléphone, tandis que deux serveurs distincts fonctionnent sur l’ordinateur.
+Dans le montage local, l’application s’ouvre sur téléphone, simulateur, émulateur ou navigateur. Deux serveurs distincts fonctionnent sur l’ordinateur : Expo Metro fournit le code de développement et FastAPI répond aux demandes métier.
 
 ```mermaid
 flowchart LR
@@ -124,7 +93,7 @@ flowchart TD
     A[Ouverture de l’application] --> B[Restaurer la session éventuelle]
     B --> T[Afficher les cinq onglets]
     T --> P[Consulter accueil, promos, recettes et paramètres]
-    T --> C[Ajouter une recette, gérer ses favoris ou accéder au calendrier et au profil]
+    T --> C[Ajouter une recette, gérer les favoris, le calendrier, les listes ou le profil]
     C --> Q{Compte connecté ?}
     Q -->|Oui| R[Accéder au parcours personnel]
     Q -->|Non| L[Proposer la connexion ou la création de compte]
@@ -138,52 +107,45 @@ flowchart TD
 
 À l’inscription, l’utilisateur doit confirmer son courriel. Le retour dans l’application utilise le lien `optimeal://auth/callback` et un échange de code pour obtenir la session.
 
-Les cinq onglets sont visibles avec ou sans compte : Accueil, Promos, Recettes, Calendrier et Liste. Accueil présente les repas du jour et un aperçu des achats au compte connecté, ou un message de bienvenue aux visiteurs. Promos regroupe les offres et les circulaires ; Recettes permet de consulter et gérer les plats ; Calendrier permet de gérer les repas d’une semaine et ouvre ses listes sauvegardées. Le nouvel onglet Liste permet de créer, compléter et reprendre des brouillons privés, manuellement ou depuis un aperçu du calendrier ; les comparaisons et courses sont raccordées, avec prix inconnus sans attestations commerciales. Calendrier et Liste demandent un compte ; Liste exige aussi une connexion au serveur. React Navigation organise ces onglets et les écrans de détail de Recettes et Promos.
+Les cinq onglets sont **Accueil, Promos, Recettes, Calendrier et Listes**. Le nom technique du dernier onglet reste `Liste` dans la navigation. Ils restent visibles en mode visiteur, mais les actions personnelles demandent une connexion. Calendrier est protégé par `AccountRequired` ; le navigateur Liste exige aussi une lecture privée réussie auprès du serveur avant de monter ses écrans.
 
-Une roue dentée en haut à droite de l’accueil ouvre Paramètres, avec une zone tactile de 48 × 48 et un libellé accessible. Cet écran présente le mode visiteur ou, après connexion, le profil et la déconnexion. Le bouton de retour ramène à l’accueil ; une connexion ou déconnexion réinitialise toujours la navigation.
+Le client [services/supabase.ts](mobile/services/supabase.ts) configure Auth et conserve la session avec AsyncStorage. `AuthContext.tsx` restaure cette session, écoute ses changements et traite le retour du lien de confirmation. Une connexion, déconnexion ou un changement de compte recrée la navigation à l’accueil, afin de retirer les écrans du compte précédent.
 
-Le client [services/supabase.ts](mobile/services/supabase.ts) configure Supabase et conserve la session avec AsyncStorage. `AuthContext.tsx` écoute aussi les changements de connexion et gère le retour du lien de confirmation. La consultation est accessible sans session ; chaque demande protégée reste vérifiée par le serveur.
+La connexion s’ouvre dans une fenêtre. « Continuer sans compte » et le retour Android permettent de l’annuler sans enregistrer l’action personnelle. [AccountRequired.tsx](mobile/components/AccountRequired.tsx) protège aussi les écrans de création et d’édition ouverts directement. Le backend vérifie toujours les droits, même lorsqu’un bouton est masqué ou protégé dans le mobile.
 
-La connexion s’ouvre dans une fenêtre que l’on peut fermer avec « Continuer sans compte » ou le retour Android. Annuler conserve la page consultée. Une connexion, une déconnexion ou un changement de compte réinitialise la navigation vers l’accueil, afin de retirer les écrans et données du compte précédent. Après connexion, l’utilisateur peut relancer l’action souhaitée.
+### Accueil et menu du compte
 
-[AccountRequired.tsx](mobile/components/AccountRequired.tsx) protège aussi les écrans d’ajout, de saisie et d’édition lorsqu’ils sont ouverts directement. Les paramètres visiteurs ne demandent pas le profil privé à l’API. Le calendrier est soumis à la connexion ; les instantanés historiques et les listes restent à développer.
+[HomeScreen.tsx](mobile/app/HomeScreen.tsx) affiche la date, une salutation et un bouton **Mon compte** en haut à droite. Ce bouton ouvre [MenuCompte.tsx](mobile/components/MenuCompte.tsx), avec Mes listes, Produits suivis, Ingrédients non suggérés et Paramètres. Il remplace l’ancien accès direct par roue dentée.
 
-### Données personnelles conservées sur le téléphone
+Sans compte, l’accueil présente une invitation à découvrir les recettes, promotions et circulaires. Avec une session, il charge les repas de la semaine et de la suivante, la première page des listes, les offres et les produits suivis.
 
-Les listes et achats privés sont sauvegardés sur le serveur. Le téléphone
-conserve leur cache complet, les commandes en attente, le journal de récupération
-et les suivis dans l’espace de chaque compte. Changer de compte masque les
-données de la session précédente ; les réponses tardives ne les réaffichent pas.
-Les suivis restent locaux, tandis que les listes et l’épinglage sont partagés
-entre appareils par le serveur.
+| Zone | Comportement actuel |
+| --- | --- |
+| Aujourd’hui / Demain | Repas du jour ; à partir de 21 h, présentation de ceux du lendemain. Les horaires sont ceux de l’appareil. Une recette accessible ouvre sa fiche dans la pile Accueil. |
+| Mes listes en cours | Jusqu’à trois listes actives ou brouillons, par modification récente, sans masquage lié à la date technique des prix. Voir toutes ouvre Liste ; toucher une ligne ouvre son détail. |
+| Promos suivies | Jusqu’à huit offres actives correspondant aux produits suivis ; accès au détail, aux suivis et aux promotions. |
 
-L’ancien moteur local a été retiré. Ses anciennes données restent conservées,
-sans interface d’import des anciens ajouts ou du garde-manger. Les clés communes sans propriétaire
-sont ignorées. Voir aussi [le stockage par compte](mobile/README.md#données-locales-par-compte).
+Les lignes de listes d’Accueil et de Liste partagent le même résumé : reste à acheter et magasins illustrés par des icônes puis **Total estimé** ou **Sous-total connu** uniquement lorsqu’un produit chiffré a été retenu ou acheté. Une liste d’articles n’affiche pas de montant ; les produits présentent leur montant à droite sous Total estimé ou Sous-total connu, avec le symbole $ après le montant, sans icône monétaire supplémentaire. Le budget connu inclut les achats enregistrés. L’accueil filtre encore la première page reçue ; une liste masquée reste accessible dans Liste.
 
-### Erreurs de chargement et d’enregistrement de la liste d’achats
+**Créer la liste de la semaine** transmet le lundi et le dimanche de la semaine courante au parcours calendrier. Sans repas planifié, **Créer une liste** propose Articles ou Produits avant de créer la liste vide persistante. L’épinglage est conservé en base et dans le menu d’une liste, mais cet Accueil ne l’utilise pas pour choisir ses lignes.
 
-Une panne ne devient pas une liste vide réussie. L’aperçu calendrier signale les
-repas indisponibles avant la création ; une liste sauvegardée reste indépendante
-des repas sources. Les prix inconnus restent visibles et le montant partiel
-reste un sous-total, sans calcul local concurrent.
+### Paramètres
 
-Une commande incertaine garde sa clé et son corps pour être reprise sans double
-écriture. Les coches hors connexion restent signalées en attente, les conflits
-incompatibles demandent une décision et les erreurs locales restent explicites.
-Voir le [guide hors connexion](backend/docs/SHOPPING_OFFLINE.md) et le
-[guide mobile](mobile/README.md#liste-dachats--chargement-incomplet-et-erreurs-locales).
+[ProfileScreen.tsx](mobile/app/ProfileScreen.tsx) affiche une carte de compte avec nom et courriel, puis les sections **Nom affiché** et **Session**. Le profil est relu à chaque ouverture. Le bouton Enregistrer apparaît lorsque le nom change ; une sauvegarde réussie affiche brièvement « ✓ Enregistré ». La section Session propose déconnexion et suppression du compte.
 
-### Identité commerciale des produits
+En mode visiteur, Paramètres propose la connexion sans demander le profil privé à l’API. Le retour ramène vers Accueil. Les préférences alimentaires ou recommandations avancées ne sont pas implémentées par cet écran.
 
-Les suivis et les choix manuels utilisent `product_id`, la référence stable du
-produit pour une enseigne et un magasin. Le prix, les dates et les promotions
-peuvent changer sans perdre ces préférences. `offer.id` reste l’identifiant du
-relevé courant. Les anciens suivis sont convertis si l’offre d’origine est
-encore identifiable ; sinon ils restent visibles comme suivis à réassocier.
-Les anciens choix non identifiables déclenchent un avertissement. Le
-[guide mobile](mobile/README.md#identité-des-produits-suivis-et-choisis)
-décrit la conversion et les essais à réaliser.
+### Données conservées sur le téléphone
+
+Les listes et leurs achats sont sauvegardés sur le serveur. Le mobile ne conserve plus de cache complet des listes ni de file de synchronisation hors connexion. Il conserve, par compte, les commandes dont la réponse reste incertaine pour permettre une reprise manuelle avec la même clé.
+
+Les produits suivis ont un stockage local par compte et une persistance serveur complémentaire, décrits dans la section Promos. Les trois ajouts récents proposés par la recherche des listes sont aussi conservés par compte, après un ajout réussi ; les références de produits y sont gardées sans prix. Le choix grille/liste de Promos est une préférence locale d’affichage. Les anciennes clés de l’ancien moteur de listes restent inutilisées, sans parcours d’import proposé à l’utilisateur.
+
+Une panne ne devient pas un faux état vide réussi. Les écrans signalent les erreurs, conservent la saisie lorsque possible et proposent une reprise. Les réponses tardives d’un écran ou d’un ancien compte sont ignorées par les contrôles d’identité des parcours concernés.
+
+### Identité des produits
+
+Les suivis et les choix manuels utilisent `product_id`, l’identité stable d’un produit pour une enseigne et un magasin. `offer.id` désigne le relevé exposé par l’API et peut changer avec ses données. Les anciens suivis fondés sur l’offre sont rapprochés du produit lorsque l’offre est identifiable ; sinon ils restent signalés comme suivis à réassocier.
 
 ### Supprimer son compte depuis Paramètres
 
@@ -209,8 +171,7 @@ leur propriétaire avant la suppression du profil. Leurs ingrédients, évaluati
 par les autres comptes, favoris et références dans les calendriers sont conservés.
 Les photos publiques du dossier personnel sont d’abord copiées dans `community/`
 avec une clé serveur, et leurs liens sont actualisés avant le nettoyage des originaux.
-Le profil, les recettes privées, les favoris, les repas et les évaluations du
-compte supprimé sont retirés. Les autres comptes et les circulaires sont conservés.
+Le profil, les recettes privées, les favoris, les repas, les évaluations, les listes et les préférences privées liées au profil sont retirés par leurs cascades. Les produits suivis en base sont également liés au profil avec suppression en cascade. Les autres comptes et les circulaires sont conservés.
 La suppression bloque les créations et modifications de recettes du compte
 pendant son traitement. En cas d’échec, il faut relancer la suppression depuis
 Paramètres ; aucune photo publique source n’est effacée avant la sauvegarde
@@ -223,7 +184,7 @@ sans résultat individuel pour chaque scénario de suppression. Voir le [guide A
 
 Supabase Auth délivre un **jeton d’accès**, aussi appelé JWT. Le mobile le joint aux appels FastAPI dans l’en-tête `Authorization: Bearer …`.
 
-[backend/app/security.py](backend/app/security.py) vérifie ce jeton auprès de Supabase Auth, via `/auth/v1/user`, puis obtient l’identité du compte. Les services métier utilisent cette identité pour contrôler les droits.
+[backend/app/security.py](backend/app/security.py) vérifie ce jeton auprès de Supabase Auth, via `/auth/v1/user`, puis obtient l’identité du compte. Les services métier utilisent cette identité pour contrôler les droits. Si FastAPI répond 401 à un compte connecté, le client `api.ts` tente une fois de renouveler la session avant de reprendre la requête. Les autres erreurs sont remontées à l’écran ; le délai réseau est de 15 secondes par défaut.
 
 Par exemple, être connecté avec le compte B ne donne pas le droit de modifier une recette du compte A. Masquer un bouton dans l’écran améliore l’interface ; le contrôle décisif se fait aussi dans le backend.
 
@@ -241,11 +202,13 @@ sequenceDiagram
     participant D as PostgreSQL
     U->>M: Ouvrir Recettes
     M->>C: Charger la liste
-    C->>B: GET /api/v1/recipes avec jeton
-    B->>A: Vérifier le jeton
-    A-->>B: Identité du compte
+    C->>B: GET /api/v1/recipes avec jeton si connecté
+    opt Jeton présent
+        B->>A: Vérifier le jeton
+        A-->>B: Identité du compte
+    end
     B->>D: Lire les recettes accessibles
-    D-->>B: Recettes initiales et personnelles du compte
+    D-->>B: Recettes publiques et, selon la demande, privées du compte
     B-->>C: JSON avec items, total et pagination
     C-->>M: Données de la liste
     M-->>U: Cartes de recettes
@@ -262,7 +225,7 @@ Le fichier [RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) demande la li
 | Voir ses favoris | `GET /api/v1/recipes?scope=favorites` |
 | Lire une recette complète | `GET /api/v1/recipes/{id}` |
 
-Rapides signifie **30 minutes au maximum, préparation et cuisson comprises**. Petit budget affiche encore « Disponible prochainement ».
+Rapides signifie **une durée totale enregistrée de 30 minutes au maximum**. Pour les recettes saisies avec le formulaire actuel, cette durée est la somme des durées des étapes. Petit budget affiche encore « Disponible prochainement ».
 
 Sans jeton, l’API permet de lire les recettes initiales et les recettes publiées par les utilisateurs. Avec une identité valide, elle ajoute les recettes privées de ce compte. Le mobile permet également cette consultation sans compte. Ajouter une recette, consulter ou modifier ses favoris et accéder au profil demande une connexion.
 
@@ -309,7 +272,7 @@ Les règles détaillées sont dans les [contrats](backend/docs/CONTRACTS.md).
 
 ## 5. Créer une recette et enregistrer sa photo
 
-Le parcours manuel passe par le choix d’ajout, le choix de saisie et le formulaire. Les choix IA sont visibles, mais leur traitement reste à développer.
+Le parcours disponible passe par le choix d’ajout, le choix de saisie et le formulaire manuel. Les choix IA encore visibles sont des emplacements avec message d’attente ; leur réalisation a été retirée du périmètre le 17 novembre.
 
 ```mermaid
 flowchart TD
@@ -342,7 +305,7 @@ Les responsabilités se répartissent ainsi :
 
 **L’image et la recette sont enregistrées dans deux services différents.** Storage reçoit le fichier ; PostgreSQL conserve son URL dans `recipe.image_url`. Si l’envoi de l’image réussit mais que la recette ne peut pas être enregistrée, un fichier inutilisé peut rester dans Storage.
 
-Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les politiques Storage limitent les écritures à `users/<identifiant du compte>/`. En édition, retirer une photo enregistre `image_url: null` ; le fichier n’est pas automatiquement supprimé. Cette politique publique concerne les photos de recettes ; le futur parcours des reçus prévoit un stockage privé.
+Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les politiques Storage limitent les écritures à `users/<identifiant du compte>/`. En édition, retirer une photo enregistre `image_url: null` ; le fichier n’est pas automatiquement supprimé. Cette politique publique concerne les photos de recettes. Les reçus restent des fichiers locaux ; aucun parcours mobile de contribution n’est intégré.
 
 ### Choisir la visibilité et publier définitivement
 
@@ -414,7 +377,7 @@ Auth gère les comptes dans son propre schéma. Les tables applicatives décrive
 
 ### Schéma relationnel de la base
 
-Ce schéma présente les tables actuelles et leurs principaux champs. Les liens
+Ce schéma présente les tables principales des comptes, recettes, repas, suivis et offres. Le stockage des listes est décrit séparément ci-dessous. Les liens
 représentent les clés étrangères vérifiées dans les modèles du backend.
 `auth.users` appartient à Supabase Auth ; les autres tables figurent dans le
 schéma `public`.
@@ -426,6 +389,7 @@ erDiagram
     profile ||--o{ favorite : "enregistre"
     profile ||--o{ meal_plan_entry : "planifie"
     profile ||--o{ recipe_rating : "évalue"
+    profile ||--o{ product_follow : "suit"
     recipe ||--o{ recipe_ingredient : "contient"
     ingredient ||--o{ recipe_ingredient : "entre dans"
     recipe ||--o{ favorite : "est mise en favori"
@@ -445,7 +409,7 @@ erDiagram
     recipe {
         text id PK
         text seed_key UK
-        uuid owner_id FK "Facultatif pour les recettes initiales"
+        uuid owner_id FK "Absent pour les recettes initiales ou publiques conservées sans auteur"
         text name
         int servings
         int total_time_minutes
@@ -491,6 +455,13 @@ erDiagram
         int ease_score
         timestamptz created_at
         timestamptz updated_at
+    }
+    product_follow {
+        uuid user_id PK,FK
+        text product_id PK
+        text retailer
+        text name
+        timestamptz since
     }
     category {
         int id PK
@@ -543,6 +514,7 @@ champs facultatifs ne sont signalés ici que lorsqu’ils expliquent une relatio
 | `favorite` | Association personnelle entre un compte et une recette |
 | `meal_plan_entry` | Repas d’un compte à une date et un créneau, avec recette ou note libre |
 | `recipe_rating` | Trois notes d’un compte pour une version du contenu d’une recette |
+| `product_follow` | Produit suivi par un compte, indépendant du relevé de prix courant |
 | `category` | Catégories des offres, comme les rayons alimentaires |
 | `product_offer` | Produit d’un magasin avec format, prix relevés et période de validité |
 | `circular` | Circulaire courante d’une enseigne et emplacement de ses pages dans Storage |
@@ -552,7 +524,7 @@ Par exemple, une recette demandant 300 g de riz possède une ligne
 `recipe_ingredient` qui référence l’ingrédient riz et conserve `quantity = 300`
 et `unit = g`. Les fiches Maxi, Metro et Super C correspondantes référencent
 ce même ingrédient dans `product_offer`. Ce lien permet de retrouver les
-produits associés ; le calcul des paquets à acheter reste à développer.
+produits associés. Le moteur de Liste calcule les produits entiers à acheter selon les quantités et formats compatibles.
 
 La clé de `recipe_rating` combine recette, compte et version : les votes des
 anciennes versions restent enregistrés. `recipe_version` est comparé à
@@ -592,7 +564,7 @@ flowchart LR
     F[circular : magasin, dates et nombre de pages] -.->|storage_prefix| S[Pages JPEG dans Storage]
 ```
 
-`product_offer` conserve le prix de base, le prix promotionnel éventuel, les dates, la source et, depuis la migration `0007`, le lien de la photo du produit et sa provenance (`image_url`, `image_source`). Un nouvel import actualise le produit de même identifiant ; cette table ne conserve pas encore l’historique des prix. `circular` garde une seule circulaire par magasin et les informations nécessaires pour retrouver ses images dans le bucket public `circulars`.
+`product_offer` conserve le prix de base, le prix promotionnel éventuel, les dates, la source et, depuis la migration `0007`, le lien de la photo du produit et sa provenance (`image_url`, `image_source`). Un nouvel import actualise le produit de même identifiant ; cette table conserve les valeurs courantes, sans historique des prix. `circular` garde une seule circulaire par magasin et les informations nécessaires pour retrouver ses images dans le bucket public `circulars`.
 
 ### Ingrédient et produit commercial : quelle différence ?
 
@@ -605,14 +577,47 @@ flowchart LR
     I --> A[Fiche produit Maxi]
     I --> B[Fiche produit Metro]
     I --> C[Fiche produit Super C]
-    A -.-> X[À développer : choix selon formats, prix et contraintes]
-    B -.-> X
-    C -.-> X
+    A --> X[Liste : choix selon quantités, formats et prix disponibles]
+    B --> X
+    C --> X
 ```
 
 Le référentiel commun contient **31 ingrédients et 93 fiches produits**. Les clés `ing_…` permettent aux recettes et au catalogue de désigner le même ingrédient. Les identifiants propres aux magasins ne suffisent pas : un même numéro peut désigner deux aliments différents selon la source.
 
 Les correspondances sont explicites et restent à vérifier selon les produits. Relier deux fiches à un ingrédient commun ne prouve pas que leurs formats ou leurs qualités sont interchangeables.
+
+### Données privées des listes
+
+Les tables de listes séparent les besoins des achats et des prix sauvegardés :
+
+| Ensemble | Utilité |
+| --- | --- |
+| `shopping_list`, `shopping_list_item` | Nom, propriétaire, statut, dates et articles |
+| `shopping_list_quantity`, `shopping_list_contribution` | Quantités requises ou possédées et provenance des recettes |
+| `shopping_list_purchase`, `shopping_list_purchase_quantity` | Achats déclarés sans prix |
+| `shopping_list_comparison`, `shopping_list_assignment`, `shopping_list_choice` | Résultats de calcul, panier choisi et préférences explicites de produits |
+| `shopping_list_product_purchase` | Produits achetés, quantités, prix sauvegardés et allocations aux besoins |
+| `shopping_list_template`, `shopping_list_exclusion`, `shopping_list_pin` | Modèles, ingrédients non suggérés et préférence d’épinglage |
+| Tables de commandes et `shopping_list_revision` | Rejeu des écritures et état courant avec contrôle de révision |
+
+Le schéma suivant présente les rôles des données, sans détailler toutes les clés étrangères :
+
+```mermaid
+flowchart LR
+    L[Liste privée et type] --> B[Besoins : ingrédients et quantités]
+    B --> C[Choix de produits et panier calculé]
+    B --> A[Achats sans prix]
+    C --> P[Achats de produits et prix sauvegardés]
+    L --> R[Révision courante et commandes de reprise]
+    L --> S[Sauvegarde réutilisable en articles]
+    S --> N[Nouvelle copie indépendante]
+```
+
+`shopping_list.kind` distingue les nouvelles listes d’articles et de produits. Les anciennes listes sans type restent lisibles, y compris lorsqu’elles mélangent les deux. La sauvegarde réutilisable et la liste de courses ont des identifiants et des achats séparés.
+
+Le compteur de révision refuse les modifications concurrentes d’un état ancien. Il ne donne pas accès à un historique de versions. À chaque mutation, le service remplace l’instantané courant de la liste ; les résultats de commandes restent disponibles pour répondre sans doublon à une reprise.
+
+`product_follow` possède une clé composée compte/produit, sans clé étrangère vers `product_offer` : un suivi peut ainsi rester enregistré lorsque le catalogue est actualisé ou qu’un produit en disparaît.
 
 ## 8. Pourquoi certaines routes lisent encore des JSON
 
@@ -622,6 +627,8 @@ Le raccordement à PostgreSQL avance par étapes. Le référentiel des ingrédie
 | --- | --- |
 | `/api/v1/recipes` et détail | PostgreSQL, relu à chaque requête |
 | Profil et favoris | PostgreSQL |
+| `/api/v1/plans`, listes, modèles, exclusions et épinglage | PostgreSQL |
+| `/api/v1/follows` | PostgreSQL ; le mobile garde aussi ses suivis locaux |
 | `/api/v1/ingredients` | Catalogue JSON commun chargé au démarrage |
 | `/api/v1/offers` et détail | JSON par défaut, ou PostgreSQL avec `OFFERS_SOURCE=database` |
 | `/api/v1/circulars` | PostgreSQL pour les informations ; Storage pour les images des pages |
@@ -650,11 +657,44 @@ Une panne PostgreSQL produit une erreur sur les routes qui en dépendent : recet
 
 ### Consulter les promotions
 
-[PromotionsScreen.tsx](mobile/app/PromotionsScreen.tsx) demande les offres actives avec `GET /api/v1/offers?promotion_only=true&limit=100`. La recherche par nom et le filtre Maxi, Metro ou Super C sont ensuite appliqués dans le mobile. Les cartes sont triées par pourcentage de rabais décroissant et ouvrent le détail de l’offre.
+[PromotionsScreen.tsx](mobile/app/PromotionsScreen.tsx) utilise [search.ts](mobile/components/search.ts) pour charger **toutes les pages** de `/api/v1/offers`, cent offres à la fois. Le chargement n’est donc plus limité aux cent premières offres. Les prix promotionnels des offres non actives sont écartés de cette présentation ; le prix régulier reste affichable lorsqu’il est connu.
 
-Le détail présente le prix, le format, le prix par unité lorsque le format est reconnu, les dates et le lien vers le site du magasin. « Ajouter à la liste » affiche encore un message d’attente. Le chargement actuel porte sur les 100 premières offres ; les pages suivantes ne sont pas récupérées par cet écran.
+Le sélecteur [OngletsPromos.tsx](mobile/components/OngletsPromos.tsx) organise trois vues : **Promos**, **Idées repas** et **Suivis**. Un bouton distinct ouvre les circulaires.
 
-Le prix affiché est `promo_price.amount` lorsqu’il est renseigné, sinon `price.amount`. Le pourcentage de rabais est calculé seulement si les deux prix sont strictement positifs et que le prix promotionnel est inférieur au prix de base. Les conversions d’affichage couvrent g, kg, lb, ml, L et les lots en unités ; elles ne constituent pas encore le moteur de calcul des besoins ou des listes.
+Sans recherche, la page affiche les promotions actives, avec filtres de catégorie et d’enseigne. Avec une recherche, elle affiche aussi les produits hors promotion, dans une section séparée ; le filtre de catégorie est alors ignoré. Le filtre magasin reste actif.
+
+La recherche s’effectue dans le mobile sur les noms et les alias des ingrédients. Elle normalise les accents, certaines ligatures et les pluriels simples, accepte des préfixes et tolère de petites fautes de frappe. Les résultats sont triés par pertinence, rabais décroissant puis nom. Jusqu’à cinq suggestions apparaissent à partir de deux caractères saisis.
+
+Le choix **grille ou liste** est conservé localement et partagé avec la vue Suivis. Les cartes [PromoCard.tsx](mobile/components/PromoCard.tsx) ouvrent le détail et proposent une cloche pour suivre le produit. Ce suivi demande un compte.
+
+Le détail présente le prix applicable, le format, le prix par unité lorsque le format est reconnu, les dates, les conditions et le lien marchand. « Ajouter à la liste » reste un message d’attente : ce bouton ne crée pas d’article dans les listes privées.
+
+Le pourcentage de rabais exige un prix régulier et un prix promotionnel strictement positifs, avec une promotion active moins chère que le prix régulier. Les conversions d’affichage couvrent notamment g, kg, lb, ml, L et lots en unités. Elles ne remplacent pas le calcul des besoins et produits entiers de Liste.
+
+### Suivre un produit et retrouver ses suivis
+
+[FollowsScreen.tsx](mobile/app/FollowsScreen.tsx) présente les produits suivis en promotion, ceux hors promotion et ceux absents du catalogue. Les anciens suivis impossibles à rapprocher sont signalés comme à réassocier. L’utilisateur peut retirer un suivi ; l’état vide invite à utiliser la cloche d’un produit.
+
+La pastille de Suivis indique le nombre de produits suivis en promotion dans les offres chargées. Il s’agit d’un indicateur dans l’interface, pas d’une notification système envoyée au téléphone. Le texte évoquant une actualisation le jeudi n’est pas un ordonnanceur : les imports des offres restent des commandes explicites.
+
+[follows.ts](mobile/components/follows.ts) conserve d’abord la liste locale par compte. Ajouter ou retirer une cloche met à jour ce stockage, puis lance une requête serveur en arrière-plan. Une panne serveur ne bloque pas l’usage local et l’erreur distante est ignorée par ce traitement.
+
+La première récupération réussie sur un appareil fonctionne ainsi :
+
+1. Lire les suivis du compte avec `GET /api/v1/follows`.
+2. Si le téléphone n’a aucun suivi et que le serveur en a, les récupérer localement.
+3. Sinon, envoyer les suivis locaux identifiés absents du serveur.
+4. Marquer cette initialisation comme effectuée pour ce compte sur cet appareil.
+
+Si la lecture serveur échoue, le marqueur n’est pas enregistré et une lecture ultérieure pourra réessayer. Une fois l’initialisation marquée, le code ne fusionne pas systématiquement les modifications d’autres appareils. Les envois individuels ne disposent pas d’une file de reprise garantie ; une erreur d’écriture distante peut donc laisser une différence entre téléphone et serveur.
+
+| Route privée | Comportement |
+| --- | --- |
+| `GET /api/v1/follows` | Lire les suivis du compte connecté |
+| `PUT /api/v1/follows` | Ajouter le produit ou actualiser ses libellés, sans doublon et en conservant sa date d’origine |
+| `DELETE /api/v1/follows/{product_id}` | Retirer uniquement le suivi du compte connecté ; retrait répétable |
+
+Le domaine [backend/app/follows/](backend/app/follows/) utilise la table `product_follow`, ajoutée par `0022_product_follows`. Ce schéma doit être présent sur la base cible pour que la persistance serveur fonctionne. Le contrôle du 20 novembre confirme que la base configurée est à la révision 0023, qui inclut cette table. La récupération et les modifications des suivis gardent les limites de synchronisation décrites ci-dessus.
 
 ### Photos des produits : du fichier source à l’écran
 
@@ -683,29 +723,28 @@ Les lectures JSON et PostgreSQL exposent les mêmes champs dans la liste et le d
 
 [ProductImage.tsx](mobile/components/ProductImage.tsx) utilise l’image distante et affiche une icône si l’URL manque ou si le chargement échoue. Le détail indique aussi le magasin comme source de la photo lorsque l’URL est présente. La disponibilité des photos dépend ainsi du réseau et des serveurs des magasins, indépendamment de celle des données de prix.
 
-### Trouver une recette avec les promos
+### Idées repas à partir des promotions
 
-[CookWithPromosScreen.tsx](mobile/app/CookWithPromosScreen.tsx) réutilise les promotions et charge les recettes accessibles au compte, puis leur détail pour connaître les ingrédients.
+[CookWithPromosScreen.tsx](mobile/app/CookWithPromosScreen.tsx) est la vue **Idées repas** de Promos. Elle charge les recettes accessibles par pages de vingt, puis leurs détails pour connaître leurs ingrédients. Elle charge aussi les promotions actives avec `fetchPromos`, qui reste limité aux **cent premières promotions**, contrairement au chargement complet de la page principale Promos.
+
+Le rapprochement reste effectué dans le mobile, par `ingredient_id`, sans IA. Pour chaque ingrédient, le code retient l’offre au prix affiché le plus bas parmi les promotions admissibles. Il retient une promotion au rabais connu d’au moins 5 %, ou à l’écart de prix d’au moins 1 $ ; un rabais non calculable n’entraîne pas à lui seul son exclusion.
 
 ```mermaid
 flowchart TD
-    P[Promotions actives chargées] --> O[Retenir une offre par ingrédient]
-    R[Recettes initiales et personnelles accessibles] --> D[Lire leurs ingrédients]
-    O --> C[Relier les offres aux recettes par ingredient_id]
-    D --> C
-    C --> T[Garder les recettes avec au moins un ingrédient en promo]
-    T --> L[Classer par nombre d’ingrédients en promo]
-    L --> V[Afficher les recettes et ouvrir leur détail]
+    O[Promotions actives chargées] --> F[Filtrer puis retenir une offre par ingrédient]
+    R[Recettes accessibles et détails] --> I[Identifiants des ingrédients]
+    F --> M[Rapprocher par ingredient_id]
+    I --> M
+    M --> S[Sommer les écarts entre prix régulier et promotionnel]
+    S --> T[Trier par économies affichées ou nombre de promotions]
+    T --> C[Déplier une carte ou ouvrir la recette]
 ```
 
-Pour chaque ingrédient, le code retient l’offre au prix affiché le plus bas parmi celles chargées. Cette comparaison porte sur le prix du produit, sans ajustement aux formats ou aux quantités de la recette. Le classement ne calcule donc ni un coût total ni le panier le moins cher. Il fonctionne sans IA et reste distinct du filtre « Petit budget », encore à développer.
+Le tri initial est **Plus d’économies** ; **Plus de promos** inverse les priorités entre économie affichée et nombre d’ingrédients en promotion. Les cartes peuvent être dépliées pour montrer les produits et magasins, puis ouvrir la recette. La fiche est ouverte dans la pile Promos, afin que le retour revienne aux idées repas.
 
-Les cartes affichent aussi la moyenne réelle et le nombre d’évaluations de la
-version courante, ou « Pas encore évaluée ». Les notes ne changent pas ce
-classement par ingrédients en promotion. Toucher une carte ouvre le détail
-dans Recettes, avec ses notes et son formulaire ; revenir dans Promos recharge
-les données. Si une recette devient privée ou disparaît entre la liste et son
-détail, elle est ignorée. Une panne du service reste affichée comme une erreur.
+Le montant appelé économie est la somme des écarts entre prix régulier et prix promotionnel des produits retenus. Il n’est ajusté ni aux portions ni aux quantités ou formats nécessaires à la recette. Un écart non calculable contribue zéro à ce classement, sans rendre connu le coût de la recette. Ce montant ne doit donc pas être interprété comme une économie garantie sur un panier complet.
+
+Les évaluations courantes restent visibles lorsqu’elles existent et ne changent pas ces deux tris. Une recette devenue inaccessible entre liste et détail est ignorée sur 404 ; une autre panne reste une erreur affichée.
 
 ### Calendrier et repas enregistrés
 
@@ -727,12 +766,13 @@ flowchart LR
 ```
 
 Le nom et la photo viennent de la recette courante. La suppression d’une
-recette conserve les repas qui la référencent, sans nom ni photo et avec une
+recette privée conserve les repas qui la référencent, sans nom ni photo et avec une
 référence à NULL depuis `0010_preserve_meals` ; la suppression du compte retire
-ses propres repas. Ce fonctionnement ne fournit pas encore l’historique stable par
-instantanés prévu pour les anciennes semaines. Les listes et le calcul
-économique restent à développer. Voir le [guide du calendrier](backend/docs/PLANNING.md)
-pour l’installation, les routes, les limites et les essais sur appareil.
+ses propres repas. Le calendrier n’est pas un historique figé des recettes.
+Le parcours vers les listes et le calcul des produits à acheter est intégré,
+comme décrit ci-dessous. Les instantanés historiques des plans sont retirés du
+périmètre. Voir le [guide du calendrier](backend/docs/PLANNING.md) pour les
+routes et les essais sur appareil.
 
 Depuis le 5 novembre, une recette publique ne peut plus être rendue privée ni supprimée par son auteur et reste accessible après suppression de son compte. Pour une référence exceptionnellement devenue inaccessible, le backend
 conserve son repas mais renvoie un nom et une photo nuls. Il masque aussi cette
@@ -748,6 +788,147 @@ ensuite depuis cette fiche, avec ses droits et la version courante du contenu.
 Une note libre ou une recette indisponible ne propose pas cette action.
 Planifier, déplacer ou marquer des restes ne crée aucun vote et ne prouve pas
 que la recette a été préparée.
+
+### Vue Épicerie et accès aux listes
+
+Le calendrier propose les vues **Repas** et **Épicerie**. [EpicerieSemaine.tsx](mobile/components/EpicerieSemaine.tsx) calcule les besoins des recettes de la semaine choisie via `calendar-preview`, puis demande les quatre scénarios de prix sans créer de liste.
+
+La date des courses utilisée par cet aperçu est aujourd’hui si le jour appartient à la semaine affichée, sinon le lundi de cette semaine. Les ingrédients sont présentés par rayon. Si les prix échouent, les besoins peuvent rester visibles sans leur chiffrage.
+
+**Créer une liste de produits** reprend le scénario sélectionné : Le moins cher, Maxi, Metro ou Super C. La copie active porte le nom de la semaine, par exemple **Épicerie 16-22 nov**, et s’ouvre directement dans Listes. Retour ramène aux récentes. Les produits, prix, magasins et provenances calendrier sont enregistrés ensemble ; les autres listes restent indépendantes.
+
+Les besoins sans produit chiffrable et les repas inaccessibles sont signalés avant confirmation des seuls produits disponibles. Sans produit disponible, la création est désactivée. Un besoin exclu ne devient pas un article libre dans cette liste de produits.
+
+```mermaid
+flowchart TD
+    A[Aperçu des besoins de la semaine] --> P[Comparer les quatre scénarios sans enregistrer de liste]
+    P --> S[Choisir un scénario]
+    S --> E{Des éléments sont indisponibles ?}
+    E -->|Oui| C[Confirmer leur exclusion et vérifier le devis retenu]
+    E -->|Non| V[Vérifier le calendrier et les prix côté serveur]
+    C --> V
+    V --> L[Créer la liste et son panier dans une transaction]
+    L --> O[Ouvrir la fiche avec des achats déjà cochables]
+```
+
+Une **empreinte** résume les données utilisées pour un aperçu. À la création, le serveur vérifie les empreintes du calendrier et des prix : si les données ont changé, il refuse le devis plutôt que d’enregistrer un panier différent sans confirmation. Le prix d’une ligne est rapproché par ingrédient, car le devis et le calendrier ont des identifiants temporaires distincts. La reprise réseau conserve la même commande pour éviter les doublons. Aucun premier appui sur Actualiser les prix n’est nécessaire.
+
+Depuis Accueil, **Créer la liste de la semaine** conserve un autre parcours : confirmer ou modifier les besoins, puis créer une liste d’articles sans magasin ni prix.
+
+### Listes : articles, produits et sauvegardes
+
+Le [guide des listes](backend/docs/SHOPPING_GUIDE.md) détaille les boutons et les cas particuliers. L’onglet **Listes** sépare **Listes récentes** et **Mes listes**. Les récentes montrent les cinq dernières listes actives ou brouillons ; **Voir tout** ouvre une page paginée des listes en cours. **Mes listes** contient les sauvegardes réutilisables.
+
+#### Créer et ajouter
+
+Le **+** propose Articles ou Produits. Le choix crée immédiatement une liste active vide sur le serveur, appelée **Mes courses** ou **Mes produits**, puis ouvre son détail. Une création échouée reste une erreur avec reprise ; aucun détail fictif n’est affiché. Le nom est modifiable. La date de calcul reste une donnée technique, sans date de courses imposée dans ce parcours.
+
+| Type | Ajout proposé | Affichage et achats |
+| --- | --- | --- |
+| Articles | Ingrédient du catalogue ou texte libre | Besoins cochables, sans magasin ni montant |
+| Produits | Produit précis d’une enseigne et d’un magasin | Référence commerciale, format et prix disponible ; achats cochables |
+
+Le type d’une nouvelle liste est immuable. Le backend refuse une modification qui mélangerait articles et produits. Les anciennes listes sans type restent compatibles ; le mobile bloque les nouveaux ajouts dans celles qui sont mixtes.
+
+```mermaid
+flowchart TD
+    PLUS[Créer une liste] --> TYPE{Articles ou Produits ?}
+    TYPE -->|Articles| A[Enregistrer une liste vide d’articles]
+    TYPE -->|Produits| P[Enregistrer une liste vide de produits]
+    A --> IA[Choisir un ingrédient ou saisir du texte libre]
+    P --> IP[Choisir une référence commerciale]
+    IA --> SA[Enregistrer le besoin sans prix]
+    IP --> SP[Enregistrer le produit choisi et son prix disponible]
+    SA --> CA[Cocher un achat sans montant]
+    SP --> CP[Cocher un achat de produit]
+```
+
+La barre d’ajout utilise le type de liste pour interroger les ingrédients **ou** les offres. Elle attend brièvement après la frappe, annule les recherches dépassées et présente trois résultats par page. Les trois récents sont séparés par compte et par nature d’ajout. Une liste d’articles accepte le texte libre avec Entrée ou Terminé : aucun ingrédient n’est déduit automatiquement de ce texte. Une liste de produits exige de toucher une référence commerciale. Un ingrédient déjà présent propose regroupement ou ligne séparée.
+
+L’ajout conserve les droits, révisions et commandes de reprise. **Terminé** ferme les suggestions ; le bouton **Actualiser les prix**, réservé aux produits, reste désactivé pendant les ajouts. Un produit sans prix valide conserve son identité sans montant inventé.
+
+#### Calculer les besoins et les montants
+
+Le serveur ajuste chaque recette aux portions prévues, puis additionne les quantités du même ingrédient dans les unités compatibles. Les notes libres et les restes sont ignorés pour éviter d’inventer ou de compter deux fois des ingrédients. Les recettes inaccessibles sont signalées et les préférences **Ne plus suggérer** retirent les ingrédients concernés des prochaines générations.
+
+```mermaid
+flowchart LR
+    R[Quantités de la recette] --> P[Multiplier par portions prévues / portions de référence]
+    P --> U[Convertir les unités certaines]
+    U --> G[Regrouper les besoins du même ingrédient]
+    G --> D[Déduire les quantités possédées ou achetées]
+    D --> E[Arrondir au nombre de produits entiers à acheter]
+    E --> M[Appliquer les prix et conditions valides à la date du calcul]
+```
+
+Par exemple, une recette pour quatre personnes qui demande 500 g de riz en demande 750 g pour six. Avec des sacs de 500 g à 3 $, cela donne deux sacs, soit 6 $. L’arrondi aux produits se fait après regroupement des besoins. Les calculs utilisent des décimaux et fractions ; une quantité non représentable exactement en décimal est arrondie par excès à six décimales et signalée.
+
+Les conversions certaines couvrent notamment kg → g, L → ml, tasse → 250 ml, cuillère à table → 15 ml et cuillère à thé → 5 ml. Aucune conversion entre poids et volume n’est inventée. Sans quantité, le calcul direct prévoit une unité de vente. Un format incompatible ou un prix absent laisse le besoin sans prix.
+
+Le scénario **Le moins cher** compare le coût des produits entiers nécessaires pour chaque ingrédient parmi les références disponibles. Il peut répartir les achats sur plusieurs magasins ; il ne calcule pas les frais ou le temps de déplacement. Les promotions sont évaluées à la date du calcul, avec leur limite de quantité et le prix après limite lorsqu’ils sont connus. Le calcul utilise la même source d’offres que Promos : JSON ou PostgreSQL selon `OFFERS_SOURCE`. Il ne déclenche aucune collecte.
+
+Les montants n’apparaissent que lorsqu’un produit chiffré est retenu ou acheté. **Total estimé** signifie que les besoins sont chiffrés ; **Sous-total connu** signale un montant incomplet. Un achat déclaré sans prix peut couvrir un besoin sans créer un coût connu. Les prix restent des estimations issues du catalogue, pas une garantie du montant en caisse.
+
+#### Acheter, modifier et actualiser
+
+Le détail affiche les besoins ou produits à acheter et une section **Achetés**, repliée au départ. Une coche attend la confirmation du serveur ; une erreur restaure l’état précédent. Les produits conservent leur référence et le prix sauvegardé de l’achat.
+
+Toucher une ligne ouvre sa fiche. Pour les articles, elle permet de changer le nom et la quantité. Pour les produits, le nom est immuable ; **Définir la quantité** demande un nombre entier total d’emballages et **Choisir dans un autre magasin** propose des produits du même ingrédient hors du magasin courant.
+
+**J’en ai déjà** retire la ligne après confirmation. **Ne plus suggérer** enregistre d’abord une exclusion d’ingrédient pour les futures générations calendrier, puis retire la ligne ; ces deux écritures restent reprenables séparément. L’exclusion est annulable depuis le menu du compte. **Retirer de la liste** est restaurable. Les anciennes listes mixtes et les routes historiques conservent les déclarations de possession et d’achats partiels.
+
+**Actualiser les prix** recalcule les produits au jour courant en gardant les références explicites. Modifier la quantité ou retirer un produit recalcule le panier dans la même transaction. Une erreur annule l’ensemble de cette modification.
+
+```mermaid
+flowchart LR
+    A[Achats déjà enregistrés] --> I[Conserver quantités et prix sauvegardés]
+    B[Besoins actuels] --> R[Calculer le reste à acheter]
+    I --> R
+    R --> P[Chiffrer seulement le complément]
+    I --> T[Budget connu de la liste]
+    P --> T
+```
+
+Le budget connu additionne les achats conservés et le complément nouvellement chiffré. Retirer un besoin ne supprime pas le coût des achats passés. Les achats ne sont pas réévalués au nouveau prix du catalogue.
+
+#### Sauvegarder et terminer
+
+**… → Enregistrer dans mes listes** crée une sauvegarde d’articles. Les produits deviennent des ingrédients génériques avec leurs quantités, sans référence commerciale, magasin, prix, achat ou possession. La liste source reste inchangée.
+
+Dans **Mes listes**, **Utiliser cette liste** crée une nouvelle copie active d’articles avec un nouvel identifiant. Le retour mène aux récentes. Les sauvegardes peuvent être renommées, modifiées et supprimées ; leur barre d’ajout utilise la même recherche d’ingrédients et le même texte libre que les listes d’articles. Les anciennes sauvegardes de produits sont aussi présentées et utilisées comme articles. Les routes backend gardent le nom historique `shopping-list-templates`.
+
+Le menu **…** permet aussi de renommer, épingler, terminer ou rouvrir une liste. L’épinglage est conservé côté serveur, mais l’Accueil actuel affiche les listes récentes en cours plutôt que la liste épinglée.
+
+**Terminer la liste** apparaît dans le détail d’une liste active non vide quand tout est couvert. Le menu permet aussi de terminer avec des besoins restants après confirmation, sans les cocher automatiquement. La copie quitte alors les récentes et **Toutes les listes**. Elle reste en base avec ses achats ; les listes sauvegardées restent disponibles. L’écran historique est encore déclaré dans la navigation et l’API sait lire les listes terminées, mais aucun bouton de l’index courant n’ouvre cet historique.
+
+#### Réseau, conflits et reprise
+
+Les listes exigent un compte et un serveur accessible. [ListAccessRequired.tsx](mobile/components/lists/ListAccessRequired.tsx) vérifie une lecture privée à l’entrée et au retour sur l’onglet. Le navigateur déjà autorisé reste monté pendant cette vérification pour préserver la destination demandée depuis Accueil ; un échec affiche Réessayer. Aucun contrôle périodique ni cache complet de listes ne fournit de mode courses hors connexion.
+
+Avant une écriture, [useListCommand.ts](mobile/components/lists/useListCommand.ts) conserve la commande par compte, avec sa clé d’idempotence. Le serveur utilise cette clé pour reconnaître un rejeu et la révision attendue pour refuser un écrasement concurrent.
+
+```mermaid
+sequenceDiagram
+    participant M as Mobile
+    participant L as Stockage local du compte
+    participant B as FastAPI et PostgreSQL
+    M->>L: Conserver la commande et sa clé
+    M->>B: Envoyer la commande avec la révision attendue
+    B->>B: Valider puis enregistrer la mutation et son résultat
+    alt Réponse reçue
+        B-->>M: État confirmé
+        M->>L: Retirer la commande locale
+    else Réponse perdue
+        M->>M: Proposer une reprise manuelle
+        M->>B: Renvoyer la même commande avec la même clé
+        B-->>M: Résultat déjà enregistré, sans nouvel achat ni recalcul
+        M->>L: Retirer la commande locale
+    end
+```
+
+Un refus explicite 404, 409 ou 422 libère la commande locale. Une erreur réseau ou 503 conserve la demande incertaine pour une reprise manuelle. Un conflit demande de relire l’état courant ; il ne devient pas une réécriture silencieuse. Les réponses dépassées par un changement de compte sont ignorées dans les parcours concernés.
+
+La migration `0023_shopping_list_kind` ajoute le type nullable aux listes et sauvegardes. Les nouvelles listes mobiles sont typées ; les anciennes gardent leur compatibilité. Le contrôle du 20 novembre 2026 confirme que cette migration est appliquée sur la base configurée et que le schéma correspond aux modèles.
 
 ## 9. Migrations et imports : deux opérations différentes
 
@@ -780,8 +961,13 @@ flowchart LR
 | `0014_recipe_kitchen_units.py` | Tasses et cuillères acceptées comme unités de recette, sans conversion des quantités existantes ; appliquée sur Supabase le 5 novembre 2026 |
 | `0015_permanent_public_recipes.py` | Conservation des recettes publiques sans propriétaire après suppression du compte ; appliquée sur Supabase le 5 novembre 2026 |
 | `0016_offer_quantity_limits.py` | Prix promotionnel limité et prix après limite ; appliquée sur Supabase le 14 novembre 2026 |
-| `0017_shopping_lists.py` | Huit tables privées de listes et historique ; appliquée et vérifiée sur Supabase le 14 novembre 2026 |
-| `0018_shopping_comparisons.py` | Simulations privées, choix manuels et répartition enregistrée ; appliquée et vérifiée sur Supabase le 16 novembre 2026 |
+| `0017_shopping_lists.py` | Tables privées des listes, quantités, contributions, achats manuels et commandes |
+| `0018_shopping_comparisons.py` | Résultats de comparaison, choix de produits et panier enregistré |
+| `0019_shopping_courses.py` | Achats de produits, quantités et allocations aux besoins |
+| `0020_shopping_reuse.py` | Modèles, exclusions et commandes de réutilisation |
+| `0021_shopping_list_pin.py` | Préférence privée d’épinglage d’une liste |
+| `0022_product_follows.py` | Produits suivis par compte, avec RLS et suppression en cascade du profil |
+| `0023_shopping_list_kind.py` | Type Articles / Produits des listes et sauvegardes ; anciennes listes conservées avec un type NULL |
 
 Les commandes se lancent depuis la racine, après configuration du serveur :
 
@@ -796,7 +982,9 @@ L’import des ingrédients peut actualiser le référentiel sans supprimer les 
 
 L’import des offres valide le catalogue, puis insère ou actualise les catégories et les produits dans une transaction. Il exige que les ingrédients existent déjà en base et ne supprime pas les offres absentes du fichier. Modifier les fichiers de prix demande donc de reconstruire le catalogue commun et de relancer cet import pour les lectures PostgreSQL.
 
-Sur une base déjà à la migration `0006`, `upgrade head` ajoute les colonnes de photo sans remplir les anciennes lignes : elles restent à `NULL` jusqu’à l’import des offres enrichies. Il faut appliquer `0007` avant d’utiliser les lectures PostgreSQL du code actuel ; disposer du fichier de migration dans Git ne prouve pas qu’il a été appliqué sur la base distante.
+La tête de migration présente dans le dépôt est `0023_shopping_list_kind`. Le contrôle du 20 novembre 2026 confirme cette révision sur la base configurée et un schéma conforme aux modèles (`alembic check`). Les migrations 0022 (suivis) et 0023 (types de listes) sont donc appliquées. Ce contrôle ne valide pas la synchronisation des suivis entre appareils.
+
+Une migration crée la structure mais ne remplit pas les nouvelles colonnes avec les données du catalogue : les imports restent nécessaires. Les tables et les politiques Storage sont des configurations distinctes ; la commande de configuration des images ne remplace pas Alembic.
 
 FastAPI ne lance automatiquement ni ces migrations, ni ces imports. Le guide [MIGRATIONS.md](backend/docs/MIGRATIONS.md) détaille les migrations et les imports initiaux ; le [guide backend](backend/README.md#promos-et-circulaires-de-la-semaine) décrit la mise à jour des offres et des circulaires.
 
@@ -843,45 +1031,28 @@ Les captures ne garantissent pas le prix ni le stock actuels en magasin. Épicer
 
 ### Actualiser les prix et les photos des trois magasins
 
-Les fichiers sources utilisés pour assembler le catalogue sont :
+Les fichiers sources sont `data/catalog/maxi/data_final/produits.json`, `data/catalog/metro/produits.json` et `data/catalog/superc/produits.json`. Ils conservent les prix réguliers et promotionnels, dates, formats, liens produits et photos, ainsi que les limites promotionnelles lorsqu’elles sont documentées.
 
-- `data/catalog/maxi/data_final/produits.json` ;
-- `data/catalog/metro/produits.json` ;
-- `data/catalog/superc/produits.json`.
+Les données ont reçu une mise à jour hebdomadaire le 19 novembre. Cela ne signifie pas que chaque fiche possède un nouveau relevé ou que tous les produits sont en promotion. Les dates, prix et conditions de chaque fiche font foi ; les promotions expirées ne doivent pas être présentées comme actuelles.
 
-Dans ces fichiers, `Prix` désigne le prix de base et `PrixPromo` le prix promotionnel éventuel, avec `IsPromotion`, les dates de validité et `DateRecuperation`. `ImageUrl` désigne la photo ; `Url` reste la page du produit. L’assemblage transforme ces noms en champs communs tels que `price`, `promo_price`, `valid_from`, `valid_to`, `retrieved_at` et `image_url`.
-
-Le changement du 30 octobre actualise notamment dix promotions pour la période du **29 octobre au 4 novembre 2026**. Le catalogue conserve aussi deux promotions avec d’autres périodes et des relevés plus anciens hors promotion : tous les produits n’ont donc pas été relevés à nouveau le 30 octobre. Les dates de chaque fiche font foi. Un prix de base absent reste inconnu ; il ne faut pas l’inventer pour afficher un pourcentage de rabais.
-
-```mermaid
-flowchart TD
-    V[Vérifier produit, format, prix et dates dans la source] --> J[Mettre à jour les produits.json concernés]
-    J --> B[Reconstruire le catalogue commun]
-    B --> S{Source des offres du serveur ?}
-    S -->|JSON| R[Redémarrer FastAPI pour relire le catalogue]
-    S -->|PostgreSQL| M[Appliquer les migrations nécessaires]
-    M --> I[Importer les offres dans PostgreSQL]
-    R --> A[Ouvrir de nouveau l’onglet Promos]
-    I --> A
-    A --> F[Le backend filtre les offres actives à la date demandée]
-```
-
-Après la vérification et la mise à jour des fichiers, les commandes suivantes se lancent depuis la racine, avec l’environnement Python activé :
+Après vérification et mise à jour des sources, reconstruire le catalogue depuis la racine :
 
 ```bash
 python -m backend.cli.build_common_catalog
 ```
 
-Pour le chemin PostgreSQL, appliquer les migrations puis importer :
+Pour les lectures JSON, redémarrer FastAPI pour recharger ce fichier. Pour les offres PostgreSQL, appliquer les migrations nécessaires puis importer :
 
 ```bash
 python -m alembic -c backend/alembic.ini upgrade head
 python -m backend.cli.import_offers
 ```
 
-Les offres en base sont relues à chaque requête ; un changement de `OFFERS_SOURCE` exige toutefois un redémarrage du serveur. La liste des ingrédients reste chargée depuis le JSON au démarrage. Le mobile recharge les promotions lorsqu’on revient dans l’onglet.
+Les offres en base sont relues à chaque requête ; les ingrédients HTTP restent chargés depuis le JSON au démarrage. Changer `OFFERS_SOURCE` demande un redémarrage.
 
-`ON_DATE` dans [components/promos.ts](mobile/components/promos.ts) vaut actuellement `undefined` : le backend utilise la date du jour à Toronto. Une date explicite sert à essayer les offres du catalogue pour cette date, sans restaurer un historique des anciens prix. Après expiration, une promotion disparaît de la liste active ; importer une circulaire plus récente ne suffit pas à actualiser les offres.
+`ON_DATE` dans [promos.ts](mobile/components/promos.ts) vaut `undefined` : le backend utilise la date du jour à Toronto. Une date explicite évalue la capture actuellement disponible à cette date ; elle ne restaure pas d’anciens prix. Importer une circulaire en images ne modifie pas les offres.
+
+Les tests des limites promotionnelles utilisent désormais une offre fixe indépendante des mises à jour hebdomadaires. Les contrôles d’assemblage et de parité des données vérifient séparément la cohérence du catalogue courant.
 
 ### Préparer et consulter les circulaires
 
@@ -920,14 +1091,14 @@ flowchart LR
     J --> M[Pilote Maxi : préparer les correspondances]
     U[Liens produits renseignés] --> M
     M --> W[PC Express : actualiser les fiches identifiées]
-    J -.-> F[À développer : confirmation dans le mobile et observations de prix]
+    J --> F[Vérification locale du JSON extrait]
 ```
 
 L’OCR utilise Apple Vision sur Mac ou Tesseract + OpenCV. Un profil Super C reconnaît désormais les rayons, les rabais informatifs, les consignes et les corrections de prix. Au 2 novembre, les prix de deux nouveaux reçus Maxi et de cinq reçus Super C ont été vérifiés ligne par ligne avec les deux moteurs sur Mac. Les relectures Tesseract utilisent des modèles locaux supplémentaires, décrits dans le guide des reçus. Le chemin Windows reste à vérifier sur PC ; les noms, quantités et autres champs restent à relire.
 
 Le pilote PC Express est un traitement complémentaire testé sur cinq produits Maxi. [match_maxi_receipts.py](backend/cli/match_maxi_receipts.py) prépare les correspondances puis actualise les produits dont le lien est renseigné ; [web_matching.py](backend/app/receipts/web_matching.py) porte les traitements et [pcx_products.py](backend/app/price_sources/pcx_products.py) récupère les fiches. Ce pilote ne fait pas partie du parcours HTTP des recettes.
 
-Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/docs/RECEIPTS.md) et [PCX_PILOT.md](backend/docs/PCX_PILOT.md). La future contribution de prix sera facultative et nécessitera une correction puis une confirmation de l’utilisateur.
+Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/docs/RECEIPTS.md) et [PCX_PILOT.md](backend/docs/PCX_PILOT.md). L’intégration d’une contribution de prix depuis les reçus est retirée du périmètre ; les outils locaux restent utilisables pour lire et vérifier des extractions.
 
 ## 11. Retrouver les fichiers utiles dans le dépôt
 
@@ -935,7 +1106,7 @@ Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/
 
 | Fichier ou dossier | Utilité et lien avec les autres |
 | --- | --- |
-| [App.tsx](mobile/App.tsx) | Assemble AuthProvider, les cinq onglets et les navigations Recettes et Promos |
+| [App.tsx](mobile/App.tsx) | Assemble AuthProvider, les cinq onglets et les piles Accueil, Recettes, Promos et Listes |
 | [app/AuthScreen.tsx](mobile/app/AuthScreen.tsx) | Inscription et connexion à la demande, avec retour au mode visiteur |
 | [components/AccountRequired.tsx](mobile/components/AccountRequired.tsx) | Protection des écrans personnels sans bloquer la consultation publique |
 | [app/ProfileScreen.tsx](mobile/app/ProfileScreen.tsx) | Profil, déconnexion et suppression du compte |
@@ -944,11 +1115,23 @@ Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/
 | [app/RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) | Recherche, filtres, pagination et cartes |
 | [app/RecipeDetailScreen.tsx](mobile/app/RecipeDetailScreen.tsx) | Détail, favoris et actions sur ses recettes |
 | [app/AddRecipeScreen.tsx](mobile/app/AddRecipeScreen.tsx) | Choix entre les trois modes d’ajout |
-| [app/ManualEntryScreen.tsx](mobile/app/ManualEntryScreen.tsx) | Choix formulaire ou texte ; le texte IA reste prévu |
+| [app/ManualEntryScreen.tsx](mobile/app/ManualEntryScreen.tsx) | Accès au formulaire manuel ; texte IA encore visible avec message d’attente, retiré du périmètre |
 | [app/RecipeEditorScreen.tsx](mobile/app/RecipeEditorScreen.tsx) | Création manuelle avec photo obligatoire ; modification des recettes existantes |
-| [app/PromotionsScreen.tsx](mobile/app/PromotionsScreen.tsx) | Promotions actives, recherche et filtre par magasin |
+| [app/PromotionsScreen.tsx](mobile/app/PromotionsScreen.tsx) | Promotions, recherche, catégories, enseignes et grille/liste |
+| [components/search.ts](mobile/components/search.ts) | Pagination complète des offres, alias et recherche tolérante |
+| [components/OngletsPromos.tsx](mobile/components/OngletsPromos.tsx) | Navigation Promos, Idées repas et Suivis |
+| [app/FollowsScreen.tsx](mobile/app/FollowsScreen.tsx) et [components/follows.ts](mobile/components/follows.ts) | Produits suivis, stockage local et échanges serveur |
+| [app/HomeScreen.tsx](mobile/app/HomeScreen.tsx) et [components/MenuCompte.tsx](mobile/components/MenuCompte.tsx) | Tableau de bord et menu du compte |
+| [components/EpicerieSemaine.tsx](mobile/components/EpicerieSemaine.tsx) | Aperçu des besoins/prix et accès aux listes depuis Calendrier |
+| [app/ListScreen.tsx](mobile/app/ListScreen.tsx) et [app/ShoppingListDetailScreen.tsx](mobile/app/ShoppingListDetailScreen.tsx) | Listes, détail et suivi des courses |
+| [app/CreateListScreen.tsx](mobile/app/CreateListScreen.tsx) et [InstantListCreation.tsx](mobile/components/lists/InstantListCreation.tsx) | Choix Articles / Produits et création vide ; confirmation des besoins calendrier depuis Accueil |
+| [app/ShoppingAllListsScreen.tsx](mobile/app/ShoppingAllListsScreen.tsx) | Pagination des listes en cours au-delà des cinq récentes |
+| [app/ShoppingTemplateDetailScreen.tsx](mobile/app/ShoppingTemplateDetailScreen.tsx) et [app/ShoppingReuseScreen.tsx](mobile/app/ShoppingReuseScreen.tsx) | Sauvegardes réutilisables et création de copies d’articles |
+| [components/lists/ListQuickAdd.tsx](mobile/components/lists/ListQuickAdd.tsx) et [services/shoppingRecents.ts](mobile/services/shoppingRecents.ts) | Recherche selon le type de liste et trois récents par compte |
+| [services/shoppingCalendarProducts.ts](mobile/services/shoppingCalendarProducts.ts) | Nom hebdomadaire, sélection des besoins chiffrables et contrôle des produits du scénario |
+| [components/lists/useListCommand.ts](mobile/components/lists/useListCommand.ts) et [services/shoppingLists.ts](mobile/services/shoppingLists.ts) | Commandes privées, révisions, idempotence et reprise |
 | [app/PromoDetailScreen.tsx](mobile/app/PromoDetailScreen.tsx) | Prix, format, dates et lien vers le produit |
-| [app/CookWithPromosScreen.tsx](mobile/app/CookWithPromosScreen.tsx) | Recettes classées par nombre d’ingrédients en promotion |
+| [app/CookWithPromosScreen.tsx](mobile/app/CookWithPromosScreen.tsx) | Idées repas, tris par écarts de prix affichés ou nombre de promotions |
 | [app/CircularsScreen.tsx](mobile/app/CircularsScreen.tsx) et [app/CircularScreen.tsx](mobile/app/CircularScreen.tsx) | Choix du magasin et lecture des pages de la circulaire |
 | [components/promos.ts](mobile/components/promos.ts) | Chargement des promos et circulaires, affichage des prix, formats et dates |
 | [components/ProductImage.tsx](mobile/components/ProductImage.tsx) | Photo distante du produit et icône de remplacement en cas d’absence ou d’erreur |
@@ -965,10 +1148,7 @@ Les types TypeScript aident le développeur à utiliser les données correctemen
 
 ### Guides, configuration et vérifications
 
-Le [plan des listes d’épicerie](backend/docs/SHOPPING_LISTS.md) est la référence
-pour implémenter l’onglet Liste : parcours, calculs, données, API, étapes et
-critères de validation. Il décrit la cible à construire, distincte de la
-première liste locale actuellement accessible dans Calendrier.
+Le [guide de Liste](backend/docs/SHOPPING_GUIDE.md) et la [note de refonte](backend/docs/SHOPPING_REFACTOR.md) présentent le fonctionnement courant, les contrats et les validations. Les guides de `backend/docs/` détaillent les contrats et les étapes de réalisation ; certaines de leurs sections datées conservent des descriptions historiques. Le code des routes et des écrans permet de vérifier les parcours effectivement accessibles.
 
 | Emplacement | Rôle |
 | --- | --- |
@@ -983,7 +1163,7 @@ première liste locale actuellement accessible dans Calendrier.
 | [backend/cli/import_offers.py](backend/cli/import_offers.py) et [backend/cli/import_circulars.py](backend/cli/import_circulars.py) | Mise à jour des offres et des circulaires depuis le terminal |
 | [backend/config/storage/recipe_images.sql](backend/config/storage/recipe_images.sql) | Politiques du bucket d’images, appliquées par la commande dédiée ; séparées des migrations applicatives |
 | [backend/tests/](backend/tests/) | Tests des règles, routes, imports, autorisations et traitements de données |
-| [mobile/tests/](mobile/tests/) | Tests du service photo et des règles du formulaire |
+| [mobile/tests/](mobile/tests/) | Tests des services, formulaires, accès, listes, achats, reprises et navigation |
 | [.github/workflows/backend.yml](.github/workflows/backend.yml) | Tests backend avec PostgreSQL temporaire dans la CI |
 | [.github/workflows/mobile.yml](.github/workflows/mobile.yml) | Vérification TypeScript et export des bundles iOS/Android |
 | [.github/workflows/docs.yml](.github/workflows/docs.yml) | Construction du site et publication depuis `main` |
@@ -992,20 +1172,9 @@ première liste locale actuellement accessible dans Calendrier.
 | `tools/` | Consignes, architecture, décisions et tâches locales, actuellement ignorées par Git |
 | [requirements.txt](requirements.txt) | Dépendances Python du backend, des tests et du site |
 
-Les fichiers `__init__.py` identifient les packages Python. Un fichier présent
-peut encore être un emplacement réservé, comme `backend/tests/conftest.py`.
-Le domaine des listes expose désormais les routes privées du lot A, les copies
-indépendantes du calendrier et l’édition des brouillons dans le mobile. La
-migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis le
-14 novembre 2026. La normalisation des formats et bases tarifaires est disponible
-côté serveur. Le moteur de couverture calcule désormais les paquets, les
-ventes au poids et les paliers promotionnels dans ses bornes. Le détail de Liste
-propose les comparaisons et leur application explicite depuis l'étape 8, après
-la migration 0018, appliquée et vérifiée sur Supabase le 16 novembre 2026.
-Les prix non attestés restent inconnus et les résultats
-partiels affichent un sous-total connu. Le
-[suivi de l’étape 5](backend/docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5)
-précise les fonctionnalités disponibles et leurs limites.
+Les fichiers `__init__.py` identifient les packages Python. Certains fichiers peuvent rester des emplacements réservés ; leur présence ne garantit pas une fonction. À l’inverse, les domaines [shopping_lists](backend/app/shopping_lists/) et [follows](backend/app/follows/) contiennent des routes, modèles et services fonctionnels.
+
+Le [dossier des contrats](backend/contracts/v1/) contient les schémas et exemples partagés. Après changement des routes ou des modèles, `python -m backend.cli.export_shared_contracts` régénère ces exports ; `--check` vérifie leur cohérence sans écrire. Les exports doivent être commités avec le code qui change le contrat.
 
 ## 12. Configuration : comment les adresses relient les composants
 
@@ -1037,11 +1206,19 @@ Dans un autre terminal, depuis `mobile/`, après installation et configuration d
 npm start -- --dev-client
 ```
 
+Pour la version web, lancer `npm run web` depuis `mobile/`. Le [README principal](README.md#sur-ordinateur-avec-un-format-de-téléphone) explique le choix de dimensions iPhone ou Samsung dans Chrome.
+
+| Cible | Adresse API habituelle |
+| --- | --- |
+| Navigateur ou simulateur iPhone sur le Mac | `http://localhost:8001` |
+| Émulateur Android standard | `http://10.0.2.2:8001` |
+| Téléphone physique | Adresse IP locale de l’ordinateur sur le même réseau |
+
 Le [guide mobile](mobile/README.md) détaille la première compilation, la configuration Auth et les essais sur appareil.
 
 ### Appels depuis Expo Web et autorisations CORS
 
-Le backend autorise désormais les origines `http://localhost:8081` et `http://127.0.0.1:8081` dans [main.py](backend/app/main.py). Une origine correspond au protocole, à l’hôte et au port de la page qui effectue l’appel. Le navigateur applique la règle CORS lorsque cette origine diffère de celle du backend.
+Le backend autorise les origines HTTP sur `localhost` et `127.0.0.1`, avec port facultatif, au moyen de `allow_origin_regex` dans [main.py](backend/app/main.py). Expo Web peut ainsi utiliser un autre port local si 8081 est occupé. Une origine correspond au protocole, à l’hôte et au port de la page qui effectue l’appel. Le navigateur applique la règle CORS lorsque cette origine diffère de celle du backend.
 
 ```mermaid
 sequenceDiagram
@@ -1053,73 +1230,62 @@ sequenceDiagram
     B-->>W: Réponse avec autorisation de lecture par le navigateur
 ```
 
-Cette configuration permet les appels API depuis ces deux origines locales. Un autre port, une adresse IP du réseau ou un futur domaine web demande une adaptation de la liste. CORS ne remplace ni la connexion ni les contrôles de propriétaire et ne règle pas un problème de pare-feu ou d’URL inaccessible. Les applications natives iOS et Android ne sont pas soumises à cette restriction du navigateur. Cet ajout ne constitue pas une validation complète de l’application dans sa version web.
+Cette configuration couvre les ports locaux correspondant à cette expression. Une origine HTTPS, une adresse IP du réseau ou un domaine web différent demande une configuration adaptée. CORS ne remplace ni la connexion ni les contrôles de propriétaire et ne règle pas un problème de pare-feu ou d’URL inaccessible. Les applications natives iOS et Android ne sont pas soumises à cette restriction du navigateur. Cet ajout ne constitue pas une validation complète de l’application dans sa version web.
 
-## 13. Ce qui fonctionne et le parcours encore à construire
+## 13. État, validations et limites
 
-Les derniers ajustements de Recettes sont confirmés fonctionnels sur téléphone
-le 5 novembre 2026 : cartes ouvrant le détail, informations compactes avec
-compteurs, favoris sur la photo, filtres illustrés dont Faciles, retrait du
-choix de difficulté par l’auteur et ordre de création décroissant dans Mes
-recettes. La confirmation inclut également le formulaire simplifié, les six
-unités et leur sélecteur, le retour visuel des champs obligatoires, la
-publication définitive et les notes en trois colonnes avec icônes. La plateforme n’est pas précisée ; cette confirmation globale ne
-remplace pas des résultats distincts sur iOS et Android ou pour chaque erreur
-réseau.
+### Fonctions présentes dans le code
 
-Avant la publication définitive du 5 novembre, les trois scénarios manuels de partage avaient été validés le 1er novembre 2026 : création privée puis publication, retrait avec masquage des favoris puis republication, et choix de visibilité dans le formulaire avec contrôle des actions du propriétaire.
+| Domaine | Fonctionnement courant | Limite à garder visible |
+| --- | --- | --- |
+| Comptes | Visiteur, inscription, connexion, profil et suppression | Tester les erreurs et changements de compte sur appareils |
+| Accueil | Repas du jour ou lendemain, listes en cours et promos suivies | Première page de listes filtrée localement ; épinglage non utilisé dans ce nouvel écran |
+| Recettes | Manuel, photos, visibilité, favoris, filtres, tris et notation | Publication définitive ; photos publiques dans le prototype |
+| Promos | Recherche avec suggestions, catégories, magasins, grille/liste et circulaires | Fraîcheur dépendante des collectes et imports |
+| Idées repas | Rapprochement recettes/promos et deux tris | Cent promotions chargées ; économies non ajustées aux quantités des recettes |
+| Suivis | Stockage local et persistance serveur complémentaire | Initialisation ponctuelle, pas de synchronisation garantie entre appareils |
+| Calendrier | Repas, portions, notes, restes et vue Épicerie | Recettes courantes, sans historique figé des anciennes semaines |
+| Listes | Création Articles / Produits, génération de produits depuis Calendrier, coches et actualisation ; fonctionnement global confirmé par Hamza le 19 novembre | Réseau requis ; données inconnues signalées ; plateforme de validation non précisée |
+| Listes sauvegardées | Création, édition, suppression et utilisation mobile ; backend historique des modèles conservé | Nouvelle liste indépendante sans achats ni prix hérités |
+| Outils de données | Apify Maxi, imports, OCR local et pilote PC Express | Collecte Metro/Super C à compléter ; Windows OCR à vérifier |
 
-Le nom obligatoire et la quantité séparée du choix de l’unité (g, ml ou unité) ont été validés sur iOS le 1er novembre 2026. Les essais Android de ces ajustements restent à effectuer.
+### Validations connues
 
-| État au 1er novembre 2026 | Parcours |
-| --- | --- |
-| Confirmé sur iOS le 1er novembre ; Android à vérifier | Mode visiteur et connexion à la demande |
-| Confirmé sur iOS le 1er novembre ; Android à vérifier | Photo obligatoire à la création d’une recette et suppression du compte |
-| Confirmé sur iOS et Android le 27 octobre | Inscription, confirmation du courriel, connexion, session persistante et profil minimal |
-| Confirmé sur iOS et Android | Consultation, recherche, Rapides, recettes manuelles et favoris ; séparation de deux comptes aussi vérifiée sur iPhone |
-| Confirmé sur iOS et Android | Photo de galerie, hébergement Storage et URL enregistrée dans la recette |
-| Outils locaux disponibles | Collecte Maxi, catalogue commun, OCR et pilote PC Express |
-| Implémenté dans le code | Tables et import des catégories/offres ; choix de lecture JSON ou PostgreSQL |
-| Confirmé sur iOS et Android | Consultation des promos, détail et recettes associées aux ingrédients en promotion |
-| Import disponible, lecture confirmée sur iOS et Android | Circulaires en images dans Storage et consultation dans le mobile |
-| Affichage confirmé sur iOS le 1er novembre ; Android à vérifier | Photos des produits dans les JSON, l’import PostgreSQL, les contrats API et les écrans Promos |
-| Données locales actualisées le 30 octobre | Dix promotions du 29 octobre au 4 novembre ; d’autres relevés gardent leurs propres dates |
-| Configuré dans le backend | CORS pour les deux origines locales Expo Web sur le port 8081 |
-| À développer | Collecte web IA Metro/Super C |
-| À développer | Modes IA des recettes, Petit budget et calcul des coûts |
-| Confirmé sur Supabase et iOS le 1er novembre ; Android à vérifier | Calendrier privé et repas sauvegardés ; migration 0008 appliquée sur Supabase |
-| À développer | Historique stable par instantanés et listes modifiables par magasin |
-| À développer | Confirmation des reçus dans le mobile, contributions et estimations de prix |
-| À compléter | Scénarios d’erreur réseau et essais sur différentes tailles d’écran |
+**19 novembre 2026 — Listes : validation manuelle utilisateur.** Après ses essais, Hamza confirme que l’onglet Listes et tout ce qui concerne les listes sont fonctionnels dans l’état courant, après les derniers ajustements. Cette validation globale inclut l’état livré avec la création des produits depuis Calendrier, le panier initial corrigé et le retrait des blocs d’ingrédients répétés. La plateforme et le détail des scénarios n’ont pas été précisés ; aucune validation distincte de chaque plateforme n’est déduite de cette confirmation. Le périmètre et les prochaines régressions sont consignés dans le [guide des listes](backend/docs/SHOPPING_GUIDE.md#21-parcours-de-vérification).
 
-Les parcours comptes, recettes, photos et Promos ont été validés sur iOS et Android le 27 octobre. Les fonctionnalités encore prévues ci-dessous restent à développer.
+Les parcours comptes, recettes, photos et Promos ont été confirmés sur iOS et Android le 27 octobre. Des ajustements supplémentaires ont été confirmés sur iOS le 1er novembre, puis globalement sur téléphone le 5 novembre pour les cartes, favoris, unités, publication et notes de Recettes ; la plateforme de cette dernière confirmation n’est pas précisée.
 
-Le mode visiteur, la connexion à la demande, la photo obligatoire à la création, les photos de produits dans Promos et la suppression du compte ont été validés sur iOS le 1er novembre 2026. Cette confirmation générale ne constitue pas un résultat individuel pour chaque scénario d’erreur. Les nouveaux parcours restent à reproduire sur Android. La configuration CORS pour Expo Web n’est pas validée par ces essais iOS.
+Ces confirmations précèdent les changements récents d’Accueil, de Promos, de Paramètres, d’Épicerie et de persistance des suivis. Elles ne constituent donc pas une validation de ces nouveaux écrans sur iOS et Android.
 
-### Parcours cible : de la semaine de repas aux achats
+La dernière vérification automatisée consignée du 19 novembre a donné **1 039 tests backend réussis** avec un PostgreSQL jetable et **14 tests OCR optionnels ignorés**, ainsi que **302 tests mobiles réussis**, TypeScript, **47 exports de contrats cohérents** et les bundles Expo iOS, Android et Web. Les contrôles du comparateur, des ajouts et de la reprise sont décrits dans la [note de refonte](backend/docs/SHOPPING_REFACTOR.md). Ces contrôles automatisés n’incluaient pas d’essai par l’agent sur appareil/simulateur natif pour le clavier et les lecteurs d’écran ; la confirmation manuelle de Hamza est consignée séparément ci-dessus. Ces résultats vérifient les scénarios automatisés existants ; ils ne prouvent ni une validation visuelle complète ni une synchronisation des suivis entre plusieurs appareils. Séparément, le contrôle du 20 novembre a confirmé la base configurée à `0023_shopping_list_kind (head)` et un schéma conforme aux modèles ; aucune migration supplémentaire n’était nécessaire.
 
-Le calendrier enregistre désormais les repas, mais les instantanés et le
-parcours jusqu’aux achats ne sont pas encore implémentés. Le schéma suivant
-décrit cet objectif complet.
+La priorité reste une version stable et les tests utilisateurs. Les préférences détaillées et recommandations économiques restent incomplètes. Les modes IA utilisateur, la gestion avancée du budget, les instantanés historiques des plans/prix, les estimations statistiques et les contributions par reçu sont retirés du périmètre, sans retrait des outils OCR locaux ni de l’historique des listes terminées.
+
+### Parcours actuel : de la semaine de repas aux achats
 
 ```mermaid
 flowchart TD
-    R[Choisir recettes, jours et portions] --> P[Sauvegarder un plan et ses instantanés]
-    P --> Q[Calculer et regrouper les besoins compatibles]
-    Q --> C[Relier les besoins aux produits et formats]
-    D[Prix et offres valides à la date d’achat] --> C
-    C --> O[Comparer selon budget et contraintes de magasins]
-    O --> L[Sauvegarder une liste par magasin avec prix et incertitudes]
-    L --> M[Cocher, remplacer ou retirer des articles]
-    M --> V[Recalculer et conserver une nouvelle révision]
-    V --> A[Effectuer les achats]
-    A -.-> F[Facultatif : photo de reçu et confirmation des lignes]
-    F -.-> E[Observations privées pouvant alimenter les estimations]
+    R[Choisir recettes et portions] --> P[Enregistrer les repas dans Calendrier]
+    P --> E[Vue Épicerie : besoins et quatre scénarios de prix]
+    E --> S[Choisir un scénario et confirmer les éléments indisponibles]
+    S --> LP[Créer une liste de produits avec son panier déjà chiffré]
+    P --> A[Depuis Accueil : confirmer les besoins de la semaine]
+    A --> LA[Créer une liste d’articles sans prix]
+    PLUS[Bouton + de Listes] --> K{Quel type ?}
+    K -->|Articles| LA
+    K -->|Produits| LV[Créer une liste de produits vide]
+    LV --> CP[Choisir des produits dans la recherche]
+    CP --> PC[Panier de produits enregistrés]
+    LP --> PC
+    LA --> CA[Cocher les achats sans montant]
+    PC --> PA[Cocher les produits et actualiser les prix si nécessaire]
+    CA --> FIN[Terminer : conserver en base et retirer des listes en cours]
+    PA --> FIN
 ```
 
-Les calculs de portions, conversions connues et prix seront effectués par le backend. Une unité incompatible ou un prix inconnu devra rester explicitement signalé. Une fourchette ne garantit pas le budget réel ; si certaines lignes ne sont pas estimables, la partie calculable devra être présentée comme un sous-total.
+Une liste de produits créée depuis Calendrier est déjà chiffrée et ses achats sont immédiatement cochables. Une actualisation ultérieure conserve les achats et leurs prix sauvegardés. Les besoins sans produit chiffrable sont signalés avant la création, sans être transformés en articles libres dans cette liste de produits.
 
-Les propositions IA devront être corrigées et confirmées avant sauvegarde. Les anciennes semaines devront conserver leurs recettes, portions et prix sous forme d’instantanés, même si les données courantes changent ensuite.
+Les listes sauvegardées de **Mes listes** restent réutilisables indépendamment de la fin d’une copie de courses. L’API conserve les listes terminées ; **Toutes les listes** est la pagination des listes en cours. Ce parcours n’intègre pas de contribution par reçu ni d’historique des versions d’une liste.
 
 ### Notation des recettes
 
@@ -1155,8 +1321,7 @@ détail ajoute uniquement les trois notes du compte connecté. Le tri est
 calculé avant pagination et le score de classement reste interne au backend.
 Le [guide de notation](backend/docs/RATINGS.md) précise les textes, les droits
 et les étapes d’intégration. Le formulaire est couvert par les tests mobiles
-et les bundles iOS/Android sont générés. Hamza confirme le 2 novembre 2026
-que les tests sur téléphone fonctionnent ; la plateforme n’est pas précisée. Les notes sur les cartes et les tris sont intégrés. La migration
+et la génération de bundles iOS/Android a été vérifiée lors de son intégration. Le fonctionnement a été confirmé globalement sur téléphone le 2 novembre 2026 ; la plateforme n’est pas précisée. Les notes sur les cartes et les tris sont intégrés. La migration
 `0012_recipe_timestamps` ajoute les dates nécessaires sans inventer celles des
 recettes déjà présentes ; elle est appliquée sur Supabase. Les recettes
 sans note suivent les recettes évaluées dans Mieux notées. Le tri Plus récentes
@@ -1172,9 +1337,7 @@ personnelle reste visible dans le détail avec un avertissement si elle est
 ancienne ; « Réévaluer la recette » ouvre alors une saisie vide. Supprimer sa
 contribution retire toutes ses versions pour la recette après confirmation.
 Si le contenu change pendant la saisie, le serveur refuse le vote et le
-mobile demande d’actualiser puis de relire la recette. Cette version de
-notation ne fournit pas encore les instantanés historiques des recettes
-utilisées dans les anciennes semaines.
+mobile demande d’actualiser puis de relire la recette. Le versionnement des évaluations ne sauvegarde pas d’anciennes recettes complètes pour les semaines du calendrier.
 
 La suppression du compte retire aussi toutes ses évaluations, anciennes
 versions comprises. Supprimer ses recettes retire les votes associés, sans
@@ -1187,10 +1350,7 @@ La [validation finale](backend/docs/RATINGS_VALIDATION.md) consigne les tests,
 les lectures de l’API sur Supabase et l’application des migrations. Les
 essais sur téléphone portent sur la notation et sa modification, la
 réévaluation après modification de la recette, les liens entre onglets et
-les erreurs. Hamza confirme globalement leur bon
-fonctionnement sur téléphone le 2 novembre 2026, après les ajustements du
-formulaire et du libellé Calendrier ; les résultats par plateforme ne sont
-pas détaillés.
+les erreurs. Leur bon fonctionnement a été confirmé globalement sur téléphone le 2 novembre 2026 ; les résultats par plateforme ne sont pas détaillés.
 
 ## 14. Un ordre de lecture pour explorer le code
 
@@ -1208,8 +1368,16 @@ Pour suivre un parcours sans lire tout le dépôt à la fois :
 10. Suivre [import_circulars.py](backend/cli/import_circulars.py), puis les écrans Circulaires, pour comprendre le trajet des PDF jusqu’au téléphone.
 11. Examiner ensuite les autres outils de catalogue et de reçus selon le besoin.
 
-Pour suivre les ajouts récents, partir des champs `ImageUrl` et `ImageSource` d’un fichier `produits.json`, puis lire `common_catalog.py`, la migration `0007`, `offer_import.py`, `public_data.py` et enfin `ProductImage.tsx`. Ce trajet distingue l’enregistrement du lien et le téléchargement réel de la photo par le mobile.
+Pour explorer les autres parcours actuels :
+
+1. Suivre [HomeScreen.tsx](mobile/app/HomeScreen.tsx), [MenuCompte.tsx](mobile/components/MenuCompte.tsx) et [ProfileScreen.tsx](mobile/app/ProfileScreen.tsx) pour les accès de compte.
+2. Lire [search.ts](mobile/components/search.ts), [PromoCard.tsx](mobile/components/PromoCard.tsx) et [OngletsPromos.tsx](mobile/components/OngletsPromos.tsx) pour la recherche et les vues de Promos.
+3. Suivre [follows.ts](mobile/components/follows.ts) vers [follows/router.py](backend/app/follows/router.py), son service, son modèle et la migration `0022` pour la persistance des suivis.
+4. Lire [EpicerieSemaine.tsx](mobile/components/EpicerieSemaine.tsx), [shoppingCalendarProducts.ts](mobile/services/shoppingCalendarProducts.ts) et [draft_pricing.py](backend/app/shopping_lists/draft_pricing.py) pour la création des produits du scénario calendrier. [CreateListScreen.tsx](mobile/app/CreateListScreen.tsx) conserve le formulaire de création d’articles depuis Accueil.
+5. Suivre [ShoppingListDetailScreen.tsx](mobile/app/ShoppingListDetailScreen.tsx) vers les services backend [draft_pricing.py](backend/app/shopping_lists/draft_pricing.py), [recalculation.py](backend/app/shopping_lists/recalculation.py) et [courses.py](backend/app/shopping_lists/courses.py) pour les produits, le complément et les achats.
+
+Le [guide détaillé de Liste](backend/docs/SHOPPING_GUIDE.md) complète cet ordre de lecture avec les actions de chaque écran.
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 16 novembre 2026*
+*Dernière mise à jour : 20 novembre 2026*

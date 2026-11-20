@@ -1,23 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useAuth } from '../context/AuthContext';
-import { fetchLists, localDate, previewCalendar, previewCreationPrices, quantityLabel } from '../services/shoppingLists';
+import { listCommand, listsPath, localDate, previewCalendar, previewCreationPrices, quantityLabel } from '../services/shoppingLists';
 import type {
   ShoppingCalendarPreviewRead, ShoppingComparedNeed, ShoppingDraftPricingRead, ShoppingItemRead,
-  ShoppingListRead, ShoppingPeriod, ShoppingScenarioName,
+  ShoppingPeriod, ShoppingScenarioName,
 } from '../types/shoppingLists';
+import { useListCommand } from './lists/useListCommand';
+import { calendarNeed, calendarProductsName, calendarProductSelection, calendarProductSignature } from '../services/shoppingCalendarProducts';
 import { storeName } from './promos';
-import { recipeColors as c } from './recipes';
+import { RecipeButton, recipeColors as c } from './recipes';
 
-// =====================================================================
-// Épicerie de la semaine (onglet Épicerie du Calendrier)
-//   - les ingrédients des repas planifiés, calculés en direct (calendar-preview)
-//   - les prix par scénario : Le moins cher, Maxi, Metro, Super C (creation-prices)
-//   - rien n'est enregistré : « Enregistrer ma liste » ouvre la création de liste
-//     avec la période déjà remplie. Mêmes calculs que la création, donc mêmes totaux.
-// =====================================================================
-
+// Aperçu du calendrier et création atomique du scénario sélectionné.
 const SCENARIOS: { id: ShoppingScenarioName; label: string }[] = [
   { id: 'cheapest', label: 'Le moins cher' },
   { id: 'maxi', label: 'Maxi' },
@@ -39,15 +34,21 @@ function parRayon(articles: ShoppingItemRead[]) {
   return [...groupes.entries()].sort(([x], [y]) => x.localeCompare(y, 'fr'));
 }
 
-export default function EpicerieSemaine({ period, onCreate, onOpen }: {
-  period: ShoppingPeriod; onCreate: () => void; onOpen: (id: string) => void;
+export default function EpicerieSemaine({ period, onOpen }: {
+  period: ShoppingPeriod; onOpen: (id: string) => void;
 }) {
   const { session } = useAuth();
   const userId = session?.user.id;
 
   const [apercu, setApercu] = useState<ShoppingCalendarPreviewRead | null>(null);
   const [prix, setPrix] = useState<ShoppingDraftPricingRead | null>(null);
-  const [listes, setListes] = useState<ShoppingListRead[]>([]);
+  const identity = `${userId}:${period.start_date}:${period.end_date}`;
+  const current = useRef(identity); current.current = identity;
+  const generation = useRef(0), creating = useRef(false);
+  const command = useListCommand(`calendar-products:${period.start_date}:${period.end_date}`);
+  const [loadedIdentity, setLoadedIdentity] = useState('');
+  const [working, setWorking] = useState(false), [confirmation, setConfirmation] = useState(false);
+  const [creationError, setCreationError] = useState('');
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState<string | null>(null);
   const [prixIndisponibles, setPrixIndisponibles] = useState(false);
@@ -57,7 +58,8 @@ export default function EpicerieSemaine({ period, onCreate, onOpen }: {
   // Recalculer à chaque changement de semaine (et à chaque retour sur l'onglet Épicerie)
   useEffect(() => {
     if (!userId) return;
-    let annule = false;
+    let annule = false; generation.current++; creating.current = false;
+    setWorking(false); setConfirmation(false); setCreationError(''); setApercu(null);
     setChargement(true); setErreur(null); setPrix(null); setPrixIndisponibles(false);
 
     // Date des courses : aujourd'hui si c'est dans la semaine affichée, sinon le lundi
@@ -66,13 +68,9 @@ export default function EpicerieSemaine({ period, onCreate, onOpen }: {
 
     (async () => {
       try {
-        const [a, page] = await Promise.all([
-          previewCalendar({ ...period, purchase_date: dateCourses }),
-          fetchLists(0, 'current', period, userId).catch(() => null), // une liste déjà enregistrée ?
-        ]);
+        const a = await previewCalendar({ ...period, purchase_date: dateCourses }, userId);
         if (annule) return;
         setApercu(a);
-        setListes(page?.items ?? []);
 
         const articles = a.items.filter((i) => !i.removed);
         if (articles.length === 0) return;
@@ -91,19 +89,52 @@ export default function EpicerieSemaine({ period, onCreate, onOpen }: {
       } catch {
         if (!annule) setErreur("Impossible de préparer l'épicerie de cette semaine.");
       } finally {
-        if (!annule) setChargement(false);
+        if (!annule) { setChargement(false); setLoadedIdentity(identity); }
       }
     })();
 
-    return () => { annule = true; };
+    return () => { annule = true; generation.current++; };
   }, [period.start_date, period.end_date, userId, essai]);
 
   // ---- Ce qu'on affiche ----
   const articles = (apercu?.items ?? []).filter((i) => !i.removed);
   const scenario = prix?.scenarios.find((s) => s.scenario === choix) ?? null;
-  const besoinParArticle = new Map<string, ShoppingComparedNeed>();
-  scenario?.needs.forEach((n) => n.item_ids.forEach((id) => besoinParArticle.set(id, n)));
-  const listeSemaine = listes[0];
+  const selection = scenario ? calendarProductSelection(articles, scenario) : null;
+  const locked = working || command.locked || chargement || loadedIdentity !== identity;
+  async function createProducts() {
+    if (creating.current || !command.ready || command.busy || (!command.pending && (locked || !apercu || !prix || !scenario || !selection?.included.length))) return;
+    const version = generation.current;
+    const isCurrent = () => current.current === identity && generation.current === version;
+    creating.current = true; setWorking(true); setCreationError('');
+    try {
+      let intent = command.pending;
+      if (!intent && apercu && prix && scenario && selection) {
+        // Retirer les besoins indisponibles change l'empreinte : vérifier un devis du sous-ensemble.
+        const quote = selection.excluded.length ? await previewCreationPrices({
+          purchase_date: apercu.purchase_date, choices: [],
+          items: selection.included.map(item => ({ name: item.name, ingredient_id: item.ingredient_id, required: item.required })),
+        }, userId!) : prix;
+        if (!isCurrent()) return;
+        const selected = quote.scenarios.find(value => value.scenario === choix);
+        if (!selected?.complete || calendarProductSignature(selected) !== calendarProductSignature(scenario))
+          throw new Error('Les produits ou les prix ont changé. Actualise l’aperçu avant de créer la liste.');
+        intent = listCommand(`${listsPath}/from-calendar`, {
+          ...period, name: calendarProductsName(period), purchase_date: apercu.purchase_date,
+          kind: 'products', activate: true, preview_fingerprint: apercu.preview_fingerprint,
+          accept_partial: !!apercu.excluded_meals.length,
+          excluded_item_ids: selection.excluded.map(item => item.id),
+          pricing: { fingerprint: quote.fingerprint, scenario: choix, choices: [] },
+        });
+      }
+      if (!intent || !isCurrent()) return;
+      const result = await command.run(intent);
+      if (result && isCurrent()) { setConfirmation(false); onOpen(result.id); }
+    } catch (failure) {
+      if (isCurrent()) setCreationError(failure instanceof Error ? failure.message : 'Création impossible. Réessaie.');
+    } finally {
+      if (isCurrent()) { creating.current = false; setWorking(false); }
+    }
+  }
   const nbExclus = apercu?.excluded_meals.length ?? 0;
   const nomScenario = SCENARIOS.find((s) => s.id === choix)?.label ?? '';
 
@@ -114,19 +145,19 @@ export default function EpicerieSemaine({ period, onCreate, onOpen }: {
     if (!scenario.complete) detailTotal += ' · certains prix inconnus';
   }
 
-  if (chargement) return <ActivityIndicator color={c.green} style={{ marginTop: 16 }} />;
-
-  if (erreur) return (
-    <View style={styles.carte}>
-      <Text style={styles.texte}>{erreur}</Text>
-      <Pressable accessibilityRole="button" onPress={() => setEssai((n) => n + 1)}>
-        <Text style={styles.lien}>Réessayer</Text>
-      </Pressable>
-    </View>
-  );
+  if (chargement || loadedIdentity !== identity) return <ActivityIndicator color={c.green} style={{ marginTop: 16 }} />;
 
   return (
     <View style={{ gap: 12 }}>
+      {working && <ActivityIndicator accessibilityLabel="Création de la liste de produits" color={c.green} />}
+      {!!(erreur || creationError || command.error) && <View style={styles.carte}>
+        <Text accessibilityRole="alert" style={styles.texte}>{erreur || creationError || command.error}</Text>
+        <RecipeButton title="Actualiser l’aperçu" variant="neutral" disabled={working || command.busy || !!command.pending} onPress={() => setEssai(n => n + 1)} />
+      </View>}
+      {command.pending && <View style={styles.carte}>
+        <Text style={styles.texte}>La création reste à confirmer. Reprends la demande pour éviter une liste en double.</Text>
+        <RecipeButton title="Reprendre la création" disabled={working || command.busy || !command.ready} onPress={() => void createProducts()} />
+      </View>}
       {/* Aucun ingrédient : pas encore de repas avec recette */}
       {articles.length === 0 && (
         <View style={styles.carte}>
@@ -158,7 +189,7 @@ export default function EpicerieSemaine({ period, onCreate, onOpen }: {
                 const actif = s.id === choix;
                 return (
                   <Pressable key={s.id} accessibilityRole="radio" accessibilityState={{ selected: actif }}
-                    onPress={() => setChoix(s.id)} style={[styles.puce, actif && styles.puceActive]}>
+                    disabled={locked} onPress={() => { setChoix(s.id); setConfirmation(false); setCreationError(''); }} style={[styles.puce, actif && styles.puceActive]}>
                     <Text style={[styles.textePuce, actif && styles.textePuceActive]}>{s.label}</Text>
                   </Pressable>
                 );
@@ -172,7 +203,7 @@ export default function EpicerieSemaine({ period, onCreate, onOpen }: {
               <Text style={styles.rayon}>{rayon.toUpperCase()}</Text>
               <View style={styles.groupe}>
                 {items.map((a, index) => (
-                  <LigneArticle key={a.id} article={a} besoin={besoinParArticle.get(a.id)}
+                  <LigneArticle key={a.id} article={a} besoin={calendarNeed(a, scenario)}
                     avecPrix={!!scenario} derniere={index === items.length - 1} />
                 ))}
               </View>
@@ -185,24 +216,25 @@ export default function EpicerieSemaine({ period, onCreate, onOpen }: {
             </Text>
           )}
 
-                    {/* Liste déjà enregistrée → l'ouvrir ; sinon → l'enregistrer */}
-          {listeSemaine ? (
-            <Pressable accessibilityRole="button" accessibilityLabel={`Ouvrir la liste ${listeSemaine.name}`}
-              onPress={() => onOpen(listeSemaine.id)}
-              style={({ pressed }) => [styles.bouton, pressed && { opacity: 0.8 }]}>
-              <MaterialCommunityIcons name="format-list-checks" size={20} color="white" accessible={false} />
-              <Text style={styles.texteBouton}>Ouvrir ma liste</Text>
-            </Pressable>
-          ) : (
-            <>
-              <Pressable accessibilityRole="button" onPress={onCreate}
-                style={({ pressed }) => [styles.bouton, pressed && { opacity: 0.8 }]}>
-                <MaterialCommunityIcons name="content-save-outline" size={20} color="white" accessible={false} />
-                <Text style={styles.texteBouton}>Enregistrer ma liste</Text>
-              </Pressable>
-              <Text style={[styles.note, { textAlign: 'center' }]}>Tu pourras ensuite cocher tes articles en magasin.</Text>
-            </>
-          )}
+          {!command.pending && (confirmation ? <View style={styles.carte}>
+            <Text accessibilityRole="header" style={styles.titreVide}>Créer avec les produits disponibles ?</Text>
+            {!!selection?.excluded.length && <>
+              <Text style={styles.texte}>Ces ingrédients ne peuvent pas être chiffrés dans {nomScenario} et ne seront pas ajoutés :</Text>
+              {selection.excluded.map(item => <Text key={item.id} style={styles.texte}>• {item.name}</Text>)}
+            </>}
+            {!!nbExclus && <Text style={styles.texte}>{nbExclus} repas sans recette accessible ne seront pas inclus.</Text>}
+            <RecipeButton title="Créer avec les produits disponibles" disabled={locked} onPress={() => void createProducts()} />
+            <RecipeButton title="Annuler" variant="neutral" disabled={working} onPress={() => setConfirmation(false)} />
+          </View> : <>
+            <RecipeButton title="Créer une liste de produits" disabled={locked || !selection?.included.length} onPress={() => {
+              if (selection?.excluded.length || nbExclus) setConfirmation(true); else void createProducts();
+            }} />
+            {!selection?.included.length && <>
+              <Text style={styles.note}>Aucun produit chiffré disponible pour ce scénario. Essaie un autre magasin ou actualise l’aperçu.</Text>
+              {!prixIndisponibles && <RecipeButton title="Actualiser l’aperçu" variant="neutral" disabled={locked} onPress={() => setEssai(n => n + 1)} />}
+            </>}
+            {prixIndisponibles && <RecipeButton title="Réessayer les prix" variant="neutral" disabled={locked} onPress={() => setEssai(n => n + 1)} />}
+          </>)}
         </>
       )}
     </View>

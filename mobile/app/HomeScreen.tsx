@@ -7,6 +7,8 @@ import type { HomeStackParams } from "../types/navigation";
 import { useAuth } from "../context/AuthContext";
 import { RecipeScreen, recipeColors as c, recipeStyles } from "../components/recipes";
 import { MEALS, MEAL_COLORS, MEAL_LABELS, dayFullName, getPlan, mealName, mondayOf, recipeUnavailable, toISODate } from "../components/planning";
+import ListSummaryRow from '../components/lists/ListSummaryRow';
+import { shoppingListDestination } from '../services/shoppingNavigation';
 import { fetchLists } from "../services/shoppingLists";
 import { storeName } from "../components/promos";
 import { fetchAllOffers, isOnPromo } from "../components/search";
@@ -26,7 +28,6 @@ import type { ShoppingListRead } from "../types/shoppingLists";
 const HEURE_BASCULE = 21;       // à partir de 21 h, on montre les repas de demain
 const NB_LISTES_MAX = 3;
 const NB_PROMOS_MAX = 8;
-const JOURS_AVANT_MASQUER = 7;  // une liste passée depuis plus de 7 jours quitte l'Accueil
 
 // Heure à partir de laquelle un repas du jour est considéré comme passé
 const FIN_DU_REPAS: Record<MealType, number> = { dejeuner: 11, diner: 15, souper: 21, collation: 24 };
@@ -68,17 +69,10 @@ function libelleRepas(e: MealPlanEntry, maintenant: Date) {
   return MEAL_LABELS[e.meal];
 }
 
-// Listes encore en cours, la plus proche d'abord (à venir, puis en retard).
-// Une liste passée depuis plus de 7 jours n'est plus montrée ici (elle reste dans l'onglet Liste).
-function listesEnCours(listes: ShoppingListRead[], maintenant: Date) {
-  const aujourdhui = toISODate(maintenant);
-  const limite = toISODate(plusJours(maintenant, -JOURS_AVANT_MASQUER));
-  const ouvertes = listes.filter((l) => (l.status === "draft" || l.status === "active") && l.purchase_date >= limite);
-  const aVenir = ouvertes.filter((l) => l.purchase_date >= aujourdhui)
-    .sort((a, b) => a.purchase_date.localeCompare(b.purchase_date));
-  const enRetard = ouvertes.filter((l) => l.purchase_date < aujourdhui)
-    .sort((a, b) => b.purchase_date.localeCompare(a.purchase_date));
-  return [...aVenir, ...enRetard];
+// Les copies actives restent visibles jusqu’à leur fin explicite, sans échéance.
+function listesEnCours(listes: ShoppingListRead[]) {
+  return listes.filter(l => l.status === 'draft' || l.status === 'active')
+    .sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''));
 }
 
 // "Aujourd'hui", "Demain", "Lun. 16 nov."
@@ -89,12 +83,6 @@ function dateCourte(iso: string, aujourdhui: string) {
 }
 
 // "≈ 21 $" si tous les prix sont connus, "au moins 21 $" sinon, rien si aucun prix connu
-function coutListe(l: ShoppingListRead): string | null {
-  const montant = Math.round(Number(l.totals.remaining_known_amount));
-  if (!Number.isFinite(montant) || montant <= 0) return null;
-  return l.totals.estimate_complete ? `≈ ${montant} $` : `au moins ${montant} $`;
-}
-
 // Prix et rabais d'une offre (montants en texte, ex. "2.49")
 function prixRegulier(o: Offer): number | null {
   const n = Number(o.price.amount);
@@ -204,7 +192,7 @@ function TableauDeBord() {
       .catch(() => { if (!annule) setErreurRepas(true); })
       .finally(() => { if (!annule) setChargementRepas(false); });
 
-    fetchLists(0)
+    fetchLists(0, 'current')
       .then((page) => { if (!annule) setListes(page.items); })
       .catch(() => { if (!annule) setErreurListes(true); })
       .finally(() => { if (!annule) setChargementListes(false); });
@@ -231,8 +219,12 @@ function TableauDeBord() {
     }
   };
   const ouvrirListes = () => navigation.navigate("Liste", { screen: "Lists" });
-  const creerListe = () => navigation.navigate("Liste", { screen: "CreateList", initial: false });
-  const ouvrirListe = (id: string) => navigation.navigate("Liste", { screen: "ShoppingDetail", params: { id }, initial: false });
+  const creerListe = () => {
+    const start = mondayOf(new Date());
+    const period = { start_date: toISODate(start), end_date: toISODate(plusJours(start, 6)) };
+    navigation.navigate("Liste", { screen: "CreateList", ...(nbRepasSemaine > 0 ? { params: { period } } : {}), initial: false });
+  };
+  const ouvrirListe = (id: string) => (navigation.getParent?.() ?? navigation).navigate("Liste", shoppingListDestination(id));
   const ouvrirSuivis = () => navigation.navigate("Promos", { screen: "Follows", initial: false });
   const ouvrirPromos = () => navigation.navigate("Promos", { screen: "List" });
   const ouvrirOffre = (o: Offer) => navigation.navigate("Promos", { screen: "Detail", params: { offer: o }, initial: false });
@@ -246,7 +238,7 @@ function TableauDeBord() {
     .filter((e) => e.date === jour.iso)
     .sort((a, b) => MEALS.indexOf(a.meal) - MEALS.indexOf(b.meal));
 
-  const listesAffichees = listesEnCours(listes, maintenant).slice(0, NB_LISTES_MAX);
+  const listesAffichees = listesEnCours(listes).slice(0, NB_LISTES_MAX);
   const chargement = chargementListes || chargementRepas;
 
   const suivisEnPromo = offres
@@ -357,28 +349,7 @@ function TableauDeBord() {
 
         {!chargement && !erreurListes && listesAffichees.length > 0 && (
           <View style={[styles.carte, { paddingVertical: 4, gap: 0 }]}>
-            {listesAffichees.map((l, index) => {
-              const enRetard = l.purchase_date < aujourdhui;
-              const nb = l.totals.remaining_item_count;
-              const cout = coutListe(l);
-              return (
-                <Pressable key={l.id} accessibilityRole="button" accessibilityLabel={`Ouvrir la liste ${l.name}`}
-                  onPress={() => ouvrirListe(l.id)}
-                  style={({ pressed }) => [styles.ligneListe, index < listesAffichees.length - 1 && styles.separateur, pressed && styles.appuye]}>
-                  <View style={styles.tuileIcone}>
-                    <MaterialCommunityIcons name="basket-outline" size={22} color={c.green} accessible={false} />
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.nom} numberOfLines={1}>{majuscule(l.name)}</Text>
-                    <Text style={[styles.detail, enRetard && { color: PRIX_PROMO }]}>
-                      {enRetard ? "Prévue " : ""}{dateCourte(l.purchase_date, aujourdhui)} · {nb} article{nb > 1 ? "s" : ""}
-                    </Text>
-                  </View>
-                  {cout && <Text style={styles.cout}>{cout}</Text>}
-                  <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} />
-                </Pressable>
-              );
-            })}
+            {listesAffichees.map(list => <ListSummaryRow key={list.id} list={list} onPress={() => ouvrirListe(list.id)} />)}
           </View>
         )}
       </View>

@@ -9,7 +9,7 @@ function gate(options = {}) {
   const slots = [], effects = [], calls = [], timers = new Set(), listeners = new Set();
   let cursor = 0, user = options.user === undefined ? 'alice' : options.user, online = options.online !== false;
   const exports = {}, jsx = (type, props) => ({ type, props: props ?? {} });
-  let focusCleanup;
+  let focusCleanup, focusCallback;
   vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.join(__dirname, '../components/lists/ListAccessRequired.tsx'), 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
   }).outputText, { exports, Error,
@@ -21,7 +21,7 @@ function gate(options = {}) {
         useRef(current) { const i = cursor++; return slots[i] ??= { current }; },
         useCallback(fn, deps) { const i = cursor++; if (!slots[i] || deps.some((v, n) => v !== slots[i].deps[n])) slots[i] = { fn, deps }; return slots[i].fn; },
       };
-      if (name === '@react-navigation/native') return { useFocusEffect(fn) { const i = cursor++; if (slots[i]?.fn !== fn) {
+      if (name === '@react-navigation/native') return { useFocusEffect(fn) { focusCallback = fn; const i = cursor++; if (slots[i]?.fn !== fn) {
         const old = slots[i]; slots[i] = { fn }; effects.push(() => { old?.cleanup?.(); focusCleanup = slots[i].cleanup = fn(); });
       } } };
       if (name === 'react-native') return { Text: 'Text', ActivityIndicator: 'Spinner', AppState: { addEventListener(event, fn) { listeners.add(fn); return { remove: () => listeners.delete(fn) }; } } };
@@ -37,6 +37,7 @@ function gate(options = {}) {
   const render = () => { cursor = 0; return exports.default({ children: 'PRIVATE_NAVIGATOR' }); };
   return { render, calls, timers, listeners, set user(value) { user = value; }, set online(value) { online = value; },
     async ready() { render(); effects.splice(0).forEach(fn => fn()); await tick(); return render(); },
+    focus() { focusCleanup?.(); focusCleanup = focusCallback(); },
     blur() { focusCleanup?.(); }, async foreground() { for (const fn of listeners) fn('active'); await tick(); } };
 }
 function nodes(tree) { if (!tree || typeof tree !== 'object') return []; if (Array.isArray(tree)) return tree.flatMap(nodes); return [tree, ...nodes(tree.props?.children)]; }
@@ -69,4 +70,16 @@ test('changement de compte : ignorer une validation réseau tardive de l’ancie
   const h = gate({ api: (...args) => args[4] === 'alice' ? new Promise(resolve => { finish = resolve; }) : Promise.reject(new Error('offline')) });
   await h.ready(); h.user = 'bob'; assert.equal(containsPrivate(h.render()), false); await h.ready();
   finish({ items: [], total: 0 }); await tick(); assert.equal(containsPrivate(h.render()), false);
+});
+
+
+test('retour dans Listes : la revérification conserve le navigateur et bloque si le serveur refuse', async () => {
+  let reject;
+  let count = 0;
+  const h = gate({ api: () => ++count === 1 ? Promise.resolve({ items: [] }) : new Promise((resolve, failure) => { reject = failure; }) });
+  assert.equal(containsPrivate(await h.ready()), true);
+  h.focus();
+  assert.equal(containsPrivate(h.render()), true);
+  reject(new Error('Session refusée')); await tick();
+  assert.equal(containsPrivate(h.render()), false);
 });

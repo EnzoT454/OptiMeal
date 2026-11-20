@@ -1,3 +1,4 @@
+import { shoppingListDestination } from '../services/shoppingNavigation';
 import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect, useNavigation, type NavigationProp } from "@react-navigation/native";
@@ -255,8 +256,7 @@ export default function CalendarScreen({ vue: vueDemandee }: { vue?: "repas" | "
       {vue === "epicerie" && (
         <EpicerieSemaine
           period={{ start_date: debut, end_date: fin }}
-          onCreate={() => navigation.navigate("Liste", { screen: "CreateList", params: { period: { start_date: debut, end_date: fin } }, initial: false })}
-          onOpen={(id) => navigation.navigate("Liste", { screen: "ShoppingDetail", params: { id }, initial: false })}
+          onOpen={(id) => navigation.navigate("Liste", shoppingListDestination(id))}
         />
       )}
 

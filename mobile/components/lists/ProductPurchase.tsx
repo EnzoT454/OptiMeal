@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ProductImage } from '../ProductImage';
 import { Pressable, Text, View } from 'react-native';
 import { RecipeButton, RecipeField, recipeStyles as s } from '../recipes';
 import { listCommand, listsPath, quantityLabel } from '../../services/shoppingLists';
@@ -34,6 +35,7 @@ export default function ProductPurchase({ list, row, disabled, onCommand, onOpen
 }) {
   const [units, setUnits] = useState(String(row.purchasedUnits));
   const [error, setError] = useState('');
+  const [pending, setPending] = useState<boolean | null>(null);
   const line = row.line;
   const direct = line.pricing_method === 'direct';
   const packaged = direct || line.sale.price_basis === 'package';
@@ -47,28 +49,34 @@ export default function ProductPurchase({ list, row, disabled, onCommand, onOpen
   const costLabel = `${costWhole},${costFraction.padEnd(2, '0')}`;
   const displayedQuantity = purchasedView ? row.purchasedQuantity ?? line.quantity : remainingView ? subtractAmount(line.quantity, [row.purchasedQuantity ?? '0']) : line.quantity;
 
-  const checked = purchasedView ? row.purchasedUnits > 0 : row.purchasedUnits >= line.sale_units;
+  const checked = pending ?? (purchasedView ? row.purchasedUnits > 0 : row.purchasedUnits >= line.sale_units);
   const staleNew = !!list.assignment?.stale && !list.product_purchases?.some(p => p.comparison_id === row.comparisonId
     && p.line.sale.product_id === line.sale.product_id && p.item_ids[0] === row.itemIds[0]);
   const label = `${line.sale.raw_source.name} pour ${names}`;
+  const source = line.sale.raw_source;
+  const photo = typeof source.image_url === 'string' ? source.image_url : null;
   const summary = <>
-    <Text style={s.sectionTitle}>{line.sale.raw_source.name}</Text>
-    <Text style={s.body}>Pour : {names}</Text>
-    <Text style={s.body}>{storeLabel(line.sale.raw_source.retailer)}{line.sale.raw_source.store_id ? ` · ${line.sale.raw_source.store_id}` : ''}</Text>
-    <Text style={s.body}>{direct ? `${displayedUnits} produit(s)` : line.sale.price_basis === 'package' ? `${displayedUnits} paquet(s)` : `${displayedQuantity} ${list.assignment?.scenario.needs.find(n => n.item_ids[0] === row.itemIds[0])?.unit ?? ''}`} · {costLabel} $ estimés</Text>
-    <Text style={s.note}>{row.purchasedUnits} {direct ? 'produit(s)' : line.sale.price_basis === 'package' ? 'paquet(s)' : 'pas de vente'} acheté(s){historical ? ' · achat conservé d’une proposition précédente' : ''}</Text>
+    <Text style={s.sectionTitle}>{source.name}</Text>
+    <Text style={s.note}>{displayedUnits} produit(s) · {costLabel} $ · {storeLabel(source.retailer)}</Text>
+    {historical && <Text style={s.note}>Achat conservé</Text>}
+    {detailed && <Text style={s.note}>Pour : {names}</Text>}
   </>;
-  return <View style={[s.choice, { gap: 10 }]}>
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+  return <View style={detailed ? [s.choice, { gap: 10 }] : { gap: 4, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#e1e8df' }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
       <Pressable accessibilityRole="checkbox" accessibilityLabel={`Acheté : ${label}`}
-        accessibilityState={{ checked, disabled: disabled || staleNew }} disabled={disabled || staleNew}
-        onPress={() => void onCommand(productCommand(list, row, checked ? 0 : line.sale_units))}
-        style={{ minHeight: 48, minWidth: 48, justifyContent: 'center', alignItems: 'center' }}>
+        accessibilityState={{ checked, busy: pending !== null, disabled: disabled || staleNew || pending !== null }} disabled={disabled || staleNew || pending !== null}
+        onPress={() => {
+          if (pending !== null || disabled || staleNew) return;
+          setPending(!checked);
+          void onCommand(productCommand(list, row, checked ? 0 : line.sale_units)).finally(() => setPending(null));
+        }} style={{ minHeight: 48, minWidth: 48, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={s.sectionTitle}>{checked ? '☑' : '☐'}</Text>
       </Pressable>
+      {photo && <ProductImage key={photo} uri={photo} size={44} />}
       {onOpen ? <Pressable accessibilityRole="button" accessibilityLabel={`Fiche de ${label}`} onPress={onOpen} style={{ flex: 1, minHeight: 48 }}>{summary}</Pressable>
         : <View style={{ flex: 1 }}>{summary}</View>}
     </View>
+    {pending !== null && <Text accessibilityLiveRegion="polite" style={s.note}>Enregistrement…</Text>}
     {detailed && <>
       <Text style={s.note}>Besoin : {quantityLabel(list.items.filter(i => row.itemIds.includes(i.id)).flatMap(i => i.required))}</Text>
       <Text style={s.note}>Format : {line.sale.format?.raw ?? (line.sale.content_per_package ? quantityLabel([line.sale.content_per_package]) : 'Voir la quantité de vente')}. {line.estimated_weight ? 'Poids réel et montant payé à confirmer.' : 'Estimation conservée, prix de caisse non confirmé.'}</Text>

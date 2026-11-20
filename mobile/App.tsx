@@ -31,7 +31,9 @@ import HomeScreen from './app/HomeScreen';
 import ListScreen from './app/ListScreen';
 import CreateListScreen from './app/CreateListScreen';
 import ShoppingListDetailScreen from './app/ShoppingListDetailScreen';
+import ShoppingComparisonScreen from './app/ShoppingComparisonScreen';
 import ShoppingHistoryScreen from './app/ShoppingHistoryScreen';
+import ShoppingAllListsScreen from './app/ShoppingAllListsScreen';
 import ListAccessRequired from './components/lists/ListAccessRequired';
 import ShoppingTemplateDetailScreen from './app/ShoppingTemplateDetailScreen';
 import ShoppingReuseScreen from './app/ShoppingReuseScreen';
@@ -64,12 +66,14 @@ function HomeNavigator() {
 }
 function ListNavigator() {
   return <ListAccessRequired><Lists.Navigator screenOptions={{ headerTintColor: VERT }}>
-    <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Liste' }} />
-    <Lists.Screen name="CreateList" component={CreateListScreen} getId={({ params }) => params?.period ? `${params.period.start_date}:${params.period.end_date}` : 'manual'} options={{ title: 'Nouvelle liste', headerBackTitle: 'Liste' }} />
-    <Lists.Screen name="History" component={ShoppingHistoryScreen} options={{ title: 'Historique', headerBackTitle: 'Liste' }} />
-    <Lists.Screen name="TemplateDetail" component={ShoppingTemplateDetailScreen} options={{ title: 'Modèle', headerBackTitle: 'Liste' }} />
-    <Lists.Screen name="ReuseList" component={ShoppingReuseScreen} options={{ title: 'Réutiliser', headerBackTitle: 'Liste' }} />
-    <Lists.Screen name="ShoppingDetail" component={ShoppingListDetailScreen} options={{ title: 'Ma liste', headerBackTitle: 'Liste' }} />
+    <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Listes' }} />
+    <Lists.Screen name="CreateList" component={CreateListScreen} getId={({ params }) => params?.period ? `${params.period.start_date}:${params.period.end_date}` : params?.kind ?? 'choose'} options={{ title: 'Nouvelle liste', headerBackTitle: 'Listes' }} />
+    <Lists.Screen name="Comparison" component={ShoppingComparisonScreen} options={{ title: 'Comparer les prix', headerBackTitle: 'Listes' }} />
+    <Lists.Screen name="AllLists" component={ShoppingAllListsScreen} options={{ title: 'Toutes les listes', headerBackTitle: 'Listes' }} />
+    <Lists.Screen name="History" component={ShoppingHistoryScreen} options={{ title: 'Historique', headerBackTitle: 'Listes' }} />
+    <Lists.Screen name="TemplateDetail" component={ShoppingTemplateDetailScreen} options={{ title: 'Liste sauvegardée', headerBackTitle: 'Listes' }} />
+    <Lists.Screen name="ReuseList" component={ShoppingReuseScreen} options={{ title: 'Réutiliser', headerBackTitle: 'Listes' }} />
+    <Lists.Screen name="ShoppingDetail" component={ShoppingListDetailScreen} options={{ title: 'Ma liste', headerBackTitle: 'Listes' }} />
   </Lists.Navigator></ListAccessRequired>;
 }
 function ProtectedAdd(props: NativeStackScreenProps<RecipeStackParams, 'Add'>) {
@@ -128,7 +132,7 @@ function Content() {
     <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false, popToTopOnBlur: true }} />
     <Tabs.Screen name="Recettes" component={RecipeNavigator} options={{ headerShown: false }} />
     <Tabs.Screen name="Calendrier" component={Calendar} options={{ headerShown: false }} />
-    <Tabs.Screen name="Liste" component={ListNavigator} options={{ headerShown: false }} />
+    <Tabs.Screen name="Liste" component={ListNavigator} options={{ headerShown: false, title: 'Listes' }} />
   </Tabs.Navigator></NavigationContainer>
     {!session && signInReason !== null && <Modal visible animationType="slide" onRequestClose={dismissSignIn}>
       <SafeAreaView style={{ flex: 1 }}><AuthScreen reason={signInReason} onCancel={dismissSignIn} /></SafeAreaView>

@@ -206,6 +206,22 @@
       "default": null,
       "title": "Purchase Date"
     },
+    "kind": {
+      "anyOf": [
+        {
+          "enum": [
+            "articles",
+            "products"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Kind"
+    },
     "name": {
       "maxLength": 120,
       "minLength": 1,

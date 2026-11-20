@@ -23,7 +23,7 @@ from backend.app.common.units import normalize_quantity
 from backend.app.security import CurrentUser
 from .errors import ShoppingListError
 from .models import (
-    ShoppingList, ShoppingListCommand, ShoppingListContribution, ShoppingListItem,
+    ShoppingList, ShoppingListChoice, ShoppingListCommand, ShoppingListContribution, ShoppingListItem,
     ShoppingListPurchase, ShoppingListPurchaseQuantity, ShoppingListQuantity,
     ShoppingListRevision,
 )
@@ -185,7 +185,7 @@ def _snapshot(db: Session, list_id: UUID, user: CurrentUser, source_warnings=Non
         bought_amount = _amount(sum((Fraction(Decimal(p.estimated_amount)) for p in product_purchases), Fraction()))
         totals = totals.model_copy(update={'budget_known_amount': bought_amount})
     resource = ShoppingListRead(
-        **{k: row[k] for k in ('id', 'name', 'source', 'status', 'revision', 'purchase_date', 'origin')},
+        **{k: row[k] for k in ('id', 'name', 'kind', 'source', 'status', 'revision', 'purchase_date', 'origin')},
         created_at=row['created_at'].astimezone(timezone.utc), updated_at=row['updated_at'].astimezone(timezone.utc),
         period={'start_date': row['start_date'], 'end_date': row['end_date']} if row['source'] == 'calendar' else None,
         items=result, purchases=purchases_read, product_purchases=product_purchases, totals=totals, warnings=warnings)
@@ -238,6 +238,7 @@ def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,
             db.execute(update(ShoppingList).where(ShoppingList.id == target_id).values(
                 revision=current['revision'] + 1, updated_at=datetime.now(timezone.utc)))
         result = _snapshot(db, target_id, user, source_warnings)
+        _validate_kind(result)
         payload = result.model_dump(mode='json')
         db.execute(insert(ShoppingListCommand).values(owner_id=user.id, idempotency_key=key,
                                                      list_id=target_id, signature=signature, result=payload))
@@ -249,6 +250,29 @@ def _mutate(db: Session, user: CurrentUser, key: UUID, operation: str, body,
     except Exception:
         db.rollback()
         raise
+
+
+def _validate_kind(resource):
+    """Validation finale atomique, commune à toutes les mutations privées.
+
+    NULL conserve la compatibilité des anciennes listes et commandes clientes.
+    Les nouvelles listes du mobile ont toujours un type explicite immuable.
+    """
+    if resource.kind is None:
+        return
+    active = {item.id for item in resource.items if not item.removed}
+    choices = {choice.item_id for choice in resource.choices}
+    product_items = set(choices)
+    if resource.assignment:
+        product_items.update(item_id for need in resource.assignment.scenario.needs
+                             if need.lines for item_id in need.item_ids)
+    product_items.update(item_id for purchase in resource.product_purchases
+                         if purchase.purchased_units for item_id in purchase.item_ids)
+    invalid = (resource.kind == 'articles' and bool(active & product_items) or
+               resource.kind == 'products' and bool(active - choices))
+    if invalid:
+        raise ShoppingListError(422, 'LIST_KIND_CONFLICT',
+            'Une liste d’articles et une liste de produits ne peuvent pas être mélangées.')
 
 
 def _initial_items(db, list_id, items, start_position=1, resolve_names=False):
@@ -274,10 +298,10 @@ def create_list(db: Session, user: CurrentUser, body: ShoppingListCreate, key: U
     def create(_):
         list_id = uuid4()
         now = datetime.now(timezone.utc)
-        db.execute(insert(ShoppingList).values(id=list_id, owner_id=user.id, name=body.name, source='manual',
+        db.execute(insert(ShoppingList).values(id=list_id, owner_id=user.id, name=body.name, source='manual', kind=body.kind,
             status='active' if body.activate else 'draft', revision=1, purchase_date=body.purchase_date or today(), created_at=now, updated_at=now))
-        if body.activate and not body.items:
-            raise ShoppingListError(422, 'EMPTY_LIST', 'Ajoute au moins un article avant de créer la liste.')
+        # Une liste vide active est une vraie ressource : l'ajout vient ensuite.
+        # Le panier reste facultatif et aucune lecture de prix n'est implicite.
         _initial_items(db, list_id, body.items, resolve_names=body.pricing is not None)
         if body.pricing is not None:
             from .draft_pricing import attach
@@ -313,7 +337,7 @@ def create_from_calendar(db: Session, user: CurrentUser, body: ShoppingFromCalen
             raise ShoppingListError(422, 'EMPTY_LIST', 'Ajoute au moins un article avant de créer la liste.')
         list_id, now = uuid4(), datetime.now(timezone.utc)
         db.execute(insert(ShoppingList).values(id=list_id, owner_id=user.id, name=body.name,
-            source='calendar', status='active' if body.activate else 'draft', revision=1, start_date=body.start_date,
+            source='calendar', kind=body.kind, status='active' if body.activate else 'draft', revision=1, start_date=body.start_date,
             end_date=body.end_date, purchase_date=preview.purchase_date, created_at=now, updated_at=now))
         identities = {}
         for position, item in enumerate(selected, start=1):
@@ -402,7 +426,7 @@ def _contribution(db: Session, item_id: UUID, quantity: ShoppingQuantity | None)
                                                       position=position, data=contribution.model_dump(mode='json')))
 
 
-def add_item(db: Session, list_id: UUID, user: CurrentUser, body: ShoppingItemAdd, key: UUID) -> ShoppingListRead:
+def add_item(db: Session, list_id: UUID, user: CurrentUser, body: ShoppingItemAdd, key: UUID, price_source=None) -> ShoppingListRead:
     def change(target):
         ingredient = db.get(Ingredient, body.ingredient_id) if body.ingredient_id else None
         if body.ingredient_id and ingredient is None:
@@ -433,15 +457,50 @@ def add_item(db: Session, list_id: UUID, user: CurrentUser, body: ShoppingItemAd
                                                             unit=normalized.unit, amount=Decimal(normalized.amount))
             db.execute(command.on_conflict_do_update(index_elements=['item_id', 'kind', 'unit'],
                 set_={'amount': ShoppingListQuantity.amount + command.excluded.amount}))
+        if body.product_id is not None:
+            from .recalculation import apply_product_selection
+            apply_product_selection(db, target, item_id, user, body.product_id, price_source)
         return target
     return _mutate(db, user, key, 'add_item', body, list_id, change)
 
 
 def update_item(db: Session, list_id: UUID, item_id: UUID, user: CurrentUser,
-                body: ShoppingItemUpdate, key: UUID) -> ShoppingListRead:
+                body: ShoppingItemUpdate, key: UUID, price_source=None) -> ShoppingListRead:
     def change(target):
         item = _item(db, target, item_id)
-        values = body.model_dump(exclude_unset=True, exclude={'expected_revision', 'quantity'})
+        kind = db.scalar(select(ShoppingList.kind).where(ShoppingList.id == target))
+        if 'name' in body.model_fields_set and body.name != item['name'] and kind == 'products':
+            raise ShoppingListError(422, 'PRODUCT_NAME_IMMUTABLE', 'Le nom d’un produit du catalogue ne peut pas être modifié.')
+        values = body.model_dump(exclude_unset=True, exclude={'expected_revision', 'quantity', 'refresh_prices', 'product_units'})
+        products = kind == 'products'
+        if kind is None and (body.refresh_prices or body.product_units is not None):
+            legacy = _snapshot(db, target, user)
+            active_ids = {i.id for i in legacy.items if not i.removed}
+            selected_ids = {c.item_id for c in legacy.choices}
+            if legacy.assignment:
+                selected_ids.update(i for need in legacy.assignment.scenario.needs if need.lines for i in need.item_ids)
+            products = bool(active_ids) and active_ids <= selected_ids
+        sales = None
+        if body.product_units is not None:
+            if not products:
+                raise ShoppingListError(422, 'LIST_KIND_CONFLICT', 'Le nombre de produits est réservé aux listes de produits.')
+            if price_source is None:
+                raise ShoppingListError(503, 'CATALOG_UNAVAILABLE', 'Catalogue indisponible.')
+            sales = price_source(db, today())
+            product_id = db.scalar(select(ShoppingListChoice.product_id).where(ShoppingListChoice.item_id == item_id))
+            sale = next((s for s in sales if s.product_id == product_id and s.ingredient_id == item['ingredient_id']), None)
+            if sale is None or sale.match_status == 'rejected':
+                raise ShoppingListError(422, 'PRODUCT_NOT_MATCHED', 'Produit absent ou incompatible.')
+            # Une unité saisie désigne un emballage de vente, y compris un paquet de plusieurs pièces.
+            size = sale.format.quantity if sale.format.kind == 'fixed' else Decimal(1)
+            unit = sale.format.unit if sale.format.kind == 'fixed' else 'unit'
+            from .purchases import _quantity
+            from fractions import Fraction
+            amount = _quantity(Fraction(size) * body.product_units)
+            db.execute(delete(ShoppingListQuantity).where(ShoppingListQuantity.item_id == item_id,
+                ShoppingListQuantity.kind == 'required'))
+            db.execute(insert(ShoppingListQuantity).values(item_id=item_id, kind='required', unit=unit, amount=Decimal(amount)))
+            values['need_revision'] = item['need_revision'] + 1
         if 'quantity' in body.model_fields_set:
             if body.quantity is None:
                 db.execute(delete(ShoppingListQuantity).where(ShoppingListQuantity.item_id == item_id,
@@ -455,6 +514,9 @@ def update_item(db: Session, list_id: UUID, item_id: UUID, user: CurrentUser,
                                                          set_={'amount': command.excluded.amount}))
             values['need_revision'] = item['need_revision'] + 1
         db.execute(update(ShoppingListItem).where(ShoppingListItem.id == item_id).values(**values))
+        if products and (body.refresh_prices or body.product_units is not None):
+            from .recalculation import refresh_current_prices
+            refresh_current_prices(db, target, user, price_source, sales=sales)
         return target
     return _mutate(db, user, key, 'update_item:' + str(item_id), body, list_id, change)
 
