@@ -1,8 +1,9 @@
 # Contrats communs — Recettes et Promos v1
 
 Les [contrats des listes](SHOPPING_LISTS_CONTRACTS.md) sont définis
-séparément pour le lot A. Leurs schémas, exemples et routes sont exportés ; le lot A persistant et
-son parcours mobile sont raccordés. Les prix et comparaisons restent à développer.
+séparément. Les listes persistantes, les prix, les comparaisons et les achats
+sont implémentés. Le [guide des listes](SHOPPING_GUIDE.md) présente les parcours
+Articles / Produits actuels ; les notes de lots conservent leurs validations datées.
 
 Les [formats de vente et bases tarifaires](SALE_NORMALIZATION.md) disposent de
 schémas de documents serveur séparés, sans changement des réponses HTTP de
@@ -57,6 +58,19 @@ conserve le contrat `RecipeWrite` nullable : le retrait envoie `image_url: null`
 HTTP sont inchangés ; les droits et limites Storage sont décrits dans
 [RECIPE_IMAGES.md](RECIPE_IMAGES.md).
 
+## Parcours mobile courant — 20 novembre 2026
+
+Le + de Recettes ouvre directement la création manuelle : présentation
+(nom, photo, portions), ingrédients (quantités et unités), préparation
+(instructions et durées), informations facultatives, puis visibilité et
+sauvegarde. Les étapes intermédiaires ne créent aucune recette et n’envoient
+aucune photo. La publication reste privée par défaut, avec confirmation avant
+une publication publique définitive. L’édition reste préremplie sur une page.
+
+Le navigateur lit les octets de la photo locale avec `fetch` ; iOS et Android
+conservent `expo-file-system`. Le contrat HTTPS `image_url`, les droits Storage
+et les routes POST/PUT restent identiques. Voir le [guide photo](RECIPE_IMAGES.md).
+
 ## Routes et filtres
 
 | Méthode et route | Réponse | Filtres |
@@ -67,9 +81,9 @@ HTTP sont inchangés ; les droits et limites Storage sont décrits dans
 | `POST /api/v1/recipes` | Créer une recette personnelle, propriétaire issu du jeton | Connexion requise |
 | `PUT /api/v1/recipes/{id}` | Remplacer sa propre recette | Connexion requise |
 | `PATCH /api/v1/recipes/{id}/visibility` | Publier définitivement sa propre recette | Connexion requise |
-| `DELETE /api/v1/recipes/{id}` | Supprimer sa propre recette | Connexion requise |
+| `DELETE /api/v1/recipes/{id}` | Supprimer sa propre recette privée | Connexion requise ; publication publique définitive |
 | `PUT / DELETE /api/v1/recipes/{id}/favorite` | Ajouter/retirer son favori | Connexion requise |
-| `GET /api/v1/offers` | Prix relevés avec produit, format et contexte | `ingredient_id`, `retailer`, `store_id`, `category_id`, `promotion_only`, `on_date`, `limit`, `offset` |
+| `GET /api/v1/offers` | Prix relevés avec produit, format et contexte | `q`, `ingredient_id`, `retailer`, `store_id`, `category_id`, `promotion_only`, `on_date`, `limit`, `offset` |
 | `GET /api/v1/offers/{id}` | Détail d’un prix relevé | `on_date` |
 | `GET /api/v1/circulars` | Circulaires disponibles, dates et liens des pages | Aucun |
 
@@ -629,4 +643,4 @@ résumés/détails ajoutent `is_owned` et `is_favorite`. Les métadonnées
 manuelles confirmées n’exigent pas la revue des recettes de démonstration.
 Voir [AUTH.md](AUTH.md) pour les corps, droits et codes de réponse.
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 20 novembre 2026*

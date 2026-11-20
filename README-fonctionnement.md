@@ -6,7 +6,7 @@ Le parcours principal relie les recettes, les repas planifiés et les achats : c
 
 La présence d’une fonction dans le code ne prouve pas sa validation sur tous les appareils ni l’application de sa migration sur Supabase. Les confirmations connues sont distinguées des vérifications encore nécessaires. Les schémas Mermaid peuvent être consultés dans un aperçu Markdown compatible.
 
-Le cadrage du **17 novembre 2026** retire les modes IA destinés aux utilisateurs, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations statistiques et la contribution par reçu. Les montants calculés à partir du catalogue, l’historique des listes terminées et les outils locaux de lecture des reçus sont conservés. Les choix IA ou Petit budget encore visibles avec un message d’attente ne constituent pas des fonctions disponibles.
+Le cadrage du **17 novembre 2026** retire les modes IA destinés aux utilisateurs, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations statistiques et la contribution par reçu. Les montants calculés à partir du catalogue, l’historique des listes terminées et les outils locaux de lecture des reçus sont conservés. Les liens de création IA ont été retirés de Recettes. Le filtre Petit budget, représenté par $, affiche encore un message d’attente et ne constitue pas une fonction disponible.
 
 ## 1. Les grandes parties de l’application
 
@@ -272,26 +272,41 @@ Les règles détaillées sont dans les [contrats](backend/docs/CONTRACTS.md).
 
 ## 5. Créer une recette et enregistrer sa photo
 
-Le parcours disponible passe par le choix d’ajout, le choix de saisie et le formulaire manuel. Les choix IA encore visibles sont des emplacements avec message d’attente ; leur réalisation a été retirée du périmètre le 17 novembre.
+Le bouton **+** dans un cercle, en haut à droite du titre **Recettes**, ouvre directement le formulaire manuel pour un compte connecté. En mode visiteur, il propose la connexion. Les liens Trouver une idée, Cuisiner avec ce que j’ai et Structurer mon idée sont retirés ; les modes IA ont été retirés du périmètre le 17 novembre.
+
+La création présente une page à la fois, avec **Étape X sur 5**, une progression segmentée et les boutons **Précédent / Continuer**.
+
+| Étape | Contenu et validation |
+| --- | --- |
+| 1. Présentation | Nom, photo et portions. Les besoins de nom et de photo sont signalés en rouge ; les portions sont un entier positif. |
+| 2. Ingrédients | Choix des ingrédients, quantités positives, unités et précisions facultatives. |
+| 3. Préparation | Instructions, durée entière de chaque étape et total automatique. |
+| 4. Informations | Étiquettes et autres informations facultatives, dont la description. |
+| 5. Visibilité | Résumé, choix privé/public et enregistrement final. Privée par défaut ; publication après confirmation. |
+
+Chaque bouton Continuer vérifie uniquement la page active. Précédent, la flèche du titre et le retour Android permettent de reculer sans perdre les saisies. La photo reste locale jusqu’à l’enregistrement final. Quitter une création commencée demande confirmation ; les saisies sont conservées en mémoire pendant le parcours, sans brouillon persistant après fermeture de l’application. L’édition d’une recette existante conserve son formulaire prérempli sur une seule page.
+
 
 ```mermaid
 flowchart TD
-    A[AddRecipeScreen : choix d’ajout] --> M[ManualEntryScreen : choix de saisie]
-    M --> F[RecipeEditorScreen : formulaire manuel]
-    F --> C{Photo choisie ou URL déjà obtenue ?}
-    C -->|Non| B[Création bloquée : ajouter une photo]
-    B --> F
-    C -->|Oui| P{Nouvelle photo locale ?}
-    P -->|Oui| I[recipeImages.ts : préparer et envoyer à Storage]
-    I --> URL[Obtenir l’URL publique]
-    URL --> H[api.ts : POST /api/v1/recipes avec jeton]
-    P -->|Non| H
-    H --> V[FastAPI : identité et validation des données]
-    V --> S[recipes/service.py : ingrédients et propriétaire]
-    S --> D[(PostgreSQL : recette et liens ingrédients)]
+    A[Bouton + de Recettes] --> SESS{Compte connecté ?}
+    SESS -->|Non| CONN[Proposer la connexion]
+    SESS -->|Oui| F[1. Nom, photo et portions]
+    F --> ING[2. Ingrédients, quantités et unités]
+    ING --> ET[3. Instructions et durées]
+    ET --> INFO[4. Étiquettes et autres informations]
+    INFO --> VIS[5. Visibilité et résumé]
+    VIS --> ENR[Enregistrer et confirmer une éventuelle publication]
+    ENR --> P{Nouvelle photo locale ?}
+    P -->|Oui| I[Envoyer la photo à Storage et obtenir son URL]
+    I --> H[POST /api/v1/recipes avec jeton]
+    P -->|Non, URL déjà obtenue| H
+    H --> V[FastAPI : identité et validation complète]
+    V --> D[(PostgreSQL : recette et ingrédients)]
     D --> R[Réponse avec la recette créée]
     R --> E[Afficher le détail]
 ```
+
 
 Les responsabilités se répartissent ainsi :
 
@@ -306,6 +321,8 @@ Les responsabilités se répartissent ainsi :
 **L’image et la recette sont enregistrées dans deux services différents.** Storage reçoit le fichier ; PostgreSQL conserve son URL dans `recipe.image_url`. Si l’envoi de l’image réussit mais que la recette ne peut pas être enregistrée, un fichier inutilisé peut rester dans Storage.
 
 Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les politiques Storage limitent les écritures à `users/<identifiant du compte>/`. En édition, retirer une photo enregistre `image_url: null` ; le fichier n’est pas automatiquement supprimé. Cette politique publique concerne les photos de recettes. Les reçus restent des fichiers locaux ; aucun parcours mobile de contribution n’est intégré.
+
+La lecture de la photo préparée dépend de l’appareil : sur iOS et Android, `recipeImages.ts` utilise `File` de `expo-file-system` ; dans le navigateur, il lit l’URL locale `blob:` avec `fetch` puis `arrayBuffer()`. L’aperçu, la limite de 5 Mo, l’authentification et l’envoi final vers Storage restent soumis aux mêmes règles. La correction Web a été confirmée par Hamza lors de son test sur ordinateur le 20 novembre ; elle ne constitue pas un nouvel essai natif. Le [guide des photos](backend/docs/RECIPE_IMAGES.md#lecture-sur-téléphone-et-navigateur) décrit les deux chemins.
 
 ### Choisir la visibilité et publier définitivement
 
@@ -1114,9 +1131,7 @@ Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/
 | [components/AddMealSheet.tsx](mobile/components/AddMealSheet.tsx) et [components/MealActionsSheet.tsx](mobile/components/MealActionsSheet.tsx) | Choix de recette ou note, portions, déplacement, duplication et restes |
 | [app/RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) | Recherche, filtres, pagination et cartes |
 | [app/RecipeDetailScreen.tsx](mobile/app/RecipeDetailScreen.tsx) | Détail, favoris et actions sur ses recettes |
-| [app/AddRecipeScreen.tsx](mobile/app/AddRecipeScreen.tsx) | Choix entre les trois modes d’ajout |
-| [app/ManualEntryScreen.tsx](mobile/app/ManualEntryScreen.tsx) | Accès au formulaire manuel ; texte IA encore visible avec message d’attente, retiré du périmètre |
-| [app/RecipeEditorScreen.tsx](mobile/app/RecipeEditorScreen.tsx) | Création manuelle avec photo obligatoire ; modification des recettes existantes |
+| [app/RecipeEditorScreen.tsx](mobile/app/RecipeEditorScreen.tsx) | Création guidée en cinq étapes avec photo obligatoire ; édition préremplie des recettes existantes |
 | [app/PromotionsScreen.tsx](mobile/app/PromotionsScreen.tsx) | Promotions, recherche, catégories, enseignes et grille/liste |
 | [components/search.ts](mobile/components/search.ts) | Pagination complète des offres, alias et recherche tolérante |
 | [components/OngletsPromos.tsx](mobile/components/OngletsPromos.tsx) | Navigation Promos, Idées repas et Suivis |
@@ -1143,6 +1158,7 @@ Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/
 | [types/navigation.ts](mobile/types/navigation.ts) | Types des écrans et paramètres de navigation |
 | [app.json](mobile/app.json) | Configuration Expo et schéma de lien `optimeal` |
 | [package.json](mobile/package.json) et `package-lock.json` | Commandes npm et versions des dépendances |
+| [eslint.config.js](mobile/eslint.config.js) | Règles Expo du lint ; diagnostics React Compiler en avertissements pour adoption progressive |
 
 Les types TypeScript aident le développeur à utiliser les données correctement. Le backend doit aussi valider les entrées reçues, indépendamment des vérifications du formulaire.
 
@@ -1163,9 +1179,9 @@ Le [guide de Liste](backend/docs/SHOPPING_GUIDE.md) et la [note de refonte](back
 | [backend/cli/import_offers.py](backend/cli/import_offers.py) et [backend/cli/import_circulars.py](backend/cli/import_circulars.py) | Mise à jour des offres et des circulaires depuis le terminal |
 | [backend/config/storage/recipe_images.sql](backend/config/storage/recipe_images.sql) | Politiques du bucket d’images, appliquées par la commande dédiée ; séparées des migrations applicatives |
 | [backend/tests/](backend/tests/) | Tests des règles, routes, imports, autorisations et traitements de données |
-| [mobile/tests/](mobile/tests/) | Tests des services, formulaires, accès, listes, achats, reprises et navigation |
+| [mobile/tests/](mobile/tests/) | Tests des services, création en cinq étapes, photos natives/Web, accès, listes, achats, reprises et navigation |
 | [.github/workflows/backend.yml](.github/workflows/backend.yml) | Tests backend avec PostgreSQL temporaire dans la CI |
-| [.github/workflows/mobile.yml](.github/workflows/mobile.yml) | Vérification TypeScript et export des bundles iOS/Android |
+| [.github/workflows/mobile.yml](.github/workflows/mobile.yml) | Lint, TypeScript, tests mobiles et export des bundles iOS/Android |
 | [.github/workflows/docs.yml](.github/workflows/docs.yml) | Construction du site et publication depuis `main` |
 | [docs/](docs/) et [zensical.toml](zensical.toml) | Sources et configuration du site de suivi académique |
 | `site/` | Sortie générée par Zensical, à ne pas modifier manuellement |
@@ -1240,7 +1256,7 @@ Cette configuration couvre les ports locaux correspondant à cette expression. U
 | --- | --- | --- |
 | Comptes | Visiteur, inscription, connexion, profil et suppression | Tester les erreurs et changements de compte sur appareils |
 | Accueil | Repas du jour ou lendemain, listes en cours et promos suivies | Première page de listes filtrée localement ; épinglage non utilisé dans ce nouvel écran |
-| Recettes | Manuel, photos, visibilité, favoris, filtres, tris et notation | Publication définitive ; photos publiques dans le prototype |
+| Recettes | Création manuelle en cinq étapes, photos natives/Web, visibilité, favoris, filtres, tris et notation | Publication définitive ; photos publiques dans le prototype |
 | Promos | Recherche avec suggestions, catégories, magasins, grille/liste et circulaires | Fraîcheur dépendante des collectes et imports |
 | Idées repas | Rapprochement recettes/promos et deux tris | Cent promotions chargées ; économies non ajustées aux quantités des recettes |
 | Suivis | Stockage local et persistance serveur complémentaire | Initialisation ponctuelle, pas de synchronisation garantie entre appareils |
@@ -1251,13 +1267,17 @@ Cette configuration couvre les ports locaux correspondant à cette expression. U
 
 ### Validations connues
 
+**20 novembre 2026 — Création des recettes et photos Web.** La création utilise cinq pages ; l’édition conserve le formulaire prérempli. Hamza confirme le bon fonctionnement de l’ajout de photo lors de son essai dans le navigateur après correction de la lecture du fichier. Cette confirmation ne vaut pas nouvel essai sur téléphone ou validation de tous les cas de publication.
+
+Les derniers contrôles mobiles ont donné **314 tests réussis**, TypeScript et lint avec **0 erreur et 111 avertissements existants**. Les règles React Compiler introduites progressivement restent en avertissements. Les exports Expo iOS/Android/Web ont été validés lors de la création en cinq étapes, avant la correction photo Web. Les résultats backend du 19 novembre ci-dessous restent les derniers consignés ; aucun test backend n’a été relancé pour ces ajustements mobiles.
+
 **19 novembre 2026 — Listes : validation manuelle utilisateur.** Après ses essais, Hamza confirme que l’onglet Listes et tout ce qui concerne les listes sont fonctionnels dans l’état courant, après les derniers ajustements. Cette validation globale inclut l’état livré avec la création des produits depuis Calendrier, le panier initial corrigé et le retrait des blocs d’ingrédients répétés. La plateforme et le détail des scénarios n’ont pas été précisés ; aucune validation distincte de chaque plateforme n’est déduite de cette confirmation. Le périmètre et les prochaines régressions sont consignés dans le [guide des listes](backend/docs/SHOPPING_GUIDE.md#21-parcours-de-vérification).
 
 Les parcours comptes, recettes, photos et Promos ont été confirmés sur iOS et Android le 27 octobre. Des ajustements supplémentaires ont été confirmés sur iOS le 1er novembre, puis globalement sur téléphone le 5 novembre pour les cartes, favoris, unités, publication et notes de Recettes ; la plateforme de cette dernière confirmation n’est pas précisée.
 
 Ces confirmations précèdent les changements récents d’Accueil, de Promos, de Paramètres, d’Épicerie et de persistance des suivis. Elles ne constituent donc pas une validation de ces nouveaux écrans sur iOS et Android.
 
-La dernière vérification automatisée consignée du 19 novembre a donné **1 039 tests backend réussis** avec un PostgreSQL jetable et **14 tests OCR optionnels ignorés**, ainsi que **302 tests mobiles réussis**, TypeScript, **47 exports de contrats cohérents** et les bundles Expo iOS, Android et Web. Les contrôles du comparateur, des ajouts et de la reprise sont décrits dans la [note de refonte](backend/docs/SHOPPING_REFACTOR.md). Ces contrôles automatisés n’incluaient pas d’essai par l’agent sur appareil/simulateur natif pour le clavier et les lecteurs d’écran ; la confirmation manuelle de Hamza est consignée séparément ci-dessus. Ces résultats vérifient les scénarios automatisés existants ; ils ne prouvent ni une validation visuelle complète ni une synchronisation des suivis entre plusieurs appareils. Séparément, le contrôle du 20 novembre a confirmé la base configurée à `0023_shopping_list_kind (head)` et un schéma conforme aux modèles ; aucune migration supplémentaire n’était nécessaire.
+La vérification backend et contrats du 19 novembre, avant les derniers ajustements mobiles, a donné **1 039 tests backend réussis** avec un PostgreSQL jetable et **14 tests OCR optionnels ignorés**, ainsi que **302 tests mobiles réussis**, TypeScript, **47 exports de contrats cohérents** et les bundles Expo iOS, Android et Web. Les contrôles du comparateur, des ajouts et de la reprise sont décrits dans la [note de refonte](backend/docs/SHOPPING_REFACTOR.md). Ces contrôles automatisés n’incluaient pas d’essai par l’agent sur appareil/simulateur natif pour le clavier et les lecteurs d’écran ; la confirmation manuelle de Hamza est consignée séparément ci-dessus. Ces résultats vérifient les scénarios automatisés existants ; ils ne prouvent ni une validation visuelle complète ni une synchronisation des suivis entre plusieurs appareils. Séparément, le contrôle du 20 novembre a confirmé la base configurée à `0023_shopping_list_kind (head)` et un schéma conforme aux modèles ; aucune migration supplémentaire n’était nécessaire.
 
 La priorité reste une version stable et les tests utilisateurs. Les préférences détaillées et recommandations économiques restent incomplètes. Les modes IA utilisateur, la gestion avancée du budget, les instantanés historiques des plans/prix, les estimations statistiques et les contributions par reçu sont retirés du périmètre, sans retrait des outils OCR locaux ni de l’historique des listes terminées.
 

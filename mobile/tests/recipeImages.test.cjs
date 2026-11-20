@@ -6,16 +6,17 @@ const vm = require('node:vm');
 const ts = require('typescript');
 const path = require('node:path');
 
-function setup({ canceled = false, size = 100, session = true, status = 200 } = {}) {
-  const calls = { uploads: [], resizes: [], saves: [], releases: 0 };
+function setup({ canceled = false, size = 100, session = true, status = 200, platform = 'ios', readFails = false } = {}) {
+  const calls = { reads: [], files: 0, uploads: [], resizes: [], saves: [], releases: 0 };
   const rendered = {
-    saveAsync: async options => { calls.saves.push(options); return { uri: 'file:///compressed.jpg' }; },
+    saveAsync: async options => { calls.saves.push(options); return { uri: platform === 'web' ? 'blob:http://localhost/compressed-photo' : 'file:///compressed.jpg' }; },
     release: () => calls.releases++,
   };
   const context = { resize: value => calls.resizes.push(value), renderAsync: async () => rendered, release: () => calls.releases++ };
   const bucket = { getPublicUrl: key => ({ data: { publicUrl: `https://project.test/${key}` } }) };
   const modules = {
-    'expo-file-system': { File: class { size = size; async arrayBuffer() { return new ArrayBuffer(size); } } },
+    'react-native': { Platform: { OS: platform } },
+    'expo-file-system': { File: class { constructor() { calls.files++; if (platform === 'web') throw new TypeError('this.validatePath is not a function'); } size = size; async arrayBuffer() { return new ArrayBuffer(size); } } },
     'expo-image-picker': { launchImageLibraryAsync: async () => ({ canceled, assets: [{ uri: 'file:///original.heic', width: 4000, height: 3000 }] }) },
     'expo-image-manipulator': { ImageManipulator: { manipulate: () => context }, SaveFormat: { JPEG: 'jpeg' } },
     './supabase': { supabase: {
@@ -30,7 +31,14 @@ function setup({ canceled = false, size = 100, session = true, status = 200 } = 
     exports, require: name => { assert.ok(name in modules, name); return modules[name]; },
     process: { env: { EXPO_PUBLIC_SUPABASE_URL: 'https://project.test', EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: 'public-key' } },
     setTimeout, clearTimeout, AbortController,
-    fetch: async (url, options) => { calls.uploads.push({ url, options }); return { ok: status === 200 }; },
+    fetch: async (url, options) => {
+      if (!options?.method) {
+        calls.reads.push(url);
+        if (readFails) throw new Error('Blob indisponible');
+        return { ok: true, arrayBuffer: async () => new ArrayBuffer(size) };
+      }
+      calls.uploads.push({ url, options }); return { ok: status === 200 };
+    },
   });
   return { ...exports, calls };
 }
@@ -78,4 +86,57 @@ test('refuser une photo vide avant tout appel réseau', async () => {
 test('signaler un refus Storage sans fournir une URL à enregistrer', async () => {
   const service = setup({ status: 403 });
   await assert.rejects(service.uploadRecipeImage('file:///photo.jpg'), /Envoi de la photo impossible/);
+});
+
+
+test('web : sélectionner et préparer la photo sans utiliser le système de fichiers natif', async () => {
+  const service = setup({ platform: 'web' });
+  const uri = await service.chooseRecipeImage();
+  assert.equal(uri, 'blob:http://localhost/compressed-photo');
+  assert.deepEqual(service.calls.reads, [uri]);
+  assert.equal(service.calls.files, 0);
+  assert.equal(service.calls.saves[0].format, 'jpeg');
+  assert.equal(service.calls.releases, 2);
+  assert.equal(service.calls.uploads.length, 0);
+});
+
+test('web : envoyer les octets de la photo sélectionnée avec les droits du compte', async () => {
+  const service = setup({ platform: 'web' });
+  const uri = 'blob:http://localhost/compressed-photo';
+  const url = await service.uploadRecipeImage(uri);
+  assert.deepEqual(service.calls.reads, [uri]);
+  assert.equal(service.calls.files, 0);
+  assert.equal(service.calls.uploads.length, 1);
+  assert.equal(service.calls.uploads[0].options.body.byteLength, 100);
+  assert.equal(service.calls.uploads[0].options.headers.Authorization, 'Bearer token');
+  assert.equal(service.calls.uploads[0].options.headers['Content-Type'], 'image/jpeg');
+  assert.match(url, /^https:\/\/project.test\/users\/alice\//);
+});
+
+test('web : refuser une photo de plus de 5 Mo dès la préparation', async () => {
+  const service = setup({ platform: 'web', size: 6 * 1024 * 1024 });
+  await assert.rejects(service.chooseRecipeImage(), /volumineuse/);
+  assert.equal(service.calls.files, 0);
+  assert.equal(service.calls.uploads.length, 0);
+  assert.equal(service.calls.releases, 2);
+});
+
+test('web : une photo vide ne doit pas être envoyée', async () => {
+  const service = setup({ platform: 'web', size: 0 });
+  await assert.rejects(service.uploadRecipeImage('blob:http://localhost/vide'), /vide/);
+  assert.equal(service.calls.uploads.length, 0);
+});
+
+test('web : une photo illisible demande une nouvelle sélection sans envoyer de recette', async () => {
+  const service = setup({ platform: 'web', readFails: true });
+  await assert.rejects(service.chooseRecipeImage(), /lire la photo/);
+  assert.equal(service.calls.releases, 2);
+  assert.equal(service.calls.uploads.length, 0);
+});
+
+test('web : une session est requise avant la lecture et l’envoi de la photo', async () => {
+  const service = setup({ platform: 'web', session: false });
+  await assert.rejects(service.uploadRecipeImage('blob:http://localhost/photo'), /Reconnecte/);
+  assert.equal(service.calls.reads.length, 0);
+  assert.equal(service.calls.uploads.length, 0);
 });

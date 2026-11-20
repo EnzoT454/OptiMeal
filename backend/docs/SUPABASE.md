@@ -1,7 +1,9 @@
 # Connexion PostgreSQL / Supabase
 
 Le serveur peut vérifier PostgreSQL via `GET /health/db`. Les routes
-Recettes lisent PostgreSQL ; les ingrédients et Promos restent sur JSON. Aucune table, migration
+Recettes, profils, repas, listes et suivis utilisent PostgreSQL. Les ingrédients
+HTTP restent sur JSON ; les offres utilisent JSON par défaut ou PostgreSQL avec
+`OFFERS_SOURCE=database`. Aucune table, migration
 ou import persistant n’est créé par le démarrage ou ce contrôle.
 
 ## Installation et configuration

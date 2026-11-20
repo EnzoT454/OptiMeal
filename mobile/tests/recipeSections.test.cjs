@@ -220,7 +220,7 @@ test('états vides : créer sa première recette, découvrir depuis Favoris et e
   tab(tree, 'Mes recettes').props.onPress();
   tree = await s.load();
   button(tree, 'Ajouter ma première recette').props.onPress();
-  assert.equal(s.navigations[0][0], 'Add');
+  assert.equal(s.navigations[0][0], 'Editor');
   tab(tree, 'Favoris').props.onPress();
   tree = await s.load();
   button(tree, 'Découvrir des recettes').props.onPress();

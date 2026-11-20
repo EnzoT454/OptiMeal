@@ -93,7 +93,7 @@ test('fermer la connexion conserve la navigation visiteur, changer de compte la 
 test('un visiteur doit se connecter avant ajout ou consultation des favoris', () => {
   const list = screen('app/RecipeListScreen.tsx');
   const tree = list.render();
-  button(tree, '+  Ajouter une recette').props.onPress();
+  button(tree, 'Créer une recette').props.onPress();
   nodes(tree).find(n => n.props.accessibilityLabel === 'Favoris').props.onPress();
   nodes(tree).find(n => n.props.accessibilityLabel === 'Mes recettes').props.onPress();
   assert.equal(list.requests.length, 3);
@@ -103,8 +103,8 @@ test('un visiteur doit se connecter avant ajout ou consultation des favoris', ()
 
 test('un compte connecté peut ouvrir l’ajout de recette', () => {
   const list = screen('app/RecipeListScreen.tsx', { session: user });
-  button(list.render(), '+  Ajouter une recette').props.onPress();
-  assert.equal(list.navigations[0][0], 'Add');
+  button(list.render(), 'Créer une recette').props.onPress();
+  assert.equal(list.navigations[0][0], 'Editor');
   assert.equal(list.requests.length, 0);
 });
 

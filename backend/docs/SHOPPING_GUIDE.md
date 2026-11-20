@@ -1,6 +1,6 @@
 # Fonctionnement détaillé de l’onglet Liste
 
-Ce document décrit le fonctionnement présent dans le code au **19 novembre 2026**, après la refonte de Liste et l’intégration des changements de `main`. Il couvre les écrans, les actions, les calculs, la sauvegarde et les erreurs. Les parcours accessibles dans le mobile sont distingués des fonctions disponibles uniquement côté serveur.
+Ce document décrit le fonctionnement présent dans le code au **20 novembre 2026**, après la refonte de Liste et l’intégration des changements de `main`. Il couvre les écrans, les actions, les calculs, la sauvegarde et les erreurs. Les parcours accessibles dans le mobile sont distingués des fonctions disponibles uniquement côté serveur.
 
 Les exemples de prix sont des données d’explication, pas des prix actuels en magasin. La lecture du code ne remplace pas une validation visuelle et fonctionnelle sur iOS et Android.
 
@@ -163,7 +163,7 @@ Les quantités de chaque ingrédient restent modifiables et chaque besoin peut �
 
 Les notes et restes ignorés, exclusions personnelles et repas inaccessibles sont signalés. La création exige une confirmation pour les repas indisponibles et au moins un besoin retenu. **Créer plutôt une liste vide** permet de passer au parcours manuel si aucun besoin n’est exploitable.
 
-**Créer la liste** envoie l’empreinte de l’aperçu, les corrections et retraits, sans `pricing`. La liste est active, générique et utilisable immédiatement : le comparateur reste facultatif dans son détail. Les ajouts manuels supplémentaires se font ensuite par sa barre d’ajout.
+**Créer la liste** envoie l’empreinte de l’aperçu, les corrections et retraits, sans `pricing`. La liste est active, de type articles et utilisable immédiatement, sans comparateur ni application de produits dans son détail. Les ajouts manuels supplémentaires se font ensuite par sa barre d’ajout.
 
 Le serveur relit les sources dans la transaction et refuse un aperçu devenu ancien. Après création, les changements ultérieurs de calendrier ou de recettes ne réécrivent ni les besoins ni les achats de cette copie.
 
@@ -234,7 +234,7 @@ Chaque commande d’écriture possède une clé d’idempotence et, pour une res
 
 ## 9. Détail et organisation des courses
 
-Le détail affiche le nom, la barre d’ajout et la période des repas lorsqu’elle existe. Le statut est intégré au bloc résumé ; les phrases Liste en cours et Liste de produits · prix estimés ne sont plus répétées au-dessus. Aucune date complète de courses n’est affichée. Le bloc résumé regroupe le statut, puis des icônes et compteurs pour le total Articles/Produits, À acheter, Achetés, Disponibles si nécessaire et Magasins pour les produits. Les compteurs des listes d’articles sont centrés dans le bloc. La phrase Copie indépendante d’une liste sauvegardée est retirée de l’écran ; la provenance reste conservée sur le serveur.
+Le détail affiche le nom et la barre d’ajout. La phrase « Repas du… Copie indépendante du calendrier. » a été retirée ; les dates et la provenance restent conservées dans les données. Le statut est intégré au bloc résumé ; les phrases Liste en cours et Liste de produits · prix estimés ne sont plus répétées au-dessus. Aucune date complète de courses n’est affichée. Le bloc résumé regroupe le statut, puis des icônes et compteurs pour le total Articles/Produits, À acheter, Achetés, Disponibles si nécessaire et Magasins pour les produits. Les compteurs des listes d’articles sont centrés dans le bloc. La phrase Copie indépendante d’une liste sauvegardée est retirée de l’écran ; la provenance reste conservée sur le serveur.
 
 Une liste générique ne présente aucun prix de ligne ni bloc total. Dès que des produits chiffrés ou des achats produits connus existent, le résumé indique Total estimé ou Sous-total connu. Le montant **Reste connu à acheter** est retiré ; le compteur du nombre d’éléments À acheter reste présent. Le total forme la troisième ligne du résumé sous les compteurs, centré avec son libellé et son montant suivi de $ ; il utilise les montants du serveur. **Prix au …**, les frais non documentés et les limites du prix en caisse sont déplacés tout en bas de la liste dans un bloc vert avec une icône d’information. Aucune note de prix n’apparaît sans panier ni achat de produit enregistré.
 
@@ -515,9 +515,9 @@ Le bouton de création est l’action principale. Les actions secondaires utilis
 
 Les panneaux d’options, de date, d’unité et de fiche article s’ouvrent sur un fond assombri. Les panneaux longs sont défilants et tiennent compte des zones sûres du téléphone.
 
-### Champs de date
+### Champs de date des composants historiques
 
-Toucher une date ouvre une liste des jours du mois. **Mois précédent**, **Mois suivant**, **Aujourd’hui** et **Fermer** permettent de naviguer. Le jour sélectionné porte une coche ; choisir un jour ferme le panneau.
+Les nouveaux parcours mobiles n’imposent aucun champ de date de courses. Les composants conservés pour les anciens parcours savent encore ouvrir un sélecteur : toucher une date ouvre une liste des jours du mois. **Mois précédent**, **Mois suivant**, **Aujourd’hui** et **Fermer** permettent de naviguer. Le jour sélectionné porte une coche ; choisir un jour ferme le panneau.
 
 ### Retours d’action et protections
 
@@ -598,11 +598,13 @@ La séparation des types demande la migration `0023_shopping_list_kind` avant la
 
 **État validé manuellement le 19 novembre 2026.** Hamza confirme : « J’ai fait les tests, onglet Listes, tout ce qui concerne les listes est fonctionnel. » Cette confirmation porte sur l’état courant après les derniers ajustements, notamment le panier à jour dès la création depuis Calendrier et le retrait des blocs d’ingrédients répétés. Elle est consignée comme une validation fonctionnelle globale déclarée par l’utilisateur ; aucun relevé détaillé par scénario ni plateforme iOS/Android/web n’a été fourni.
 
-Dernière vérification automatisée consignée : **1 039 tests backend réussis, 14 ignorés**, **302 tests mobiles réussis**, TypeScript, 47 exports de contrats cohérents et exports Expo iOS/Android/web valides. Ces résultats sont ceux de la correction précédente ; aucun test n’a été relancé pour cet ajout documentaire.
+Vérification automatisée de la refonte du 19 novembre, avant les changements mobiles du 20 novembre : **1 039 tests backend réussis, 14 ignorés**, **302 tests mobiles réussis**, TypeScript, 47 exports de contrats cohérents et exports Expo iOS/Android/web valides. Ces résultats sont ceux de la correction précédente ; aucun test n’a été relancé pour cet ajout documentaire.
+
+Le 20 novembre, après les ajustements de Recettes et des photos Web, la suite mobile complète passe à **314 tests réussis**, avec TypeScript et lint sans erreur (111 avertissements existants). Les validations backend restent celles du 19 novembre.
 
 La [note de refonte](SHOPPING_REFACTOR.md) consigne les lots, les tests réellement exécutés et le statut des critères AC-01 à AC-24. Les tests utilisateurs et les essais natifs ne sont pas remplacés par les tests automatisés.
 
-Pour les prochaines vérifications de régression, les parcours clés sont : créer une liste vide puis relancer l’application ; ajouter lait, œufs et pain depuis la barre ; cocher/décocher ; ouvrir puis quitter la comparaison sans appliquer ; confirmer un panier partiel ; changer les quantités après un achat ; créer depuis une semaine avec notes/restes/recettes inaccessibles ; instancier un modèle ; interrompre une réponse et reprendre ; changer de compte pendant une recherche.
+Pour les prochaines vérifications de régression : créer séparément une liste d’articles et une liste de produits ; retrouver la liste après relance ; ajouter et cocher/décocher ; changer de produit ou actualiser ses prix après un achat ; créer depuis Calendrier avec chacun des quatre scénarios et confirmer les exclusions ; sauvegarder puis réutiliser une liste en articles ; interrompre une réponse et reprendre ; changer de compte pendant une recherche. La comparaison avancée des anciennes listes reste un parcours de compatibilité, pas un bouton des nouvelles listes d’articles.
 
 La validation globale ci-dessus ne précise pas les essais iOS/Android avec clavier, texte agrandi et lecteur d’écran. Les objectifs de création/ajout en moins d’une minute sont des mesures à réaliser avec des utilisateurs, pas des résultats acquis.
 

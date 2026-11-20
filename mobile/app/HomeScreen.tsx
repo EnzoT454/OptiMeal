@@ -141,7 +141,7 @@ export default function HomeScreen({ navigation }: NativeStackScreenProps<HomeSt
           <Text style={styles.titreCarte}>Bienvenue dans OptiMeal</Text>
           <Text style={recipeStyles.body}>
             Découvre les recettes, les promotions et les circulaires. Connecte-toi pour planifier tes repas
-            et retrouver tes listes d'épicerie ici.
+            et retrouver tes listes d’épicerie ici.
           </Text>
         </View>
       )}
@@ -387,7 +387,7 @@ function TableauDeBord() {
               <MaterialCommunityIcons name="bell-sleep-outline" size={20} color={c.green} accessible={false} />
             </View>
             <Text style={[styles.texteDoux, { flex: 1 }]}>
-              Aucun de tes {follows.length} produits suivis n'est en promo cette semaine.
+              Aucun de tes {follows.length} produits suivis n’est en promo cette semaine.
             </Text>
           </View>
         )}

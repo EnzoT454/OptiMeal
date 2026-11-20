@@ -30,12 +30,16 @@ commande `python -m backend.cli.normalize_sales --on-date 2026-11-14 --output /t
 audite le JSON ; ajouter `--source database` pour une lecture seule PostgreSQL.
 Au contrôle du 14 novembre, les deux sources donnent les mêmes 93 références :
 90 formats candidats, 3 inconnus et aucune référence certifiée sans attestation.
-Le [moteur d’achats](docs/PURCHASE_CALCULATION.md) et les [comparaisons](docs/SHOPPING_COMPARISONS.md) utilisent les références attestées.
+Le [moteur d’achats historique](docs/PURCHASE_CALCULATION.md) utilise les références attestées. Les créations et actualisations courantes utilisent aussi le calcul direct des formats et prix disponibles, sans transformer une référence non attestée en référence certifiée ; voir les [contrats courants](docs/SHOPPING_LISTS_CONTRACTS.md).
+
+Le mobile crée les recettes en cinq étapes, puis transmet une seule recette
+complète à l’API. L’ajout de photo fonctionne sur téléphone et navigateur avec
+le même contrat HTTPS et les mêmes droits Storage ; voir [les photos](docs/RECIPE_IMAGES.md).
 
 Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
 privées par défaut et publication volontaire définitive. Une recette publique
 ne peut plus être rendue privée ni supprimée par son auteur.
-La migration `0020_shopping_reuse`, pour les [modèles, exclusions, copies et historique](docs/SHOPPING_REUSE.md), est présente sur Supabase. La révision distante antérieurement vérifiée est `0021_shopping_list_pin` ; ce contrôle n’atteste pas le déploiement de `0022_product_follows`.
+La migration `0020_shopping_reuse`, pour les [modèles, exclusions, copies et historique](docs/SHOPPING_REUSE.md), est présente sur Supabase. Le contrôle du 20 novembre 2026 confirme 0023 sur la base configurée, incluant `0022_product_follows`, avec un schéma conforme aux modèles.
 Les autres routes utilisent les migrations jusqu’à `0016_offer_quantity_limits` :
 `0009_recipe_visibility` ajoute le partage et
 `0010_preserve_meals` conserve les repas après suppression de leur recette. Les
@@ -124,7 +128,7 @@ backend/
 ├── alembic.ini                  # Configuration sans identifiants
 ├── alembic/                     # Chaîne unique des migrations PostgreSQL
 │   ├── env.py                   # Métadonnées applicatives et connexion serveur
-│   └── versions/                # Huit migrations : comptes, recettes, catalogue, circulaires, photos et calendrier
+│   └── versions/                # Migrations applicatives jusqu’à 0023 : recettes, catalogue, calendrier, listes et suivis
 ├── tests/
 │   ├── conftest.py              # Base des futures fixtures partagées
 │   ├── test_accounts.py         # Profils et isolation des comptes

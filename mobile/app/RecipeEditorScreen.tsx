@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, Pressable, Switch, Text, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Alert, BackHandler, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, Switch, Text, View } from 'react-native';
+import { useFocusEffect, usePreventRemove, type NavigationAction } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Message } from '../components/ui';
 import { RecipeButton, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles } from '../components/recipes';
@@ -13,6 +14,7 @@ import { Detail, Ingredient, Page, Recipe, RecipeUnit, RecipeVisibility, RecipeW
 import { RecipeStackParams } from '../types/navigation';
 
 type IngredientDraft = { ingredient_id: string; quantity: string; unit: RecipeUnit | null; preparation: string | null };
+const creationStages = ['Présentation', 'Ingrédients', 'Préparation', 'Informations', 'Visibilité'];
 const emptyStep = (): RecipeStepDraft => ({ text: '', duration: '' });
 const emptyIngredient = (): IngredientDraft => ({ ingredient_id: '', quantity: '', unit: null, preparation: null });
 
@@ -31,6 +33,31 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
   const [visibility, setVisibility] = useState<RecipeVisibility>('private');
   const [initialVisibility, setInitialVisibility] = useState<RecipeVisibility>('private');
   const [attempted, setAttempted] = useState(false);
+  const [currentStage, setCurrentStage] = useState(0);
+  const [exitAction, setExitAction] = useState<NavigationAction | null>(null);
+  const saving = useRef(false), saved = useRef(false);
+  const dirty = !!(name.trim() || description.trim() || tags.trim() || localImage || image || servings !== '2' || visibility !== 'private' ||
+    ingredients.length !== 1 || ingredients.some(item => item.ingredient_id || item.quantity || item.unit || item.preparation) ||
+    steps.length !== 1 || steps.some(step => step.text || step.duration));
+  const showStage = (stage: number) => !!id || currentStage === stage;
+  usePreventRemove(!id && (dirty || busy || picking), ({ data }) => {
+    if (saved.current) navigation.dispatch(data.action);
+    else if (!saving.current && !picking) setExitAction(data.action);
+  });
+  function goToStage(stage: number) {
+    Keyboard.dismiss(); setPickerIndex(null); setError(''); setAttempted(false); setCurrentStage(stage);
+  }
+  useFocusEffect(useCallback(() => {
+    if (id) return;
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (saving.current || picking) return true;
+      if (currentStage === 0) return false;
+      Keyboard.dismiss(); setPickerIndex(null); setError(''); setAttempted(false);
+      setCurrentStage(stage => stage - 1);
+      return true;
+    });
+    return () => subscription.remove();
+  }, [id, currentStage, picking]));
   useEffect(() => {
     let active = true;
     setLoading(true); setError('');
@@ -55,6 +82,36 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
   function change(index: number, fields: Partial<IngredientDraft>) {
     setIngredients(items => items.map((item, position) => position === index ? { ...item, ...fields } : item));
   }
+  function validateStage(stage: number) {
+    if (stage === 0) {
+      if (!name.trim()) throw new Error('Ajoute un nom pour enregistrer la recette.');
+      if (!id && !(localImage?.trim() || image?.trim())) throw new Error('Ajoute une photo pour créer la recette.');
+      if (!/^\d+$/.test(servings) || !Number.isSafeInteger(Number(servings)) || Number(servings) < 1)
+        throw new Error('Indique un nombre entier de portions, supérieur à zéro.');
+    }
+    if (stage === 1) {
+      if (!ingredients.length || ingredients.some(item => !item.ingredient_id))
+        throw new Error('Choisis au moins un ingrédient et complète chaque ligne.');
+      if (new Set(ingredients.map(item => item.ingredient_id)).size !== ingredients.length)
+        throw new Error('Chaque ingrédient ne doit apparaître qu’une fois.');
+      ingredients.forEach(item => parseIngredientQuantity(item.quantity, item.unit));
+    }
+    if (stage === 2) {
+      prepareRecipeSteps(steps);
+      if (totalMinutes === null) throw new Error('Vérifie la durée totale des étapes.');
+    }
+    if (stage === 3) {
+      const labels = tags.split(',').map(tag => tag.trim()).filter(Boolean);
+      if (labels.length > 10 || labels.some(tag => tag.length > 40))
+        throw new Error('Ajoute au maximum 10 étiquettes de 40 caractères chacune.');
+    }
+  }
+  function continueCreation() {
+    if (busy || picking || saving.current) return;
+    setAttempted(true);
+    try { validateStage(currentStage); goToStage(Math.min(currentStage + 1, 4)); }
+    catch (failure) { setError((failure as Error).message); }
+  }
   async function pickImage() {
     if (busy || picking) return;
     setPicking(true); setError('');
@@ -64,27 +121,18 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
     } catch (e) { setError((e as Error).message); } finally { setPicking(false); }
   }
   async function save(confirmed = false) {
-    if (busy || picking) return;
+    if (busy || picking || saving.current) return;
     setAttempted(true);
     let body: RecipeWrite;
     try {
-      if (!name.trim()) {
-        throw new Error('Ajoute un nom pour enregistrer la recette.');
-      }
-      if (!id && !(localImage?.trim() || image?.trim())) {
-        throw new Error('Ajoute une photo pour créer la recette.');
-      }
-      const integer = (value: string) => /^\d+$/.test(value) && Number.isSafeInteger(Number(value));
-      if (!integer(servings) || Number(servings) < 1 ||
-          !ingredients.length || ingredients.some(i => !i.ingredient_id)) {
-        throw new Error('Complète les portions et ajoute au moins un ingrédient.');
+      for (let stage = 0; stage < 4; stage++) {
+        try { validateStage(stage); }
+        catch (failure) { if (!id) setCurrentStage(stage); throw failure; }
       }
       const instructions = prepareRecipeSteps(steps);
-      if (totalMinutes === null) throw new Error('Vérifie la durée totale des étapes.');
       const labels = tags.split(',').map(tag => tag.trim()).filter(Boolean);
-      if (labels.length > 10 || labels.some(tag => tag.length > 40)) throw new Error('Ajoute au maximum 10 étiquettes de 40 caractères chacune.');
       body = { name: name.trim(), description: description.trim() || name.trim(), servings: Number(servings),
-        prep_time_minutes: totalMinutes, cook_time_minutes: 0, total_time_minutes: totalMinutes,
+        prep_time_minutes: totalMinutes!, cook_time_minutes: 0, total_time_minutes: totalMinutes!,
         image_url: image, tags: labels,
         ingredients: ingredients.map(i => ({ ingredient_id: i.ingredient_id, ...parseIngredientQuantity(i.quantity, i.unit), preparation: i.preparation?.trim() || null })),
         instructions };
@@ -97,7 +145,7 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
         ]);
       return;
     }
-    setBusy(true); setError('');
+    saving.current = true; setBusy(true); setError('');
     let contentSaved = false;
     try {
       if (localImage) {
@@ -113,19 +161,32 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
         result = await api<Detail<Recipe>>('/api/v1/recipes/' + id + '/visibility', { method: 'PATCH', body: JSON.stringify({ visibility }) });
       }
       setInitialVisibility(result.item.visibility);
+      saved.current = true;
       navigation.reset({ index: 1, routes: [{ name: 'List' }, { name: 'Detail', params: { id: result.item.id } }] });
     } catch (e) {
       const message = contentSaved ? 'Les modifications sont enregistrées, mais le changement de visibilité n’a pas été confirmé. Réessaie pour vérifier et appliquer le statut choisi.' :
         (e as Error).message;
       setError(message); Alert.alert(contentSaved ? 'Enregistrement incomplet' : 'Enregistrement impossible', message);
-    } finally { setBusy(false); }
+    } finally { saving.current = false; setBusy(false); }
   }
   return <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-    <RecipeScreen>
-      <RecipeTitle onBack={busy || picking ? undefined : () => navigation.goBack()}>{id ? 'Modifier la recette' : 'Nouvelle recette'}</RecipeTitle>
+    <RecipeScreen key={id ? 'edit' : currentStage}>
+      <RecipeTitle onBack={busy || picking ? undefined : () => !id && currentStage > 0 ? goToStage(currentStage - 1) : navigation.goBack()}>{id ? 'Modifier la recette' : 'Nouvelle recette'}</RecipeTitle>
       <Message text={error} />
       {loading ? <Text>Chargement…</Text> : catalog.length === 0 ? <RecipeButton title="Réessayer" onPress={() => setRetry(retry + 1)} /> :
         <View style={{ gap: 20 }} pointerEvents={busy || picking ? 'none' : 'auto'}>
+          {!id && <View style={{ gap: 12 }}>
+            <View accessibilityRole="progressbar" accessibilityLabel="Création de la recette"
+              accessibilityValue={{ min: 1, max: 5, now: currentStage + 1, text: `Étape ${currentStage + 1} sur 5 : ${creationStages[currentStage]}` }}>
+              <Text style={recipeStyles.note}>Étape {currentStage + 1} sur 5</Text>
+              <View style={{ flexDirection: 'row', gap: 6, marginTop: 8 }} accessible={false}>
+                {creationStages.map((label, index) => <View key={label} style={{ flex: 1, height: 6, borderRadius: 3,
+                  backgroundColor: index <= currentStage ? recipeColors.green : recipeColors.border }} />)}
+              </View>
+            </View>
+            <Text accessibilityRole="header" style={recipeStyles.sectionTitle}>{creationStages[currentStage]}</Text>
+          </View>}
+          {showStage(0) && <>
           <RecipeField label="Nom de la recette (obligatoire)" placeholder="Ex. : Salade de riz maison" value={name} onChangeText={setName} />
           {(localImage || image) && <RecipeImage recipe={{ id: id ?? '', name: name || 'Photo de la recette', image_url: localImage ?? image }} />}
           <View style={{ gap: 8 }}>
@@ -136,7 +197,9 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
             {(localImage || image) && <Pressable accessibilityRole="button" onPress={() => { setLocalImage(null); setImage(null); }}><Text style={recipeStyles.remove}>Retirer la photo</Text></Pressable>}
           </View>
           <RecipeField label="Portions" keyboardType="number-pad" value={servings} onChangeText={setServings} />
-          <Text accessibilityRole="header" style={recipeStyles.sectionTitle}>Ingrédients</Text>
+          </>}
+          {showStage(1) && <>
+          {!!id && <Text accessibilityRole="header" style={recipeStyles.sectionTitle}>Ingrédients</Text>}
           {ingredients.map((item, index) => <View key={index} style={{ gap: 6 }}>
             <View style={{ flexDirection: 'row', gap: 8, alignItems: 'flex-start' }}>
               <View style={{ flex: 1, minWidth: 0 }}><Text style={recipeStyles.label}>Ingrédient</Text>
@@ -163,7 +226,9 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
           </View>)}
           <RecipeButton title="+ Ajouter un ingrédient" variant="neutral" onPress={() => setIngredients([...ingredients, emptyIngredient()])} />
           <Text style={recipeStyles.note}>Pour une demi-tasse ou une demi-cuillère, saisis 0,5.</Text>
-          <Text accessibilityRole="header" style={recipeStyles.sectionTitle}>Préparation</Text>
+          </>}
+          {showStage(2) && <>
+          {!!id && <Text accessibilityRole="header" style={recipeStyles.sectionTitle}>Préparation</Text>}
           <Text style={recipeStyles.note}>Indique la durée de chaque étape, cuisson et attente comprises. Le total est la somme des étapes. Saisis 0 pour une étape immédiate.</Text>
           {id && steps.some(step => !step.duration.trim()) && <Text style={recipeStyles.note}>Les anciennes recettes n’ont pas toujours de durée par étape. Complète ces durées avant d’enregistrer.</Text>}
           {steps.map((step, index) => <View key={index} style={{ gap: 12, padding: 16, borderWidth: 1, borderColor: recipeColors.border, borderRadius: 16 }}>
@@ -183,11 +248,20 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
             <Text style={recipeStyles.sectionTitle}>Durée totale{totalMinutes !== null ? ` : ${totalMinutes} min` : ' : à compléter'}</Text>
             <Text style={recipeStyles.note}>{totalMinutes === null ? 'Renseigne une durée valide pour chaque étape pour calculer le total.' : 'Calculée automatiquement à partir des étapes.'}</Text>
           </View>
+          </>}
+          {showStage(3) && <>
           <RecipeField label="Étiquettes (facultatif)" placeholder="Rapide, économique…" value={tags} onChangeText={setTags} />
           <RecipeButton title={extra ? 'Masquer les autres informations' : 'Autres informations (facultatif)'} variant="neutral" onPress={() => setExtra(!extra)} />
           {extra && <>
             <RecipeField label="Description (facultatif)" multiline value={description} onChangeText={setDescription} />
           </>}
+          </>}
+          {showStage(4) && <>
+          {!id && <View style={recipeStyles.notice}>
+            <Text style={recipeStyles.sectionTitle}>{name}</Text>
+            <Text style={recipeStyles.body}>{servings} portion(s) · {ingredients.length} ingrédient(s) · {steps.length} étape(s)</Text>
+            <Text style={recipeStyles.note}>Durée totale : {totalMinutes} min</Text>
+          </View>}
           <View style={recipeStyles.notice}>
             <View style={[recipeStyles.row, { justifyContent: 'space-between' }]}>
               <Text style={[recipeStyles.sectionTitle, { flex: 1 }]}>Partager avec la communauté</Text>
@@ -197,17 +271,37 @@ export default function RecipeEditorScreen({ route, navigation }: NativeStackScr
             <Text style={recipeStyles.body}>{visibility === 'public' ? 'Publique — publication définitive. La recette restera dans Découvrir et les calendriers.' : 'Privée — la recette est accessible uniquement dans ton compte.'}</Text>
             {initialVisibility !== 'public' && visibility === 'public' && <Text style={recipeStyles.note}>Après publication, tu ne pourras plus rendre cette recette privée ni la supprimer. Elle restera accessible même après la suppression de ton compte.</Text>}
           </View>
+          </>}
           {id && <Text style={recipeStyles.note}>Changer les ingrédients, les étapes, les portions ou les durées ouvre une nouvelle version : les anciennes évaluations seront conservées, mais ne compteront plus dans la note actuelle.</Text>}
-          {(!name.trim() || (!id && !(localImage?.trim() || image?.trim()))) &&
+          {showStage(0) && (!name.trim() || (!id && !(localImage?.trim() || image?.trim()))) &&
             <View style={recipeStyles.requiredNotice} accessible accessibilityLiveRegion="polite">
-              <Text style={recipeStyles.requiredTitle}>ⓘ À compléter avant d’enregistrer</Text>
+              <Text style={recipeStyles.requiredTitle}>{id ? "ⓘ À compléter avant d’enregistrer" : "Nom et photo obligatoires"}</Text>
               {!name.trim() && <Text style={recipeStyles.requiredItem}>• Ajoute un nom à ta recette.</Text>}
               {!id && !(localImage?.trim() || image?.trim()) && <Text style={recipeStyles.requiredItem}>• Ajoute une photo de ton plat.</Text>}
             </View>}
-          <RecipeButton title={busy ? 'Enregistrement…' : 'Enregistrer la recette'} disabled={busy || picking || !name.trim() || (!id && !(localImage?.trim() || image?.trim()))} onPress={() => void save()} />
+          {!id && <View style={{ flexDirection: 'row', gap: 12 }}>
+            {currentStage > 0 && <RecipeButton title="Précédent" variant="neutral" style={{ flex: 1 }} disabled={busy || picking}
+              onPress={() => goToStage(currentStage - 1)} />}
+            {currentStage < 4 && <RecipeButton title="Continuer" style={{ flex: 1 }}
+              disabled={busy || picking || (currentStage === 0 && (!name.trim() || !(localImage?.trim() || image?.trim())))}
+              onPress={continueCreation} />}
+          </View>}
+          {showStage(4) && <RecipeButton title={busy ? 'Enregistrement…' : 'Enregistrer la recette'} disabled={busy || picking || !name.trim() || (!id && !(localImage?.trim() || image?.trim()))} onPress={() => void save()} />}
         </View>}
       <IngredientPicker visible={pickerIndex !== null} ingredients={catalog.filter(i => !ingredients.some((item, p) => p !== pickerIndex && item.ingredient_id === i.id))}
         onClose={() => setPickerIndex(null)} onSelect={ingredient_id => { if (pickerIndex !== null) change(pickerIndex, { ingredient_id }); setPickerIndex(null); }} />
+      {!!exitAction && <Modal visible transparent animationType="fade" onRequestClose={() => setExitAction(null)}>
+        <View style={{ flex: 1, padding: 24, backgroundColor: '#0007', justifyContent: 'center' }}>
+          <View accessibilityViewIsModal style={[recipeStyles.notice, { gap: 16 }]}>
+            <Text accessibilityRole="header" style={recipeStyles.sectionTitle}>Quitter la création ?</Text>
+            <Text style={recipeStyles.body}>Tes saisies ne sont pas encore enregistrées. Elles seront perdues si tu quittes ce formulaire.</Text>
+            <RecipeButton title="Continuer ma recette" onPress={() => setExitAction(null)} />
+            <RecipeButton title="Abandonner la recette" variant="neutral" onPress={() => {
+              setExitAction(null); navigation.dispatch(exitAction);
+            }} />
+          </View>
+        </View>
+      </Modal>}
     </RecipeScreen>
   </KeyboardAvoidingView>;
 }

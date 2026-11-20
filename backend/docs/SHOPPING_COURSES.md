@@ -1,5 +1,12 @@
 # Parcours de courses — étape 9
 
+> **Note historique de réalisation.** Les sections datées ci-dessous décrivent
+> les étapes et validations initiales. Pour les écrans actuels, consulter le
+> [guide des listes](SHOPPING_GUIDE.md) et les [contrats courants](SHOPPING_LISTS_CONTRACTS.md).
+> La tête Alembic est 0023, contrôlée sur la base configurée le 20 novembre 2026 ;
+> les mentions de révisions antérieures ou d’absence de lint décrivent ces anciens essais.
+> Le lint est désormais configuré ; voir le [guide mobile](../../mobile/README.md#vérifier-le-code-avec-eslint).
+
 Le nouvel onglet Liste permet de cocher les achats, déclarer une possession
 partielle ou totale, modifier les besoins et terminer les courses. Les calculs
 restent côté serveur. L’ancienne Épicerie de Calendrier et les accès Accueil

@@ -22,7 +22,7 @@ Nous concentrons maintenant le travail sur la stabilisation de l’application e
 Éléments réalisés :
 
 - Comptes, profil et mode visiteur.
-- Recettes personnelles, recherche, filtres, recettes privées, publication et favoris.
+- Recettes personnelles avec création guidée en cinq étapes, recherche, filtres, publication et favoris.
 - Évaluations des recettes et classement par notes.
 - Calendrier hebdomadaire des repas.
 - Listes d’épicerie d’articles ou de produits, ajout par recherche et suivi des achats.
@@ -238,6 +238,7 @@ Voir le [guide des tests PostgreSQL](backend/docs/MIGRATIONS.md#tests).
 Mobile, depuis `mobile/` :
 
 ```bash
+npm run lint
 npm run typecheck
 npm test
 ```
@@ -376,7 +377,9 @@ OptiMeal/
 │   │       ├── 0018_shopping_comparisons.py # Comparaisons et choix de produits
 │   │       ├── 0019_shopping_courses.py # Suivi des achats
 │   │       ├── 0020_shopping_reuse.py # Modèles et réutilisation des listes
-│   │       └── 0021_shopping_list_pin.py # Liste épinglée sur Accueil
+│   │       ├── 0021_shopping_list_pin.py # Préférence d’épinglage
+│   │       ├── 0022_product_follows.py # Produits suivis par compte
+│   │       └── 0023_shopping_list_kind.py # Types Articles / Produits
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express
@@ -437,11 +440,12 @@ OptiMeal/
 │   ├── services/                     # Auth, client FastAPI et sélection/envoi des photos
 │   │   └── recipeForm.ts             # Règles de quantités et badges des recettes
 │   ├── tests/                        # Tests des services mobiles
-│   │   ├── recipeImages.test.cjs     # Tests du service photo avec doubles natifs
+│   │   ├── recipeImages.test.cjs     # Photos sur téléphone et navigateur avec doubles
 │   │   ├── recipeForm.test.cjs       # Tests des règles du formulaire de recette
-│   │   ├── recipeCreation.test.cjs   # Photo obligatoire et échec d’envoi
+│   │   ├── recipeCreation.test.cjs   # Parcours en cinq étapes, photos et publication
 │   │   ├── visitorAccess.test.cjs    # Visiteurs et confirmation de suppression
 │   │   └── accountSession.test.cjs   # Nettoyage local après suppression du compte
+│   ├── eslint.config.js             # Lint Expo et règles React
 │   ├── metro.config.js              # Inclusion des illustrations locales de secours
 │   └── package-lock.json             # Dépendances mobiles verrouillées
 ├── data/                             # Données et résultats pouvant être ajoutés à Git
@@ -535,4 +539,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 19 novembre 2026*
+*Dernière mise à jour : 20 novembre 2026*

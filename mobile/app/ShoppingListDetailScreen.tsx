@@ -15,7 +15,7 @@ import ListQuickAdd from '../components/lists/ListQuickAdd';
 import { shoppingListKind } from '../services/shoppingPresentation';
 import type { ListCommand } from '../services/shoppingLists';
 import { useListCommand } from '../components/lists/useListCommand';
-import { recalculatePricesCommand, dateLabel, fetchList, listCommand, listsPath } from '../services/shoppingLists';
+import { recalculatePricesCommand, fetchList, listCommand, listsPath } from '../services/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
 import type { ShoppingListRead } from '../types/shoppingLists';
 
@@ -102,7 +102,6 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
       <RecipeTitle>{list.name}</RecipeTitle>
       {editable && panel === null && kind !== 'mixed' && <ListQuickAdd list={list} disabled={locked} onCommand={send} onEditingChange={setAddingProducts} />}
       {kind === 'mixed' && <Text style={s.note}>Ancienne liste mixte conservée. Crée une liste d’articles ou de produits pour de nouveaux ajouts.</Text>}
-      {list.period && <Text style={s.note}>Repas du {dateLabel(list.period.start_date)} au {dateLabel(list.period.end_date)}. Copie indépendante du calendrier.</Text>}
       <View style={s.notice}>
         <SavedListTotals list={list} />
       </View>

@@ -1,4 +1,4 @@
-# Listes d’épicerie — contrats du lot A
+# Listes d’épicerie — contrats actuels et historique
 
 ## Séparation Articles / Produits — ajustements courants
 
@@ -598,7 +598,7 @@ Validation historique de l’étape 2 : **36 cas de contrats backend** ; suite b
 complète **465 réussis, 192 ignorés** ; **176 tests mobiles réussis**, dont le
 contrôle croisé des exemples ; TypeScript, **27 exports** et construction stricte
 de la documentation réussis. Les tests ignorés ne sont pas des validations.
-Le projet ne configure pas de commande lint mobile. La CI mobile est également
+Lors des validations initiales des étapes 4 et 5, le projet ne configurait pas de commande lint mobile. Depuis le 20 novembre 2026, `npm run lint` est disponible et exécuté en CI ; voir le [guide mobile](../../mobile/README.md#vérifier-le-code-avec-eslint). La CI mobile est également
 déclenchée par les changements des exports `shopping-*.json`, afin de vérifier
 leurs consommateurs même lors d’une modification des seuls contrats backend.
 

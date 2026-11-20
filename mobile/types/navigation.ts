@@ -3,7 +3,7 @@ import type { ShoppingListKind, ShoppingPeriod } from './shoppingLists';
 import type { Circular, Offer } from './api';
 
 export type RecipeStackParams = {
-  List: undefined; Add: undefined; ManualEntry: undefined; Detail: { id: string }; Editor: { id?: string } | undefined;
+  List: undefined; Detail: { id: string }; Editor: { id?: string } | undefined;
 };
 
 export type PromoStackParams = {

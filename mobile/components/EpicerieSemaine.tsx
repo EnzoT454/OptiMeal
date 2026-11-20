@@ -163,7 +163,7 @@ export default function EpicerieSemaine({ period, onOpen }: {
         <View style={styles.carte}>
           <MaterialCommunityIcons name="basket-outline" size={28} color={c.green} accessible={false} />
           <Text style={styles.titreVide}>Ton épicerie apparaîtra ici</Text>
-          <Text style={styles.texte}>Planifie des repas avec des recettes : leurs ingrédients s'ajoutent automatiquement.</Text>
+          <Text style={styles.texte}>Planifie des repas avec des recettes : leurs ingrédients s’ajoutent automatiquement.</Text>
         </View>
       )}
 

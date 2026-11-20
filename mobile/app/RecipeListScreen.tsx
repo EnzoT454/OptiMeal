@@ -22,7 +22,7 @@ const filters = [
   { label: 'Toutes', icon: 'view-grid-outline' },
   { label: 'Rapides', icon: 'timer-outline' },
   { label: 'Faciles', icon: 'egg-pan' },
-  { label: 'Petit budget', icon: 'piggy-bank-outline' },
+  { label: 'Petit budget', icon: 'currency-usd' },
 ] as const;
 
 export default function RecipeListScreen({ navigation }: NativeStackScreenProps<RecipeStackParams, 'List'>) {
@@ -52,7 +52,7 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
   }
   function addRecipe() {
     if (!session) { requestSignIn('Connecte-toi pour ajouter tes propres recettes.'); return; }
-    navigation.navigate('Add');
+    navigation.navigate('Editor');
   }
   async function toggleFavorite(recipe: RecipeSummary) {
     if (!session) { requestSignIn('Connecte-toi pour enregistrer tes recettes favorites.'); return; }
@@ -97,7 +97,13 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
     return cleanup;
   }, [query, filter, offset, retry, activeSection, activeSort, session?.user.id]));
   return <RecipeScreen>
-    <RecipeTitle>Recettes</RecipeTitle>
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+      <RecipeTitle>Recettes</RecipeTitle>
+      <Pressable accessibilityRole="button" accessibilityLabel="Créer une recette" onPress={addRecipe}
+        style={{ width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: recipeColors.green }}>
+        <MaterialCommunityIcons name="plus" size={28} color="white" accessible={false} />
+      </Pressable>
+    </View>
     <View style={{ flexDirection: 'row', padding: 4, gap: 4, borderRadius: 14, backgroundColor: recipeColors.light }}>
       {sections.map(option => <Pressable key={option.value} accessibilityRole="tab" accessibilityLabel={option.label}
         accessibilityState={{ selected: activeSection === option.value }} onPress={() => selectSection(option.value)}
@@ -117,7 +123,6 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
           if (option.label !== filter) { resetResults(); setFilter(option.label); }
         }} />)}
     </ScrollView>
-    <RecipeButton title="+  Ajouter une recette" onPress={addRecipe} />
     {filter === 'Petit budget' ? <View style={recipeStyles.notice}>
       <Text style={recipeStyles.sectionTitle}>Petit budget</Text><Text style={recipeStyles.body}>Disponible prochainement.</Text>
     </View> : <>

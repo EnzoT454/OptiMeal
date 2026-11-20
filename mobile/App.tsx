@@ -18,8 +18,6 @@ import ProfileScreen from './app/ProfileScreen';
 import RecipeListScreen from './app/RecipeListScreen';
 import RecipeDetailScreen from './app/RecipeDetailScreen';
 import RecipeEditorScreen from './app/RecipeEditorScreen';
-import AddRecipeScreen from './app/AddRecipeScreen';
-import ManualEntryScreen from './app/ManualEntryScreen';
 import PromotionsScreen from './app/PromotionsScreen';
 import PromoDetailScreen from './app/PromoDetailScreen';
 import CircularsScreen from './app/CircularsScreen';
@@ -76,16 +74,6 @@ function ListNavigator() {
     <Lists.Screen name="ShoppingDetail" component={ShoppingListDetailScreen} options={{ title: 'Ma liste', headerBackTitle: 'Listes' }} />
   </Lists.Navigator></ListAccessRequired>;
 }
-function ProtectedAdd(props: NativeStackScreenProps<RecipeStackParams, 'Add'>) {
-  return <AccountRequired reason="Connecte-toi pour ajouter tes propres recettes." onCancel={() => props.navigation.popToTop()}>
-    <AddRecipeScreen {...props} />
-  </AccountRequired>;
-}
-function ProtectedManualEntry(props: NativeStackScreenProps<RecipeStackParams, 'ManualEntry'>) {
-  return <AccountRequired reason="Connecte-toi pour ajouter tes propres recettes." onCancel={() => props.navigation.popToTop()}>
-    <ManualEntryScreen {...props} />
-  </AccountRequired>;
-}
 function ProtectedEditor(props: NativeStackScreenProps<RecipeStackParams, 'Editor'>) {
   return <AccountRequired reason="Connecte-toi pour enregistrer tes recettes." onCancel={() => props.navigation.popToTop()}>
     <RecipeEditorScreen {...props} />
@@ -94,8 +82,6 @@ function ProtectedEditor(props: NativeStackScreenProps<RecipeStackParams, 'Edito
 function RecipeNavigator() {
   return <Recipes.Navigator screenOptions={{ headerTintColor: VERT }}>
     <Recipes.Screen name="List" component={RecipeListScreen} options={{ headerShown: false }} />
-    <Recipes.Screen name="Add" component={ProtectedAdd} options={{ headerShown: false }} />
-    <Recipes.Screen name="ManualEntry" component={ProtectedManualEntry} options={{ headerShown: false }} />
     <Recipes.Screen name="Detail" component={RecipeDetailScreen} options={{ title: 'La recette' }} />
     <Recipes.Screen name="Editor" component={ProtectedEditor} options={{ headerShown: false }} />
   </Recipes.Navigator>;

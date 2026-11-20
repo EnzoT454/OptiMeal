@@ -1,6 +1,6 @@
 # Catalogue et prix — évaluation et modèle de données proposé
 
-**Conception initiale : 28 septembre 2026. Mise à jour : 5 novembre 2026. Statut : ingrédients, recettes, profils, favoris, catégories, offres et circulaires implémentés ; historique des prix, reçus et estimations proposés.**
+**Conception initiale : 28 septembre 2026. Mise à jour : 20 novembre 2026. Statut : recettes, comptes, catalogue, calendrier, listes et suivis implémentés. Les propositions d’historique des prix, d’estimations et de contribution par reçu sont historiques et retirées du périmètre depuis le 17 novembre.**
 
 Ce document évalue la structure transmise par l’équipe : un ingrédient canonique contient des produits commerciaux, chacun contenant ses offres. Il couvre le catalogue, les sources de prix et l’intégration des reçus. Les comptes, recettes, plans et listes sont décrits uniquement aux endroits où ils touchent ces données.
 
@@ -24,12 +24,13 @@ La proposition étendue nécessite surtout six ajustements avant son implémenta
 | Composant | Disponible aujourd’hui | Conséquence pour la conception |
 | --- | --- | --- |
 | `app/database.py` et configuration | Moteur SQLAlchemy/Psycopg, sessions par requête et contrôle `/health/db` | Voir le [guide Supabase](SUPABASE.md) ; les recettes lisent PostgreSQL ; ingrédients sur JSON, offres sur JSON ou PostgreSQL selon `OFFERS_SOURCE` |
-| Modèles et `alembic/env.py` | Quinze migrations (tête `0015_permanent_public_recipes`) : ingrédients, recettes, profils, favoris, catégories, offres, circulaires, photos de produits, calendrier, visibilité, conservation des repas, évaluations, dates, versions évaluées, unités de cuisine et conservation des recettes publiques sans auteur ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous à développer |
+| Modèles et `alembic/env.py` | Vingt-trois migrations (tête `0023_shopping_list_kind`) : ingrédients, recettes, profils, favoris, catégories, offres, circulaires, photos de produits, calendrier, visibilité, conservation des repas, évaluations, dates, versions évaluées, unités de cuisine et conservation des recettes publiques sans auteur, conditions promotionnelles, listes, achats, sauvegardes, exclusions, épinglage et suivis ; imports rejouables | Voir le [guide des migrations](MIGRATIONS.md) ; modèle étendu ci-dessous conservé comme proposition historique |
 | `app/catalog/apify_ingestion.py` et `apify_batch.py` | Normalisation des captures Apify, produits, formats, prix et avertissements | Prévoir l’insertion des données vérifiées ; Metro/Super C web IA restent à développer |
 | `app/receipts/schemas.py` | Contrat `receipt-1.1`, OCR local, articles, ajustements et contrôles | Stocker d’abord une extraction privée à vérifier |
 | Comptes | Supabase Auth, profil minimal et droits sur recettes/favoris | Voir [AUTH.md](AUTH.md) ; préférences détaillées à développer |
 | Photos de recettes | Fichiers dans le bucket public `recipes-images`, URL dans `recipe.image_url`, ajout depuis la galerie | Voir [RECIPE_IMAGES.md](RECIPE_IMAGES.md) ; écritures Storage par propriétaire, nettoyage à développer |
-| Confirmation des reçus | Non implémentée | Contrôles de propriété à étendre avant import privé et contribution |
+| Confirmation et contribution des reçus dans le mobile | Retirées du périmètre | Outils OCR locaux conservés |
+| Listes et suivis | Listes privées, besoins, paniers, achats, sauvegardes, exclusions, épinglage et `product_follow` | Voir le [guide des listes](SHOPPING_GUIDE.md) et [les migrations](MIGRATIONS.md) |
 
 SQLAlchemy et Psycopg assurent la connexion. Alembic est l’unique chaîne de
 migrations applicatives. `0001_ingredients` crée le référentiel commun,
@@ -47,6 +48,9 @@ des recettes, et `0013_rating_versions` les versions évaluées.
 `0015_permanent_public_recipes` conserve les recettes publiques sans propriétaire
 après suppression du compte et ajoute `profile.deletion_pending`. Les migrations sont
 la référence exécutable du schéma ; ce document ne les remplace pas.
+Les révisions 0016 à 0023 ajoutent les conditions promotionnelles, les listes et
+leurs achats/sauvegardes, l’épinglage, les suivis et les types Articles / Produits.
+La base configurée a été contrôlée à 0023 le 20 novembre, sans divergence des modèles.
 
 La suppression du compte est maintenant exposée par `DELETE /api/v1/me`.
 Après nettoyage du dossier photo, l’API administrative Supabase supprime le
@@ -101,6 +105,14 @@ Les parcours comptes, recettes, photos et Promos ont été confirmés sur iOS
 et Android le 27 octobre. Les sections 3 à 10 présentent la conception des
 extensions, et non une liste de tables toutes déjà créées. Les migrations
 et [models.py](../app/catalog/models.py) restent la référence du schéma actuel.
+
+## Portée des propositions historiques
+
+Les sections 3 à 10 conservent l’évaluation initiale du modèle étendu. Elles
+ne décrivent pas des fonctions disponibles ni un plan de développement actuel.
+L’historique des prix, les estimations et les contributions par reçu ont été
+retirés du périmètre le 17 novembre 2026. Le schéma courant est décrit par les
+[migrations](MIGRATIONS.md) et le [guide de fonctionnement](../../README-fonctionnement.md).
 
 ## 3. Évaluation des champs transmis
 

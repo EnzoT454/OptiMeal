@@ -11,6 +11,15 @@ supplémentaire. Aucune migration restante à appliquer lors de ce contrôle.
 Les mentions d’absence de déploiement dans les lots décrivent leurs validations
 initiales, antérieures à ce contrôle.
 
+## Mise à jour documentaire — 20 novembre 2026
+
+La phrase de période « Repas du… Copie indépendante du calendrier. » est retirée
+du détail des listes ; les données de provenance restent conservées.
+Le lint est désormais configuré et exécuté en CI. La suite mobile après les
+changements de création de recette et de photo Web compte 314 tests réussis,
+avec TypeScript et lint sans erreur (111 avertissements existants).
+Les résultats de chaque lot ci-dessous restent ceux exécutés à leur livraison.
+
 ## État actuel validé par l’utilisateur — 19 novembre 2026
 
 Hamza confirme après ses essais : « J’ai fait les tests, onglet Listes, tout ce
