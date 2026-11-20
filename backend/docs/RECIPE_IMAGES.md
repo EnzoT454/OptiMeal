@@ -83,7 +83,57 @@ après envoi peuvent laisser des fichiers inutilisés. Leur nettoyage reste
 à développer ; aucun fichier n’est supprimé automatiquement après une erreur
 réseau dont le résultat d’enregistrement est incertain.
 
-## Vérification
+### Lecture sur téléphone et navigateur
+
+`mobile/services/recipeImages.ts` prépare la sélection en JPEG, avec un côté
+maximal de 1 200 pixels, puis vérifie la limite de 5 Mo. La photo choisie reste
+locale pendant les cinq étapes de création. Elle est envoyée à Storage seulement
+lors de l’enregistrement final, après validation et confirmation de publication
+si nécessaire.
+
+La lecture des octets dépend de la plateforme :
+
+| Plateforme | Lecture de la photo préparée |
+| --- | --- |
+| iOS / Android | `File` de `expo-file-system`, comme dans le parcours natif initial |
+| Navigateur | `fetch` de l’URL locale `blob:` puis `arrayBuffer()` ; aucun accès au système de fichiers natif |
+
+La branche Web permet les essais sur ordinateur. Elle conserve la compression,
+la limite de taille, le jeton de session et le dossier du propriétaire. Elle ne
+remplace pas la photo obligatoire par une image fictive ni une URL de test.
+
+```mermaid
+flowchart LR
+    P[Choisir une photo] --> J[Préparer un JPEG de 1 200 pixels maximum]
+    J --> PL{Plateforme ?}
+    PL -->|iOS / Android| F[Lire le fichier natif]
+    PL -->|Navigateur| B[Lire les octets de l’URL blob]
+    F --> T[Vérifier la limite de 5 Mo et afficher l’aperçu]
+    B --> T
+    T --> E[Enregistrement final de la recette]
+    E --> A[Vérifier la session et envoyer les octets à Storage]
+    A --> U[Transmettre l’URL HTTPS à FastAPI]
+```
+
+## Vérification du 20 novembre 2026
+
+Hamza confirme que l’ajout d’une photo fonctionne lors de son essai dans le
+navigateur après correction de l’erreur `this.validatePath is not a function`.
+Cette confirmation concerne le parcours testé sur ordinateur ; elle ne constitue
+pas une nouvelle validation sur iOS et Android ni un relevé de tous les scénarios
+de publication et de réseau.
+
+La suite mobile exécutée pour cette correction Web comptait **314 tests réussis**, dont **13 tests
+du service photo** : lecture Web sans `File` natif, préparation JPEG, limite de
+taille, session obligatoire, lecture impossible et envoi Storage. TypeScript et
+le lint passent avec **0 erreur et 111 avertissements existants**. Les exports
+iOS/Android/Web ont été vérifiés lors de l’intégration des cinq étapes, avant la
+correction de lecture Web. Aucun nouveau résultat backend n’est déduit de ces
+contrôles mobiles.
+
+Les résultats datés ci-dessous conservent leur contexte de validation initiale.
+
+## Vérifications antérieures
 
 Le 1er novembre, l’adaptation au partage avec stockage public conservé a été
 vérifiée par 35 tests backend ciblés sur PostgreSQL local jetable : conservation
@@ -109,4 +159,4 @@ Le 1er novembre 2026, Hamza a confirmé sur iOS le parcours de création
 avec photo obligatoire. Cette nouvelle règle reste à vérifier sur Android ;
 les scénarios d’erreur réseau détaillés restent à compléter.
 
-*Dernière mise à jour : 5 novembre 2026*
+*Dernière mise à jour : 20 novembre 2026*

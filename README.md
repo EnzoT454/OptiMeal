@@ -22,11 +22,11 @@ Nous concentrons maintenant le travail sur la stabilisation de l’application e
 Éléments réalisés :
 
 - Comptes, profil et mode visiteur.
-- Recettes personnelles, recherche, filtres, recettes privées, publication et favoris.
-- Évaluations des recettes et classement par notes.
+- Recettes personnelles avec création guidée en cinq étapes, recherche, filtres, publication et favoris.
+- Évaluations des recettes et classement par notes ou par coût estimé avec Petit budget.
 - Calendrier hebdomadaire des repas.
-- Listes d’épicerie privées, comparaison des prix par magasin et suivi des achats.
-- Modèles de listes, historique et accès depuis l’Accueil et le Calendrier.
+- Listes d’épicerie d’articles ou de produits, ajout par recherche et suivi des achats.
+- Création depuis le calendrier, comparaison des prix par magasin et listes sauvegardées réutilisables.
 - Promotions et consultation des circulaires.
 - Catalogue commun des produits et ingrédients.
 - Collecte Maxi et lecture locale des reçus.
@@ -159,6 +159,70 @@ npm start -- --dev-client
 Scanner le QR code pour ouvrir l’application installée. Le [guide mobile](mobile/README.md)
 détaille la configuration, les prérequis sur téléphone et le lancement sur simulateur.
 
+### Sur ordinateur avec un format de téléphone
+
+La version web permet de consulter l’application dans Chrome et de choisir
+les dimensions d’un iPhone, d’un Samsung Galaxy ou d’un autre appareil.
+Les dépendances et les valeurs publiques Supabase doivent être configurées
+comme indiqué ci-dessus. Dans `mobile/.env`, utiliser pour le navigateur :
+
+```dotenv
+EXPO_PUBLIC_API_URL=http://localhost:8001
+```
+
+Dans un premier terminal, depuis la racine avec l’environnement Python activé :
+
+```text
+python -m uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8001
+```
+
+Dans un deuxième terminal, depuis la racine :
+
+```bash
+cd mobile
+npm run web
+```
+
+Ouvrir l’adresse indiquée par Expo, généralement `http://localhost:8081`,
+dans Chrome. Pour choisir le format d’écran :
+
+1. Ouvrir les outils développeur avec **⌘ + ⌥ + I** sur Mac ou **Ctrl + Maj + I** sur Windows/Linux.
+2. Activer la barre d’outils des appareils avec **⌘ + Maj + M** sur Mac ou **Ctrl + Maj + M** sur Windows/Linux.
+3. Dans **Dimensions**, choisir un iPhone ou un Samsung Galaxy. Le choix **Edit / Modifier** permet d’afficher d’autres modèles ; **Responsive** permet de saisir une largeur et une hauteur.
+
+Cet aperçu reproduit les dimensions d’écran de la version web. Les parcours
+natifs doivent aussi être vérifiés sur simulateur, émulateur ou téléphone.
+Voir le [guide du mode appareil de Chrome](https://developer.chrome.com/docs/devtools/device-mode/).
+
+### Sur simulateur iPhone ou émulateur Android
+
+Garder le backend lancé dans son terminal. Depuis `mobile/`, sur macOS avec
+Xcode et un simulateur iOS installé :
+
+```bash
+npm run ios -- --device
+```
+
+Choisir un simulateur iPhone dans la liste proposée. Pour Android, créer et
+démarrer un appareil virtuel dans le gestionnaire d’appareils d’Android Studio,
+puis lancer depuis `mobile/` :
+
+```bash
+npm run android -- --device
+```
+
+Choisir l’émulateur démarré. L’adresse de l’API dans `mobile/.env` dépend de
+l’appareil utilisé :
+
+| Appareil | `EXPO_PUBLIC_API_URL` |
+| --- | --- |
+| Navigateur ou simulateur iPhone sur le Mac | `http://localhost:8001` |
+| Émulateur Android standard d’Android Studio | `http://10.0.2.2:8001` |
+| Téléphone physique sur le même réseau | `http://<IP-locale-de-l’ordinateur>:8001` |
+
+Après une modification de `mobile/.env`, arrêter Expo et relancer la commande
+correspondant au mode utilisé.
+
 ## Tests
 
 Backend, depuis la racine avec l’environnement virtuel activé :
@@ -174,6 +238,7 @@ Voir le [guide des tests PostgreSQL](backend/docs/MIGRATIONS.md#tests).
 Mobile, depuis `mobile/` :
 
 ```bash
+npm run lint
 npm run typecheck
 npm test
 ```
@@ -214,8 +279,9 @@ OptiMeal/
 │   │   │   ├── schemas.py            # Contrats des recettes, ingrédients et étapes
 │   │   │   ├── models.py             # Modèles Recipe, RecipeIngredient et Favorite
 │   │   │   ├── service.py            # Lectures, mutations et autorisations des recettes
+│   │   │   ├── budget.py             # Coût interne des quantités utilisées pour Petit budget
 │   │   │   └── seed_import.py        # Import transactionnel et rejouable des recettes
-│   │   ├── planning/                 # Calendrier privé ; instantanés à développer
+│   │   ├── planning/                 # Calendrier privé des repas
 │   │   │   ├── router.py             # Routes /api/v1/plans et entrées de repas
 │   │   │   ├── schemas.py            # Repas, notes, portions et changements
 │   │   │   ├── models.py             # Table MealPlanEntry
@@ -312,7 +378,9 @@ OptiMeal/
 │   │       ├── 0018_shopping_comparisons.py # Comparaisons et choix de produits
 │   │       ├── 0019_shopping_courses.py # Suivi des achats
 │   │       ├── 0020_shopping_reuse.py # Modèles et réutilisation des listes
-│   │       └── 0021_shopping_list_pin.py # Liste épinglée sur Accueil
+│   │       ├── 0021_shopping_list_pin.py # Préférence d’épinglage
+│   │       ├── 0022_product_follows.py # Produits suivis par compte
+│   │       └── 0023_shopping_list_kind.py # Types Articles / Produits
 │   ├── docs/                         # Guides techniques du backend
 │   │   ├── APIFY.md                  # Utilisation du connecteur Maxi
 │   │   ├── PCX_PILOT.md              # Utilisation et limites du pilote PC Express
@@ -373,11 +441,12 @@ OptiMeal/
 │   ├── services/                     # Auth, client FastAPI et sélection/envoi des photos
 │   │   └── recipeForm.ts             # Règles de quantités et badges des recettes
 │   ├── tests/                        # Tests des services mobiles
-│   │   ├── recipeImages.test.cjs     # Tests du service photo avec doubles natifs
+│   │   ├── recipeImages.test.cjs     # Photos sur téléphone et navigateur avec doubles
 │   │   ├── recipeForm.test.cjs       # Tests des règles du formulaire de recette
-│   │   ├── recipeCreation.test.cjs   # Photo obligatoire et échec d’envoi
+│   │   ├── recipeCreation.test.cjs   # Parcours en cinq étapes, photos et publication
 │   │   ├── visitorAccess.test.cjs    # Visiteurs et confirmation de suppression
 │   │   └── accountSession.test.cjs   # Nettoyage local après suppression du compte
+│   ├── eslint.config.js             # Lint Expo et règles React
 │   ├── metro.config.js              # Inclusion des illustrations locales de secours
 │   └── package-lock.json             # Dépendances mobiles verrouillées
 ├── data/                             # Données et résultats pouvant être ajoutés à Git
@@ -423,6 +492,8 @@ avec une nouvelle copie du dépôt sont les README, `backend/docs/` et `docs/`.
 
 - [Validation de la notation et migrations Supabase](backend/docs/RATINGS_VALIDATION.md)
 - [Comprendre le fonctionnement de l’application et du dépôt](README-fonctionnement.md)
+- [Fonctionnement détaillé de l’onglet Liste : parcours, calculs et interface](backend/docs/SHOPPING_GUIDE.md)
+- [Refonte Liste : audit, lots, contrats, tests et critères d’acceptation](backend/docs/SHOPPING_REFACTOR.md)
 - [Structure et utilisation des données locales](backend/docs/DATA.md)
 - [Catalogue pilote : utilisation et résultats](backend/docs/CATALOG.md)
 - [Évaluer API Anything pour les prix et promotions](backend/docs/API_ANYTHING.md)
@@ -469,4 +540,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 17 novembre 2026*
+*Dernière mise à jour : 20 novembre 2026*

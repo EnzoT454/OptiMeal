@@ -1,10 +1,23 @@
 import { File } from 'expo-file-system';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
+import { Platform } from 'react-native';
 import { supabase } from './supabase';
 
 const BUCKET = 'recipes-images';
 const MAX_BYTES = 5 * 1024 * 1024;
+
+async function imageBytes(uri: string): Promise<ArrayBuffer> {
+  if (Platform.OS !== 'web') return new File(uri).arrayBuffer();
+  // Les photos préparées sur Expo Web sont des URL blob, sans fichier natif.
+  try {
+    const response = await fetch(uri);
+    if (!response.ok) throw new Error('Photo indisponible');
+    return await response.arrayBuffer();
+  } catch {
+    throw new Error('Impossible de lire la photo sélectionnée. Choisis-la à nouveau.');
+  }
+}
 
 export async function chooseRecipeImage(): Promise<string | null> {
   // Le sélecteur système donne accès à la photo choisie seulement.
@@ -21,7 +34,8 @@ export async function chooseRecipeImage(): Promise<string | null> {
   const rendered = await context.renderAsync();
   try {
     const image = await rendered.saveAsync({ format: SaveFormat.JPEG, compress: 0.75 });
-    if (new File(image.uri).size > MAX_BYTES) {
+    const size = Platform.OS === 'web' ? (await imageBytes(image.uri)).byteLength : new File(image.uri).size;
+    if (size > MAX_BYTES) {
       throw new Error('Cette photo est trop volumineuse. Choisis une autre image (maximum 5 Mo).');
     }
     return image.uri;
@@ -34,7 +48,7 @@ export async function chooseRecipeImage(): Promise<string | null> {
 export async function uploadRecipeImage(uri: string): Promise<string> {
   const { data, error } = await supabase.auth.getSession();
   if (error || !data.session) throw new Error('Reconnecte-toi avant d’envoyer une photo.');
-  const bytes = await new File(uri).arrayBuffer();
+  const bytes = await imageBytes(uri);
   if (!bytes.byteLength || bytes.byteLength > MAX_BYTES) {
     throw new Error('Photo vide ou trop volumineuse (maximum 5 Mo).');
   }

@@ -3,13 +3,13 @@ from uuid import UUID, uuid4
 from decimal import Decimal
 from datetime import datetime, timezone
 
-from sqlalchemy import delete, exists, func, or_, select, update
+from sqlalchemy import case, delete, exists, func, or_, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
 from backend.app.accounts.service import ensure_profile
 from backend.app.accounts.models import Profile
-from backend.app.common.public_data import search_text
+from backend.app.common.public_data import search_text, today
 from backend.app.common.public_router import fail
 from backend.app.security import CurrentUser
 from .models import Favorite, Recipe, RecipeIngredient, RecipeRating
@@ -85,7 +85,12 @@ def list_recipes(db: Session, *, q: str, quick: bool, limit: int, offset: int,
                        ingredient_count.label('ingredient_count'),
                        func.jsonb_array_length(Recipe.instructions).label('step_count')).where(*conditions)
     selected_sort = sort or {'discover': 'top', 'favorites': 'top', 'mine': 'newest'}.get(scope)
-    if selected_sort == 'top':
+    if selected_sort == 'budget':
+        from .budget import budget_order
+        ranks = budget_order(db, conditions, today())
+        ordering = ([case(ranks, value=Recipe.id, else_=len(ranks)), Recipe.id]
+                    if ranks else [Recipe.id])
+    elif selected_sort == 'top':
         # nR est la somme pondérée : même méthode que ratings.py, sans
         # arrondir les moyennes ni charger les recettes avant pagination.
         weighted_sum = (TASTE_WEIGHT * func.sum(RecipeRating.taste_score)

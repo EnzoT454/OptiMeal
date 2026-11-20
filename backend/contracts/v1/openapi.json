@@ -310,6 +310,17 @@
               "default": 0,
               "title": "Offset"
             }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "default": "",
+              "title": "Q"
+            }
           }
         ],
         "responses": {
@@ -580,7 +591,8 @@
                   "enum": [
                     "top",
                     "newest",
-                    "updated"
+                    "updated",
+                    "budget"
                   ],
                   "type": "string"
                 },
@@ -1844,6 +1856,188 @@
         }
       }
     },
+    "/api/v1/follows": {
+      "get": {
+        "tags": [
+          "Produits suivis v1"
+        ],
+        "summary": "List Follows",
+        "operationId": "list_follows_api_v1_follows_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_FollowListRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Produits suivis v1"
+        ],
+        "summary": "Follow",
+        "operationId": "follow_api_v1_follows_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FollowWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_FollowRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/follows/{product_id}": {
+      "delete": {
+        "tags": [
+          "Produits suivis v1"
+        ],
+        "summary": "Unfollow",
+        "operationId": "unfollow_api_v1_follows__product_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "title": "Product Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
     "/auth/me": {
       "get": {
         "tags": [
@@ -2956,6 +3150,124 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ShoppingItemAdd"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Detail_ShoppingListRead_"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShoppingConflictResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        }
+      }
+    },
+    "/api/v1/shopping-lists/{list_id}/items/{item_id}/selected-product": {
+      "put": {
+        "tags": [
+          "Listes v1"
+        ],
+        "summary": "Select Product",
+        "operationId": "select_product_api_v1_shopping_lists__list_id__items__item_id__selected_product_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "list_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "List Id"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShoppingChoiceWrite"
               }
             }
           }
@@ -5987,6 +6299,40 @@
         ],
         "title": "DatabaseHealth"
       },
+      "Detail_FollowListRead_": {
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/FollowListRead"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item",
+          "meta"
+        ],
+        "title": "Detail[FollowListRead]"
+      },
+      "Detail_FollowRead_": {
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/FollowRead"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "item",
+          "meta"
+        ],
+        "title": "Detail[FollowRead]"
+      },
       "Detail_MealPlanEntryRead_": {
         "properties": {
           "item": {
@@ -6205,6 +6551,104 @@
           "error"
         ],
         "title": "ErrorResponse"
+      },
+      "FollowListRead": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/FollowRead"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "FollowListRead"
+      },
+      "FollowRead": {
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "title": "Product Id"
+          },
+          "retailer": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc"
+            ],
+            "title": "Retailer"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Since"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "product_id",
+          "retailer",
+          "name",
+          "since"
+        ],
+        "title": "FollowRead"
+      },
+      "FollowWrite": {
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Product Id"
+          },
+          "retailer": {
+            "type": "string",
+            "enum": [
+              "maxi",
+              "metro",
+              "superc"
+            ],
+            "title": "Retailer"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "since": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Since"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "product_id",
+          "retailer",
+          "name"
+        ],
+        "title": "FollowWrite",
+        "description": "Ce que l'app envoie pour suivre un produit (appel répétable sans doublon)."
       },
       "HTTPValidationError": {
         "properties": {
@@ -8689,6 +9133,13 @@
             "type": "boolean",
             "title": "Stale",
             "default": false
+          },
+          "selected_products": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/SourceProduct"
+            },
+            "type": "object",
+            "title": "Selected Products"
           }
         },
         "additionalProperties": false,
@@ -9905,6 +10356,21 @@
             ],
             "title": "Purchase Date"
           },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "articles",
+                  "products"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
           "name": {
             "type": "string",
             "maxLength": 120,
@@ -10058,6 +10524,19 @@
             ],
             "title": "Merge",
             "default": "add"
+          },
+          "product_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 512,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Id"
           }
         },
         "additionalProperties": false,
@@ -10186,6 +10665,24 @@
             "minimum": 1.0,
             "title": "Expected Revision"
           },
+          "refresh_prices": {
+            "type": "boolean",
+            "title": "Refresh Prices",
+            "default": false
+          },
+          "product_units": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 1000000.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Units"
+          },
           "name": {
             "anyOf": [
               {
@@ -10230,6 +10727,21 @@
       },
       "ShoppingListCreate": {
         "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "articles",
+                  "products"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
           "name": {
             "type": "string",
             "maxLength": 120,
@@ -10281,6 +10793,21 @@
       },
       "ShoppingListRead": {
         "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "articles",
+                  "products"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
           "id": {
             "type": "string",
             "format": "uuid",
@@ -10883,6 +11410,11 @@
             "minimum": 1.0,
             "title": "Expected Revision"
           },
+          "refresh_date": {
+            "type": "boolean",
+            "title": "Refresh Date",
+            "default": false
+          },
           "scenario": {
             "anyOf": [
               {
@@ -10907,6 +11439,23 @@
             "type": "array",
             "maxItems": 500,
             "title": "Choices"
+          },
+          "expected_fingerprint": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Fingerprint"
+          },
+          "accept_partial": {
+            "type": "boolean",
+            "title": "Accept Partial",
+            "default": false
           }
         },
         "additionalProperties": false,
@@ -11079,6 +11628,11 @@
             "type": "boolean",
             "title": "Include Choices",
             "default": false
+          },
+          "activate": {
+            "type": "boolean",
+            "title": "Activate",
+            "default": false
           }
         },
         "additionalProperties": false,
@@ -11156,6 +11710,21 @@
       },
       "ShoppingTemplateRead": {
         "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "articles",
+                  "products"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
           "id": {
             "type": "string",
             "format": "uuid",

@@ -89,13 +89,22 @@ def update(list_id: UUID, body: ShoppingListUpdate, user: User, db: DB, key: Key
 
 
 @router.post('/{list_id}/items', response_model=Detail[ShoppingListRead])
-def add_item(list_id: UUID, body: ShoppingItemAdd, user: User, db: DB, key: Key):
-    return detail(service.add_item(db, list_id, user, body, key))
+def add_item(list_id: UUID, body: ShoppingItemAdd, request: Request, user: User, db: DB, key: Key):
+    return detail(service.add_item(db, list_id, user, body, key,
+        lambda session, day: comparisons.load_sales(request, session, day)))
+
+
+@router.put('/{list_id}/items/{item_id}/selected-product', response_model=Detail[ShoppingListRead])
+def select_product(list_id: UUID, item_id: UUID, body: ShoppingChoiceWrite, request: Request, user: User, db: DB, key: Key):
+    from .recalculation import select_product as select
+    return detail(select(db, list_id, item_id, user, body, key,
+        lambda session, day: comparisons.load_sales(request, session, day)))
 
 
 @router.patch('/{list_id}/items/{item_id}', response_model=Detail[ShoppingListRead])
-def update_item(list_id: UUID, item_id: UUID, body: ShoppingItemUpdate, user: User, db: DB, key: Key):
-    return detail(service.update_item(db, list_id, item_id, user, body, key))
+def update_item(list_id: UUID, item_id: UUID, body: ShoppingItemUpdate, request: Request, user: User, db: DB, key: Key):
+    return detail(service.update_item(db, list_id, item_id, user, body, key,
+        lambda session, day: comparisons.load_sales(request, session, day)))
 
 
 @router.put('/{list_id}/items/{item_id}/manual-purchase', response_model=Detail[ShoppingListRead])

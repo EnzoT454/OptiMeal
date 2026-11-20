@@ -49,6 +49,8 @@ def _resource_mutate(db, user, key, operation, body, model, action):
             result = action()
             db.execute(insert(ShoppingResourceCommand).values(owner_id=user.id, idempotency_key=key,
                 signature=signature, result=result.model_dump(mode='json')))
+        if model is ShoppingTemplateRead:
+            result = _article_templates(db, [result])[0]
         db.commit()
         return result
     except Exception:
@@ -56,12 +58,35 @@ def _resource_mutate(db, user, key, operation, body, model, action):
         raise
 
 
+def _article_templates(db, resources):
+    """Projection compatible des anciennes sauvegardes, sans toucher aux courses.
+
+    Les identités et quantités des besoins sont conservées ; les noms commerciaux
+    sont remplacés par le nom du référentiel lorsqu’une correspondance existe.
+    """
+    references = {item.ingredient_id for resource in resources for item in resource.items if item.ingredient_id}
+    ingredients = {item.id: item for item in db.scalars(select(Ingredient).where(Ingredient.id.in_(references)))} if references else {}
+    result = []
+    for resource in resources:
+        items = []
+        for item in resource.items:
+            ingredient = ingredients.get(item.ingredient_id)
+            convert_name = resource.kind != 'articles' or item.preferred_product_id is not None
+            changes = {'preferred_product_id': None}
+            if ingredient is not None and convert_name:
+                changes.update(name=ingredient.name, category=ingredient.category)
+            items.append(item.model_copy(update=changes))
+        result.append(resource.model_copy(update={'kind': 'articles', 'items': items}))
+    return result
+
+
 def _template(db: Session, template_id: UUID, user: CurrentUser) -> ShoppingTemplateRead:
     row = db.execute(select(ShoppingListTemplate.__table__).where(ShoppingListTemplate.id == template_id,
         ShoppingListTemplate.owner_id == user.id, ShoppingListTemplate.deleted.is_(False))).mappings().one_or_none()
     if row is None:
         raise ShoppingListError(404, 'TEMPLATE_NOT_FOUND', 'Modèle introuvable.')
-    return ShoppingTemplateRead.model_validate({k: v for k, v in row.items() if k != 'owner_id'})
+    resource = ShoppingTemplateRead.model_validate({k: v for k, v in row.items() if k != 'owner_id'})
+    return _article_templates(db, [resource])[0]
 
 
 def get_template(db: Session, template_id: UUID, user: CurrentUser) -> ShoppingTemplateRead:
@@ -73,7 +98,8 @@ def list_templates(db: Session, user: CurrentUser, limit=20, offset=0):
     total = db.scalar(select(func.count()).select_from(ShoppingListTemplate).where(*conditions))
     rows = db.execute(select(ShoppingListTemplate.__table__).where(*conditions)
         .order_by(ShoppingListTemplate.updated_at.desc(), ShoppingListTemplate.id).limit(limit).offset(offset)).mappings()
-    return [ShoppingTemplateRead.model_validate({k: v for k, v in row.items() if k != 'owner_id'}) for row in rows], total
+    resources = [ShoppingTemplateRead.model_validate({k: v for k, v in row.items() if k != 'owner_id'}) for row in rows]
+    return _article_templates(db, resources), total
 
 
 def _current_source(db, list_id, expected_revision, user):
@@ -87,17 +113,18 @@ def _current_source(db, list_id, expected_revision, user):
 def create_template(db: Session, user: CurrentUser, body: ShoppingTemplateCreate, key: UUID) -> ShoppingTemplateRead:
     def action():
         source = _current_source(db, body.source_list_id, body.source_revision, user)
-        choices = {choice.item_id: choice.product_id for choice in source.choices} if body.include_choices else {}
+        choices = {choice.item_id: choice.product_id for choice in source.choices}
         items = [ShoppingTemplateItem(id=uuid4(), name=item.name, ingredient_id=item.ingredient_id,
             category=item.category, required=item.required, preferred_product_id=choices.get(item.id) if item.ingredient_id else None)
             for item in source.items if not item.removed]
         if len(items) > 500:
             raise ShoppingListError(422, 'TEMPLATE_TOO_LARGE', 'Un modèle peut contenir au maximum 500 articles.')
         now = datetime.now(timezone.utc)
-        result = ShoppingTemplateRead(id=uuid4(), name=body.name, icon=body.icon, revision=1,
+        result = ShoppingTemplateRead(kind=source.kind, id=uuid4(), name=body.name, icon=body.icon, revision=1,
             items=items, created_at=now, updated_at=now)
+        result = _article_templates(db, [result])[0]
         db.execute(insert(ShoppingListTemplate).values(owner_id=user.id, **result.model_dump(exclude={'items'}),
-            items=[item.model_dump(mode='json') for item in items]))
+            items=[item.model_dump(mode='json') for item in result.items]))
         return result
     return _resource_mutate(db, user, key, 'create_template', body, ShoppingTemplateRead, action)
 
@@ -119,7 +146,10 @@ def change_template(db: Session, template_id: UUID, user: CurrentUser,
             existing = set(db.scalars(select(Ingredient.id).where(Ingredient.id.in_(references)))) if references else set()
             if references - existing:
                 raise ShoppingListError(422, 'INGREDIENT_NOT_FOUND', 'Un nouvel ingrédient est absent du référentiel.')
-            changes['items'] = [item.model_dump(mode='json') for item in body.items]
+            normalized = _article_templates(db, [current.model_copy(update={'items': body.items})])[0]
+            changes['items'] = [item.model_dump(mode='json') for item in normalized.items]
+        changes['kind'] = 'articles'
+        changes.setdefault('items', [item.model_dump(mode='json') for item in current.items])
         now = datetime.now(timezone.utc)
         db.execute(update(ShoppingListTemplate).where(ShoppingListTemplate.id == template_id)
             .values(**changes, revision=current.revision + 1, updated_at=now))
@@ -129,11 +159,11 @@ def change_template(db: Session, template_id: UUID, user: CurrentUser,
                             body, ShoppingTemplateRead, action)
 
 
-def _clone(db, user, name, purchase_date, items, choices, origin, warnings, source=None):
+def _clone(db, user, name, purchase_date, items, choices, origin, warnings, source=None, kind=None):
     """Nouveaux UUID ; seuls besoins, provenance et choix explicites sont copiés."""
     list_id, now = uuid4(), datetime.now(timezone.utc)
     db.execute(insert(ShoppingList).values(id=list_id, owner_id=user.id, name=name,
-        source=source.source if source else 'manual', status='draft', revision=1,
+        kind=kind, source=source.source if source else 'manual', status='draft', revision=1,
         start_date=source.period.start_date if source and source.period else None,
         end_date=source.period.end_date if source and source.period else None,
         purchase_date=purchase_date, origin=origin, created_at=now, updated_at=now))
@@ -172,7 +202,7 @@ def duplicate(db: Session, list_id: UUID, user: CurrentUser, body: ShoppingDupli
         source = _current_source(db, list_id, body.source_revision, user)
         choices = {c.item_id: c.product_id for c in source.choices} if body.include_choices else {}
         return _clone(db, user, body.name, body.purchase_date, [i for i in source.items if not i.removed],
-            choices, {'kind': 'list', 'id': str(list_id), 'revision': body.source_revision}, warnings, source)
+            choices, {'kind': 'list', 'id': str(list_id), 'revision': body.source_revision}, warnings, source, kind=source.kind if body.include_choices else ('articles' if source.kind else None))
     return service._mutate(db, user, key, 'duplicate:' + str(list_id), body, None, action, source_warnings=warnings)
 
 
@@ -184,9 +214,11 @@ def instantiate(db: Session, template_id: UUID, user: CurrentUser,
         if template.revision != body.expected_template_revision:
             raise ShoppingListError(409, 'TEMPLATE_REVISION_CONFLICT', 'Le modèle a changé. Relis ses besoins.',
                 expected_revision=body.expected_template_revision, current_revision=template.revision)
-        choices = {i.id: i.preferred_product_id for i in template.items if i.preferred_product_id} if body.include_choices else {}
-        return _clone(db, user, body.name, body.purchase_date, template.items, choices,
-            {'kind': 'template', 'id': str(template_id), 'revision': template.revision}, warnings)
+        list_id = _clone(db, user, body.name, body.purchase_date, template.items, {},
+            {'kind': 'template', 'id': str(template_id), 'revision': template.revision}, warnings, kind='articles')
+        if body.activate:
+            db.execute(update(ShoppingList).where(ShoppingList.id == list_id).values(status='active'))
+        return list_id
     return service._mutate(db, user, key, 'instantiate:' + str(template_id), body, None, action, source_warnings=warnings)
 
 

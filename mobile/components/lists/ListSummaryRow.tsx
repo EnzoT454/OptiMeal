@@ -1,45 +1,39 @@
 import { Pressable, Text, View } from 'react-native';
-import type { ComponentProps } from 'react';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { recipeColors, recipeStyles as s } from '../recipes';
-import { dateLabel } from '../../services/shoppingLists';
 import type { ShoppingListRead } from '../../types/shoppingLists';
+import { shoppingBudget, shoppingListKind, shoppingStoreCount } from '../../services/shoppingPresentation';
+import { recipeColors, recipeStyles as s } from '../recipes';
 
 export default function ListSummaryRow({ list, onPress }: { list: ShoppingListRead; onPress: () => void }) {
-  const stores = new Set<string>();
-  if (list.assignment && !list.assignment.stale) {
-    for (const store of list.assignment.scenario.store_totals) stores.add(JSON.stringify([store.retailer, store.store_id]));
-  }
-  for (const purchase of list.product_purchases ?? []) {
-    if (purchase.purchased_units > 0) {
-      const source = purchase.line.sale.raw_source;
-      stores.add(JSON.stringify([source.retailer, source.store_id]));
-    }
-  }
-  const [whole, fraction = ''] = list.totals.budget_known_amount.split('.');
-  const amount = `${whole},${fraction.padEnd(2, '0')} $`;
-  const unknown = !list.totals.estimate_complete && !/[1-9]/.test(list.totals.budget_known_amount);
-  const cost = unknown ? '—' : `${list.totals.estimate_complete ? '' : '≥ '}${amount}`;
-  const costLabel = unknown ? 'Coût à déterminer' : `${list.totals.estimate_complete ? 'Coût total estimé' : 'Coût total estimé, au moins'} ${amount}`;
+  const budget = shoppingBudget(list);
+  const product = shoppingListKind(list) !== 'articles';
+  const stores = shoppingStoreCount(list);
+  const unit = product ? 'produits' : 'articles';
+  const accent = product ? '#315b86' : recipeColors.green;
   const status = list.status === 'completed' ? 'Terminée' : list.status === 'archived' ? 'Archivée' : 'En cours';
-  const metrics: { icon: ComponentProps<typeof MaterialCommunityIcons>['name']; value: string }[] = [
-    { icon: 'format-list-bulleted', value: String(list.totals.item_count) },
-    { icon: 'storefront-outline', value: String(stores.size) },
-    { icon: 'calendar-blank-outline', value: list.purchase_date.split('-').reverse().join('/') },
-    { icon: 'cash', value: cost },
-  ];
   return <Pressable accessibilityRole="button"
-    accessibilityLabel={`Ouvrir ${list.name}. ${status}. ${list.totals.item_count} articles. ${stores.size} magasins. Courses le ${dateLabel(list.purchase_date)}. ${costLabel}.`}
-    onPress={onPress} style={[s.choice, { minHeight: 80, flexDirection: 'row', alignItems: 'center', gap: 12 }]}>
-    <View style={{ flex: 1, gap: 10 }}>
+    accessibilityLabel={`Ouvrir ${list.name}. ${status}. ${list.totals.remaining_item_count} ${unit} à acheter.${product ? ` ${stores} magasins. ${budget ? ` ${budget.label} : ${budget.amount} dollars canadiens. ${budget.missing} sans prix.` : ' Prix indisponible.'}` : ''}`}
+    onPress={onPress} style={{ minHeight: 80, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 10, borderBottomWidth: 1, borderBottomColor: recipeColors.border }}>
+    <View style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: product ? '#edf3fa' : recipeColors.light }}>
+      <MaterialCommunityIcons name={product ? 'cart-outline' : 'format-list-bulleted'} size={24} color={accent} accessible={false} />
+    </View>
+    <View style={{ flex: 1, gap: 6 }}>
       <Text style={s.sectionTitle}>{list.name}</Text>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 14, rowGap: 8 }}>
-        {metrics.map(metric => <View key={metric.icon} style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-          <MaterialCommunityIcons name={metric.icon} size={18} color={recipeColors.muted} accessible={false} />
-          <Text style={s.note}>{metric.value}</Text>
-        </View>)}
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 22, rowGap: 6 }}>
+        <View accessible accessibilityLabel={`${list.totals.remaining_item_count} ${unit} restants à acheter`} style={[s.row, { gap: 4 }]}>
+          <MaterialCommunityIcons name="cart-arrow-down" size={17} color={accent} accessible={false} />
+          <Text style={s.note}>{list.totals.remaining_item_count} à acheter</Text>
+        </View>
+        {product && <View accessible accessibilityLabel={`${stores} magasins`} style={[s.row, { gap: 4 }]}>
+          <MaterialCommunityIcons name="store-outline" size={17} color={accent} accessible={false} />
+          <Text style={s.note}>{stores}</Text>
+        </View>}
       </View>
     </View>
-    <MaterialCommunityIcons name="chevron-right" size={22} color={recipeColors.muted} accessible={false} />
+    {product && <View style={{ alignItems: 'flex-end', flexShrink: 1, maxWidth: '38%', gap: 3 }}>
+      <Text style={[s.note, { textAlign: 'right' }]}>{budget?.label ?? 'Prix indisponible'}</Text>
+      {budget && <Text style={[s.sectionTitle, { color: accent }]}>{budget.amount} $</Text>}
+      {!!budget?.missing && <Text style={s.note}>{budget.missing} sans prix</Text>}
+    </View>}
   </Pressable>;
 }

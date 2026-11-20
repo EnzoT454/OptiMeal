@@ -1,11 +1,11 @@
 import { useCallback, useRef, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { fetchPin, pinPath } from '../../services/shoppingAccess';
 import { listCommand } from '../../services/shoppingLists';
 import type { ShoppingPin } from '../../types/shoppingLists';
-import { RecipeButton, recipeStyles as s } from '../recipes';
+import { RecipeButton } from '../recipes';
 import { Message } from '../ui';
 import { useListCommand } from './useListCommand';
 
@@ -36,7 +36,6 @@ export default function PinListAction({ id, disabled }: { id: string; disabled: 
   return <View style={{ gap: 8 }}>
     <RecipeButton title={command.pending ? 'Reprendre l’épinglage' : pinned ? 'Ne plus épingler sur Accueil' : 'Épingler sur Accueil'} variant="neutral"
       disabled={disabled || command.busy || !command.ready || (!pin && !command.pending)} onPress={() => void save()} />
-    {pinned && <Text style={s.note}>Cette liste est épinglée sur ton accueil.</Text>}
     <Message text={error || command.error} />
   </View>;
 }

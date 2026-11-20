@@ -611,6 +611,13 @@
           "default": false,
           "title": "Stale",
           "type": "boolean"
+        },
+        "selected_products": {
+          "additionalProperties": {
+            "$ref": "#/$defs/SourceProduct"
+          },
+          "title": "Selected Products",
+          "type": "object"
         }
       },
       "required": [
@@ -1078,6 +1085,22 @@
     "ShoppingListRead": {
       "additionalProperties": false,
       "properties": {
+        "kind": {
+          "anyOf": [
+            {
+              "enum": [
+                "articles",
+                "products"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Kind"
+        },
         "id": {
           "format": "uuid",
           "title": "Id",

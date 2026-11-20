@@ -140,6 +140,22 @@
     "ShoppingTemplateRead": {
       "additionalProperties": false,
       "properties": {
+        "kind": {
+          "anyOf": [
+            {
+              "enum": [
+                "articles",
+                "products"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Kind"
+        },
         "id": {
           "format": "uuid",
           "title": "Id",

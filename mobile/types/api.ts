@@ -2,7 +2,7 @@ export type RecipeUnit = 'g' | 'ml' | 'unit' | 'cup' | 'tbsp' | 'tsp';
 export type RecipeDifficulty = 'easy' | 'medium' | 'hard';
 export type RecipeVisibility = 'private' | 'public';
 export type RecipeScope = 'accessible' | 'discover' | 'mine' | 'favorites';
-export type RecipeSort = 'top' | 'newest' | 'updated';
+export type RecipeSort = 'top' | 'newest' | 'updated' | 'budget';
 export interface RecipeIngredient {
   ingredient_id: string; quantity: string; unit: RecipeUnit; preparation: string | null;
 }

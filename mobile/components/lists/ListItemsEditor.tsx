@@ -1,3 +1,5 @@
+import ListQuickAdd from './ListQuickAdd';
+import { shoppingListKind } from '../../services/shoppingPresentation';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Text, View } from 'react-native';
 import { RecipeButton, RecipeField, recipeColors, recipeStyles as s } from '../recipes';
@@ -66,6 +68,7 @@ export default function ListItemsEditor({ list, disabled, onCommand, onDone }: {
         { text: 'Continuer la saisie', style: 'cancel' }, { text: 'Fermer', onPress: onDone },
       ]); else onDone();
     }} />
+    {shoppingListKind(list) === 'articles' ? <>
     <RecipeField label="Article" value={name} onChangeText={value => { setName(value); setIngredient(null); }} editable={!locked} maxLength={120} placeholder="Ex. Pain" />
     <RecipeButton title="Choisir dans le catalogue" variant="neutral" disabled={locked} onPress={() => void pickIngredient()} />
     <RecipeField label="Quantité (facultative)" value={amount} onChangeText={setAmount} keyboardType="decimal-pad" editable={!locked} />
@@ -73,6 +76,7 @@ export default function ListItemsEditor({ list, disabled, onCommand, onDone }: {
     <RecipeButton title="Ajouter à la liste" disabled={locked || !name.trim() || list.totals.item_count >= 500} onPress={submit} />
     {loading && <ActivityIndicator color={recipeColors.green} accessibilityLabel="Chargement des ingrédients" />}
     {!!error && <Text accessibilityRole="alert" style={s.requiredItem}>{error}</Text>}
+    </> : shoppingListKind(list) === 'products' ? <ListQuickAdd list={list} disabled={locked} onCommand={onCommand} /> : <Text style={s.note}>Cette ancienne liste mixte est conservée. Utilise une nouvelle liste pour ajouter des éléments.</Text>}
     {list.items.filter(item => !item.removed).map(item => <View key={item.id} style={s.choice}>
       <Text style={s.sectionTitle}>{item.name}</Text>
       {!!item.required.length && <Text style={s.note}>{quantityLabel(item.required)}</Text>}

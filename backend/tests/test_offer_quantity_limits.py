@@ -26,9 +26,29 @@ from backend.tests.test_common_catalog import sources  # noqa: F401
 
 
 def oil():
+    # Offre fixe : les mises à jour hebdomadaires du catalogue ne doivent pas
+    # modifier les conditions dont ces tests vérifient le calcul et la validation.
+    return SourceProduct.model_validate({
+        'id': 'maxi:8661:20105368_EA', 'retailer': 'maxi', 'store_id': '8661',
+        'external_product_id': '20105368_EA', 'name': 'Extra Virgin Olive Oil',
+        'price': None, 'promo_price': '7.77', 'quantity_limit': 4,
+        'price_after_limit': '10.0', 'currency': 'CAD', 'unit': 'ml',
+        'quantity': '1000', 'valid_from': '2026-11-12', 'valid_to': '2026-11-18',
+        'retrieved_at': '2026-11-14', 'is_promotion': True, 'source': 'apify',
+        'url': 'https://www.maxi.ca/en/extra-virgin-olive-oil/p/20105368_EA',
+    })
+
+
+@pytest.fixture
+def limited_catalog(tmp_path):
     catalog = json.loads(DEFAULT_CATALOG.read_text())
-    return SourceProduct.model_validate(next(p for i in catalog['ingredients'] for p in i['products']
-        if p['retailer'] == 'maxi' and p['external_product_id'] == '20105368_EA'))
+    for ingredient in catalog['ingredients']:
+        for index, product in enumerate(ingredient['products']):
+            if product['id'] == oil().id:
+                ingredient['products'][index] = oil().model_dump(mode='json')
+    path = tmp_path / 'limited-catalog.json'
+    path.write_text(json.dumps(catalog))
+    return path
 
 
 @pytest.mark.parametrize('units,total', [(1, '7.77'), (4, '31.08'), (5, '41.08'), (10, '91.08')])
@@ -75,7 +95,10 @@ def test_source_fields_survive_assembly_and_missing_pair_is_rejected(sources):
     path = sources / mapping['sources']['maxi']
     data = json.loads(path.read_text())
     product = next(p for i in data for p in i['Produits'] if p['Id'] == '20105368_EA')
-    assert (product['LimiteQuantite'], product['PrixApresLimite']) == (4, 10.0)
+    # Modifier uniquement la copie temporaire des sources pour tester une offre limitée.
+    product.update(Prix=None, PrixPromo=7.77, LimiteQuantite=4, PrixApresLimite=10.0,
+                   IsPromotion=True, DateDebut='2026-11-12', DateFin='2026-11-18')
+    path.write_text(json.dumps(data))
     catalog = build_common_catalog(sources, Path('data/catalog/baseCommune/ingredient_mapping.json'))
     actual = next(p for i in catalog['ingredients'] for p in i['products'] if p['id'] == 'maxi:8661:20105368_EA')
     assert actual['quantity_limit'] == 4 and Decimal(actual['price_after_limit']) == Decimal('10')
@@ -85,9 +108,9 @@ def test_source_fields_survive_assembly_and_missing_pair_is_rejected(sources):
         build_common_catalog(sources, Path('data/catalog/baseCommune/ingredient_mapping.json'))
 
 
-def test_postgres_import_api_parity_constraints_and_downgrade(postgres):
-    upsert_ingredients(postgres, read_ingredients(DEFAULT_CATALOG))
-    categories, rows = read_offers(DEFAULT_CATALOG)
+def test_postgres_import_api_parity_constraints_and_downgrade(postgres, limited_catalog):
+    upsert_ingredients(postgres, read_ingredients(limited_catalog))
+    categories, rows = read_offers(limited_catalog)
     first = upsert_offers(postgres, categories, rows)
     assert first.processed == 93
     assert upsert_offers(postgres, categories, rows).changed == 0

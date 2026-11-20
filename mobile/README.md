@@ -148,7 +148,7 @@ ci-dessous. Les questions, droits et
 contrats sont décrits dans [RATINGS.md](../backend/docs/RATINGS.md).
 
 Validation du 2 novembre, étape 9 : 100 tests mobiles réussis, TypeScript valide et
-bundles iOS/Android générés avec Node 22.23.3. Le lint n’est pas configuré.
+bundles iOS/Android générés avec Node 22.23.3. Le lint est disponible depuis le 20 novembre 2026 avec `npm run lint` ; voir la configuration ci-dessous.
 La validation finale confirme aussi les migrations et lectures sur Supabase.
 Le [bilan technique](../backend/docs/RATINGS_VALIDATION.md) distingue les contrôles automatisés et la confirmation sur téléphone.
 Hamza confirme le 2 novembre 2026 que les tests sur téléphone fonctionnent
@@ -243,7 +243,7 @@ peuvent être inconnues et vont à la fin. Sur téléphone, vérifier le changem
 de tri depuis une deuxième page, le retour du détail après un vote et les
 grandes polices des contrôles de tri.
 
-Les tests mobiles et TypeScript passent. Le lint n’est pas configuré.
+Les tests mobiles et TypeScript passent. Le lint est disponible depuis le 20 novembre 2026 avec `npm run lint` ; voir la configuration ci-dessous.
 Derniers ajustements confirmés globalement sur téléphone le 5 novembre, sans
 plateforme précisée. Le protocole suivant reste la référence pour les résultats
 distincts iOS/Android et les scénarios d’erreur non détaillés :
@@ -334,6 +334,7 @@ Depuis `mobile/` :
 
 ```bash
 npm ci
+npm run lint
 npm run typecheck
 ```
 
@@ -346,6 +347,34 @@ Le fichier `.nvmrc` ne l’installe pas automatiquement et exige nvm si l’on
 utilise `nvm install` ou `nvm use`. Sans gestionnaire, installer cette version
 de Node directement. Vérifier `node --version` avant `npm ci` : le Node local
 du projet ne remplace pas celui du terminal pour cette commande.
+
+### Vérifier le code avec ESLint
+
+ESLint utilise les règles Expo 58 dans `eslint.config.js`. Les dépendances
+`eslint` et `eslint-config-expo` sont des outils de développement, enregistrés
+dans `package.json` et `package-lock.json` ; `npm ci` les installe pour l’équipe.
+Les dépendances Python de `requirements.txt` ne changent pas.
+
+Depuis `mobile/` :
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+```
+
+`npm run check` lance lint puis TypeScript. `npm run lint:fix` applique les
+corrections automatiques disponibles ; relire les changements avant de les
+conserver. Les dossiers natifs et générés sont exclus ; les sources et les
+tests CommonJS sont analysés. GitHub Actions exécute aussi le lint après
+l’installation des dépendances.
+
+Les erreurs bloquent la commande. Les avertissements restent affichés sans
+la bloquer. Pour introduire le contrôle dans le code existant, les diagnostics
+React Compiler `refs`, `set-state-in-effect`, `use-memo` et `immutability` sont
+configurés en avertissements. Les dépendances des hooks restent contrôlées et
+`rules-of-hooks` conserve son niveau erreur. Les avertissements sont à examiner
+progressivement ; un lint sans erreur ne signifie pas que tous sont résolus.
 
 ## 2. Configurer les seules valeurs publiques
 
@@ -576,19 +605,29 @@ des parcours intégrés a été confirmé sur iOS et Android le 27 octobre.
 
 ### Parcours Recettes et maquette
 
-Les éléments retenus de la maquette sont repris dans la liste (en-tête,
-sections Découvrir/Mes recettes/Favoris, recherche, filtres Toutes/Rapides/Faciles/Petit budget, bouton d’ajout et collection), les deux écrans de
-choix et le formulaire. Les grandes cartes avec photos restent présentes.
-La police DM Sans et les quatre pictogrammes des parcours sont inclus localement.
-`expo-image` affiche ces SVG ; recompiler l’application après installation
-des dépendances, comme pour les modules photo.
+La liste reprend les sections Découvrir/Mes recettes/Favoris, la recherche et
+les filtres Toutes/Rapides/Faciles/Petit budget. Les grandes cartes avec photos
+et la police DM Sans sont conservées. Le filtre Petit budget utilise le symbole
+$ ; son fonctionnement reste un message d’attente.
 
-Le chemin fonctionnel est **Ajouter une recette → Entrer manuellement →
-Remplir un formulaire**. Trouver une idée, Cuisiner avec ce qu’on a et
-Structurer une idée affichent un message d’attente.
-Le formulaire présente le nom, la photo, les portions,
-les ingrédients avec quantité séparée du choix d’unité, les étapes et leur durée en minutes,
-les étiquettes et le réglage de partage.
+Le bouton **+ dans un cercle**, à droite du titre Recettes, ouvre directement
+le formulaire manuel pour un compte connecté. Un visiteur doit d’abord se
+connecter. Les écrans intermédiaires et les liens Trouver une idée, Cuisiner
+avec ce que j’ai et Structurer mon idée ont été retirés.
+La création est répartie en cinq pages :
+
+1. **Présentation** : nom, photo et portions, avec les champs nom/photo manquants signalés en rouge.
+2. **Ingrédients** : choix, quantités, unités et précisions facultatives.
+3. **Préparation** : instructions et durées, avec total automatique.
+4. **Informations** : étiquettes et description facultatives.
+5. **Visibilité** : résumé, choix privé/public et enregistrement final.
+
+L’indicateur Étape X sur 5 accompagne une barre segmentée. Continuer valide la
+page courante ; Précédent et le retour conservent les champs. L’image n’est
+envoyée qu’à la sauvegarde finale. Quitter une création commencée demande
+confirmation. Il n’y a pas de brouillon persistant après fermeture de l’app.
+L’édition d’une recette existante garde le formulaire prérempli sur une page.
+
 Le choix d’un ingrédient ouvre une liste consultable avec recherche.
 Les unités acceptées sont `g`, `ml`, `unit` (pièces entières), `cup` (tasse, 250 ml),
 `tbsp` (cuillère à table, 15 ml) et `tsp` (cuillère à thé, 5 ml).
@@ -688,12 +727,26 @@ recettes publiques sous `community/`, puis nettoie le dossier personnel.
 npm run test:images
 ```
 
-Les 7 tests du service utilisent des doubles de galerie et de Storage.
+Les 13 tests du service utilisent des doubles de galerie, de lecture native/Web et de Storage.
 Le 21 octobre 2026, Hamza a confirmé que l’ajout d’une photo depuis la galerie
 fonctionne sur téléphone après recompilation. Le 27 octobre, Hamza a
 également confirmé le parcours des photos sur iOS et Android, avec un essai
 Android par son coéquipier. Les essais d’erreur réseau restent à compléter.
-Les tests complètent les essais sur téléphone, sans les remplacer. Le lint n’est pas configuré.
+Les tests complètent les essais sur téléphone, sans les remplacer. Le lint est disponible depuis le 20 novembre 2026 avec `npm run lint` ; voir la configuration ci-dessous.
+
+### Photos dans le navigateur — validation du 20 novembre 2026
+
+Les essais sur ordinateur utilisent la même préparation JPEG et le même envoi
+Storage. Le service lit les URL locales blob avec `fetch` sur Web ; iOS et
+Android gardent `expo-file-system`. La limite de 5 Mo et le compte obligatoire
+restent appliqués. Hamza confirme le bon fonctionnement de l’ajout de photo dans
+son navigateur après correction de `this.validatePath is not a function`.
+
+La suite mobile exécutée après cette correction donne **314 tests réussis**,
+TypeScript valide et lint sans erreur, avec **111 avertissements existants**.
+Les exports iOS/Android/Web ont été vérifiés pour les cinq étapes avant cette
+correction. Aucun nouvel essai natif n’est déduit du test navigateur.
+Voir le [guide des photos](../backend/docs/RECIPE_IMAGES.md).
 
 ### Organisation
 

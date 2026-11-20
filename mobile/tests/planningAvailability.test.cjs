@@ -29,6 +29,7 @@ function screen(file, { states = {}, reply = { item: { entries: [] } } } = {}) {
         if (name === 'react') return react;
         if (name === 'react-native') return native;
         if (name.endsWith('services/api')) return { api };
+        if (name.endsWith('shoppingNavigation')) return load('services/shoppingNavigation.ts');
         if (name.endsWith('/planning')) return load('components/planning.ts');
         if (name.endsWith('/MonthGrid')) return load('components/MonthGrid.tsx');
         if (name === '@react-navigation/native') return { useNavigation: () => ({ navigate: (...args) => navigations.push(args) }), useFocusEffect: fn => effects.push(fn) };
@@ -131,15 +132,16 @@ for (const entry of [{ ...meal, recipe_name: null }, { ...meal, recipe_id: null,
 test('calendrier : Épicerie transmet la semaine sélectionnée et ouvre la liste par identifiant', () => {
   const s = screen('app/CalendarScreen.tsx', { states: { 0: new Date(2027, 0, 4), 1: new Date(2027, 0, 4), 2: false, 3: [], 4: false, 8: 'epicerie' } });
   let tree = s.render();
-  const lists = nodes(tree).find(n => n.props?.period && n.props?.onCreate);
+  const lists = nodes(tree).find(n => n.props?.period && n.props?.onOpen);
   assert.equal(lists.props.period.start_date, '2027-01-04'); assert.equal(lists.props.period.end_date, '2027-01-10');
-  lists.props.onCreate();
-  assert.equal(s.navigations[0][0], 'Liste'); assert.equal(s.navigations[0][1].screen, 'CreateList');
-  assert.equal(s.navigations[0][1].params.period.start_date, '2027-01-04');
+  assert.equal(lists.props.onCreate, undefined);
   lists.props.onOpen('same-list');
-  assert.equal(s.navigations[1][1].params.id, 'same-list');
+  assert.equal(s.navigations[0][0], 'Liste');
+  const destination = s.navigations[0][1].state;
+  assert.equal(destination.routes[0].name, 'Lists');
+  assert.equal(destination.routes[1].params.id, 'same-list');
   nodes(tree).find(n => n.props?.accessibilityLabel === 'Semaine suivante').props.onPress();
   tree = s.render();
-  assert.equal(nodes(tree).find(n => n.props?.period && n.props?.onCreate).props.period.start_date, '2027-01-11');
+  assert.equal(nodes(tree).find(n => n.props?.period && n.props?.onOpen).props.period.start_date, '2027-01-11');
   assert.equal(s.calls.length, 0);
 });

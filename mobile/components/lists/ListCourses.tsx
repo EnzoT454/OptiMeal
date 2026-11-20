@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ShoppingListItemRow from './ShoppingListItemRow';
 import { Pressable, Text, View } from 'react-native';
 import { RecipeButton, recipeStyles as s } from '../recipes';
 import { listCommand, listsPath, quantityLabel } from '../../services/shoppingLists';
@@ -6,13 +7,15 @@ import type { ListCommand } from '../../services/shoppingLists';
 import type { ShoppingItemRead, ShoppingListRead } from '../../types/shoppingLists';
 import ProductPurchase, { productRows } from './ProductPurchase';
 import ListArticleSheet from './ListArticleSheet';
-import { coverageLabels, manualCheckCoverage, remainingQuantities, storeLabel } from './courseQuantities';
+import { shoppingListKind } from '../../services/shoppingPresentation';
+import { remainingQuantities, storeLabel } from './courseQuantities';
 
 export default function ListCourses({ list, disabled, onCommand, error = '' }: {
   list: ShoppingListRead; error?: string; disabled: boolean; onCommand: (command: ListCommand) => Promise<boolean>;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
-  const [showBought, setShowBought] = useState(true);
+  const [showBought, setShowBought] = useState(false);
+  const [showRemoved, setShowRemoved] = useState(false);
   const [store, setStore] = useState('all');
   const rows = productRows(list);
   const isBought = (item: ShoppingItemRead) => item.coverage_status === 'purchased';
@@ -21,30 +24,13 @@ export default function ListCourses({ list, disabled, onCommand, error = '' }: {
   const locked = disabled || !editable;
   const selectedItem = list.items.find(i => i.id === selected && !i.removed);
   function manualRow(item: ShoppingItemRead) {
-    const bought = isBought(item);
-    const owned = item.coverage_status === 'owned';
-    const remaining = remainingQuantities(list, item);
-    return <View key={item.id} style={[s.choice, { flexDirection: 'row', alignItems: 'center', gap: 12 }]}>
-      {!owned && <Pressable accessibilityRole="checkbox" accessibilityLabel={`Acheté : ${item.name}`}
-        accessibilityState={{ checked: bought, disabled: locked }} disabled={locked}
-        onPress={() => void onCommand(listCommand(`${listsPath}/${list.id}/items/${item.id}/manual-purchase`, {
-          expected_revision: list.revision, purchased: !bought, coverage: bought ? {} : manualCheckCoverage(item),
-        }, 'PUT'))} style={{ minHeight: 48, minWidth: 48, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={s.sectionTitle}>{bought ? '☑' : '☐'}</Text>
-      </Pressable>}
-      <Pressable accessibilityRole="button" accessibilityLabel={`Fiche de ${item.name}`} onPress={() => setSelected(item.id)} style={{ flex: 1, minHeight: 48, gap: 6 }}>
-        <Text style={s.sectionTitle}>{item.name}</Text>
-        <Text style={s.body}>Besoin : {quantityLabel(item.required)}</Text>
-        <Text style={s.note}>{coverageLabels[item.coverage_status]} · {item.category}</Text>
-        {item.coverage_status === 'partial' && remaining.length > 0 && <Text style={s.requiredItem}>Complément : {quantityLabel(remaining)}</Text>}
-        {!owned && <Text style={s.note}>Produit et prix à préciser</Text>}
-      </Pressable>
-    </View>;
+    return <ShoppingListItemRow key={item.id} item={item} list={list} disabled={locked} onCommand={onCommand} onOpen={() => setSelected(item.id)} />;
   }
+
   const loose = list.items.filter(i => !i.removed && !rows.some(r => r.itemIds.includes(i.id)));
   const categories = [...new Set(loose.map(i => i.category))].sort((a, b) => a.localeCompare(b, 'fr'));
   return <View style={{ gap: 16 }}>
-    <Text accessibilityRole="header" style={s.sectionTitle}>Reste à acheter</Text>
+    <Text accessibilityRole="header" style={s.sectionTitle}>À acheter · {list.totals.remaining_item_count} {list.kind === 'products' ? 'produits restants' : 'articles restants'}</Text>
     {stores.length > 0 && <View style={s.chips}>
       <RecipeButton title="Tous les magasins" variant="neutral" onPress={() => setStore('all')} accessibilityState={{ selected: store === 'all' }} />
       {stores.map(retailer => <RecipeButton key={retailer} title={storeLabel(retailer)} variant="neutral" onPress={() => setStore(retailer)} accessibilityState={{ selected: store === retailer }} />)}
@@ -62,14 +48,14 @@ export default function ListCourses({ list, disabled, onCommand, error = '' }: {
     })}
     {store === 'all' && categories.map(category => {
       const remaining = loose.filter(i => i.category === category && (!isBought(i) && i.coverage_status !== 'owned'));
-      return remaining.length > 0 && <View key={category} style={{ gap: 8 }}><Text style={s.note}>Magasin à choisir · {category}</Text>{remaining.map(manualRow)}</View>;
+      return remaining.length > 0 && <View key={category} style={{ gap: 8 }}><Text style={s.note}>{list.kind === 'products' ? 'Produits sans prix' : 'Articles'} · {category}</Text>{remaining.map(manualRow)}</View>;
     })}
-    {list.items.filter(i => !i.removed && rows.some(r => r.itemIds.includes(i.id)) && remainingQuantities(list, i).length > 0).map(item =>
+    {shoppingListKind(list) !== 'products' && list.items.filter(i => !i.removed && rows.some(r => r.itemIds.includes(i.id)) && remainingQuantities(list, i).length > 0).map(item =>
       <Pressable key={item.id} accessibilityRole="button" accessibilityLabel={`Vérifier le complément de ${item.name}`} onPress={() => setSelected(item.id)} style={s.notice}>
         <Text style={s.body}>{item.name} · encore {quantityLabel(remainingQuantities(list, item))}</Text>
         {list.assignment?.stale && <Text style={s.requiredItem}>Recalculer les prix pour les compléments.</Text>}
       </Pressable>)}
-    <RecipeButton title={`${showBought ? 'Masquer' : 'Voir'} les achats enregistrés`} variant="neutral" accessibilityState={{ expanded: showBought }} onPress={() => setShowBought(!showBought)} />
+    <RecipeButton title={`Achetés (${list.totals.purchased_item_count}) · ${showBought ? 'Masquer' : 'Voir'}`} variant="neutral" accessibilityState={{ expanded: showBought }} onPress={() => setShowBought(!showBought)} />
     {showBought && <View style={{ gap: 10 }}>
       {rows.filter(r => r.purchasedUnits > 0 && (store === 'all' || r.line.sale.raw_source.retailer === store)).map(row =>
         <ProductPurchase key={`${row.comparisonId}:${row.line.sale.product_id}`} list={list} row={row} display="purchased" disabled={locked} onCommand={onCommand} onOpen={() => setSelected(row.itemIds[0])} />)}
@@ -77,6 +63,13 @@ export default function ListCourses({ list, disabled, onCommand, error = '' }: {
       {!rows.some(r => r.purchasedUnits > 0) && !loose.some(isBought) && <Text style={s.note}>Aucun achat enregistré.</Text>}
     </View>}
     {list.items.some(i => !i.removed && i.coverage_status === 'owned') && <View style={{ gap: 8 }}><Text style={s.sectionTitle}>Déjà disponible</Text>{list.items.filter(i => !i.removed && i.coverage_status === 'owned').map(manualRow)}</View>}
+    {list.items.some(item => item.removed) && <View style={{ gap: 8 }}>
+      <RecipeButton title={`${list.kind === 'products' ? 'Produits retirés' : 'Articles retirés'} (${list.items.filter(item => item.removed).length})`} variant="neutral"
+        accessibilityState={{ expanded: showRemoved }} onPress={() => setShowRemoved(!showRemoved)} />
+      {showRemoved && list.items.filter(item => item.removed).map(item => <RecipeButton key={item.id} title={`Restaurer ${item.name}`} variant="neutral"
+        disabled={locked || list.totals.item_count >= 500} onPress={() => void onCommand(listCommand(`${listsPath}/${list.id}/items/${item.id}`,
+          { expected_revision: list.revision, removed: false }, 'PATCH'))} />)}
+    </View>}
     {selectedItem && <ListArticleSheet key={selectedItem.id} item={selectedItem} list={list} commandError={error} disabled={disabled} onClose={() => setSelected(null)} onCommand={onCommand} />}
   </View>;
 }

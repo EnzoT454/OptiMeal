@@ -2,13 +2,10 @@
 
 Le calendrier intégré depuis `main` le 1er novembre 2026 permet de conserver
 les repas d’un compte dans PostgreSQL et de consulter une semaine à la fois.
-Il complète les recettes et les comptes déjà présents. Il reste distinct du
-futur moteur de listes d’épicerie et de l’historique par instantanés.
-
-Le [guide des listes d’épicerie](SHOPPING_LISTS.md) définit leur conception et
-leur ordre d’implémentation. La cible prévoit une création depuis une période
-explicite du calendrier, puis une liste indépendante ; elle ne décrit pas le
-comportement actuel de l’Épicerie locale.
+La vue Épicerie calcule les besoins de cette semaine et permet de créer une
+liste de produits indépendante. Le [guide des listes](SHOPPING_GUIDE.md) décrit
+ce parcours. Les instantanés historiques des recettes et des prix ont été retirés
+du périmètre ; le calendrier utilise les recettes courantes.
 
 ## Installation
 
@@ -49,8 +46,9 @@ avant le montage de `CalendarScreen`. Les comptes connectés peuvent :
 
 `AddMealSheet` charge les dix premières recettes correspondant à la recherche
 ou au filtre Favoris. `MealActionsSheet` propose les actions sur un repas.
-Le marquage « restes » est une information enregistrée ; aucun calcul de
-coût ou de besoins d’épicerie n’est encore branché sur ce champ.
+Les repas marqués « restes » sont ignorés par le calcul des besoins d’épicerie
+pour ne pas racheter les ingrédients d’un repas déjà préparé. Les notes libres
+sont aussi ignorées et comptées séparément.
 
 ```mermaid
 flowchart TD
@@ -64,6 +62,34 @@ flowchart TD
     V --> E[Ajouter ou modifier un repas]
     E --> W[API : vérifier identité, recette et valeurs]
     W --> D
+```
+
+## Vue Épicerie et listes indépendantes
+
+La période sélectionnée est transmise à `calendar-preview`. Le serveur ajuste
+les ingrédients aux portions, regroupe les unités compatibles et signale les
+recettes inaccessibles. `creation-prices` prépare ensuite les scénarios Le moins
+cher, Maxi, Metro et Super C sans enregistrer de liste.
+
+**Créer une liste de produits** reprend le scénario choisi. Les besoins sans
+produit chiffrable et les repas indisponibles sont confirmés avant exclusion.
+Le serveur valide les empreintes de l’aperçu et des prix puis enregistre la
+liste active, ses produits et son panier dans une transaction. Elle est
+immédiatement utilisable pour les achats et reste indépendante des modifications
+ultérieures du calendrier.
+
+Depuis Accueil, le parcours de la semaine permet aussi de confirmer des besoins
+et de créer une liste d’articles sans produit ni montant. Ces commandes passent
+par les routes des listes, pas par `/plans`.
+
+```mermaid
+flowchart LR
+    P[Repas et portions de la semaine] --> B[Calculer les besoins]
+    B --> C[Vue Épicerie : choisir un scénario de prix]
+    C --> V[Confirmer les exclusions et vérifier le devis]
+    V --> L[Créer une liste de produits et son panier]
+    B --> A[Depuis Accueil : confirmer les besoins sans prix]
+    A --> LA[Créer une liste d’articles]
 ```
 
 ## Routes et formats
@@ -128,14 +154,16 @@ Les portions, la date, le créneau et le marquage de restes sont conservés.
 Ce cas représente une recette supprimée ; les notes libres restent intactes.
 Le POST refuse toujours une nouvelle entrée sans recette accessible ni note.
 La suppression du compte retire ses propres repas, mais conserve ceux des
-autres comptes qui avaient utilisé ses recettes, désormais indisponibles.
+autres comptes. Ses recettes publiques restent accessibles sans auteur ; seules
+les références aux recettes privées supprimées deviennent indisponibles.
 Les repas effacés avant cette migration ne sont pas restaurés. Le modèle actuel ne capture pas les ingrédients, les prix ni
 les étapes dans des révisions immuables. La consultation d’une ancienne
-semaine n’est donc pas encore l’historique stable demandé dans le cadrage.
+semaine n’est donc pas un historique figé. Cet historique est retiré du périmètre
+depuis le cadrage du 17 novembre 2026.
 
-Le calendrier n’enregistre pas encore de date d’achat ou de contraintes de
-budget, et ne génère aucune liste d’épicerie. Les instantanés, les révisions
-et le raccordement au calcul des achats restent à développer.
+Le calendrier ne gère pas de budget avancé. La date technique d’évaluation des
+prix et les achats appartiennent aux parcours des listes. Leur raccordement au
+calendrier est intégré ; l’historique par instantanés reste hors périmètre.
 
 ## Vérifications
 
@@ -151,4 +179,4 @@ Les essais Android restent à effectuer. Compléter les scénarios détaillés d
 persistance après réouverture, isolation de deux comptes, actions du menu,
 changement de semaine, suppression d’une recette planifiée et erreurs réseau.
 
-*Dernière mise à jour : 5 novembre 2026*
+*Dernière mise à jour : 20 novembre 2026*

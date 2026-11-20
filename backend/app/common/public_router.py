@@ -76,12 +76,15 @@ def list_offers(request: Request, ingredient_id: IngredientId | None = None,
                 retailer: Retailer | None = None, store_id: str | None = None,
                 category_id: int | None = None,
                 promotion_only: bool = False, on_date: date | None = None,
-                limit: Limit = 20, offset: Offset = 0):
+                limit: Limit = 20, offset: Offset = 0, q: Search = ''):
     data = catalog(request)
+    query = search_text(q.strip())
+    keywords = {i.id: ' '.join([i.name, *i.aliases]) for i in data.ingredients}
     if ingredient_id is not None and ingredient_id not in {i.id for i in data.ingredients}:
         fail(404, 'INGREDIENT_NOT_FOUND', 'Ingrédient introuvable.')
     items = [o for o in current_offers(request, on_date or today())
-             if (ingredient_id is None or o.ingredient_id == ingredient_id)
+             if (not query or query in search_text(o.product_name + ' ' + keywords.get(o.ingredient_id, '')))
+             and (ingredient_id is None or o.ingredient_id == ingredient_id)
              and (retailer is None or o.retailer == retailer)
              and (store_id is None or o.store_id == store_id)
              and (category_id is None or o.category_id == category_id)

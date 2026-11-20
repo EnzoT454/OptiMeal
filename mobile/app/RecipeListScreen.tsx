@@ -22,7 +22,7 @@ const filters = [
   { label: 'Toutes', icon: 'view-grid-outline' },
   { label: 'Rapides', icon: 'timer-outline' },
   { label: 'Faciles', icon: 'egg-pan' },
-  { label: 'Petit budget', icon: 'piggy-bank-outline' },
+  { label: 'Petit budget', icon: 'currency-usd' },
 ] as const;
 
 export default function RecipeListScreen({ navigation }: NativeStackScreenProps<RecipeStackParams, 'List'>) {
@@ -52,7 +52,7 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
   }
   function addRecipe() {
     if (!session) { requestSignIn('Connecte-toi pour ajouter tes propres recettes.'); return; }
-    navigation.navigate('Add');
+    navigation.navigate('Editor');
   }
   async function toggleFavorite(recipe: RecipeSummary) {
     if (!session) { requestSignIn('Connecte-toi pour enregistrer tes recettes favorites.'); return; }
@@ -86,9 +86,8 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
     activeView.current = view;
     setPendingFavorites(new Set(favoriteRequests.current)); setFavoriteError('');
     const cleanup = () => { active = false; if (activeView.current === view) activeView.current = null; };
-    if (filter === 'Petit budget') { setBusy(false); setError(''); return cleanup; }
     setBusy(true); setError('');
-    const params = new URLSearchParams({ scope: activeSection, sort: activeSort, q: query, limit: '20', offset: String(offset) });
+    const params = new URLSearchParams({ scope: activeSection, sort: filter === 'Petit budget' ? 'budget' : activeSort, q: query, limit: '20', offset: String(offset) });
     if (filter === 'Rapides') params.set('quick', 'true');
     if (filter === 'Faciles') params.set('easy', 'true');
     api<Page<RecipeSummary>>('/api/v1/recipes?' + params).then(result => {
@@ -97,7 +96,13 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
     return cleanup;
   }, [query, filter, offset, retry, activeSection, activeSort, session?.user.id]));
   return <RecipeScreen>
-    <RecipeTitle>Recettes</RecipeTitle>
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+      <RecipeTitle>Recettes</RecipeTitle>
+      <Pressable accessibilityRole="button" accessibilityLabel="Créer une recette" onPress={addRecipe}
+        style={{ width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: recipeColors.green }}>
+        <MaterialCommunityIcons name="plus" size={28} color="white" accessible={false} />
+      </Pressable>
+    </View>
     <View style={{ flexDirection: 'row', padding: 4, gap: 4, borderRadius: 14, backgroundColor: recipeColors.light }}>
       {sections.map(option => <Pressable key={option.value} accessibilityRole="tab" accessibilityLabel={option.label}
         accessibilityState={{ selected: activeSection === option.value }} onPress={() => selectSection(option.value)}
@@ -117,14 +122,11 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
           if (option.label !== filter) { resetResults(); setFilter(option.label); }
         }} />)}
     </ScrollView>
-    <RecipeButton title="+  Ajouter une recette" onPress={addRecipe} />
-    {filter === 'Petit budget' ? <View style={recipeStyles.notice}>
-      <Text style={recipeStyles.sectionTitle}>Petit budget</Text><Text style={recipeStyles.body}>Disponible prochainement.</Text>
-    </View> : <>
+    {filter === 'Petit budget' && <Text style={recipeStyles.note}>Du moins cher au plus cher, selon les quantités utilisées et les ingrédients chiffrables. Les recettes sans estimation sont placées à la fin.</Text>}
     <View style={recipeStyles.row}><Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} maxFontSizeMultiplier={1.2}
       style={[recipeStyles.sectionTitle, { flex: 1 }]}>{activeSection === 'discover' ? 'Recettes à découvrir' : activeSection === 'mine' ? 'Mes recettes' : 'Mes favoris'}</Text>
       <Text style={recipeStyles.count} maxFontSizeMultiplier={1.2}>{busy ? '…' : `${total} recette${total > 1 ? 's' : ''}`}</Text></View>
-    {activeSection !== 'mine' && <View accessibilityRole="radiogroup" accessibilityLabel="Trier les recettes" style={recipeStyles.chips}>
+    {activeSection !== 'mine' && filter !== 'Petit budget' && <View accessibilityRole="radiogroup" accessibilityLabel="Trier les recettes" style={recipeStyles.chips}>
       {sortOptions.map(option => <Pressable key={option.value} accessibilityRole="radio" accessibilityLabel={option.label}
         accessibilityState={{ checked: activeSort === option.value }} onPress={() => {
           if (activeSort !== option.value) { resetResults(); setSorts(previous => ({ ...previous, [activeSection]: option.value })); }
@@ -204,6 +206,6 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
       })}
       {offset > 0 && <Button title="Page précédente" onPress={() => { setItems([]); setBusy(true); setOffset(Math.max(0, offset - 20)); }} />}
       {offset + 20 < total && <Button title="Page suivante" onPress={() => { setItems([]); setBusy(true); setOffset(offset + 20); }} />}
-    </>}</>}
+    </>}
   </RecipeScreen>;
 }

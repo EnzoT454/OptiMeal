@@ -18,10 +18,10 @@ export const fetchLists = (offset = 0, collection?: 'current' | 'history', perio
 export async function fetchList(id: string, userId?: string) {
   return (await api<ShoppingDetail<ShoppingListRead>>(`${listsPath}/${id}`, {}, true, 15000, userId)).item;
 }
-export async function previewCalendar(body: ShoppingCalendarPreviewWrite) {
+export async function previewCalendar(body: ShoppingCalendarPreviewWrite, userId?: string) {
   return (await api<ShoppingDetail<ShoppingCalendarPreviewRead>>(`${listsPath}/calendar-preview`, {
     method: 'POST', body: JSON.stringify(body),
-  })).item;
+  }, true, 15000, userId)).item;
 }
 
 export async function previewCreationPrices(body: ShoppingDraftPricingWrite, userId: string) {

@@ -15,6 +15,7 @@ from backend.app.common.contracts import (
     ApiError, ContractModel, DecimalText, IngredientId, Quantity,
 )
 from backend.app.catalog.sales import NormalizedSale
+from backend.app.catalog.common_schemas import SourceProduct
 
 Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)]
 Revision = Annotated[int, Field(strict=True, ge=1)]
@@ -22,6 +23,7 @@ Count = Annotated[int, Field(strict=True, ge=0)]
 Fingerprint = Annotated[str, StringConstraints(pattern=r'^[a-f0-9]{64}$')]
 InputUnit = Literal['g', 'kg', 'ml', 'L', 'unit', 'cup', 'tbsp', 'tsp']
 BaseUnit = Literal['g', 'ml', 'unit']
+ListKind = Literal['articles', 'products']
 ListStatus = Literal['draft', 'active', 'completed', 'archived']
 
 
@@ -87,6 +89,7 @@ class ShoppingInitialItem(ContractModel):
 
 
 class ShoppingListCreate(ContractModel):
+    kind: ListKind | None = None
     name: Name
     pricing: ShoppingCreationPricing | None = None
     items: list[ShoppingInitialItem] = Field(default_factory=list, max_length=500)
@@ -115,20 +118,31 @@ class ShoppingItemAdd(ShoppingCommand):
     name: Name
     quantity: ShoppingQuantity | None = None
     merge: Literal['add', 'separate'] = 'add'
+    product_id: Annotated[str, StringConstraints(min_length=1, max_length=512)] | None = None
+
+    @model_validator(mode='after')
+    def product_requires_ingredient(self):
+        if self.product_id is not None and self.ingredient_id is None:
+            raise ValueError('Choisir un produit exige un ingrédient identifié.')
+        return self
 
 
 class ShoppingItemUpdate(ShoppingCommand):
+    refresh_prices: StrictBool = False
+    product_units: Annotated[int, Field(strict=True, ge=1, le=1_000_000)] | None = None
     name: Name | None = None
     quantity: ShoppingQuantity | None = None
     removed: StrictBool | None = None
 
     @model_validator(mode='after')
     def actual_change(self):
-        fields = self.model_fields_set - {'expected_revision'}
+        fields = self.model_fields_set - {'expected_revision', 'refresh_prices'}
         if not fields:
             raise ValueError('Indiquer une modification de l’article.')
         if any(getattr(self, f) is None for f in fields - {'quantity'}):
             raise ValueError('Seule la quantité peut être explicitement effacée.')
+        if 'product_units' in fields and 'quantity' in fields:
+            raise ValueError('Choisir un nombre de produits ou une quantité, pas les deux.')
         return self
 
 
@@ -176,6 +190,7 @@ class ShoppingCalendarAdjustment(ContractModel):
 
 
 class ShoppingFromCalendar(ShoppingCalendarPreviewWrite):
+    kind: ListKind | None = None
     name: Name
     pricing: ShoppingCreationPricing | None = None
     items: list[ShoppingInitialItem] = Field(default_factory=list, max_length=500)
@@ -314,8 +329,11 @@ class ShoppingRecalculateChoice(ContractModel):
 
 
 class ShoppingRecalculatePricesWrite(ShoppingCommand):
+    refresh_date: StrictBool = False
     scenario: Literal['maxi', 'metro', 'superc', 'cheapest'] | None = None
     choices: list[ShoppingRecalculateChoice] = Field(default_factory=list, max_length=500)
+    expected_fingerprint: Fingerprint | None = None
+    accept_partial: StrictBool = False
 
     @model_validator(mode='after')
     def unique_choices(self):
@@ -505,6 +523,7 @@ class ShoppingAppliedComparison(ContractModel):
     scenario: ShoppingScenario
     planning_fingerprint: Fingerprint | None = None
     stale: StrictBool = False
+    selected_products: dict[str, SourceProduct] = Field(default_factory=dict)
 
 
 class ShoppingOrigin(ContractModel):
@@ -514,6 +533,7 @@ class ShoppingOrigin(ContractModel):
 
 
 class ShoppingListRead(ContractModel):
+    kind: ListKind | None = None
     id: UUID
     name: Name
     source: Literal['manual', 'calendar']

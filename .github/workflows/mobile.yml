@@ -21,6 +21,7 @@ jobs:
           cache: npm
           cache-dependency-path: mobile/package-lock.json
       - run: npm ci
+      - run: npm run lint
       - run: npm run typecheck
       - run: npm test
       - run: npm exec -- expo export --platform ios --platform android --output-dir /tmp/optimeal-auth-export

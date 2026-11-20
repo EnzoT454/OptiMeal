@@ -6,6 +6,12 @@ Le [guide d’évaluation d’API Anything](docs/API_ANYTHING.md) prépare les f
 essais de récupération des prix sur les sites marchands et Glouton. Cette
 piste reste expérimentale et ne remplace pas les sources actuelles.
 
+La [refonte Liste du 19 novembre](docs/SHOPPING_REFACTOR.md) ajoute la création
+active vide, la sélection ciblée d’un produit et la comparaison facultative.
+La séparation Articles / Produits exige désormais la migration `0023_shopping_list_kind`, testée localement et confirmée sur la base configurée le 20 novembre 2026 ; contrats historiques et achats conservés.
+Mes listes conserve uniquement des articles : conversion des produits en ingrédients à la sauvegarde et à la lecture des anciennes sauvegardes, sans reprendre les choix commerciaux. L’ajout utilise le PATCH révisionné existant ; aucune nouvelle migration.
+Voir le [guide des listes](docs/SHOPPING_GUIDE.md) et les [contrats courants](docs/SHOPPING_LISTS_CONTRACTS.md).
+
 Le [plan des listes d’épicerie](docs/SHOPPING_LISTS.md) décrit les parcours,
 calculs et validations. Le lot A est livré : routes privées sous
 `/api/v1/shopping-lists`, brouillons manuels, aperçu puis import indépendant du
@@ -14,7 +20,8 @@ calendrier, édition, révisions et commandes idempotentes. Voir les
 [suivi de l’étape 5](docs/SHOPPING_LISTS.md#27-api-et-parcours-mobile--étape-5).
 La migration `0017_shopping_lists` est appliquée et vérifiée sur Supabase depuis
 le 14 novembre 2026. Les comparaisons et le [parcours de courses](docs/SHOPPING_COURSES.md) sont livrés dans le dépôt. Les migrations jusqu’à 0019 sont appliquées et vérifiées sur Supabase. Les prix réels demandent des attestations commerciales. L’[étape 13](docs/SHOPPING_ACCESS.md) relie Accueil et Calendrier aux listes identifiées,
-avec épinglage privé et filtrage par période exacte. La tête du dépôt est 0021 ;
+avec épinglage privé et filtrage par période exacte. La tête du dépôt est `0023_shopping_list_kind` (séparation Articles / Produits),
+confirmée sur la base configurée le 20 novembre 2026 avec un schéma conforme aux modèles ;
 0021 a été appliquée et vérifiée sur Supabase le 16 novembre 2026, depuis 0020 déjà présente.
 
 La [normalisation des ventes](docs/SALE_NORMALIZATION.md), étape 6, sépare contenu
@@ -23,12 +30,16 @@ commande `python -m backend.cli.normalize_sales --on-date 2026-11-14 --output /t
 audite le JSON ; ajouter `--source database` pour une lecture seule PostgreSQL.
 Au contrôle du 14 novembre, les deux sources donnent les mêmes 93 références :
 90 formats candidats, 3 inconnus et aucune référence certifiée sans attestation.
-Le [moteur d’achats](docs/PURCHASE_CALCULATION.md) et les [comparaisons](docs/SHOPPING_COMPARISONS.md) utilisent les références attestées.
+Le [moteur d’achats historique](docs/PURCHASE_CALCULATION.md) utilise les références attestées. Les créations et actualisations courantes utilisent aussi le calcul direct des formats et prix disponibles, sans transformer une référence non attestée en référence certifiée ; voir les [contrats courants](docs/SHOPPING_LISTS_CONTRACTS.md).
+
+Le mobile crée les recettes en cinq étapes, puis transmet une seule recette
+complète à l’API. L’ajout de photo fonctionne sur téléphone et navigateur avec
+le même contrat HTTPS et les mêmes droits Storage ; voir [les photos](docs/RECIPE_IMAGES.md).
 
 Le backend prépare désormais Découvrir, Mes recettes et Favoris : recettes
 privées par défaut et publication volontaire définitive. Une recette publique
 ne peut plus être rendue privée ni supprimée par son auteur.
-La migration `0020_shopping_reuse`, pour les [modèles, exclusions, copies et historique](docs/SHOPPING_REUSE.md), est présente sur Supabase. La tête du dépôt et la révision distante vérifiée sont `0021_shopping_list_pin`.
+La migration `0020_shopping_reuse`, pour les [modèles, exclusions, copies et historique](docs/SHOPPING_REUSE.md), est présente sur Supabase. Le contrôle du 20 novembre 2026 confirme 0023 sur la base configurée, incluant `0022_product_follows`, avec un schéma conforme aux modèles.
 Les autres routes utilisent les migrations jusqu’à `0016_offer_quantity_limits` :
 `0009_recipe_visibility` ajoute le partage et
 `0010_preserve_meals` conserve les repas après suppression de leur recette. Les
@@ -44,8 +55,12 @@ de gérer sa notation. Listes et détails incluent les moyennes ; seul le détai
 inclut les notes du compte connecté. Les migrations jusqu’à `0013` sont requises pour
 ces lectures et écritures. Le formulaire mobile est intégré ; Hamza confirme
 les tests sur téléphone le 2 novembre 2026, sans préciser la plateforme : voir le [contrat de notation](docs/CONTRACTS.md#notation-des-recettes).
-Les listes acceptent `sort=top/newest/updated` avec classement SQL avant
-pagination. Les dates historiques inconnues restent nulles ; voir les
+Les listes de recettes acceptent `sort=top/newest/updated/budget`, avec
+classement global avant pagination. Petit budget utilise les quantités consommées
+et les produits compatibles les moins chers en PostgreSQL, sans afficher ni
+stocker le coût. Les nouveaux prix importés sont pris en compte au prochain
+chargement ; aucune migration supplémentaire n’est nécessaire. Voir le
+[calcul Petit budget](docs/CONTRACTS.md#petit-budget). Les dates historiques inconnues restent nulles ; voir les
 [dates des recettes](docs/MIGRATIONS.md#dates-et-tris-des-recettes).
 Les votes incluent une version de contenu : seuls les votes de la version
 courante comptent. Une édition concurrente renvoie 409, sans réattribuer le
@@ -64,7 +79,7 @@ backend/
 │   ├── security.py              # Validation distante Supabase Auth
 │   ├── accounts/                # Identité, profil et suppression de compte (Auth/Storage)
 │   ├── recipes/                 # Modèles, autorisations, CRUD manuel et favoris
-│   ├── planning/                # Calendrier privé et repas planifiés ; instantanés à développer
+│   ├── planning/                # Calendrier privé et repas planifiés
 │   ├── shopping_lists/          # Base des listes, modifications et recalcul
 │   ├── common/                  # Contrats et routes communs ; calculs à développer
 │   ├── catalog/
@@ -117,7 +132,7 @@ backend/
 ├── alembic.ini                  # Configuration sans identifiants
 ├── alembic/                     # Chaîne unique des migrations PostgreSQL
 │   ├── env.py                   # Métadonnées applicatives et connexion serveur
-│   └── versions/                # Huit migrations : comptes, recettes, catalogue, circulaires, photos et calendrier
+│   └── versions/                # Migrations applicatives jusqu’à 0023 : recettes, catalogue, calendrier, listes et suivis
 ├── tests/
 │   ├── conftest.py              # Base des futures fixtures partagées
 │   ├── test_accounts.py         # Profils et isolation des comptes
@@ -302,7 +317,7 @@ python -m backend.cli.extract_receipt data/receipts/images/recu_maxi.jpg \
 
 Sur Mac, `--engine vision` utilise Apple Vision. Pour Windows, utiliser Tesseract + OpenCV. Le [guide OCR](docs/RECEIPTS.md) explique l’installation, les modèles de relecture des prix et les résultats Maxi/Metro/Super C. Le chemin Windows reste à tester sur PC.
 
-Les reçus restent locaux et privés. La confirmation humaine du 4 octobre porte sur les prix de l’échantillon Maxi/Metro ; les anciennes sorties peuvent conserver des erreurs. Le parcours de correction et confirmation en base reste à développer.
+Les reçus restent locaux et privés. La confirmation humaine du 4 octobre porte sur les prix de l’échantillon Maxi/Metro ; les anciennes sorties peuvent conserver des erreurs. La contribution par reçu est retirée du périmètre ; les outils de lecture locale sont conservés.
 
 ## Tests et développement
 
@@ -312,6 +327,17 @@ python -m pytest backend/tests -q
 
 Les tests couvrent les modules existants sans collecte externe ni appel payant. Ils ne prouvent pas l’exactitude des prix en magasin.
 
+Les tests des limites promotionnelles utilisent une offre fixe et des copies
+temporaires du catalogue : une actualisation hebdomadaire des prix ne doit pas
+changer leurs résultats attendus. Les tests PostgreSQL nécessitent une base
+locale jetable configurée avec `OPTIMEAL_TEST_DATABASE_URL` ; sans elle, ils
+sont ignorés. Voir le [guide des migrations](docs/MIGRATIONS.md#tests).
+
+Après un ajout ou une modification de route ou de schéma API, régénérer les
+contrats avec `python -m backend.cli.export_shared_contracts` et inclure les
+exports modifiés dans le commit. Vérifier ensuite leur cohérence avec
+`python -m backend.cli.export_shared_contracts --check`.
+
 Le 1er novembre, Hamza a aussi confirmé sur iOS le mode visiteur, la connexion
 à la demande, la photo obligatoire à la création, les photos des produits et
 la suppression du compte. Ces ajouts restent à reproduire sur Android ; les
@@ -319,10 +345,12 @@ scénarios d’erreur détaillés restent à compléter.
 
 Les parcours comptes, recettes, photos et Promos ont été confirmés sur iOS
 et Android par Hamza le 27 octobre 2026, avec des essais Android par son
-coéquipier. Pour la suite, développer les connecteurs web IA Metro/Super C
-dans `app/price_sources/`, les modes IA des recettes, les instantanés du calendrier, les listes,
-l’historique des prix et les contributions par reçus. Compléter les fichiers déjà préparés dans les domaines concernés et leurs tests. Garder les routes HTTP courtes et les traitements réutilisables hors des commandes.
+coéquipier. Depuis le cadrage du 17 novembre, la priorité est la stabilisation et les tests
+utilisateurs. Les listes sont intégrées. Les collectes automatisées Metro/Super C
+restent à compléter ; les modes IA utilisateur, les instantanés historiques des
+plans et des prix, les estimations statistiques et les contributions par reçu
+sont retirés du périmètre. Garder les routes HTTP courtes et les traitements réutilisables hors des commandes.
 
 Le [guide des données](docs/DATA.md) décrit les fichiers locaux. Le [guide de la base](docs/DATABASE.md) distingue les tables actuelles du modèle étendu proposé pour l’historique, les reçus et les estimations.
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 20 novembre 2026*

@@ -1,231 +1,108 @@
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RecipeButton, RecipeField, RecipeScreen, RecipeTitle, recipeColors, recipeStyles as s } from '../components/recipes';
-import { Message } from '../components/ui';
-import CreationPrices from '../components/lists/CreationPrices';
-import IngredientPicker from '../components/IngredientPicker';
-import RecipeUnitPicker from '../components/RecipeUnitPicker';
+import InstantListCreation from '../components/lists/InstantListCreation';
+import { useListCommand } from '../components/lists/useListCommand';
 import { positiveAmount } from '../components/lists/courseQuantities';
 import { useAuth } from '../context/AuthContext';
-import { api } from '../services/api';
-import type { Ingredient, Page, RecipeUnit } from '../types/api';
-import { ListDateField } from '../components/lists/ListDateField';
-import { useListCommand } from '../components/lists/useListCommand';
-import { currentWeek, dateLabel, listCommand, listsPath, localDate, previewCalendar, previewCreationPrices, quantityLabel } from '../services/shoppingLists';
-import type { ShoppingCalendarPreviewRead, ShoppingInitialItem, ShoppingInputUnit, ShoppingBaseQuantity, ShoppingDraftPricingRead, ShoppingDraftChoice, ShoppingDraftProduct, ShoppingScenarioName } from '../types/shoppingLists';
+import { dateLabel, listCommand, listsPath, localDate, previewCalendar } from '../services/shoppingLists';
+import type { ShoppingListKind, ShoppingBaseQuantity, ShoppingCalendarPreviewRead } from '../types/shoppingLists';
 import type { ListStackParams } from '../types/navigation';
 
-export default function CreateListScreen({ navigation, route }: NativeStackScreenProps<ListStackParams, 'CreateList'>) {
+export default function CreateListScreen(props: NativeStackScreenProps<ListStackParams, 'CreateList'>) {
+  const [kind, setKind] = useState<ShoppingListKind | null>(props.route.params?.kind ?? null);
+  if (!props.route.params?.period) {
+    if (kind) return <InstantListCreation kind={kind} onCreated={id => props.navigation.replace('ShoppingDetail', { id })} />;
+    return <RecipeScreen>
+      <RecipeTitle>Quelle liste souhaites-tu créer ?</RecipeTitle>
+      <View style={s.notice}><RecipeButton title="Liste d’articles" onPress={() => setKind('articles')} />
+        <Text style={s.body}>Note tes besoins librement et coche tes achats, sans prix ni magasin.</Text></View>
+      <View style={s.notice}><RecipeButton title="Liste de produits" onPress={() => setKind('products')} />
+        <Text style={s.body}>Choisis des produits en magasin pour suivre leur prix et le total estimé.</Text></View>
+    </RecipeScreen>;
+  }
+  return <CalendarListCreation {...props} />;
+}
+
+function CalendarListCreation({ navigation, route }: NativeStackScreenProps<ListStackParams, 'CreateList'>) {
+  const period = route.params!.period!;
   const { session } = useAuth();
-  const user = session?.user.id;
-  const account = useRef(user); account.current = user;
-  const [step, setStep] = useState<1 | 2>(1);
-  const [quote, setQuote] = useState<ShoppingDraftPricingRead | null>(null);
-  const [choices, setChoices] = useState<ShoppingDraftChoice[]>([]);
-  const [selected, setSelected] = useState<ShoppingScenarioName | null>(null);
-  const [calendarEdits, setCalendarEdits] = useState<Record<string, ShoppingBaseQuantity[]>>({});
-  const priceRequest = useRef(0), priceLock = useRef(false);
-  useEffect(() => () => { priceRequest.current++; }, []);
-  const [items, setItems] = useState<(ShoppingInitialItem & { key: number })[]>([]);
-  const sequence = useRef(0);
-  const [editing, setEditing] = useState<number | null>(null);
-  const [article, setArticle] = useState(''), [amount, setAmount] = useState('');
-  const [unit, setUnit] = useState<RecipeUnit | null>(null);
-  const [ingredient, setIngredient] = useState<string | null>(null);
-  const [catalog, setCatalog] = useState<Ingredient[]>([]), [picker, setPicker] = useState(false);
-  const [excluded, setExcluded] = useState<string[]>([]);
-  const [mode, setMode] = useState<'manual' | 'calendar'>(route.params?.period ? 'calendar' : 'manual');
-  const [name, setName] = useState('');
-  const [period, setPeriod] = useState(() => route.params?.period ?? currentWeek());
-  const [purchaseDate, setPurchaseDate] = useState(localDate);
+  const identity = `${session?.user.id}:${period.start_date}:${period.end_date}`;
+  const current = useRef(identity); current.current = identity;
+  const [name, setName] = useState('Courses de la semaine'), [date] = useState(localDate);
   const [preview, setPreview] = useState<ShoppingCalendarPreviewRead | null>(null);
-  const [empty, setEmpty] = useState(false);
-  const [partial, setPartial] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const previewLock = useRef(false);
-  const command = useListCommand(route.params?.period ? `create.${route.params.period.start_date}.${route.params.period.end_date}` : 'create');
+  const [edits, setEdits] = useState<Record<string, ShoppingBaseQuantity[]>>({});
+  const [excluded, setExcluded] = useState<string[]>([]), [partial, setPartial] = useState(false);
+  const [loading, setLoading] = useState(false), [error, setError] = useState('');
+  const request = useRef(0), fetching = useRef(false), started = useRef(false);
+  const command = useListCommand(`create.${period.start_date}.${period.end_date}`);
   const locked = command.locked || loading;
-  function resetPreview() { setPreview(null); setCalendarEdits({}); setExcluded([]); setPartial(false); setEmpty(false); setError(''); }
-  async function generate() {
-    if (previewLock.current || locked) return;
-    if (period.end_date < period.start_date) { setError('La fin de la période doit suivre son début.'); return; }
-    previewLock.current = true; setLoading(true); setError('');
-    try { setPreview(await previewCalendar({ ...period, purchase_date: purchaseDate })); setCalendarEdits({}); setExcluded([]); setPartial(false); }
-    catch (e) { setError(e instanceof Error ? e.message : 'Aperçu indisponible.'); }
-    finally { previewLock.current = false; setLoading(false); }
-  }
-  const calendarItems = mode === 'calendar' ? preview?.items.filter(item => !excluded.includes(item.id)) ?? [] : [];
-  const itemCount = items.length + calendarItems.length;
-  const unfinished = !!article.trim() || !!amount.trim() || editing !== null;
-  function clearArticle() { setArticle(''); setAmount(''); setUnit(null); setIngredient(null); setEditing(null); setError(''); }
-  function stageArticle() {
-    if (locked) return;
-    if (!article.trim()) { setError('Indique le nom de l’article.'); return; }
-    const quantity = amount.trim() ? positiveAmount(amount.trim()) : null;
-    if (amount.trim() && (!quantity || !unit)) { setError('Indique une quantité positive et son unité.'); return; }
-    if (editing === null && itemCount >= 500) { setError('Une liste peut contenir au maximum 500 articles.'); return; }
-    const item = { key: editing ?? ++sequence.current, name: article.trim(), ingredient_id: ingredient,
-      quantity: quantity && unit ? { amount: quantity, unit: unit as ShoppingInputUnit } : null };
-    setItems(previous => editing === null ? [...previous, item] : previous.map(current => current.key === editing ? item : current));
-    clearArticle();
-  }
-  async function pickIngredient() {
-    if (!user || locked) return;
-    setLoading(true); setError('');
+  useEffect(() => () => { request.current++; }, []);
+  async function load(day = date) {
+    if (fetching.current || command.locked) return;
+    const version = ++request.current; fetching.current = true; setLoading(true); setError('');
     try {
-      const page = await api<Page<Ingredient>>('/api/v1/ingredients?limit=100', {}, true, 15000, user);
-      if (account.current === user) { setCatalog(page.items); setPicker(true); }
-    } catch (failure) { if (account.current === user) setError(failure instanceof Error ? failure.message : 'Catalogue indisponible.'); }
-    finally { if (account.current === user) setLoading(false); }
-  }
-  function adjustedCalendar() {
-    return calendarItems.map(item => {
-      const edits = calendarEdits[item.id];
-      if (!edits) return item;
-      const required = edits.filter(q => q.amount.trim()).map(q => {
-        const amount = positiveAmount(q.amount.trim());
-        if (!amount) throw new Error(`Vérifie la quantité de ${item.name}.`);
-        return { ...q, amount };
-      });
-      return { ...item, required };
-    });
-  }
-  const canContinue = !!name.trim() && itemCount > 0 && itemCount <= 500 && !unfinished &&
-    (mode === 'manual' || !!preview && (!preview.excluded_meals.length || partial) &&
-      (preview.items.length > 0 || !preview.excluded_ingredient_ids.length || empty));
-  async function requestPrices(nextChoices: ShoppingDraftChoice[] = choices) {
-    if (!user || locked || priceLock.current || !canContinue) return;
-    let calendar;
-    try { calendar = adjustedCalendar(); }
-    catch (failure) { setError(failure instanceof Error ? failure.message : 'Vérifie les quantités.'); return; }
-    const version = ++priceRequest.current; priceLock.current = true;
-    setLoading(true); setError('');
-    try {
-      const value = await previewCreationPrices({ purchase_date: purchaseDate, choices: nextChoices,
-        items: [...calendar.map(item => ({ name: item.name, ingredient_id: item.ingredient_id, required: item.required })),
-          ...items.map(item => ({ name: item.name, ingredient_id: item.ingredient_id, required: item.quantity ? [item.quantity] : [] }))],
-      }, user);
-      if (priceRequest.current === version && account.current === user) { setQuote(value); setChoices(nextChoices); setStep(2); return true; }
+      const value = await previewCalendar({ ...period, purchase_date: day });
+      if (current.current === identity && request.current === version) {
+        setPreview(value); setEdits({}); setExcluded([]); setPartial(false);
+      }
     } catch (failure) {
-      if (priceRequest.current === version && account.current === user) setError(failure instanceof Error ? failure.message : 'Prix indisponibles.');
-    } finally { priceLock.current = false; if (priceRequest.current === version && account.current === user) setLoading(false); }
+      if (current.current === identity && request.current === version) setError(failure instanceof Error ? failure.message : 'Aperçu indisponible.');
+    } finally {
+      fetching.current = false;
+      if (current.current === identity && request.current === version) setLoading(false);
+    }
   }
-  async function pickProduct(product: ShoppingDraftProduct) {
-    const next = [...choices.filter(choice => choice.item_index !== product.item_index), { item_index: product.item_index, product_id: product.product_id }];
-    const updated = await requestPrices(next);
-    if (updated && account.current === user) setSelected('cheapest');
-  }
-  async function persist(acceptPartial = false) {
-    if (!command.pending && (!canContinue || !quote || !selected)) return;
-    const calendar = adjustedCalendar();
-    const content = { name: name.trim(), purchase_date: purchaseDate, activate: true,
-      items: items.map(({ key, ...item }) => item),
-      pricing: quote && selected ? { fingerprint: quote.fingerprint, scenario: selected, choices, accept_partial: acceptPartial } : undefined };
-    const body = mode === 'manual' ? content : { ...content, ...period,
-      preview_fingerprint: preview?.preview_fingerprint, excluded_item_ids: excluded,
-      adjusted_items: calendar.filter(item => calendarEdits[item.id]).map(item => ({ item_id: item.id, required: item.required })),
-      accept_partial: partial, accept_empty: empty,
-    };
-    const result = await command.run(command.pending ?? listCommand(
-      mode === 'manual' ? listsPath : `${listsPath}/from-calendar`, body));
-    if (result) navigation.replace('ShoppingDetail', { id: result.id });
-  }
-  function create() {
-    if (command.pending) { void persist(); return; }
-    if (!quote || !selected || locked) return;
-    const scenario = quote.scenarios.find(value => value.scenario === selected);
-    if (!scenario?.complete) Alert.alert('Certains produits restent sans prix', 'Le montant affiché est un sous-total. Créer la liste avec ces produits à vérifier ?', [
-      { text: 'Annuler', style: 'cancel' }, { text: 'Créer avec le sous-total', onPress: () => void persist(true) },
-    ]); else void persist();
+  useEffect(() => {
+    if (command.ready && !command.pending && !started.current) { started.current = true; void load(); }
+  }, [command.ready]);
+  const selected = preview?.items.filter(item => !excluded.includes(item.id)) ?? [];
+  const valid = !!name.trim() && selected.length > 0 && selected.length <= 500 && !!preview && (!preview.excluded_meals.length || partial);
+  async function save() {
+    if (!command.pending && (!valid || !preview)) return;
+    const adjusted = [];
+    for (const item of selected) if (edits[item.id]) {
+      const required = edits[item.id].filter(q => q.amount.trim()).map(q => ({ ...q, amount: positiveAmount(q.amount) }));
+      if (required.some(q => q.amount === null)) { setError(`Vérifie les quantités de ${item.name}.`); return; }
+      adjusted.push({ item_id: item.id, required });
+    }
+    const result = await command.run(command.pending ?? listCommand(`${listsPath}/from-calendar`, {
+      name: name.trim(), kind: 'articles', ...period, purchase_date: date, activate: true,
+      preview_fingerprint: preview!.preview_fingerprint, accept_partial: partial,
+      excluded_item_ids: excluded, adjusted_items: adjusted,
+    }));
+    if (result && current.current === identity) navigation.replace('ShoppingDetail', { id: result.id });
   }
   return <RecipeScreen>
-    <RecipeTitle>Créer une liste</RecipeTitle>
-    {command.pending ? <View style={s.notice}>
-      <Text style={s.sectionTitle}>Enregistrement à vérifier</Text>
-      <Text style={s.body}>La réponse n’a pas été confirmée. Reprends la même demande pour retrouver la liste sans la créer deux fois.</Text>
-      <RecipeButton title="Reprendre l’enregistrement" disabled={command.busy} onPress={create} />
-    </View> : step === 2 ? <>
-      <Text accessibilityRole="header" style={s.sectionTitle}>2. Prix par magasin</Text>
-      <Text style={s.note}>Produits entiers, arrondis au supérieur. Sans quantité : un produit. Prix estimés hors taxes et consignes.</Text>
-      {quote && <CreationPrices quote={quote} selected={selected} disabled={locked} onSelect={setSelected} onPick={product => void pickProduct(product)} />}
-      <RecipeButton title="Précédent" variant="neutral" disabled={locked} onPress={() => { setStep(1); setQuote(null); setChoices([]); setSelected(null); setError(''); }} />
-      {!!(error || command.error) && <RecipeButton title="Recalculer les prix" variant="neutral" disabled={locked} onPress={() => void requestPrices()} />}
-      <RecipeButton title="Créer la liste" disabled={locked || !quote || !selected} onPress={create} />
+    <RecipeTitle>Créer la liste de cette semaine</RecipeTitle>
+    <Text style={s.body}>Repas du {dateLabel(period.start_date)} au {dateLabel(period.end_date)}. Les ingrédients seront enregistrés sans choisir de magasin ni de produit.</Text>
+    {!!(error || command.error) && <Text accessibilityRole="alert" style={s.requiredItem}>{error || command.error}</Text>}
+    {command.pending ? <>
+      <Text style={s.body}>La création reste à confirmer. Reprends la même demande sans créer de doublon.</Text>
+      <RecipeButton title="Reprendre la création" disabled={command.busy} onPress={() => void save()} />
     </> : <>
-      <Text accessibilityRole="header" style={s.sectionTitle}>1. Ingrédients</Text>
-      <Text style={s.sectionTitle}>Comment commencer ?</Text>
-      <View accessibilityRole="radiogroup" accessibilityLabel="Origine de la liste" style={{ gap: 10 }}>
-        {([{ value: 'manual', title: 'Manuellement', description: 'Ajoute tes articles avant d’enregistrer la liste.' },
-          { value: 'calendar', title: 'Depuis mon calendrier', description: 'Les besoins de tes repas, sur la période de ton choix.' }] as const).map(choice =>
-          <Pressable key={choice.value} accessibilityRole="radio" accessibilityState={{ checked: mode === choice.value, disabled: locked }}
-            disabled={locked} onPress={() => { setMode(choice.value); resetPreview(); }}
-            style={[s.choice, { borderWidth: 2, borderColor: mode === choice.value ? recipeColors.green : recipeColors.border, minHeight: 72 }]}>
-            <Text style={s.sectionTitle}>{mode === choice.value ? '✓ ' : ''}{choice.title}</Text>
-            <Text style={s.body}>{choice.description}</Text>
-          </Pressable>)}
-      </View>
-      <RecipeField label="Nom de la liste" value={name} onChangeText={setName} editable={!locked} maxLength={120} placeholder="Ex. Épicerie de la semaine" />
-      <ListDateField label="Date prévue des courses" value={purchaseDate} disabled={locked}
-        onChange={value => { setPurchaseDate(value); resetPreview(); }} />
-      {mode === 'calendar' && <>
-        <ListDateField label="Premier jour inclus" value={period.start_date} disabled={locked}
-          onChange={value => { setPeriod(p => ({ ...p, start_date: value })); resetPreview(); }} />
-        <ListDateField label="Dernier jour inclus" value={period.end_date} disabled={locked}
-          onChange={value => { setPeriod(p => ({ ...p, end_date: value })); resetPreview(); }} />
-        <RecipeButton title={preview ? 'Actualiser l’aperçu' : 'Voir l’aperçu'} variant="neutral" disabled={locked} onPress={() => void generate()} />
-        {preview && <>
-          <Text style={s.sectionTitle}>Aperçu · {preview.items.length} articles</Text>
-          <Text style={s.body}>Du {dateLabel(preview.period.start_date)} au {dateLabel(preview.period.end_date)} · {preview.included_meal_count} repas inclus.</Text>
-          <Text style={s.note}>{preview.skipped_note_count} notes et {preview.skipped_leftover_count} restes ignorés.</Text>
-          <Text style={s.body}>Cette copie restera indépendante du calendrier. Tes repas et recettes ne seront pas modifiés.</Text>
-          {preview.warnings.map((w, i) => <Text key={i} style={s.requiredItem}>{w.message}</Text>)}
-          {preview.items.filter(item => !excluded.includes(item.id)).map(item => <View key={item.id} style={s.choice}>
-            <Text style={s.sectionTitle}>{item.name}</Text>
-            {(calendarEdits[item.id] ?? (item.required.length ? item.required : [{ amount: '', unit: 'unit' as const }])).map((q, index, values) =>
-              <RecipeField key={q.unit} label={`Quantité de ${item.name} (${q.unit})`} value={q.amount} keyboardType="decimal-pad" editable={!locked}
-                onChangeText={amount => setCalendarEdits(previous => ({ ...previous, [item.id]: values.map((current, n) => n === index ? { ...current, amount } : current) }))} />)}
-            <Text style={s.note}>{item.contributions.map(c => `${c.recipe_name} · ${c.meal_date ? dateLabel(c.meal_date) : ''} · ${c.servings} portions`).join('\n')}</Text>
-            <RecipeButton title={`Retirer ${item.name} de l’aperçu`} variant="neutral" disabled={locked} onPress={() => setExcluded(previous => [...previous, item.id])} />
-          </View>)}
-          {preview.excluded_ingredient_ids.length > 0 && <Text style={s.note}>{preview.excluded_ingredient_ids.length} ingrédient(s) non suggéré(s) selon tes préférences. Tu peux les rétablir dans Paramètres.</Text>}
-          {!preview.items.length && preview.excluded_ingredient_ids.length > 0 && <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: empty, disabled: locked }} disabled={locked} onPress={() => setEmpty(!empty)} style={s.notice}>
-            <Text style={s.body}>{empty ? '☑' : '☐'} Je confirme l’aperçu sans besoin après exclusions.</Text>
-          </Pressable>}
-          {!!preview.excluded_meals.length && <Pressable accessibilityRole="checkbox" accessibilityState={{ checked: partial, disabled: locked }}
-            disabled={locked} onPress={() => setPartial(!partial)} style={[s.notice, { minHeight: 52 }]}>
-            <Text style={s.body}>{partial ? '☑' : '☐'} Je confirme la création sans les {preview.excluded_meals.length} repas indisponibles.</Text>
-          </Pressable>}
-        </>}
+      <RecipeField label="Nom de la liste" value={name} maxLength={120} editable={!locked} onChangeText={setName} />
+      {loading && <ActivityIndicator color={recipeColors.green} accessibilityLabel="Calcul des ingrédients" />}
+      <RecipeButton title={preview ? 'Actualiser l’aperçu' : 'Voir l’aperçu'} variant="neutral" disabled={locked} onPress={() => void load()} />
+      {preview && <>
+        <Text style={s.note}>{preview.included_meal_count} repas inclus · {preview.skipped_note_count} notes et {preview.skipped_leftover_count} restes ignorés. Cette liste restera indépendante du calendrier.</Text>
+        {preview.warnings.map((warning, index) => <Text key={index} style={s.requiredItem}>{warning.message}</Text>)}
+        {selected.map(item => <View key={item.id} style={s.choice}>
+          <Text style={s.sectionTitle}>{item.name}</Text>
+          {(edits[item.id] ?? item.required).map((q, index, quantities) => <RecipeField key={q.unit}
+            label={`Quantité de ${item.name} (${q.unit})`} value={q.amount} editable={!locked} keyboardType="decimal-pad"
+            onChangeText={amount => setEdits(previous => ({ ...previous, [item.id]: quantities.map((value, n) => n === index ? { ...value, amount } : value) }))} />)}
+          <Text style={s.note}>{item.contributions.map(c => `${c.recipe_name} · ${c.servings} portions`).join('\n')}</Text>
+          <RecipeButton title={`Retirer ${item.name} de l’aperçu`} variant="neutral" disabled={locked} onPress={() => setExcluded(values => [...values, item.id])} />
+        </View>)}
+        {!!preview.excluded_meals.length && <RecipeButton title={partial ? '✓ Repas indisponibles exclus' : 'Confirmer les repas indisponibles exclus'}
+          variant="neutral" disabled={locked} accessibilityState={{ selected: partial }} onPress={() => setPartial(!partial)} />}
+        {!!preview.excluded_ingredient_ids.length && <Text style={s.note}>{preview.excluded_ingredient_ids.length} ingrédient(s) exclus selon tes préférences.</Text>}
+        {!selected.length && <Text style={s.body}>Aucun ingrédient retenu. Tu peux créer une liste vide et y ajouter tes articles.</Text>}
+        <RecipeButton title="Créer la liste" disabled={locked || !valid} onPress={() => void save()} />
       </>}
-      <Text accessibilityRole="header" style={s.sectionTitle}>Articles · {itemCount}</Text>
-      {itemCount > 500 && <Text accessibilityRole="alert" style={s.requiredItem}>Limite de 500 articles. Retire les articles en trop avant de créer la liste.</Text>}
-      {items.map(item => <View key={item.key} style={s.choice}>
-        <Text style={s.sectionTitle}>{item.name}</Text>
-        {!!item.quantity && <Text style={s.body}>{quantityLabel([item.quantity])}</Text>}
-        <RecipeButton title={`Modifier ${item.name}`} variant="neutral" disabled={locked} onPress={() => {
-          setEditing(item.key); setArticle(item.name); setIngredient(item.ingredient_id ?? null);
-          setAmount(item.quantity?.amount ?? ''); setUnit((item.quantity?.unit as RecipeUnit) ?? null); setError('');
-        }} />
-        <RecipeButton title={`Retirer ${item.name}`} variant="neutral" disabled={locked} onPress={() => {
-          setItems(previous => previous.filter(current => current.key !== item.key)); if (editing === item.key) clearArticle();
-        }} />
-      </View>)}
-      <RecipeField label="Article" value={article} editable={!locked} maxLength={120} onChangeText={value => { setArticle(value); setIngredient(null); }} placeholder="Ex. Pain" />
-      <RecipeButton title="Choisir dans le catalogue" variant="neutral" disabled={locked} onPress={() => void pickIngredient()} />
-      <RecipeField label="Quantité (facultative)" value={amount} editable={!locked} keyboardType="decimal-pad" onChangeText={setAmount} />
-      <RecipeUnitPicker value={unit} onChange={setUnit} ingredientLabel={article || 'Article'} disabled={locked} />
-      <RecipeButton title={editing === null ? 'Ajouter l’article' : 'Enregistrer l’article'} variant="neutral" disabled={locked || !article.trim()} onPress={stageArticle} />
-      {unfinished && <RecipeButton title="Annuler la saisie" variant="neutral" disabled={locked} onPress={clearArticle} />}
-      <RecipeButton title="Suivant" disabled={locked || !canContinue} onPress={() => void requestPrices()} />
+      <RecipeButton title="Créer plutôt une liste vide" variant="neutral" disabled={locked} onPress={() => navigation.replace('CreateList', { kind: 'articles' })} />
     </>}
-    {(loading || command.busy) && <ActivityIndicator accessibilityLabel={loading ? 'Chargement' : 'Enregistrement en cours'} color={recipeColors.green} />}
-    <Message text={error || command.error} />
-    <IngredientPicker visible={picker} ingredients={catalog} onClose={() => setPicker(false)} onSelect={id => {
-      const item = catalog.find(value => value.id === id);
-      if (item) { setArticle(item.name); setIngredient(item.id); }
-      setPicker(false);
-    }} />
   </RecipeScreen>;
 }

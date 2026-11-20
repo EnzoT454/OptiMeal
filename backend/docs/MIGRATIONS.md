@@ -5,9 +5,32 @@ héberge PostgreSQL ; ne pas créer ces mêmes tables depuis son éditeur SQL
 ou une seconde chaîne de migrations Supabase. Les révisions sont versionnées
 dans `backend/alembic/versions/` et leur application dans `public.alembic_version`.
 
+## Séparation des listes Articles / Produits — 0023
+
+`0023_shopping_list_kind` suit `0022_product_follows`. Elle ajoute une colonne
+`kind` nullable (`articles`, `products` ou NULL) et une contrainte sur les tables
+`shopping_list` et `shopping_list_template`. Aucun backfill : les anciennes listes,
+achats et commandes restent intacts. Les nouvelles listes mobiles ont un type
+immuable, vérifié atomiquement par le service avant commit.
+
+Appliquer avant de démarrer le nouveau backend :
+
+```bash
+python -m alembic -c backend/alembic.ini upgrade head
+```
+
+La migration a été testée sur PostgreSQL local jetable. Le 20 novembre 2026,
+la base configurée dans le backend a été contrôlée : `alembic current` renvoie
+`0023_shopping_list_kind (head)` et `alembic check` ne détecte aucune opération
+supplémentaire. Les migrations 0022 et 0023 sont donc déjà appliquées ; aucune
+migration n’a été exécutée lors de ce contrôle. Le downgrade retire les deux colonnes de
+type et perd donc cette distinction pour les listes nouvelles ; il ne doit pas
+être exécuté sur une base utilisée sans plan de retour arrière.
+
 ## Installer le schéma et charger le référentiel
 
-La tête du dépôt est **0021_shopping_list_pin**. Elle ajoute une liste épinglée
+La tête du dépôt est **0023_shopping_list_kind**, confirmée sur la base configurée
+le 20 novembre 2026. La migration **0021_shopping_list_pin** ajoute une liste épinglée
 privée par compte, une référence composée empêchant l’épinglage d’une liste
 étrangère, RLS et cascades. Après validation sur PostgreSQL local jetable, **0021 a été appliquée et vérifiée
 sur Supabase le 16 novembre 2026, depuis 0020 déjà présente**. Révision confirmée
@@ -220,6 +243,12 @@ par défaut la création décroissante (`sort=newest`), sans sélecteur dans le
 mobile. Le tri explicite `sort=updated` reste disponible dans l’API pour ses
 autres consommateurs.
 Les dates inconnues restent à la fin, avec départage stable par identifiant.
+
+Le tri `sort=budget`, ajouté le 20 novembre, calcule un coût temporaire depuis
+les tables existantes `recipe_ingredient` et `product_offer`. Il n’ajoute aucune
+colonne ni migration ; la tête reste `0023_shopping_list_kind`. La création ou
+la modification d’une recette n’enregistre pas de coût. Voir
+[Petit budget](CONTRACTS.md#petit-budget) pour le calcul et l’actualisation.
 
 Appliquer `upgrade head` avant de redémarrer cette version : les lectures
 utilisent les nouvelles colonnes. La migration est appliquée à Supabase depuis
@@ -499,4 +528,4 @@ Sans cette variable, les tests PostgreSQL restent volontairement ignorés :
 ils ne doivent jamais utiliser automatiquement la base Supabase du projet.
 L’option `-rs` affiche la raison de chaque test ignoré.
 
-*Dernière mise à jour : 16 novembre 2026*
+*Dernière mise à jour : 20 novembre 2026*

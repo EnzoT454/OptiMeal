@@ -20,6 +20,7 @@ class ShoppingList(Base):
         CheckConstraint('length(btrim(name)) BETWEEN 1 AND 120', name='name_valid'),
         CheckConstraint("source IN ('manual', 'calendar')", name='source_supported'),
         CheckConstraint("status IN ('draft', 'active', 'completed', 'archived')", name='status_supported'),
+        CheckConstraint("kind IS NULL OR kind IN ('articles', 'products')", name='kind_supported'),
         CheckConstraint('revision > 0', name='revision_positive'),
         CheckConstraint("(source = 'manual' AND start_date IS NULL AND end_date IS NULL) OR "
                         "(source = 'calendar' AND start_date IS NOT NULL AND end_date IS NOT NULL "
@@ -30,6 +31,7 @@ class ShoppingList(Base):
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
     owner_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), nullable=False)
     name: Mapped[str] = mapped_column(Text, nullable=False)
+    kind: Mapped[str | None] = mapped_column(Text)
     source: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[str] = mapped_column(Text, nullable=False)
     revision: Mapped[int] = mapped_column(Integer, nullable=False)
@@ -210,6 +212,7 @@ class ShoppingListTemplate(Base):
     __table_args__ = (
         CheckConstraint('length(btrim(name)) BETWEEN 1 AND 120', name='name_valid'),
         CheckConstraint("icon IN ('basket', 'cart', 'leaf', 'restaurant', 'home')", name='icon_supported'),
+        CheckConstraint("kind IS NULL OR kind IN ('articles', 'products')", name='kind_supported'),
         CheckConstraint('revision > 0', name='revision_positive'),
         CheckConstraint("jsonb_typeof(items) = 'array'", name='items_array'),
         CheckConstraint('updated_at >= created_at', name='timestamps_ordered'),
@@ -217,6 +220,7 @@ class ShoppingListTemplate(Base):
     )
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
     owner_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('profile.id', ondelete='CASCADE'), nullable=False)
+    kind: Mapped[str | None] = mapped_column(Text)
     name: Mapped[str] = mapped_column(Text, nullable=False)
     icon: Mapped[str] = mapped_column(Text, nullable=False)
     revision: Mapped[int] = mapped_column(Integer, nullable=False)

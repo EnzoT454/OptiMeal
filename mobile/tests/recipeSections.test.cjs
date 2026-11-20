@@ -220,7 +220,7 @@ test('états vides : créer sa première recette, découvrir depuis Favoris et e
   tab(tree, 'Mes recettes').props.onPress();
   tree = await s.load();
   button(tree, 'Ajouter ma première recette').props.onPress();
-  assert.equal(s.navigations[0][0], 'Add');
+  assert.equal(s.navigations[0][0], 'Editor');
   tab(tree, 'Favoris').props.onPress();
   tree = await s.load();
   button(tree, 'Découvrir des recettes').props.onPress();
@@ -264,7 +264,7 @@ test('une réponse de la section précédente est ignorée après changement', a
   assert.doesNotMatch(content(tree), /Ancienne réponse/);
 });
 
-test('réessayer et revenir sur l’écran rechargent la même section ; Petit budget conserve son attente', async () => {
+test('réessayer et revenir sur l’écran rechargent la même section ; Petit budget demande le classement serveur', async () => {
   let fail = false;
   const s = screen({ respond: () => fail ? Promise.reject(new Error('Réseau indisponible')) : Promise.resolve({ items: [], total: 0 }) });
   let tree = await s.load();
@@ -277,10 +277,11 @@ test('réessayer et revenir sur l’écran rechargent la même section ; Petit b
   await s.load();
   assert.equal(params(s.calls.at(-1)).get('scope'), 'favorites');
   chip(tree, 'Petit budget').props.onPress();
-  const before = s.calls.length;
   tree = await s.load();
-  assert.equal(s.calls.length, before);
-  assert.match(content(tree), /Disponible prochainement/);
+  assert.equal(params(s.calls.at(-1)).get('sort'), 'budget');
+  assert.equal(params(s.calls.at(-1)).get('scope'), 'favorites');
+  assert.equal(sortButton(tree, 'Mieux notées'), undefined);
+  assert.doesNotMatch(content(tree), /Disponible prochainement/);
 });
 
 test('changer le tri réinitialise la pagination sans perdre recherche ni filtre', async () => {
@@ -364,4 +365,29 @@ test('retour du détail : recharger les notes en conservant le tri sélectionné
   count = 2; tree = await s.load();
   assert.match(content(tree), /4,5 \(2\)/);
   assert.equal(params(s.calls.at(-1)).get('sort'), 'newest');
+});
+
+
+test('Petit budget conserve recherche et section, pagine et restaure le tri précédent sans montant', async () => {
+  const s = screen({ respond: () => Promise.resolve({ items: [recipe], total: 45 }) });
+  let tree = await s.load();
+  sortButton(tree, 'Plus récentes').props.onPress(); tree = await s.load();
+  field(tree).props.onChangeText('soupe'); tree = await s.load();
+  button(tree, 'Page suivante').props.onPress(); tree = await s.load();
+  chip(tree, 'Petit budget').props.onPress(); tree = await s.load();
+  assert.equal(params(s.calls.at(-1)).get('offset'), '0');
+  assert.equal(params(s.calls.at(-1)).get('q'), 'soupe');
+  assert.equal(params(s.calls.at(-1)).get('sort'), 'budget');
+  assert.match(content(tree), /Soupe/);
+  assert.doesNotMatch(content(tree), /\$/);
+  button(tree, 'Page suivante').props.onPress(); tree = await s.load();
+  assert.equal(params(s.calls.at(-1)).get('offset'), '20');
+  assert.equal(params(s.calls.at(-1)).get('sort'), 'budget');
+  tab(tree, 'Mes recettes').props.onPress(); tree = await s.load();
+  assert.equal(params(s.calls.at(-1)).get('scope'), 'mine');
+  assert.equal(params(s.calls.at(-1)).get('sort'), 'budget');
+  tab(tree, 'Découvrir').props.onPress(); tree = await s.load();
+  chip(tree, 'Toutes').props.onPress(); tree = await s.load();
+  assert.equal(params(s.calls.at(-1)).get('sort'), 'newest');
+  assert.equal(sortButton(tree, 'Plus récentes').props.accessibilityState.checked, true);
 });

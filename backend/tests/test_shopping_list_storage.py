@@ -322,12 +322,17 @@ def test_complete_creation_is_one_atomic_active_list_with_normalized_initial_ite
     assert db.scalar(select(func.count()).select_from(ShoppingListRevision)) == 1
 
 
-def test_complete_creation_refuses_empty_lists_without_persisting_anything(db):
-    with pytest.raises(service.ShoppingListError) as failure:
-        service.create_list(db, ALICE, ShoppingListCreate(name='Vide', activate=True), uuid4())
-    assert failure.value.code == 'EMPTY_LIST'
-    assert db.scalar(select(func.count()).select_from(ShoppingList)) == 0
-    assert db.scalar(select(func.count()).select_from(ShoppingListCommand)) == 0
+def test_active_empty_list_is_persistent_and_replay_does_not_read_prices(db):
+    key = uuid4()
+    body = ShoppingListCreate(name='Mes courses', activate=True)
+    source = lambda *args: pytest.fail('Aucun calcul implicite de prix')
+    created = service.create_list(db, ALICE, body, key, source)
+    assert created.status == 'active' and created.items == []
+    assert created.assignment is None and created.choices == []
+    assert service.get_list(db, created.id, ALICE) == created
+    assert service.create_list(db, ALICE, body, key, source) == created
+    assert db.scalar(select(func.count()).select_from(ShoppingList)) == 1
+    assert db.scalar(select(func.count()).select_from(ShoppingListCommand)) == 1
 
 
 def test_invalid_initial_ingredient_rolls_back_the_entire_list_and_all_previous_items(db):

@@ -218,3 +218,129 @@ def test_creation_prices_http_is_private_read_only_and_final_creation_uses_serve
     value = response.json()['item']
     assert value['totals']['budget_known_amount'] == '6.00' and value['status'] == 'active'
     assert value['assignment']['scenario']['scenario'] == 'maxi'
+
+
+@pytest.mark.parametrize('scenario,retailer', [('cheapest', 'maxi'), ('maxi', 'maxi'), ('metro', 'metro'), ('superc', 'superc')])
+def test_calendar_product_list_persists_exact_scenario_choices_and_is_ready_to_shop(database, scenario, retailer):
+    from sqlalchemy.orm import Session
+    add_meal(database)
+    original = calendar_preview(database)
+    sales = [normalize_sale(RICE, product(retailer=store, price=price), original.purchase_date)
+             for store, price in [('maxi', '2'), ('metro', '3'), ('superc', '4')]]
+    source = lambda *_: sales
+    request = ShoppingDraftPricingWrite(purchase_date=original.purchase_date,
+        items=[dict(name=i.name, ingredient_id=i.ingredient_id, required=[q.model_dump() for q in i.required]) for i in original.items])
+    with Session(database) as db:
+        quote = pricing.preview(db, ALICE, request, source); db.rollback()
+        body = creation_request(original, kind='products', activate=True,
+            pricing=dict(fingerprint=quote.fingerprint, scenario=scenario))
+        key = uuid4()
+        saved = service.create_from_calendar(db, ALICE, body, key, source)
+        assert saved.kind == 'products' and saved.status == 'active'
+        assert saved.period == original.period and not saved.assignment.stale
+        assert saved.assignment.scenario.scenario == scenario
+        assert saved.totals.budget_known_amount == selected(quote, scenario).known_amount
+        assert len(saved.choices) == len(saved.items)
+        chosen = saved.choices[0].product_id
+        assert saved.assignment.selected_products[chosen].retailer == retailer
+        assert saved.assignment.scenario.needs[0].lines[0].sale.product_id == chosen
+        assert saved.items[0].contributions and saved.product_purchases == []
+        assert service.create_from_calendar(db, ALICE, body, key, lambda *_: pytest.fail('Pas de recalcul au rejeu')) == saved
+        # La coche est immédiatement utilisable, sans actualisation intermédiaire.
+        bought = courses.set_product_purchase(db, saved.id, ALICE, ShoppingProductPurchaseWrite(expected_revision=saved.revision,
+            comparison_id=saved.assignment.comparison_id, item_id=saved.items[0].id, product_id=chosen, purchased_units=1), uuid4())
+        assert bought.product_purchases[0].purchased_units == 1
+    assert calendar_preview(database).preview_fingerprint == original.preview_fingerprint
+
+
+def test_calendar_products_refuses_missing_product_even_if_partial_prices_are_accepted(database):
+    from sqlalchemy.orm import Session
+    add_meal(database)
+    original = calendar_preview(database)
+    request = ShoppingDraftPricingWrite(purchase_date=original.purchase_date,
+        items=[dict(name=i.name, ingredient_id=i.ingredient_id, required=[q.model_dump() for q in i.required]) for i in original.items])
+    quote = pricing.build(request, [])
+    with Session(database) as db:
+        with pytest.raises(ShoppingListError) as failure:
+            service.create_from_calendar(db, ALICE, creation_request(original, kind='products', activate=True,
+                pricing=dict(fingerprint=quote.fingerprint, scenario='maxi', accept_partial=True)), uuid4(), lambda *_: [])
+        assert failure.value.code == 'LIST_KIND_CONFLICT'
+        assert db.scalar(select(func.count()).select_from(ShoppingList)) == 0
+
+
+def test_calendar_products_can_confirm_excluded_unpriced_ingredients(database):
+    from sqlalchemy.orm import Session
+    from sqlalchemy import insert
+    from decimal import Decimal
+    from backend.app.recipes.models import RecipeIngredient
+    from backend.tests.test_shopping_list_calendar import RECIPE, MILK
+    with database.begin() as connection:
+        connection.execute(insert(RecipeIngredient).values(recipe_id=RECIPE, ingredient_id=MILK,
+            position=2, quantity=Decimal('100'), unit='ml'))
+    add_meal(database)
+    original = calendar_preview(database)
+    rice = next(i for i in original.items if i.ingredient_id == RICE)
+    milk = next(i for i in original.items if i.ingredient_id == MILK)
+    source = lambda *_: [normalize_sale(RICE, product(), original.purchase_date)]
+    request = ShoppingDraftPricingWrite(purchase_date=original.purchase_date,
+        items=[dict(name=rice.name, ingredient_id=RICE, required=[q.model_dump() for q in rice.required])])
+    with Session(database) as db:
+        quote = pricing.preview(db, ALICE, request, source); db.rollback()
+        saved = service.create_from_calendar(db, ALICE, creation_request(original, kind='products', activate=True,
+            excluded_item_ids=[milk.id], pricing=dict(fingerprint=quote.fingerprint, scenario='cheapest')), uuid4(), source)
+        assert len(saved.items) == 1 and saved.items[0].ingredient_id == RICE
+        assert saved.totals.estimate_complete and not saved.assignment.stale
+        assert len(saved.choices) == 1
+    assert len(calendar_preview(database).items) == 2
+
+
+@pytest.mark.parametrize('scenario', ['cheapest', 'maxi', 'metro', 'superc'])
+def test_calendar_multi_product_creation_is_fresh_regardless_of_generated_uuid_order(database, monkeypatch, scenario):
+    from sqlalchemy.orm import Session
+    from sqlalchemy import insert
+    from decimal import Decimal
+    from itertools import count
+    from uuid import UUID
+    from backend.app.recipes.models import RecipeIngredient
+    from backend.tests.test_shopping_list_calendar import RECIPE, MILK
+    with database.begin() as connection:
+        connection.execute(insert(RecipeIngredient).values(recipe_id=RECIPE, ingredient_id=MILK,
+            position=2, quantity=Decimal('100'), unit='ml'))
+    add_meal(database)
+    original = calendar_preview(database)
+    # L'ordre lexical des UUID est délibérément l'inverse de l'ordre de création.
+    identities = count(1_000_000, -1)
+    monkeypatch.setattr(service, 'uuid4', lambda: UUID(int=next(identities)))
+    sales = [normalize_sale(ingredient, product(retailer=store, price=price, unit=unit,
+        external_product_id=ingredient), original.purchase_date)
+        for ingredient, unit in [(RICE, 'g'), (MILK, 'ml')]
+        for store, price in [('maxi', '2'), ('metro', '3'), ('superc', '4')]]
+    source = lambda *_: sales
+    request = ShoppingDraftPricingWrite(purchase_date=original.purchase_date,
+        items=[dict(name=i.name, ingredient_id=i.ingredient_id, required=[q.model_dump() for q in i.required]) for i in original.items])
+    with Session(database) as db:
+        quote = pricing.preview(db, ALICE, request, source); db.rollback()
+        key = uuid4()
+        body = creation_request(original, kind='products', activate=True,
+            pricing=dict(fingerprint=quote.fingerprint, scenario=scenario))
+        saved = service.create_from_calendar(db, ALICE, body, key, source)
+        assert len(saved.choices) == 2
+        assert not saved.assignment.stale
+        assert saved.totals.estimate_complete
+        assert not any(w.code in ('COMPARISON_STALE', 'ESTIMATE_UNAVAILABLE', 'ESTIMATE_PARTIAL') for w in saved.warnings)
+        assert saved.totals.budget_known_amount == selected(quote, scenario).known_amount
+        reopened = service.get_list(db, saved.id, ALICE)
+        assert not reopened.assignment.stale
+        assert reopened.assignment.comparison_id == saved.assignment.comparison_id
+        db.rollback()  # Terminer la transaction de lecture avant la reprise calendrier.
+        assert service.create_from_calendar(db, ALICE, body, key,
+            lambda *_: pytest.fail('Le rejeu ne recalcule pas')) == saved
+        # Chaque produit est cochable immédiatement : aucun Actualiser les prix préalable.
+        current = reopened
+        for choice in current.choices:
+            current = courses.set_product_purchase(db, current.id, ALICE, ShoppingProductPurchaseWrite(
+                expected_revision=current.revision, comparison_id=current.assignment.comparison_id,
+                item_id=choice.item_id, product_id=choice.product_id, purchased_units=1), uuid4())
+            assert not current.assignment.stale
+        assert current.totals.remaining_item_count == 0
+    assert calendar_preview(database).preview_fingerprint == original.preview_fingerprint

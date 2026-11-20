@@ -1,5 +1,12 @@
 # Modèles, exclusions, copie et historique — étape 10
 
+> **Note historique de réalisation.** Les sections datées ci-dessous décrivent
+> les étapes et validations initiales. Pour les écrans actuels, consulter le
+> [guide des listes](SHOPPING_GUIDE.md) et les [contrats courants](SHOPPING_LISTS_CONTRACTS.md).
+> La tête Alembic est 0023, contrôlée sur la base configurée le 20 novembre 2026 ;
+> les mentions de révisions antérieures ou d’absence de lint décrivent ces anciens essais.
+> Le lint est désormais configuré ; voir le [guide mobile](../../mobile/README.md#vérifier-le-code-avec-eslint).
+
 L’onglet Liste sépare les listes **En cours** (brouillons et actives) de
 l’**Historique** (terminées ou archivées). Les options d’une liste permettent de
 copier ses besoins, de l’enregistrer comme modèle et de retrouver ses besoins.

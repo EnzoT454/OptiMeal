@@ -26,6 +26,18 @@ def instantiate(db, template, *, user=ALICE, key=None):
         expected_template_revision=template.revision, name='Nouvelle semaine', purchase_date='2026-11-20'), key or uuid4())
 
 
+def test_instantiate_active_template_keeps_only_needs_and_replays_once(db):
+    template = model(db)
+    body = ShoppingTemplateInstantiate(expected_template_revision=template.revision,
+        name='Courses du modèle', purchase_date='2026-11-20', activate=True)
+    key = uuid4()
+    created = reuse.instantiate(db, template.id, ALICE, body, key)
+    assert created.status == 'active' and len(created.items) == 1
+    assert created.assignment is None and created.choices == []
+    assert not created.purchases and not created.product_purchases and not created.items[0].owned
+    assert reuse.instantiate(db, template.id, ALICE, body, key) == created
+
+
 def test_copy_has_fresh_ids_zero_purchases_and_keeps_exact_corrected_needs(db):
     source = add(db, create(db), ingredient_id='ing_test_riz', quantity={'amount': '1000', 'unit': 'g'})
     item = source.items[0]
@@ -197,7 +209,7 @@ def test_copy_drops_saved_prices_and_keeps_original_after_catalog_changes(db):
     assert service.get_list(db, saved.id, ALICE).assignment.scenario.known_amount == '6.00'
 
 
-def test_explicit_product_preferences_survive_missing_products_without_becoming_prices(db):
+def test_saved_templates_drop_product_preferences_even_for_legacy_include_choices(db):
     from backend.tests.test_shopping_comparisons import prepared, simulate, source
     from backend.app.shopping_lists import comparisons
     from backend.app.shopping_lists.schemas import ShoppingChoiceWrite
@@ -206,15 +218,15 @@ def test_explicit_product_preferences_survive_missing_products_without_becoming_
         ShoppingChoiceWrite(expected_revision=original.revision, product_id='maxi:8661:a'), uuid4(), source())
     template = reuse.create_template(db, ALICE, ShoppingTemplateCreate(source_list_id=original.id,
         source_revision=original.revision, name='Choix souhaités', include_choices=True), uuid4())
-    assert template.items[0].preferred_product_id == 'maxi:8661:a'
+    assert template.kind == 'articles' and template.items[0].preferred_product_id is None
     no_choices = instantiate(db, template)
     assert not no_choices.choices
     saved = reuse.instantiate(db, template.id, ALICE, ShoppingTemplateInstantiate(expected_template_revision=1,
         name='Choix à vérifier', purchase_date='2026-11-14', include_choices=True), uuid4())
-    assert saved.choices[0].product_id == 'maxi:8661:a'
-    assert saved.assignment is None and any(w.code == 'COPY_PRODUCT_CHOICES' for w in saved.warnings)
+    assert saved.kind == 'articles' and not saved.choices
+    assert saved.assignment is None and not any(w.code == 'COPY_PRODUCT_CHOICES' for w in saved.warnings)
     proposal = simulate(db, saved, lambda *_: [])
-    assert proposal.scenarios[-1].needs[0].status == 'manual_unavailable'
+    assert proposal.scenarios[-1].needs[0].status == 'unpriced'
     assert not proposal.scenarios[-1].needs[0].lines
 
 
@@ -314,3 +326,41 @@ def test_concurrent_template_updates_cannot_overwrite_same_revision(concurrent_d
     assert sum(value == 'TEMPLATE_REVISION_CONFLICT' for value in results if isinstance(value, str)) == 1
     with Session(engine) as session:
         assert reuse.get_template(session, template.id, ALICE).revision == 2
+
+
+@pytest.mark.parametrize('legacy_kind', [None, 'products'])
+def test_existing_saved_products_are_presented_and_instantiated_as_articles(db, legacy_kind):
+    original = model(db)
+    raw = [item.model_dump(mode='json') for item in original.items]
+    raw[0].update(name='Riz commercial sac 1 kg', preferred_product_id='maxi:old:rice')
+    db.execute(update(ShoppingListTemplate).where(ShoppingListTemplate.id == original.id).values(kind=legacy_kind, items=raw))
+    db.commit()
+    projected = reuse.get_template(db, original.id, ALICE)
+    assert projected.kind == 'articles' and projected.items[0].name == 'Riz'
+    assert projected.items[0].preferred_product_id is None
+    assert projected.items[0].id == original.items[0].id and projected.items[0].required == original.items[0].required
+    assert reuse.list_templates(db, ALICE)[0][0] == projected
+    assert db.scalar(select(ShoppingListTemplate.revision)) == original.revision
+    assert db.scalar(select(ShoppingListTemplate.kind)) == legacy_kind  # lecture sans écriture cachée
+    copied = instantiate(db, projected)
+    assert copied.kind == 'articles' and not copied.choices and copied.assignment is None
+    assert copied.items[0].name == 'Riz'
+    updated = reuse.change_template(db, original.id, ALICE, ShoppingTemplateUpdate(expected_revision=original.revision, name='Nouveau nom'), uuid4())
+    assert updated.kind == 'articles'
+    assert db.scalar(select(ShoppingListTemplate.kind)) == 'articles'
+    assert db.scalar(select(ShoppingListTemplate.items))[0]['preferred_product_id'] is None
+
+
+def test_old_product_template_command_replay_is_projected_without_creating_another_resource(db):
+    original = add(db, create(db), ingredient_id='ing_test_riz')
+    key = uuid4()
+    saved = model(db, original, key)
+    previous = saved.model_dump(mode='json')
+    previous['kind'] = 'products'
+    previous['items'][0].update(name='Riz marque commerciale', preferred_product_id='maxi:old:rice')
+    db.execute(update(ShoppingResourceCommand).where(ShoppingResourceCommand.idempotency_key == key).values(result=previous))
+    db.commit()
+    replay = model(db, original, key)
+    assert replay.id == saved.id and replay.kind == 'articles'
+    assert replay.items[0].name == 'Riz' and replay.items[0].preferred_product_id is None
+    assert db.scalar(select(func.count()).select_from(ShoppingListTemplate)) == 1

@@ -37,6 +37,11 @@
       "title": "Expected Revision",
       "type": "integer"
     },
+    "refresh_date": {
+      "default": false,
+      "title": "Refresh Date",
+      "type": "boolean"
+    },
     "scenario": {
       "anyOf": [
         {
@@ -62,6 +67,24 @@
       "maxItems": 500,
       "title": "Choices",
       "type": "array"
+    },
+    "expected_fingerprint": {
+      "anyOf": [
+        {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expected Fingerprint"
+    },
+    "accept_partial": {
+      "default": false,
+      "title": "Accept Partial",
+      "type": "boolean"
     }
   },
   "required": [

@@ -135,6 +135,22 @@
   },
   "additionalProperties": false,
   "properties": {
+    "kind": {
+      "anyOf": [
+        {
+          "enum": [
+            "articles",
+            "products"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Kind"
+    },
     "name": {
       "maxLength": 120,
       "minLength": 1,

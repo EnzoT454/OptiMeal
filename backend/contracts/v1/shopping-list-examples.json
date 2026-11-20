@@ -172,6 +172,7 @@
     },
     "shopping-template-detail": {
       "item": {
+        "kind": null,
         "id": "00000000-0000-4000-8000-000000000020",
         "name": "Besoins réutilisables",
         "icon": "basket",
@@ -206,6 +207,7 @@
     "shopping-templates-page": {
       "items": [
         {
+          "kind": null,
           "id": "00000000-0000-4000-8000-000000000020",
           "name": "Besoins réutilisables",
           "icon": "basket",
@@ -554,6 +556,7 @@
     },
     "shopping-list-detail": {
       "item": {
+        "kind": null,
         "id": "00000000-0000-4000-8000-000000000001",
         "name": "Courses de démonstration",
         "source": "manual",
@@ -700,6 +703,7 @@
     "shopping-lists-page": {
       "items": [
         {
+          "kind": null,
           "id": "00000000-0000-4000-8000-000000000001",
           "name": "Courses de démonstration",
           "source": "manual",

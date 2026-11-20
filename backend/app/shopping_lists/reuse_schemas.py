@@ -63,6 +63,7 @@ class ShoppingTemplateUpdate(ContractModel):
 
 
 class ShoppingTemplateRead(ContractModel):
+    kind: Literal['articles', 'products'] | None = None
     id: UUID
     name: Name
     icon: TemplateIcon
@@ -85,6 +86,7 @@ class ShoppingTemplateInstantiate(ContractModel):
     name: Name
     purchase_date: date
     include_choices: StrictBool = False
+    activate: StrictBool = False
 
 
 class ShoppingExclusionWrite(ContractModel):

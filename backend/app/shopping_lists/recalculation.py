@@ -14,7 +14,7 @@ from .comparisons import SCENARIOS, _hash, _scenario, catalog_fingerprint, state
 from .courses import planning_fingerprint, purchase_coverage
 from .draft_pricing import _option, resolve_items
 from .errors import ShoppingListError
-from .models import ShoppingListAssignment, ShoppingListChoice, ShoppingListComparison, ShoppingListItem
+from .models import ShoppingList, ShoppingListAssignment, ShoppingListChoice, ShoppingListComparison, ShoppingListItem
 from .purchases import _quantity
 from .schemas import ShoppingAppliedComparison, ShoppingComparedNeed, ShoppingComparisonRead, ShoppingDraftPricingRead
 
@@ -117,6 +117,13 @@ def options(db, list_id, user, source):
 def recalculate(db, list_id, user, body, key, source):
     def action(target):
         resource = service.get_list(db, target, user)
+        if body.expected_fingerprint is not None:
+            before = options(db, target, user, source)
+            if before.fingerprint != body.expected_fingerprint:
+                raise ShoppingListError(409, 'COMPARISON_STALE', 'Les prix ou les besoins ont changé. Compare de nouveau.')
+        if body.refresh_date:
+            db.execute(update(ShoppingList).where(ShoppingList.id == target).values(purchase_date=service.today()))
+            resource = service._snapshot(db, target, user)
         resolved = resolve_items(db, resource.items)
         for original, item in zip(resource.items, resolved):
             if original.ingredient_id != item.ingredient_id:
@@ -149,15 +156,75 @@ def recalculate(db, list_id, user, body, key, source):
                     raise ShoppingListError(422, 'INVALID_PRODUCT_CHOICE', 'Produit incompatible avec la quantité ou prix indisponible.')
         scenario_name = body.scenario or ('cheapest' if body.choices else resource.assignment.scenario.scenario if resource.assignment else 'cheapest')
         scenario = next(s for s in quote.scenarios if s.scenario == scenario_name)
-        comparison = ShoppingComparisonRead(id=uuid4(), list_id=target, source_revision=resource.revision,
-            purchase_date=resource.purchase_date, catalog_fingerprint=catalog_fingerprint(sales),
-            state_fingerprint=state_fingerprint(resource), expires_at=datetime.now(timezone.utc) + timedelta(minutes=15),
-            scenarios=quote.scenarios, candidates=[])
-        db.execute(insert(ShoppingListComparison).values(id=comparison.id, list_id=target, data=comparison.model_dump(mode='json')))
-        assignment = ShoppingAppliedComparison(comparison_id=comparison.id, source_revision=resource.revision,
-            purchase_date=resource.purchase_date, state_fingerprint=comparison.state_fingerprint, scenario=scenario,
-            planning_fingerprint=planning_fingerprint(resource, comparison.id, scenario))
-        db.execute(pg_insert(ShoppingListAssignment).values(list_id=target, comparison_id=comparison.id, data=assignment.model_dump(mode='json'))
-            .on_conflict_do_update(index_elements=['list_id'], set_={'comparison_id': comparison.id, 'data': assignment.model_dump(mode='json')}))
+        if body.expected_fingerprint is not None and not scenario.complete and not body.accept_partial:
+            raise ShoppingListError(409, 'COMPARISON_PARTIAL', 'Confirme les articles sans prix avant d’appliquer.')
+        store_quote(db, target, resource, quote, scenario_name, sales)
         return target
     return service._mutate(db, user, key, 'recalculate_prices', body, list_id, action)
+
+
+def refresh_current_prices(db, list_id, user, source, *, sales=None):
+    """Recalcul dans la transaction de modification, sans seconde commande ni achat réécrit."""
+    if source is None:
+        raise ShoppingListError(503, 'CATALOG_UNAVAILABLE', 'Catalogue indisponible.')
+    db.execute(update(ShoppingList).where(ShoppingList.id == list_id).values(purchase_date=service.today()))
+    resource = service._snapshot(db, list_id, user)
+    sales = sales if sales is not None else source(db, resource.purchase_date)
+    quote = remaining_prices(resource, sales)
+    scenario = resource.assignment.scenario.scenario if resource.assignment else 'cheapest'
+    store_quote(db, list_id, resource, quote, scenario, sales)
+
+
+def store_quote(db, target, resource, quote, scenario_name, sales, selected_products=None):
+    scenario = next(s for s in quote.scenarios if s.scenario == scenario_name)
+    comparison = ShoppingComparisonRead(id=uuid4(), list_id=target, source_revision=resource.revision,
+        purchase_date=resource.purchase_date, catalog_fingerprint=catalog_fingerprint(sales),
+        state_fingerprint=state_fingerprint(resource), expires_at=datetime.now(timezone.utc) + timedelta(minutes=15),
+        scenarios=quote.scenarios, candidates=[])
+    db.execute(insert(ShoppingListComparison).values(id=comparison.id, list_id=target, data=comparison.model_dump(mode='json')))
+    assignment = ShoppingAppliedComparison(comparison_id=comparison.id, source_revision=resource.revision,
+        purchase_date=resource.purchase_date, state_fingerprint=comparison.state_fingerprint, scenario=scenario,
+        planning_fingerprint=planning_fingerprint(resource, comparison.id, scenario),
+        selected_products=selected_products if selected_products is not None else (resource.assignment.selected_products if resource.assignment else {}))
+    db.execute(pg_insert(ShoppingListAssignment).values(list_id=target, comparison_id=comparison.id, data=assignment.model_dump(mode='json'))
+        .on_conflict_do_update(index_elements=['list_id'], set_={'comparison_id': comparison.id, 'data': assignment.model_dump(mode='json')}))
+
+
+def apply_product_selection(db, list_id, item_id, user, product_id, source):
+    """Choix ciblé, sans chiffrer les autres ingrédients génériques."""
+    resource = service._snapshot(db, list_id, user)
+    item = next((i for i in resource.items if i.id == item_id and not i.removed), None)
+    if item is None:
+        service._not_found()
+    if source is None:
+        raise ShoppingListError(503, 'CATALOG_UNAVAILABLE', 'Catalogue indisponible.')
+    if resource.kind == 'products' and resource.purchase_date != service.today():
+        db.execute(update(ShoppingList).where(ShoppingList.id == list_id).values(purchase_date=service.today()))
+        resource = service._snapshot(db, list_id, user)
+    sales = source(db, resource.purchase_date)
+    chosen = next((s for s in sales if s.product_id == product_id and s.ingredient_id == item.ingredient_id), None)
+    if chosen is None or item.ingredient_id is None or chosen.match_status == 'rejected':
+        raise ShoppingListError(422, 'PRODUCT_NOT_MATCHED', 'Produit absent ou incompatible avec cet ingrédient.')
+    group_ids = [i.id for i in resource.items if not i.removed and i.ingredient_id == item.ingredient_id]
+    db.execute(delete(ShoppingListChoice).where(ShoppingListChoice.item_id.in_(group_ids)))
+    db.execute(insert(ShoppingListChoice), [dict(list_id=list_id, item_id=i, product_id=product_id) for i in group_ids])
+    allowed = {product_id}
+    metadata = dict(resource.assignment.selected_products) if resource.assignment else {}
+    if resource.assignment:
+        allowed.update(line.sale.product_id for need in resource.assignment.scenario.needs
+                       if need.ingredient_id != item.ingredient_id for line in need.lines)
+    metadata[product_id] = chosen.raw_source
+    resource = service._snapshot(db, list_id, user)
+    allowed.update(c.product_id for c in resource.choices)
+    restricted = [sale for sale in sales if sale.product_id in allowed]
+    quote = remaining_prices(resource, restricted)
+    store_quote(db, list_id, resource, quote, 'cheapest', sales, metadata)
+
+
+def select_product(db, list_id, item_id, user, body, key, source):
+    def action(target):
+        if body.product_id is None:
+            raise ShoppingListError(422, 'PRODUCT_NOT_MATCHED', 'Sélectionne un produit explicite.')
+        apply_product_selection(db, target, item_id, user, body.product_id, source)
+        return target
+    return service._mutate(db, user, key, 'select_product:' + str(item_id), body, list_id, action)

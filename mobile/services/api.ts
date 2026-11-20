@@ -13,6 +13,9 @@ export async function api<T>(path: string, options: RequestInit = {}, retry = tr
   if (error) throw new Error('Session indisponible. Reconnecte-toi.');
   if (expectedUserId && data.session?.user.id !== expectedUserId) throw new Error('Le compte a changé. Rouvre ta liste.');
   const controller = new AbortController();
+  const abort = () => controller.abort();
+  if (options.signal?.aborted) controller.abort();
+  options.signal?.addEventListener('abort', abort);
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   let response: Response;
   try {
@@ -24,7 +27,7 @@ export async function api<T>(path: string, options: RequestInit = {}, retry = tr
     });
   } catch {
     throw new Error('Serveur inaccessible. Vérifie la connexion et réessaie.');
-  } finally { clearTimeout(timer); }
+  } finally { clearTimeout(timer); options.signal?.removeEventListener('abort', abort); }
   if (response.status === 401 && data.session && retry) {
     const refreshed = await supabase.auth.refreshSession();
     if (!refreshed.error && refreshed.data.session) return api<T>(path, options, false, timeoutMs, expectedUserId);

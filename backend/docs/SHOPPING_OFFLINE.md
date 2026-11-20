@@ -3,7 +3,8 @@
 À la demande de l’utilisateur le 16 novembre 2026, le cache des listes, la file
 persistante des coches, la synchronisation et les contrôles périodiques sont
 retirés. `shoppingOffline.ts`, `useOfflineCourses.ts` et leurs tests dédiés sont
-supprimés. Accueil lit également la liste épinglée directement sur le serveur.
+supprimés. Accueil lit les listes récentes en cours directement sur le serveur ; la
+préférence d’épinglage est conservée sans déterminer les lignes de cet écran.
 Les anciennes clés locales ne sont ni lues, ni rejouées, ni réattribuées.
 
 L’onglet exige toujours un compte et une vérification réseau à l’entrée. Une
