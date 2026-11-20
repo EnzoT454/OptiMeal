@@ -12,7 +12,7 @@ NonEmpty = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)
 Difficulty = Literal['easy', 'medium', 'hard']
 RecipeVisibility = Literal['private', 'public']
 RecipeScope = Literal['accessible', 'discover', 'mine', 'favorites']
-RecipeSort = Literal['top', 'newest', 'updated']
+RecipeSort = Literal['top', 'newest', 'updated', 'budget']
 
 
 class RecipeVisibilityUpdate(ContractModel):

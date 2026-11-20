@@ -6,7 +6,7 @@ Le parcours principal relie les recettes, les repas planifiés et les achats : c
 
 La présence d’une fonction dans le code ne prouve pas sa validation sur tous les appareils ni l’application de sa migration sur Supabase. Les confirmations connues sont distinguées des vérifications encore nécessaires. Les schémas Mermaid peuvent être consultés dans un aperçu Markdown compatible.
 
-Le cadrage du **17 novembre 2026** retire les modes IA destinés aux utilisateurs, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations statistiques et la contribution par reçu. Les montants calculés à partir du catalogue, l’historique des listes terminées et les outils locaux de lecture des reçus sont conservés. Les liens de création IA ont été retirés de Recettes. Le filtre Petit budget, représenté par $, affiche encore un message d’attente et ne constitue pas une fonction disponible.
+Le cadrage du **17 novembre 2026** retire les modes IA destinés aux utilisateurs, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations statistiques et la contribution par reçu. Les montants calculés à partir du catalogue, l’historique des listes terminées et les outils locaux de lecture des reçus sont conservés. Les liens de création IA ont été retirés de Recettes. Le filtre Petit budget, représenté par $, classe les recettes selon le coût estimé des quantités utilisées, sans afficher ce montant.
 
 ## 1. Les grandes parties de l’application
 
@@ -225,7 +225,7 @@ Le fichier [RecipeListScreen.tsx](mobile/app/RecipeListScreen.tsx) demande la li
 | Voir ses favoris | `GET /api/v1/recipes?scope=favorites` |
 | Lire une recette complète | `GET /api/v1/recipes/{id}` |
 
-Rapides signifie **une durée totale enregistrée de 30 minutes au maximum**. Pour les recettes saisies avec le formulaire actuel, cette durée est la somme des durées des étapes. Petit budget affiche encore « Disponible prochainement ».
+Rapides signifie **une durée totale enregistrée de 30 minutes au maximum**. Pour les recettes saisies avec le formulaire actuel, cette durée est la somme des durées des étapes. Petit budget classe les recettes du moins cher au plus cher selon les ingrédients chiffrables en base, sans afficher de prix.
 
 Sans jeton, l’API permet de lire les recettes initiales et les recettes publiées par les utilisateurs. Avec une identité valide, elle ajoute les recettes privées de ce compte. Le mobile permet également cette consultation sans compte. Ajouter une recette, consulter ou modifier ses favoris et accéder au profil demande une connexion.
 
@@ -258,6 +258,32 @@ détail. Le changer ramène à la première page sans effacer recherche et filtr
 Le serveur trie tous les résultats accessibles avant la pagination. Mieux
 notées tient compte du nombre de votes, sans remplacer la moyenne affichée
 par le score de classement.
+
+**Petit budget** remplace temporairement le tri habituel dans Découvrir,
+Mes recettes et Favoris. Le serveur additionne les coûts des quantités utilisées
+pour la recette entière, en retenant le produit compatible le moins cher par
+ingrédient dans PostgreSQL. Par exemple, 100 g d'un sac de 1 kg à 5 $ comptent
+pour 0,50 $, sans arrondir à un sac entier. Les promotions actives et leurs
+limites sont prises en compte. Les ingrédients sans prix ou format compatible
+sont ignorés ; sans aucun ingrédient chiffrable, la recette est placée à la fin.
+Le classement porte sur tous les résultats avant pagination et conserve la
+recherche. Aucun montant n'est envoyé au mobile ni affiché. Le coût n'est stocké
+dans aucune table ou colonne et n'est pas calculé à la sauvegarde d'une recette :
+il est estimé au prochain chargement de Petit budget. Les quantités viennent de
+`recipe_ingredient` ; les prix et formats viennent de `product_offer`.
+
+Pour chaque produit compatible : **coût = quantité utilisée ÷ quantité du
+produit × prix applicable**, après conversion dans la même unité. Le coût
+interne de la recette est la somme des coûts minimaux des ingrédients chiffrables,
+pour toutes ses portions de référence. Les règles complètes, dont les promotions
+limitées, figurent dans les [contrats](backend/docs/CONTRACTS.md#petit-budget).
+
+Les coûts sont recalculés à chaque requête depuis les prix en base, même si
+Promos utilise le JSON. Après l'import hebdomadaire, habituellement le mercredi,
+le prochain chargement reflète les nouveaux prix. Une modification des quantités
+d'une recette est également prise en compte. Aucun coût stocké ni migration
+supplémentaire n'est nécessaire. Une estimation partielle peut sous-estimer le
+coût réel ; ce tri ne garantit pas le prix d'un panier complet.
 
 Une section vide propose une action adaptée : créer sa première recette,
 découvrir des recettes ou effacer la recherche et les filtres. Sans paramètre
@@ -322,7 +348,7 @@ Les responsabilités se répartissent ainsi :
 
 Les photos du bucket `recipes-images` sont publiques dans ce prototype. Les politiques Storage limitent les écritures à `users/<identifiant du compte>/`. En édition, retirer une photo enregistre `image_url: null` ; le fichier n’est pas automatiquement supprimé. Cette politique publique concerne les photos de recettes. Les reçus restent des fichiers locaux ; aucun parcours mobile de contribution n’est intégré.
 
-La lecture de la photo préparée dépend de l’appareil : sur iOS et Android, `recipeImages.ts` utilise `File` de `expo-file-system` ; dans le navigateur, il lit l’URL locale `blob:` avec `fetch` puis `arrayBuffer()`. L’aperçu, la limite de 5 Mo, l’authentification et l’envoi final vers Storage restent soumis aux mêmes règles. La correction Web a été confirmée par Hamza lors de son test sur ordinateur le 20 novembre ; elle ne constitue pas un nouvel essai natif. Le [guide des photos](backend/docs/RECIPE_IMAGES.md#lecture-sur-téléphone-et-navigateur) décrit les deux chemins.
+La lecture de la photo préparée dépend de l’appareil : sur iOS et Android, `recipeImages.ts` utilise `File` de `expo-file-system` ; dans le navigateur, il lit l’URL locale `blob:` avec `fetch` puis `arrayBuffer()`. L’aperçu, la limite de 5 Mo, l’authentification et l’envoi final vers Storage restent soumis aux mêmes règles. La correction Web a été confirmée lors d’un essai sur ordinateur le 20 novembre ; elle ne constitue pas un nouvel essai natif. Le [guide des photos](backend/docs/RECIPE_IMAGES.md#lecture-sur-téléphone-et-navigateur) décrit les deux chemins.
 
 ### Choisir la visibilité et publier définitivement
 
@@ -382,6 +408,7 @@ Ce schéma présente les responsabilités. La validation et les dépendances son
 | [recipes/router.py](backend/app/recipes/router.py) | Associe les routes HTTP aux opérations sur les recettes |
 | [recipes/schemas.py](backend/app/recipes/schemas.py) | Définit les champs acceptés et retournés, avec leur validation |
 | [recipes/service.py](backend/app/recipes/service.py) | Applique la visibilité, les contrôles de propriétaire, les écritures et les favoris |
+| [recipes/budget.py](backend/app/recipes/budget.py) | Calcule le coût interne à partir des quantités utilisées et des prix en base pour Petit budget |
 | [recipes/models.py](backend/app/recipes/models.py) | Représente les tables `recipe`, `recipe_ingredient` et `favorite` |
 | [accounts/router.py](backend/app/accounts/router.py) | Expose l’identité et la lecture/modification du profil minimal |
 | [accounts/service.py](backend/app/accounts/service.py) | Assure notamment la création du profil applicatif si nécessaire |
@@ -1256,28 +1283,41 @@ Cette configuration couvre les ports locaux correspondant à cette expression. U
 | --- | --- | --- |
 | Comptes | Visiteur, inscription, connexion, profil et suppression | Tester les erreurs et changements de compte sur appareils |
 | Accueil | Repas du jour ou lendemain, listes en cours et promos suivies | Première page de listes filtrée localement ; épinglage non utilisé dans ce nouvel écran |
-| Recettes | Création manuelle en cinq étapes, photos natives/Web, visibilité, favoris, filtres, tris et notation | Publication définitive ; photos publiques dans le prototype |
+| Recettes | Création manuelle en cinq étapes, photos natives/Web, visibilité, favoris, filtres, Petit budget et notation | Publication définitive ; photos publiques dans le prototype |
 | Promos | Recherche avec suggestions, catégories, magasins, grille/liste et circulaires | Fraîcheur dépendante des collectes et imports |
 | Idées repas | Rapprochement recettes/promos et deux tris | Cent promotions chargées ; économies non ajustées aux quantités des recettes |
 | Suivis | Stockage local et persistance serveur complémentaire | Initialisation ponctuelle, pas de synchronisation garantie entre appareils |
 | Calendrier | Repas, portions, notes, restes et vue Épicerie | Recettes courantes, sans historique figé des anciennes semaines |
-| Listes | Création Articles / Produits, génération de produits depuis Calendrier, coches et actualisation ; fonctionnement global confirmé par Hamza le 19 novembre | Réseau requis ; données inconnues signalées ; plateforme de validation non précisée |
+| Listes | Création Articles / Produits, génération de produits depuis Calendrier, coches et actualisation ; fonctionnement global confirmé le 19 novembre | Réseau requis ; données inconnues signalées ; plateforme de validation non précisée |
 | Listes sauvegardées | Création, édition, suppression et utilisation mobile ; backend historique des modèles conservé | Nouvelle liste indépendante sans achats ni prix hérités |
 | Outils de données | Apify Maxi, imports, OCR local et pilote PC Express | Collecte Metro/Super C à compléter ; Windows OCR à vérifier |
 
 ### Validations connues
 
-**20 novembre 2026 — Création des recettes et photos Web.** La création utilise cinq pages ; l’édition conserve le formulaire prérempli. Hamza confirme le bon fonctionnement de l’ajout de photo lors de son essai dans le navigateur après correction de la lecture du fichier. Cette confirmation ne vaut pas nouvel essai sur téléphone ou validation de tous les cas de publication.
+**20 novembre 2026 — Petit budget.** Le classement par coût interne est intégré
+aux trois sections de Recettes, avec recherche, droits et pagination. Les tests
+vérifient le prorata des quantités, les unités compatibles, les promotions et
+limites, les ingrédients non chiffrables et le changement de classement après
+mise à jour des prix en base. La suite backend donne **1 055 tests réussis** sur
+PostgreSQL local jetable et **14 tests OCR optionnels ignorés** ; le mobile donne
+**315 tests réussis**, TypeScript et lint sans erreur avec 111 avertissements
+existants. Les **47 exports de contrats** sont cohérents. Le fonctionnement de
+Petit budget est confirmé par un essai utilisateur le 20 novembre ; la plateforme
+et le détail des scénarios ne sont pas précisés. Aucun essai sur appareil par
+l'agent ni nouvelle génération de bundles n'a été réalisé pour ce filtre. Aucune
+migration ni modification de la base Supabase n'était nécessaire.
 
-Les derniers contrôles mobiles ont donné **314 tests réussis**, TypeScript et lint avec **0 erreur et 111 avertissements existants**. Les règles React Compiler introduites progressivement restent en avertissements. Les exports Expo iOS/Android/Web ont été validés lors de la création en cinq étapes, avant la correction photo Web. Les résultats backend du 19 novembre ci-dessous restent les derniers consignés ; aucun test backend n’a été relancé pour ces ajustements mobiles.
+**20 novembre 2026 — Création des recettes et photos Web.** La création utilise cinq pages ; l’édition conserve le formulaire prérempli. Le bon fonctionnement de l’ajout de photo est confirmé lors d’un essai dans le navigateur après correction de la lecture du fichier. Cette confirmation ne vaut pas nouvel essai sur téléphone ou validation de tous les cas de publication.
 
-**19 novembre 2026 — Listes : validation manuelle utilisateur.** Après ses essais, Hamza confirme que l’onglet Listes et tout ce qui concerne les listes sont fonctionnels dans l’état courant, après les derniers ajustements. Cette validation globale inclut l’état livré avec la création des produits depuis Calendrier, le panier initial corrigé et le retrait des blocs d’ingrédients répétés. La plateforme et le détail des scénarios n’ont pas été précisés ; aucune validation distincte de chaque plateforme n’est déduite de cette confirmation. Le périmètre et les prochaines régressions sont consignés dans le [guide des listes](backend/docs/SHOPPING_GUIDE.md#21-parcours-de-vérification).
+Les contrôles mobiles précédant Petit budget ont donné **314 tests réussis**, TypeScript et lint avec **0 erreur et 111 avertissements existants**. Les règles React Compiler introduites progressivement restent en avertissements. Les exports Expo iOS/Android/Web ont été validés lors de la création en cinq étapes, avant la correction photo Web. Ces ajustements mobiles n’avaient pas donné lieu à une nouvelle suite backend ; les résultats du 19 novembre ci-dessous précèdent ceux de Petit budget consignés plus haut.
+
+**19 novembre 2026 — Listes : validation manuelle utilisateur.** Le fonctionnement global de l’onglet Listes est confirmé après essais dans l’état courant, après les derniers ajustements. Cette validation globale inclut l’état livré avec la création des produits depuis Calendrier, le panier initial corrigé et le retrait des blocs d’ingrédients répétés. La plateforme et le détail des scénarios n’ont pas été précisés ; aucune validation distincte de chaque plateforme n’est déduite de cette confirmation. Le périmètre et les prochaines régressions sont consignés dans le [guide des listes](backend/docs/SHOPPING_GUIDE.md#21-parcours-de-vérification).
 
 Les parcours comptes, recettes, photos et Promos ont été confirmés sur iOS et Android le 27 octobre. Des ajustements supplémentaires ont été confirmés sur iOS le 1er novembre, puis globalement sur téléphone le 5 novembre pour les cartes, favoris, unités, publication et notes de Recettes ; la plateforme de cette dernière confirmation n’est pas précisée.
 
 Ces confirmations précèdent les changements récents d’Accueil, de Promos, de Paramètres, d’Épicerie et de persistance des suivis. Elles ne constituent donc pas une validation de ces nouveaux écrans sur iOS et Android.
 
-La vérification backend et contrats du 19 novembre, avant les derniers ajustements mobiles, a donné **1 039 tests backend réussis** avec un PostgreSQL jetable et **14 tests OCR optionnels ignorés**, ainsi que **302 tests mobiles réussis**, TypeScript, **47 exports de contrats cohérents** et les bundles Expo iOS, Android et Web. Les contrôles du comparateur, des ajouts et de la reprise sont décrits dans la [note de refonte](backend/docs/SHOPPING_REFACTOR.md). Ces contrôles automatisés n’incluaient pas d’essai par l’agent sur appareil/simulateur natif pour le clavier et les lecteurs d’écran ; la confirmation manuelle de Hamza est consignée séparément ci-dessus. Ces résultats vérifient les scénarios automatisés existants ; ils ne prouvent ni une validation visuelle complète ni une synchronisation des suivis entre plusieurs appareils. Séparément, le contrôle du 20 novembre a confirmé la base configurée à `0023_shopping_list_kind (head)` et un schéma conforme aux modèles ; aucune migration supplémentaire n’était nécessaire.
+La vérification backend et contrats du 19 novembre, avant les derniers ajustements mobiles, a donné **1 039 tests backend réussis** avec un PostgreSQL jetable et **14 tests OCR optionnels ignorés**, ainsi que **302 tests mobiles réussis**, TypeScript, **47 exports de contrats cohérents** et les bundles Expo iOS, Android et Web. Les contrôles du comparateur, des ajouts et de la reprise sont décrits dans la [note de refonte](backend/docs/SHOPPING_REFACTOR.md). Ces contrôles automatisés n’incluaient pas d’essai par l’agent sur appareil/simulateur natif pour le clavier et les lecteurs d’écran ; la confirmation manuelle est consignée séparément ci-dessus. Ces résultats vérifient les scénarios automatisés existants ; ils ne prouvent ni une validation visuelle complète ni une synchronisation des suivis entre plusieurs appareils. Séparément, le contrôle du 20 novembre a confirmé la base configurée à `0023_shopping_list_kind (head)` et un schéma conforme aux modèles ; aucune migration supplémentaire n’était nécessaire.
 
 La priorité reste une version stable et les tests utilisateurs. Les préférences détaillées et recommandations économiques restent incomplètes. Les modes IA utilisateur, la gestion avancée du budget, les instantanés historiques des plans/prix, les estimations statistiques et les contributions par reçu sont retirés du périmètre, sans retrait des outils OCR locaux ni de l’historique des listes terminées.
 

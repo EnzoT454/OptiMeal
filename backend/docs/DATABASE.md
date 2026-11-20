@@ -21,6 +21,13 @@ La proposition étendue nécessite surtout six ajustements avant son implémenta
 
 ## 2. État réel du dépôt
 
+Petit budget est un calcul de classement à partir des prix du catalogue,
+distinct des anciennes propositions d'estimations statistiques ci-dessous.
+Son coût n'est stocké dans aucune table ou colonne. Le serveur relit les
+quantités de `recipe_ingredient` et les prix et formats de `product_offer`
+à chaque demande `sort=budget`. Aucun changement du schéma ni déclencheur
+Supabase n'est nécessaire ; voir les [règles de calcul](CONTRACTS.md#petit-budget).
+
 | Composant | Disponible aujourd’hui | Conséquence pour la conception |
 | --- | --- | --- |
 | `app/database.py` et configuration | Moteur SQLAlchemy/Psycopg, sessions par requête et contrôle `/health/db` | Voir le [guide Supabase](SUPABASE.md) ; les recettes lisent PostgreSQL ; ingrédients sur JSON, offres sur JSON ou PostgreSQL selon `OFFERS_SOURCE` |

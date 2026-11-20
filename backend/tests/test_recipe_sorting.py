@@ -80,7 +80,7 @@ def test_sort_preserves_search_quick_scope_favorites_and_private_rights(accounts
     login(app, ALICE)
     public = client.post('/api/v1/recipes', json={**body(), 'name': 'Tri accessible', 'visibility': 'public'}).json()['item']['id']
     private = client.post('/api/v1/recipes', json={**body(), 'name': 'Tri secret'}).json()['item']['id']
-    for sort in ('top', 'newest', 'updated'):
+    for sort in ('top', 'newest', 'updated', 'budget'):
         own = client.get(f'/api/v1/recipes?scope=mine&sort={sort}&q=Tri').json()['items']
         assert {row['id'] for row in own} == {public, private}
         login(app, BOB)
@@ -122,7 +122,7 @@ def test_mine_defaults_to_creation_newest_first_not_update_or_publication(accoun
     assert [r['id'] for r in client.get('/api/v1/recipes?scope=mine&sort=newest').json()['items']] == ids
 
 
-@pytest.mark.parametrize('sort', ['top', 'newest', 'updated'])
+@pytest.mark.parametrize('sort', ['top', 'newest', 'updated', 'budget'])
 def test_easy_uses_current_ease_average_before_count_and_pagination(accounts, postgres, sort):
     client, app = accounts
     voters = add_voters(postgres, 2)

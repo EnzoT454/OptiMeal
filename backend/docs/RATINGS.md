@@ -365,5 +365,7 @@ un chantier distinct. Voir [MIGRATIONS.md](MIGRATIONS.md#versions-des-évaluatio
 12. Livraison progressive des incréments prévus.
 
 Les commentaires écrits et un nouvel onglet Avis ne font pas partie de cette
-première intégration. Le filtre Petit budget et le classement actuel de
-« Cuisiner avec les promos » conservent leurs responsabilités existantes.
+première intégration. Petit budget classe par coût des quantités utilisées
+(`sort=budget`), sans afficher de montant ni utiliser le score de notation ; voir
+[son contrat](CONTRACTS.md#petit-budget). « Cuisiner avec les promos » conserve
+ses tris propres par écarts de prix affichés ou nombre de promotions.

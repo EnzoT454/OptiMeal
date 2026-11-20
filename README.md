@@ -23,7 +23,7 @@ Nous concentrons maintenant le travail sur la stabilisation de l’application e
 
 - Comptes, profil et mode visiteur.
 - Recettes personnelles avec création guidée en cinq étapes, recherche, filtres, publication et favoris.
-- Évaluations des recettes et classement par notes.
+- Évaluations des recettes et classement par notes ou par coût estimé avec Petit budget.
 - Calendrier hebdomadaire des repas.
 - Listes d’épicerie d’articles ou de produits, ajout par recherche et suivi des achats.
 - Création depuis le calendrier, comparaison des prix par magasin et listes sauvegardées réutilisables.
@@ -279,8 +279,9 @@ OptiMeal/
 │   │   │   ├── schemas.py            # Contrats des recettes, ingrédients et étapes
 │   │   │   ├── models.py             # Modèles Recipe, RecipeIngredient et Favorite
 │   │   │   ├── service.py            # Lectures, mutations et autorisations des recettes
+│   │   │   ├── budget.py             # Coût interne des quantités utilisées pour Petit budget
 │   │   │   └── seed_import.py        # Import transactionnel et rejouable des recettes
-│   │   ├── planning/                 # Calendrier privé ; instantanés à développer
+│   │   ├── planning/                 # Calendrier privé des repas
 │   │   │   ├── router.py             # Routes /api/v1/plans et entrées de repas
 │   │   │   ├── schemas.py            # Repas, notes, portions et changements
 │   │   │   ├── models.py             # Table MealPlanEntry

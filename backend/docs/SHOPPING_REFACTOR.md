@@ -19,6 +19,9 @@ Le lint est désormais configuré et exécuté en CI. La suite mobile après les
 changements de création de recette et de photo Web compte 314 tests réussis,
 avec TypeScript et lint sans erreur (111 avertissements existants).
 Les résultats de chaque lot ci-dessous restent ceux exécutés à leur livraison.
+La livraison ultérieure de Petit budget a validé la suite complète avec
+1 055 tests backend réussis, 14 OCR optionnels ignorés et 315 tests mobiles
+réussis. Voir les [validations courantes](../../README-fonctionnement.md#validations-connues).
 
 ## État actuel validé par l’utilisateur — 19 novembre 2026
 
@@ -30,7 +33,7 @@ résultats par scénario n’ont pas été précisés. Les mentions d’essais r
 faire dans les lots ci-dessous décrivent l’état au moment de leur livraison ;
 cette confirmation utilisateur est postérieure à ces notes.
 
-Derniers contrôles automatisés déjà réalisés : **1 039 tests backend réussis,
+Contrôles automatisés de la refonte du 19 novembre : **1 039 tests backend réussis,
 14 ignorés**, **302 tests mobiles réussis**, TypeScript, 47 contrats cohérents
 et exports Expo iOS/Android/web valides. Aucun nouveau test n’est requis ni
 relancé pour consigner cette confirmation ; aucun code ou contrat n’est modifié.

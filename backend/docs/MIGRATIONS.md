@@ -244,6 +244,12 @@ mobile. Le tri explicite `sort=updated` reste disponible dans l’API pour ses
 autres consommateurs.
 Les dates inconnues restent à la fin, avec départage stable par identifiant.
 
+Le tri `sort=budget`, ajouté le 20 novembre, calcule un coût temporaire depuis
+les tables existantes `recipe_ingredient` et `product_offer`. Il n’ajoute aucune
+colonne ni migration ; la tête reste `0023_shopping_list_kind`. La création ou
+la modification d’une recette n’enregistre pas de coût. Voir
+[Petit budget](CONTRACTS.md#petit-budget) pour le calcul et l’actualisation.
+
 Appliquer `upgrade head` avant de redémarrer cette version : les lectures
 utilisent les nouvelles colonnes. La migration est appliquée à Supabase depuis
 le 2 novembre 2026. Le retour à `0011` supprime les deux dates et

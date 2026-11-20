@@ -123,7 +123,7 @@ Cette confirmation concerne le parcours testé sur ordinateur ; elle ne constitu
 pas une nouvelle validation sur iOS et Android ni un relevé de tous les scénarios
 de publication et de réseau.
 
-La dernière suite mobile exécutée compte **314 tests réussis**, dont **13 tests
+La suite mobile exécutée pour cette correction Web comptait **314 tests réussis**, dont **13 tests
 du service photo** : lecture Web sans `File` natif, préparation JPEG, limite de
 taille, session obligatoire, lecture impossible et envoi Storage. TypeScript et
 le lint passent avec **0 erreur et 111 avertissements existants**. Les exports

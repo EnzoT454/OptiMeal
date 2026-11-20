@@ -284,7 +284,7 @@ instantanés historiques du contenu des recettes ou du calendrier.
 
 ### Tri et dates des recettes
 
-`GET /api/v1/recipes` accepte `sort=top`, `newest` ou `updated` (422 pour une
+`GET /api/v1/recipes` accepte `sort=top`, `newest`, `updated` ou `budget` (422 pour une
 autre valeur). Recherche, filtre Rapides, sections, favoris et droits restent
 appliqués ; le tri SQL porte sur l’ensemble des résultats avant `limit/offset`.
 Changer les données entre deux requêtes peut déplacer une recette d’une page
@@ -295,11 +295,68 @@ Changer les données entre deux requêtes peut déplacer une recette d’une pag
 | `top` | Score `(somme pondérée des notes + 20 × 4,0) / (effectif + 20)`, décroissant ; sans vote à la fin ; identifiant croissant pour départager |
 | `newest` | Publication, ou création en base si absente ; dans `scope=mine`, création uniquement ; dates décroissantes, inconnues à la fin, puis identifiant |
 | `updated` | Modification décroissante, inconnue à la fin, puis identifiant |
+| `budget` | Somme croissante des coûts des quantités utilisées et chiffrables ; sans estimation à la fin ; identifiant pour départager |
 
 Sans `sort`, Découvrir et Favoris choisissent `top`, Mes recettes choisit
 `newest` (date de création décroissante). `scope=accessible` (y compris sans section) conserve l’ordre
 historique par identifiant pour ses consommateurs existants. Ces règles ne
 changent pas le rapprochement « Cuisiner avec les promos ».
+
+#### Petit budget
+
+Le filtre mobile **Petit budget** demande `sort=budget` dans la section active,
+avec la recherche et la pagination habituelles. Il masque temporairement les
+choix de tri par note/date et restaure le choix précédent à sa désactivation.
+Aucun coût n'est exposé dans les réponses ou affiché sur les recettes.
+
+Le coût interne porte sur la recette entière pour ses portions de référence,
+pas sur une portion ni sur les emballages entiers à acheter. Pour chaque
+ingrédient, le serveur retient le produit compatible le moins cher dans
+`product_offer` en PostgreSQL, indépendamment d'`OFFERS_SOURCE`. Le prix est
+proratisé : 100 g d'un sac de 1 kg à 5 $ contribuent 0,50 $. Les unités de
+cuisine sont converties sans inventer de relation poids/volume/pièces. Un
+format inconnu ou incompatible et un prix absent excluent cet ingrédient du
+calcul. Une recette partiellement chiffrable est classée sur son seul coût
+connu ; sans aucun ingrédient chiffrable, elle suit les recettes estimées.
+Un prix nul explicitement enregistré reste un prix connu.
+
+Pour un produit compatible, après conversion dans la même unité :
+
+- `u = quantité de la recette / quantité du produit`.
+- Prix régulier ou promotion sans limite : `coût = u × prix applicable`.
+- Promotion active limitée : `coût = min(u, limite) × prix promo + max(u − limite, 0) × prix après limite`.
+- Coût de recette : somme du coût minimal par ingrédient chiffrable.
+
+Aucun calcul ni enregistrement de coût n'a lieu à la création ou à la
+modification d'une recette. `recipes/budget.py` lit `recipe_ingredient` et
+`product_offer` au chargement avec `sort=budget`. Le résultat reste temporaire
+en mémoire, sans colonne ni table dédiée.
+
+Les promotions confirmées actives au jour courant à Toronto sont prises en
+compte, avec leur limite et le prix après limite. Sinon le prix régulier est
+utilisé lorsqu'il est connu. Le calcul conserve les fractions exactes jusqu'au
+classement, sans arrondi monétaire intermédiaire. Deux lectures groupées
+chargent les ingrédients des recettes accessibles et leurs produits, puis
+l'ordre global est appliqué avant la pagination.
+
+Chaque requête relit les prix et les quantités courantes : les imports
+hebdomadaires (habituellement le mercredi) modifient automatiquement le prochain
+classement. Aucune colonne de coût, migration Supabase, tâche planifiée ou
+actualisation manuelle des recettes n'est nécessaire. L'écran recharge au retour
+sur la page ; une page déjà affichée n'est pas mise à jour en temps réel.
+Cela n'automatise pas la collecte ni l'import des prix. Le calcul porte sur
+toutes les recettes correspondant à la recherche avant de sélectionner la
+page, avec des lectures groupées plutôt qu'une requête par recette. Ce choix
+évite un coût stocké périmé ; il répète cependant le calcul à chaque chargement.
+Aucune mesure de latence n'a été réalisée pour ce filtre.
+Sans offres en base, les recettes restent accessibles, toutes sans estimation.
+Ce classement ne garantit pas le coût d'un panier complet lorsque des prix
+manquent et n'intègre pas les déplacements entre magasins. Le fonctionnement
+est confirmé par un essai utilisateur le 20 novembre 2026, sans plateforme ni
+résultats détaillés par scénario. Les validations automatisées sont consignées
+dans le [guide de fonctionnement](../../README-fonctionnement.md#validations-connues).
+
+#### Notes et dates affichées
 
 La note affichée reste la moyenne pondérée réelle, distincte du score ajusté
 de tri. Aucune donnée manquante n’est traitée comme une note zéro. Les listes
@@ -310,8 +367,9 @@ Voir [MIGRATIONS.md](MIGRATIONS.md#dates-et-tris-des-recettes).
 
 Le mobile affiche les moyennes et effectifs sur les cartes de ses trois
 sections. Découvrir et Favoris proposent « Mieux notées » et « Plus récentes » ;
-Mes recettes affiche directement les créations de la plus récente à la plus
-ancienne, sans sélecteur de tri. Pour Découvrir et Favoris, le choix
+Mes recettes affiche par défaut les créations de la plus récente à la plus
+ancienne, sans sélecteur de tri. Petit budget remplace cet ordre dans les trois
+sections tant que son filtre est sélectionné. Pour Découvrir et Favoris, le choix
 est conservé par section et au retour du détail ; le changement de tri ramène
 à la première page, sans effacer la recherche ni le filtre.
 

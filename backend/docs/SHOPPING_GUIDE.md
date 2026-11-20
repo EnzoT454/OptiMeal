@@ -600,7 +600,10 @@ La séparation des types demande la migration `0023_shopping_list_kind` avant la
 
 Vérification automatisée de la refonte du 19 novembre, avant les changements mobiles du 20 novembre : **1 039 tests backend réussis, 14 ignorés**, **302 tests mobiles réussis**, TypeScript, 47 exports de contrats cohérents et exports Expo iOS/Android/web valides. Ces résultats sont ceux de la correction précédente ; aucun test n’a été relancé pour cet ajout documentaire.
 
-Le 20 novembre, après les ajustements de Recettes et des photos Web, la suite mobile complète passe à **314 tests réussis**, avec TypeScript et lint sans erreur (111 avertissements existants). Les validations backend restent celles du 19 novembre.
+Le 20 novembre, après les ajustements de Recettes et des photos Web, la suite mobile complète passe à **314 tests réussis**, avec TypeScript et lint sans erreur (111 avertissements existants). Ces résultats précèdent Petit budget : sa livraison du 20 novembre a ensuite
+validé la suite complète avec 1 055 tests backend réussis, 14 OCR optionnels
+ignorés et 315 tests mobiles réussis. Voir les
+[validations courantes](../../README-fonctionnement.md#validations-connues).
 
 La [note de refonte](SHOPPING_REFACTOR.md) consigne les lots, les tests réellement exécutés et le statut des critères AC-01 à AC-24. Les tests utilisateurs et les essais natifs ne sont pas remplacés par les tests automatisés.
 

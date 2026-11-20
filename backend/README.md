@@ -55,8 +55,12 @@ de gérer sa notation. Listes et détails incluent les moyennes ; seul le détai
 inclut les notes du compte connecté. Les migrations jusqu’à `0013` sont requises pour
 ces lectures et écritures. Le formulaire mobile est intégré ; Hamza confirme
 les tests sur téléphone le 2 novembre 2026, sans préciser la plateforme : voir le [contrat de notation](docs/CONTRACTS.md#notation-des-recettes).
-Les listes acceptent `sort=top/newest/updated` avec classement SQL avant
-pagination. Les dates historiques inconnues restent nulles ; voir les
+Les listes de recettes acceptent `sort=top/newest/updated/budget`, avec
+classement global avant pagination. Petit budget utilise les quantités consommées
+et les produits compatibles les moins chers en PostgreSQL, sans afficher ni
+stocker le coût. Les nouveaux prix importés sont pris en compte au prochain
+chargement ; aucune migration supplémentaire n’est nécessaire. Voir le
+[calcul Petit budget](docs/CONTRACTS.md#petit-budget). Les dates historiques inconnues restent nulles ; voir les
 [dates des recettes](docs/MIGRATIONS.md#dates-et-tris-des-recettes).
 Les votes incluent une version de contenu : seuls les votes de la version
 courante comptent. Une édition concurrente renvoie 409, sans réattribuer le
@@ -75,7 +79,7 @@ backend/
 │   ├── security.py              # Validation distante Supabase Auth
 │   ├── accounts/                # Identité, profil et suppression de compte (Auth/Storage)
 │   ├── recipes/                 # Modèles, autorisations, CRUD manuel et favoris
-│   ├── planning/                # Calendrier privé et repas planifiés ; instantanés à développer
+│   ├── planning/                # Calendrier privé et repas planifiés
 │   ├── shopping_lists/          # Base des listes, modifications et recalcul
 │   ├── common/                  # Contrats et routes communs ; calculs à développer
 │   ├── catalog/
@@ -313,7 +317,7 @@ python -m backend.cli.extract_receipt data/receipts/images/recu_maxi.jpg \
 
 Sur Mac, `--engine vision` utilise Apple Vision. Pour Windows, utiliser Tesseract + OpenCV. Le [guide OCR](docs/RECEIPTS.md) explique l’installation, les modèles de relecture des prix et les résultats Maxi/Metro/Super C. Le chemin Windows reste à tester sur PC.
 
-Les reçus restent locaux et privés. La confirmation humaine du 4 octobre porte sur les prix de l’échantillon Maxi/Metro ; les anciennes sorties peuvent conserver des erreurs. Le parcours de correction et confirmation en base reste à développer.
+Les reçus restent locaux et privés. La confirmation humaine du 4 octobre porte sur les prix de l’échantillon Maxi/Metro ; les anciennes sorties peuvent conserver des erreurs. La contribution par reçu est retirée du périmètre ; les outils de lecture locale sont conservés.
 
 ## Tests et développement
 
@@ -341,10 +345,12 @@ scénarios d’erreur détaillés restent à compléter.
 
 Les parcours comptes, recettes, photos et Promos ont été confirmés sur iOS
 et Android par Hamza le 27 octobre 2026, avec des essais Android par son
-coéquipier. Pour la suite, développer les connecteurs web IA Metro/Super C
-dans `app/price_sources/`, les modes IA des recettes, les instantanés du calendrier, les listes,
-l’historique des prix et les contributions par reçus. Compléter les fichiers déjà préparés dans les domaines concernés et leurs tests. Garder les routes HTTP courtes et les traitements réutilisables hors des commandes.
+coéquipier. Depuis le cadrage du 17 novembre, la priorité est la stabilisation et les tests
+utilisateurs. Les listes sont intégrées. Les collectes automatisées Metro/Super C
+restent à compléter ; les modes IA utilisateur, les instantanés historiques des
+plans et des prix, les estimations statistiques et les contributions par reçu
+sont retirés du périmètre. Garder les routes HTTP courtes et les traitements réutilisables hors des commandes.
 
 Le [guide des données](docs/DATA.md) décrit les fichiers locaux. Le [guide de la base](docs/DATABASE.md) distingue les tables actuelles du modèle étendu proposé pour l’historique, les reçus et les estimations.
 
-*Dernière mise à jour : 14 novembre 2026*
+*Dernière mise à jour : 20 novembre 2026*

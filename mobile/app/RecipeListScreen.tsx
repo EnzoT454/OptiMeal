@@ -86,9 +86,8 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
     activeView.current = view;
     setPendingFavorites(new Set(favoriteRequests.current)); setFavoriteError('');
     const cleanup = () => { active = false; if (activeView.current === view) activeView.current = null; };
-    if (filter === 'Petit budget') { setBusy(false); setError(''); return cleanup; }
     setBusy(true); setError('');
-    const params = new URLSearchParams({ scope: activeSection, sort: activeSort, q: query, limit: '20', offset: String(offset) });
+    const params = new URLSearchParams({ scope: activeSection, sort: filter === 'Petit budget' ? 'budget' : activeSort, q: query, limit: '20', offset: String(offset) });
     if (filter === 'Rapides') params.set('quick', 'true');
     if (filter === 'Faciles') params.set('easy', 'true');
     api<Page<RecipeSummary>>('/api/v1/recipes?' + params).then(result => {
@@ -123,13 +122,11 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
           if (option.label !== filter) { resetResults(); setFilter(option.label); }
         }} />)}
     </ScrollView>
-    {filter === 'Petit budget' ? <View style={recipeStyles.notice}>
-      <Text style={recipeStyles.sectionTitle}>Petit budget</Text><Text style={recipeStyles.body}>Disponible prochainement.</Text>
-    </View> : <>
+    {filter === 'Petit budget' && <Text style={recipeStyles.note}>Du moins cher au plus cher, selon les quantités utilisées et les ingrédients chiffrables. Les recettes sans estimation sont placées à la fin.</Text>}
     <View style={recipeStyles.row}><Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} maxFontSizeMultiplier={1.2}
       style={[recipeStyles.sectionTitle, { flex: 1 }]}>{activeSection === 'discover' ? 'Recettes à découvrir' : activeSection === 'mine' ? 'Mes recettes' : 'Mes favoris'}</Text>
       <Text style={recipeStyles.count} maxFontSizeMultiplier={1.2}>{busy ? '…' : `${total} recette${total > 1 ? 's' : ''}`}</Text></View>
-    {activeSection !== 'mine' && <View accessibilityRole="radiogroup" accessibilityLabel="Trier les recettes" style={recipeStyles.chips}>
+    {activeSection !== 'mine' && filter !== 'Petit budget' && <View accessibilityRole="radiogroup" accessibilityLabel="Trier les recettes" style={recipeStyles.chips}>
       {sortOptions.map(option => <Pressable key={option.value} accessibilityRole="radio" accessibilityLabel={option.label}
         accessibilityState={{ checked: activeSort === option.value }} onPress={() => {
           if (activeSort !== option.value) { resetResults(); setSorts(previous => ({ ...previous, [activeSection]: option.value })); }
@@ -209,6 +206,6 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
       })}
       {offset > 0 && <Button title="Page précédente" onPress={() => { setItems([]); setBusy(true); setOffset(Math.max(0, offset - 20)); }} />}
       {offset + 20 < total && <Button title="Page suivante" onPress={() => { setItems([]); setBusy(true); setOffset(offset + 20); }} />}
-    </>}</>}
+    </>}
   </RecipeScreen>;
 }
