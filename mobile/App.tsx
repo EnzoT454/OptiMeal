@@ -40,6 +40,13 @@ import { HomeStackParams, ListStackParams, MainTabParams, PromoStackParams, Reci
 
 const VERT = '#25603c';
 
+// Barre du haut : la police de l'app (DM Sans), pas celle du téléphone
+const ENTETE = {
+  headerTintColor: VERT,
+  headerTitleStyle: { fontFamily: 'DMSans_700Bold', fontSize: 18 },
+  headerBackTitleStyle: { fontFamily: 'DMSans_500Medium' },
+};
+
 const Tabs = createBottomTabNavigator<MainTabParams>();
 const Recipes = createNativeStackNavigator<RecipeStackParams>();
 const Promos = createNativeStackNavigator<PromoStackParams>();
@@ -54,7 +61,7 @@ const tabIcons: Record<keyof MainTabParams, { active: IconName; inactive: IconNa
   Liste: { active: 'list', inactive: 'list-outline' },
 };
 function HomeNavigator() {
-  return <Home.Navigator screenOptions={{ headerTintColor: VERT }}>
+  return <Home.Navigator screenOptions={ENTETE}>
     <Home.Screen name="Home" component={HomeScreen} options={{ headerShown: false, title: 'Accueil' }} />
     <Home.Screen name="Paramètres" component={ProfileScreen} options={{ headerBackTitle: 'Accueil' }} />
     <Home.Screen name="Exclusions" component={ShoppingExclusionsScreen} options={{ title: 'Ingrédients non suggérés', headerBackTitle: 'Accueil' }} />{/* La recette ouverte depuis l'Accueil : la flèche retour revient à l'Accueil */}
@@ -63,7 +70,7 @@ function HomeNavigator() {
   </Home.Navigator>;
 }
 function ListNavigator() {
-  return <ListAccessRequired><Lists.Navigator screenOptions={{ headerTintColor: VERT }}>
+  return <ListAccessRequired><Lists.Navigator screenOptions={ENTETE}>
     <Lists.Screen name="Lists" component={ListScreen} options={{ headerShown: false, title: 'Listes' }} />
     <Lists.Screen name="CreateList" component={CreateListScreen} getId={({ params }) => params?.period ? `${params.period.start_date}:${params.period.end_date}` : params?.kind ?? 'choose'} options={{ title: 'Nouvelle liste', headerBackTitle: 'Listes' }} />
     <Lists.Screen name="Comparison" component={ShoppingComparisonScreen} options={{ title: 'Comparer les prix', headerBackTitle: 'Listes' }} />
@@ -80,14 +87,14 @@ function ProtectedEditor(props: NativeStackScreenProps<RecipeStackParams, 'Edito
   </AccountRequired>;
 }
 function RecipeNavigator() {
-  return <Recipes.Navigator screenOptions={{ headerTintColor: VERT }}>
+  return <Recipes.Navigator screenOptions={ENTETE}>
     <Recipes.Screen name="List" component={RecipeListScreen} options={{ headerShown: false }} />
     <Recipes.Screen name="Detail" component={RecipeDetailScreen} options={{ title: 'La recette' }} />
     <Recipes.Screen name="Editor" component={ProtectedEditor} options={{ headerShown: false }} />
   </Recipes.Navigator>;
 }
 function PromoNavigator() {
-  return <Promos.Navigator screenOptions={{ headerShown: false, headerTintColor: VERT }}>
+  return <Promos.Navigator screenOptions={{ ...ENTETE, headerShown: false }}>
     <Promos.Screen name="List" component={PromotionsScreen} />
     <Promos.Screen name="Detail" component={PromoDetailScreen} />
     <Promos.Screen name="Circulars" component={CircularsScreen} />
@@ -111,6 +118,8 @@ function Content() {
   return <><NavigationContainer key={session?.user.id ?? 'visitor'}><Tabs.Navigator screenOptions={({ route }) => ({
     tabBarActiveTintColor: VERT,
     tabBarInactiveTintColor: '#65746a',
+    // Noms des onglets : la police de l'app, pas celle du téléphone
+    tabBarLabelStyle: { fontFamily: 'DMSans_500Medium', fontSize: 12 },
     tabBarIcon: ({ focused, color, size }) => <Ionicons
       name={tabIcons[route.name][focused ? 'active' : 'inactive']} size={size} color={color} />,
   })}>

@@ -85,7 +85,7 @@ export default function ProfileScreen() {
 
   // ---------- Visiteur (pas connecté) ----------
   if (!session) return (
-    <RecipeScreen>
+    <RecipeScreen avecEntete>
       <View style={styles.carte}>
         <View style={styles.bloc}>
           <Text style={styles.titreCarte}>Tu utilises OptiMeal sans compte</Text>
@@ -103,7 +103,7 @@ export default function ProfileScreen() {
 
   // ---------- Connecté ----------
   return (
-    <RecipeScreen>
+    <RecipeScreen avecEntete>
       {/* Carte du profil : initiale, nom et courriel complet */}
       <View style={[styles.carte, styles.profil]}>
         <View style={styles.avatar}>

@@ -218,7 +218,8 @@ test('Ne plus suggérer confirme sa portée future et ne modifie pas la liste co
 
 test('Paramètres peut annuler une exclusion sans modifier les listes existantes', async () => {
   const h = screen('app/ShoppingExclusionsScreen.tsx', { pages: { items: [{ ingredient_id: 'ing_riz', name: 'Riz' }], total: 1 } });
-  await button(h, 'Suggérer à nouveau Riz').props.onPress();
+  // « Rétablir » est un lien ; on le trouve par son nom pour les lecteurs d'écran
+  await nodes(h.render()).find(n => n.props.accessibilityLabel === 'Suggérer à nouveau Riz').props.onPress();
   assert.deepEqual(json(h.commands[0].body), { excluded: false });
 });
 
@@ -442,9 +443,9 @@ test('exclure un produit confirme la portée compte et retire seulement après s
   const h = screen('components/lists/ListExclusionAction.tsx', { result: () => ({ excluded: true }),
     props: { ingredientId: 'ing_riz', name: 'Riz', disabled: false, onExcluded: async () => { removed++; return true; } } });
   button(h, 'Ne plus suggérer').props.onPress();
-  assert.match(JSON.stringify(h.render()), /paramètres de votre compte/); assert.match(JSON.stringify(h.render()), /retiré de cette liste/);
+  assert.match(JSON.stringify(h.render()), /menu de compte/); assert.match(JSON.stringify(h.render()), /retiré de cette liste/);
   assert.equal(removed, 0); assert.equal(h.commands.length, 0);
-  button(h, 'Confirmer la préférence').props.onPress(); await flush(); assert.equal(removed, 1);
+  button(h, 'Confirmer').props.onPress(); await flush(); assert.equal(removed, 1);
   assert.deepEqual(json(h.commands[0].body), { excluded: true });
 });
 
@@ -452,10 +453,10 @@ test('une préférence refusée ne retire pas le produit et un retrait refusé r
   let removed = 0;
   const props = { ingredientId: 'ing_riz', name: 'Riz', disabled: false, onExcluded: async () => { removed++; return false; } };
   const failure = screen('components/lists/ListExclusionAction.tsx', { props });
-  button(failure, 'Ne plus suggérer').props.onPress(); button(failure, 'Confirmer la préférence').props.onPress(); await flush();
+  button(failure, 'Ne plus suggérer').props.onPress(); button(failure, 'Confirmer').props.onPress(); await flush();
   assert.equal(removed, 0);
   const h = screen('components/lists/ListExclusionAction.tsx', { props, result: () => ({ excluded: true }) });
-  button(h, 'Ne plus suggérer').props.onPress(); button(h, 'Confirmer la préférence').props.onPress(); await flush();
+  button(h, 'Ne plus suggérer').props.onPress(); button(h, 'Confirmer').props.onPress(); await flush();
   assert.equal(removed, 1); button(h, 'Retirer le produit exclu de cette liste').props.onPress(); await flush();
   assert.equal(removed, 2); assert.equal(h.commands.length, 1);
 });

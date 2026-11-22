@@ -27,6 +27,7 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
   const [productAction, setProductAction] = useState<'owned' | 'remove' | null>(null);
   const [advanced, setAdvanced] = useState(false);
   const [itemName, setItemName] = useState(item.name);
+  const [exclusionOuverte, setExclusionOuverte] = useState(false); // « Ne plus suggérer » en cours de confirmation
   const rows = productRows(list).filter(r => r.itemIds.includes(item.id));
   const path = `${listsPath}/${list.id}/items/${item.id}`;
   const editable = list.status === 'draft' || list.status === 'active';
@@ -106,15 +107,16 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
             <RecipeButton title="Enregistrer la quantité" disabled={locked} onPress={() => void saveQuantity()} />
             <RecipeButton title="Annuler" variant="neutral" disabled={locked} onPress={() => { setMode(null); setError(''); }} />
           </View> : <>
-            {kind === 'products' ? <>
+            {/* Pendant la confirmation « Ne plus suggérer », on cache les autres options */}
+            {!exclusionOuverte && (kind === 'products' ? <>
               <RecipeButton title="Choisir dans un autre magasin" variant="neutral" disabled={locked || !item.ingredient_id} onPress={() => setChoosing(!choosing)} />
               {choosing && <ListProductAlternatives list={list} disabled={locked} onCommand={onCommand} itemId={item.id} otherStoresOnly onClose={onClose} />}
-            </> : <RecipeButton title="Modifier le nom" variant="neutral" disabled={locked} onPress={() => { setItemName(item.name); setMode('rename'); setError(''); }} />}
-            <RecipeButton title="Définir la quantité" variant="neutral" disabled={locked} onPress={defineQuantity} />
-            <RecipeButton title="J’en ai déjà" variant="neutral" disabled={locked} onPress={() => setProductAction('owned')} />
-            {item.ingredient_id ? <ListExclusionAction ingredientId={item.ingredient_id} name={kind === 'products' ? productName : item.name} disabled={locked} onExcluded={removeProduct} itemLabel={kind === 'products' ? 'produit' : 'article'} />
+            </> : <RecipeButton title="Modifier le nom" variant="neutral" disabled={locked} onPress={() => { setItemName(item.name); setMode('rename'); setError(''); }} />)}
+            {!exclusionOuverte && <RecipeButton title="Définir la quantité" variant="neutral" disabled={locked} onPress={defineQuantity} />}
+            {!exclusionOuverte && <RecipeButton title="J’en ai déjà" variant="neutral" disabled={locked} onPress={() => setProductAction('owned')} />}
+            {item.ingredient_id ? <ListExclusionAction ingredientId={item.ingredient_id} name={kind === 'products' ? productName : item.name} disabled={locked} onExcluded={removeProduct} itemLabel={kind === 'products' ? 'produit' : 'article'} onConfirmingChange={setExclusionOuverte} />
               : <RecipeButton title="Ne plus suggérer" variant="neutral" disabled onPress={() => {}} />}
-            <RecipeButton title="Retirer de la liste" variant="neutral" disabled={locked} onPress={() => setProductAction('remove')} />
+            {!exclusionOuverte && <RecipeButton title="Retirer de la liste" variant="neutral" disabled={locked} onPress={() => setProductAction('remove')} />}
           </>)}
         </ScrollView>
       </SafeAreaView>
