@@ -33,9 +33,10 @@ export default function ListScreen({ navigation, route }: NativeStackScreenProps
   if (!session) return null; // The navigator handles sign-in before mounting personal screens.
   return <RecipeScreen>
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-      <RecipeTitle>Listes</RecipeTitle>
+      {/* Le titre prend la place qui reste ; le bouton + garde toujours sa taille (même avec une grande police) */}
+      <View style={{ flex: 1, minWidth: 0 }}><RecipeTitle>Listes</RecipeTitle></View>
       <Pressable accessibilityRole="button" accessibilityLabel="Créer une liste" onPress={() => navigation.navigate('CreateList')}
-        style={{ width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: recipeColors.green }}>
+        style={{ width: 48, height: 48, flexShrink: 0, borderRadius: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: recipeColors.green }}>
         <MaterialCommunityIcons name="plus" size={28} color="white" accessible={false} />
       </Pressable>
     </View>

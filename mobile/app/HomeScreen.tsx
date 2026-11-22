@@ -27,6 +27,7 @@ import type { ShoppingListRead } from "../types/shoppingLists";
 
 const HEURE_BASCULE = 21;       // à partir de 21 h, on montre les repas de demain
 const NB_LISTES_MAX = 3;
+const NB_REPAS_MAX = 2;        // au-delà : « +N autres repas » ouvre le Calendrier
 const NB_PROMOS_MAX = 8;
 
 // Heure à partir de laquelle un repas du jour est considéré comme passé
@@ -237,6 +238,8 @@ function TableauDeBord() {
   const repasDuJour = repas
     .filter((e) => e.date === jour.iso)
     .sort((a, b) => MEALS.indexOf(a.meal) - MEALS.indexOf(b.meal));
+  // Seulement les repas à venir : à l'heure du dîner, le déjeuner déjà passé n'est plus montré
+  const repasAVenir = repasDuJour.filter((e) => !estPasse(e, maintenant));
 
   const listesAffichees = listesEnCours(listes).slice(0, NB_LISTES_MAX);
   const chargement = chargementListes || chargementRepas;
@@ -277,36 +280,58 @@ function TableauDeBord() {
           </Pressable>
         )}
 
-        {!chargementRepas && !erreurRepas && repasDuJour.map((e) => {
-          const passe = estPasse(e, maintenant);
-          const aRecette = !!e.recipe_id && !recipeUnavailable(e);
-          return (
-            <Pressable key={e.id} accessibilityRole="button"
-              accessibilityLabel={`${libelleRepas(e, maintenant)}, ${mealName(e)}${aRecette ? ", voir la recette" : ""}`}
-              onPress={() => ouvrirRepas(e)}
-              style={({ pressed }) => [styles.carteLigne, passe && styles.carteLignePassee, pressed && styles.appuye]}>
-              <View style={passe && styles.contenuPasse}>
-                {e.recipe_image_url ? (
-                  <Image source={{ uri: e.recipe_image_url }} style={styles.vignette} accessible={false} />
-                ) : (
-                  <View style={[styles.vignette, { backgroundColor: MEAL_COLORS[e.meal].dot }]}>
-                    <MaterialCommunityIcons name="silverware-fork-knife" size={22} color="white" accessible={false} />
+        {/* Des repas étaient prévus aujourd'hui, mais ils sont tous passés */}
+        {!chargementRepas && !erreurRepas && repasDuJour.length > 0 && repasAVenir.length === 0 && (
+          <Pressable accessibilityRole="button" onPress={ouvrirSemaine}
+            style={({ pressed }) => [styles.carteLigne, pressed && styles.appuye]}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.nom}>Plus rien de prévu aujourd'hui</Text>
+              <Text style={styles.detail}>Regarde ta semaine pour la suite.</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} />
+          </Pressable>
+        )}
+
+        {/* Une seule carte : les 2 prochains repas, une ligne chacun */}
+        {!chargementRepas && !erreurRepas && repasAVenir.length > 0 && (
+          <View style={[styles.carte, { paddingVertical: 4, gap: 0 }]}>
+            {repasAVenir.slice(0, NB_REPAS_MAX).map((e, index) => {
+              const aRecette = !!e.recipe_id && !recipeUnavailable(e);
+              return (
+                <Pressable key={e.id} accessibilityRole="button"
+                  accessibilityLabel={`${libelleRepas(e, maintenant)}, ${mealName(e)}${aRecette ? ", voir la recette" : ""}`}
+                  onPress={() => ouvrirRepas(e)}
+                  style={({ pressed }) => [styles.ligneRepas, index > 0 && styles.separateurHaut, pressed && styles.appuye]}>
+                  <View>
+                    {e.recipe_image_url ? (
+                      <Image source={{ uri: e.recipe_image_url }} style={styles.vignettePetite} accessible={false} />
+                    ) : (
+                      <View style={[styles.vignettePetite, { backgroundColor: MEAL_COLORS[e.meal].dot }]}>
+                        <MaterialCommunityIcons name="silverware-fork-knife" size={20} color="white" accessible={false} />
+                      </View>
+                    )}
                   </View>
-                )}
-              </View>
-              <View style={[{ flex: 1 }, passe && styles.contenuPasse]}>
-                <Text style={[styles.surtitre, passe && { color: c.muted }]}>
-                  {e.is_leftover ? "RESTES · " : ""}{libelleRepas(e, maintenant).toUpperCase()}
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.surtitre}>
+                      {e.is_leftover ? "RESTES · " : ""}{libelleRepas(e, maintenant).toUpperCase()}
+                    </Text>
+                    <Text style={styles.nom} numberOfLines={1}>{mealName(e)}</Text>
+                  </View>
+                  <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} />
+                </Pressable>
+              );
+            })}
+            {repasAVenir.length > NB_REPAS_MAX && (
+              <Pressable accessibilityRole="button" onPress={ouvrirSemaine}
+                style={({ pressed }) => [styles.ligneAutres, styles.separateurHaut, pressed && styles.appuye]}>
+                <Text style={styles.lien}>
+                  +{repasAVenir.length - NB_REPAS_MAX} autre{repasAVenir.length - NB_REPAS_MAX > 1 ? "s" : ""} repas
                 </Text>
-                <Text style={styles.nom} numberOfLines={1}>{mealName(e)}</Text>
-                <Text style={styles.detail}>
-                  {e.servings} portion{e.servings > 1 ? "s" : ""}{aRecette ? " · voir la recette" : ""}
-                </Text>
-              </View>
-              <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} />
-            </Pressable>
-          );
-        })}
+                <MaterialCommunityIcons name="chevron-right" size={20} color={c.green} accessible={false} />
+              </Pressable>
+            )}
+          </View>
+        )}
       </View>
 
       {/* ================= 2. Mes listes en cours ================= */}
@@ -519,6 +544,10 @@ const styles = StyleSheet.create({
   texteDoux: { fontFamily: "DMSans_500Medium", fontSize: 14, lineHeight: 19, color: c.muted },
 
   vignette: { width: 72, height: 72, borderRadius: 16, alignItems: "center", justifyContent: "center", backgroundColor: c.light },
+  vignettePetite: { width: 52, height: 52, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: c.light },
+  ligneRepas: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 10 },
+  ligneAutres: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 12 },
+  separateurHaut: { borderTopWidth: 1, borderTopColor: c.border },
   vignetteVide: { backgroundColor: "transparent", borderWidth: 1.5, borderStyle: "dashed", borderColor: c.border },
   surtitre: { fontFamily: "DMSans_700Bold", fontSize: 12, lineHeight: 16, color: c.green, letterSpacing: 0.4 },
   nom: { fontFamily: "DMSans_700Bold", fontSize: 16, lineHeight: 22, color: c.ink },

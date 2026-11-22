@@ -14,8 +14,10 @@ const icons = {
 export function FigmaRecipeIcon({ name }: { name: keyof typeof icons }) {
   return <Image source={icons[name]} style={{ width: 24, height: 24 }} contentFit="contain" accessible={false} />;
 }
-export function RecipeScreen({ children, compact = false }: PropsWithChildren<{ compact?: boolean }>) {
-  return <SafeAreaView edges={['top', 'left', 'right']} style={{ flex: 1, backgroundColor: recipeColors.background }}>
+// avecEntete : l'écran a déjà une barre du haut (titre + flèche), qui gère l'espace de la barre d'état.
+// Sans ça, l'espace serait compté deux fois et un grand vide apparaîtrait sous la barre du haut.
+export function RecipeScreen({ children, compact = false, avecEntete = false }: PropsWithChildren<{ compact?: boolean; avecEntete?: boolean }>) {
+  return <SafeAreaView edges={avecEntete ? ['left', 'right'] : ['top', 'left', 'right']} style={{ flex: 1, backgroundColor: recipeColors.background }}>
     <Screen contentStyle={[recipeStyles.screen, compact && { gap: 12 }]}>{children}</Screen>
   </SafeAreaView>;
 }
