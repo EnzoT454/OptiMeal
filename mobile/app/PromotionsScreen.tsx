@@ -202,9 +202,6 @@ export default function PromotionsScreen({ navigation }: NativeStackScreenProps<
   </RecipeScreen>;
 }
 
-function plural(count: number, word: string) {
-  return `${count} ${word}${count > 1 ? 's' : ''}`;
-}
 
 const VIEW_KEY = 'optimeal.promosView';
 

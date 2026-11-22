@@ -52,8 +52,6 @@ function plusJours(d: Date, n: number) {
   return r;
 }
 
-const dateDe = (iso: string) => new Date(iso + "T12:00:00");
-
 // Le jour à afficher : aujourd'hui pendant la journée, demain le soir
 function jourQuiCompte(maintenant: Date) {
   const demain = maintenant.getHours() >= HEURE_BASCULE;
@@ -76,12 +74,6 @@ function listesEnCours(listes: ShoppingListRead[]) {
     .sort((a, b) => (b.updated_at ?? '').localeCompare(a.updated_at ?? ''));
 }
 
-// "Aujourd'hui", "Demain", "Lun. 16 nov."
-function dateCourte(iso: string, aujourdhui: string) {
-  if (iso === aujourdhui) return "Aujourd'hui";
-  if (iso === toISODate(plusJours(new Date(), 1))) return "Demain";
-  return majuscule(dateDe(iso).toLocaleDateString("fr-CA", { weekday: "short", day: "numeric", month: "short" }));
-}
 
 // "≈ 21 $" si tous les prix sont connus, "au moins 21 $" sinon, rien si aucun prix connu
 // Prix et rabais d'une offre (montants en texte, ex. "2.49")
@@ -155,7 +147,6 @@ export default function HomeScreen({ navigation }: NativeStackScreenProps<HomeSt
 function TableauDeBord() {
   const navigation = useNavigation<any>();
   const maintenant = new Date();
-  const aujourdhui = toISODate(maintenant);
   const jour = jourQuiCompte(maintenant);
 
   // Repas : cette semaine + la suivante (demain peut tomber la semaine prochaine)
@@ -285,7 +276,7 @@ function TableauDeBord() {
           <Pressable accessibilityRole="button" onPress={ouvrirSemaine}
             style={({ pressed }) => [styles.carteLigne, pressed && styles.appuye]}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.nom}>Plus rien de prévu aujourd'hui</Text>
+              <Text style={styles.nom}>Plus rien de prévu aujourd’hui</Text>
               <Text style={styles.detail}>Regarde ta semaine pour la suite.</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={22} color={c.muted} accessible={false} />
