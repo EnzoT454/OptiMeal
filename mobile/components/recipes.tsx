@@ -88,7 +88,7 @@ export const recipeStyles = StyleSheet.create({
   input: { fontFamily: 'DMSans_400Regular', fontSize: 15, lineHeight: 20, color: recipeColors.ink,
     padding: 14, minHeight: 48, borderRadius: 10, borderColor: recipeColors.border, backgroundColor: 'white' },
   button: { minHeight: 50, justifyContent: 'center', padding: 14, borderRadius: 12, backgroundColor: recipeColors.green },
-  buttonText: { fontFamily: 'DMSans_700Bold', fontSize: 15, lineHeight: 20 },
+  buttonText: { fontFamily: 'DMSans_700Bold', fontWeight: 'normal', fontSize: 15, lineHeight: 22 },
   neutralButton: { backgroundColor: 'white', borderWidth: 1, borderColor: recipeColors.border },
   choice: { borderRadius: 16, backgroundColor: 'white', paddingHorizontal: 16, paddingVertical: 12, gap: 6 },
   notice: { backgroundColor: recipeColors.light, padding: 16, borderRadius: 14, gap: 5 },

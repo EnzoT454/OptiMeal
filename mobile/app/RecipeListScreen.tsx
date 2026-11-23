@@ -123,7 +123,6 @@ export default function RecipeListScreen({ navigation }: NativeStackScreenProps<
           if (option.label !== filter) { resetResults(); setFilter(option.label); }
         }} />)}
     </ScrollView>
-    {filter === 'Petit budget' && <Text style={recipeStyles.note}>Du moins cher au plus cher, selon les quantités utilisées et les ingrédients chiffrables. Les recettes sans estimation sont placées à la fin.</Text>}
     <View style={recipeStyles.row}><Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} maxFontSizeMultiplier={1.2}
       style={[recipeStyles.sectionTitle, { flex: 1 }]}>{activeSection === 'discover' ? 'Recettes à découvrir' : activeSection === 'mine' ? 'Mes recettes' : 'Mes favoris'}</Text>
       <Text style={recipeStyles.count} maxFontSizeMultiplier={1.2}>{busy ? '…' : `${total} recette${total > 1 ? 's' : ''}`}</Text></View>

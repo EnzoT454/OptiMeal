@@ -1193,6 +1193,12 @@ Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/
 
 Les types TypeScript aident le développeur à utiliser les données correctement. Le backend doit aussi valider les entrées reçues, indépendamment des vérifications du formulaire.
 
+### Adapter l’affichage aux appareils
+
+La barre des cinq onglets réserve une hauteur pour les icônes et les libellés, puis ajoute la marge de sécurité du bas fournie par l’appareil. Les libellés restent sous les icônes, y compris en paysage. Leur taille peut augmenter jusqu’à 1,4 fois la taille de référence, avec ajustement à la largeur disponible. Les boutons partagés utilisent une hauteur minimale, un texte centré pouvant revenir à la ligne et une largeur limitée par leur conteneur. Les boutons de recette utilisent directement la variante grasse de DM Sans.
+
+Les panneaux d’ajout et d’action sur les repas respectent les marges de sécurité du bas et des côtés. Leur hauteur est limitée et leur contenu défile pour garder les actions accessibles sur un petit écran. Ces règles réduisent les différences dues aux polices et aux barres système ; elles doivent être vérifiées sur iOS et Android, en portrait et paysage, avec le texte agrandi. Les ajustements du 23 novembre n’ont pas encore fait l’objet d’un nouvel essai natif consigné.
+
 ### Guides, configuration et vérifications
 
 Le [guide de Liste](backend/docs/SHOPPING_GUIDE.md) et la [note de refonte](backend/docs/SHOPPING_REFACTOR.md) présentent le fonctionnement courant, les contrats et les validations. Les guides de `backend/docs/` détaillent les contrats et les étapes de réalisation ; certaines de leurs sections datées conservent des descriptions historiques. Le code des routes et des écrans permet de vérifier les parcours effectivement accessibles.
