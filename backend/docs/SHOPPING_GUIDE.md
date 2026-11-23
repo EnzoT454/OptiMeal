@@ -451,18 +451,31 @@ moins cher, Maxi, Metro ou Super C. Il crée directement une copie active nommé
 fiche dans Listes. Retour ramène aux listes récentes. Une liste déjà existante
 n’est ni remplacée ni réutilisée.
 
-Le rapprochement des prix des lignes utilise l’ingrédient ; les identifiants
-UUID temporaires du devis ne sont pas ceux de l’aperçu calendrier. Les besoins
-sans produit chiffrable pour le scénario choisi sont énumérés avant confirmation
-**Créer avec les produits disponibles**, avec les repas inaccessibles éventuels.
-Ils ne sont pas ajoutés comme articles libres. Sans produit chiffrable, la
-création est désactivée et une actualisation ou un autre scénario est proposé.
+Le rapprochement des prix utilise l’ingrédient ; les UUID temporaires du devis
+ne sont pas ceux de l’aperçu calendrier. Tous les besoins sont conservés, même
+sans prix ni produit compatible pour le scénario choisi. Ils affichent **- $**,
+restent cochables sans montant et conservent leurs quantités et provenances.
+La création reste possible si aucun besoin n’est chiffrable, à condition que le
+devis soit chargé. Les repas inaccessibles éventuels demandent une confirmation.
 
-Si des ingrédients sont écartés, le mobile demande le devis du sous-ensemble
-et vérifie qu’il reprend les mêmes produits, prix et nombres d’emballages. Le
-serveur vérifie ensuite les empreintes calendrier et prix dans la transaction,
-conserve les besoins/provenances, enregistre les choix commerciaux de chaque
-scénario et leur magasin, puis active la liste. Le devis est recalculé côté
+Le résumé est centré : montant connu ou **- $**, puis compteurs avec icônes
+Articles, Magasins et Sans prix. Le montant partiel est un **Sous-total connu**.
+Le même compteur Sans prix figure dans le résumé centré de la liste créée.
+Une ligne sans référence commerciale utilise les quantités d’ingrédient dans
+sa fiche ; une ligne avec produit conserve le nombre d’emballages.
+
+Des unités incompatibles restent affichées séparément, par exemple 12 g et
+2 unités d’ail. Aucun total de quantité ni prix n’est calculé pour ce besoin.
+Le détail masque le message rouge INCOMPATIBLE_UNITS. L’explication du sous-total
+partiel apparaît une seule fois dans un bloc ambré avec une icône !, après le
+résumé et avant Actualiser les prix. Les autres avertissements et erreurs de
+commande restent visibles ; les codes techniques de l’API sont conservés.
+
+Le mobile transmet le devis complet avec `pricing.accept_partial: true` lorsque
+certains besoins ne sont pas chiffrés. Il n’exclut aucun ingrédient pour ce motif
+et ne demande plus de devis réduit. Le serveur vérifie les empreintes calendrier
+et prix dans la transaction, conserve les besoins/provenances, enregistre les
+choix commerciaux disponibles et leur magasin, puis active la liste. Le devis est recalculé côté
 serveur pendant la création ; son empreinte utilise les choix relus dans
 l’ordre canonique des UUID après enregistrement. Un panier de plusieurs produits
 est donc immédiatement utilisable dès l’ouverture, sans appui sur Actualiser
@@ -470,7 +483,7 @@ les prix ni faux avertissement de panier périmé. Un changement des sources ref
 la création et demande de revoir l’aperçu. Une erreur réseau se reprend avec la
 commande persistée exacte, sans nouvelle copie ; les doubles appuis et réponses
 d’un ancien compte ou d’une autre semaine sont ignorés. Aucune nouvelle
-migration n’est requise. Les fiches et achats de Listes restent identiques.
+migration n’est requise. Aucun prix ou produit fictif n’est enregistré pour les besoins sans référence.
 
 ## 18. Erreurs, concurrence et reprise
 

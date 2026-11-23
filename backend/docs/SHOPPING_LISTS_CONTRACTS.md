@@ -15,7 +15,10 @@ Accueil conserve kind: articles. Le type est immuable
 et figure dans les lectures/snapshots. Une validation commune, avant commit de
 toute mutation, refuse les mélanges (`422 LIST_KIND_CONFLICT`) : aucun produit
 retenu dans articles ; chaque élément actif de products doit avoir un choix
-explicite. Échec = rollback de toute la commande, sans révision publiée.
+explicite, sauf un besoin identifié provenant du calendrier. Cette exception
+exige une liste de source calendar et une contribution de source calendar
+créée par le serveur. Un ajout manuel sans produit ne bénéficie pas de cette
+exception. Échec = rollback de toute la commande, sans révision publiée.
 
 Sur une liste typée products, PATCH item refuse le changement de nom avec
 `422 PRODUCT_NAME_IMMUTABLE` ; les articles restent renommables. Les retraits
@@ -72,10 +75,23 @@ reconnaît les anciennes listes mixtes et bloque de nouveaux ajouts dans celles-
 
 Le mobile utilise `creation-prices` puis `from-calendar` avec `kind: products`,
 `activate: true`, période, empreinte calendrier et `pricing` (empreinte/scénario).
-Les besoins sans produit chiffrable sont confirmés et transmis dans
-`excluded_item_ids` ; un devis du sous-ensemble retenu est obligatoire car son
-empreinte diffère. Les produits/prix/emballages doivent rester ceux présentés.
-Aucun besoin sans choix produit n’est accepté, même avec accept_partial.
+Tous les besoins du calendrier restent inclus, y compris ceux sans produit
+chiffrable. Le mobile laisse `excluded_item_ids` vide et transmet le devis
+complet, avec `pricing.accept_partial: true` si le scénario est incomplet.
+Le serveur revérifie l’empreinte du devis : l’acceptation d’un sous-total ne
+permet pas d’accepter des prix périmés. Un scénario entièrement sans prix reste
+créable. Les besoins non chiffrables gardent `amount: null`, aucune ligne produit
+et aucun choix commercial inventé ; le mobile les affiche avec **- $**.
+Leur provenance et leurs quantités sont conservées, ainsi que les achats manuels
+sans prix. `quantity` permet de corriger leur besoin puis de recalculer ;
+`product_units` reste réservé à un produit identifié. Les ajouts manuels de
+produits continuent d’exiger une sélection explicite.
+
+`accept_partial` au niveau de la création calendrier concerne séparément les
+repas inaccessibles ; leur exclusion reste confirmée. Les champs d’exclusion
+existants restent disponibles pour les anciens parcours. Aucun format de
+contrat ni migration supplémentaire n’est nécessaire pour cette évolution du
+23 novembre 2026.
 
 `draft_pricing.attach` conserve maintenant tous les choix du scénario pour une
 liste products, quel que soit le scénario, ainsi que selected_products pour les

@@ -15,14 +15,7 @@ export function calendarNeed(item: ShoppingItemRead, scenario?: ShoppingScenario
 
 export function calendarProductSelection(items: ShoppingItemRead[], scenario: ShoppingScenario) {
   return {
-    included: items.filter(item => calendarNeed(item, scenario)?.lines.length),
-    excluded: items.filter(item => !calendarNeed(item, scenario)?.lines.length),
+    included: items,
+    unpriced: items.filter(item => !calendarNeed(item, scenario)?.lines.length),
   };
-}
-
-export function calendarProductSignature(scenario: ShoppingScenario) {
-  return JSON.stringify(scenario.needs.filter(need => need.lines.length).map(need => ({
-    ingredient: need.ingredient_id,
-    lines: need.lines.map(line => ({ id: line.sale.product_id, amount: line.amount, units: line.sale_units })),
-  })));
 }

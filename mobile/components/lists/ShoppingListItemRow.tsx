@@ -41,5 +41,6 @@ export default function ShoppingListItemRow({ item, list, disabled, onOpen, onCo
       {item.coverage_status === 'partial' && <Text style={s.note}>Partiellement couvert</Text>}
       {pending !== null && <Text accessibilityLiveRegion="polite" style={s.note}>Enregistrement…</Text>}
     </Pressable>
+    {list.kind === 'products' && <Text accessibilityLabel="Prix inconnu" style={[s.body, { color: recipeColors.ink }]}>- $</Text>}
   </View>;
 }

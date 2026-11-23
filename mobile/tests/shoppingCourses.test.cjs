@@ -362,3 +362,23 @@ for (const kind of ['products', undefined]) {
     assert.deepEqual(json(list), before);
   });
 }
+
+test('besoin calendrier sans produit : prix inconnu visible et achat manuel sans montant', async () => {
+  const { list, item } = fixture(); list.kind = 'products'; list.assignment.scenario.needs[0].lines = [];
+  const h = harness('components/lists/ShoppingListItemRow.tsx', { list, item, disabled: false, onOpen() {} });
+  assert.ok(nodes(h.render()).some(n => n.props.accessibilityLabel === 'Prix inconnu' && n.props.children === '- $'));
+  check(h).props.onPress(); await flush();
+  assert.equal(h.commands[0].path, '/api/v1/shopping-lists/list/items/rice/manual-purchase');
+  assert.deepEqual(json(h.commands[0].body.coverage), { quantities: [{ amount: '1000', unit: 'g' }] });
+  assert.equal('amount' in h.commands[0].body, false);
+});
+
+test('besoin calendrier sans produit : modifier sa quantité en unités d’ingrédient et recalculer', async () => {
+  const { list, item } = fixture(); list.kind = 'products'; list.assignment.scenario.needs[0].lines = [];
+  const h = harness('components/lists/ListArticleSheet.tsx', { list, item, disabled: false, onClose() {} });
+  button(h, 'Définir la quantité').props.onPress();
+  assert.equal(field(h, 'Quantité').props.value, '1000');
+  field(h, 'Quantité').props.onChangeText('750');
+  button(h, 'Enregistrer la quantité').props.onPress(); await flush();
+  assert.deepEqual(json(h.commands[0].body), { expected_revision: 8, quantity: { amount: '750', unit: 'g' }, refresh_prices: true });
+});

@@ -8,7 +8,7 @@ import type {
   ShoppingPeriod, ShoppingScenarioName,
 } from '../types/shoppingLists';
 import { useListCommand } from './lists/useListCommand';
-import { calendarNeed, calendarProductsName, calendarProductSelection, calendarProductSignature } from '../services/shoppingCalendarProducts';
+import { calendarNeed, calendarProductsName, calendarProductSelection } from '../services/shoppingCalendarProducts';
 import { storeName } from './promos';
 import { RecipeButton, recipeColors as c } from './recipes';
 
@@ -109,21 +109,13 @@ export default function EpicerieSemaine({ period, onOpen }: {
     try {
       let intent = command.pending;
       if (!intent && apercu && prix && scenario && selection) {
-        // Retirer les besoins indisponibles change l'empreinte : vérifier un devis du sous-ensemble.
-        const quote = selection.excluded.length ? await previewCreationPrices({
-          purchase_date: apercu.purchase_date, choices: [],
-          items: selection.included.map(item => ({ name: item.name, ingredient_id: item.ingredient_id, required: item.required })),
-        }, userId!) : prix;
-        if (!isCurrent()) return;
-        const selected = quote.scenarios.find(value => value.scenario === choix);
-        if (!selected?.complete || calendarProductSignature(selected) !== calendarProductSignature(scenario))
-          throw new Error('Les produits ou les prix ont changé. Actualise l’aperçu avant de créer la liste.');
+        // Le serveur revérifie le devis complet ; les besoins sans prix restent inclus.
         intent = listCommand(`${listsPath}/from-calendar`, {
           ...period, name: calendarProductsName(period), purchase_date: apercu.purchase_date,
           kind: 'products', activate: true, preview_fingerprint: apercu.preview_fingerprint,
           accept_partial: !!apercu.excluded_meals.length,
-          excluded_item_ids: selection.excluded.map(item => item.id),
-          pricing: { fingerprint: quote.fingerprint, scenario: choix, choices: [] },
+          excluded_item_ids: [],
+          pricing: { fingerprint: prix.fingerprint, scenario: choix, choices: [], accept_partial: !scenario.complete },
         });
       }
       if (!intent || !isCurrent()) return;
@@ -138,12 +130,8 @@ export default function EpicerieSemaine({ period, onOpen }: {
   const nbExclus = apercu?.excluded_meals.length ?? 0;
   const nomScenario = SCENARIOS.find((s) => s.id === choix)?.label ?? '';
 
-  // « 19 articles · 3 magasins » (+ « certains prix inconnus » si le total est partiel)
-  let detailTotal = `${articles.length} article${articles.length > 1 ? 's' : ''}`;
-  if (scenario) {
-    detailTotal += ` · ${scenario.store_count} magasin${scenario.store_count > 1 ? 's' : ''}`;
-    if (!scenario.complete) detailTotal += ' · certains prix inconnus';
-  }
+  const unknownCount = selection?.unpriced.length ?? articles.length;
+  const hasKnownPrice = scenario?.needs.some(need => need.lines.length > 0);
 
   if (chargement || loadedIdentity !== identity) return <ActivityIndicator color={c.green} style={{ marginTop: 16 }} />;
 
@@ -172,14 +160,18 @@ export default function EpicerieSemaine({ period, onOpen }: {
           {/* Total estimé : une information par ligne, pour que rien ne soit écrasé */}
           <View style={styles.total}>
             <Text style={styles.surtitreTotal} numberOfLines={1}>
-              Total estimé{scenario ? ` · ${nomScenario}` : ''}
+              {scenario && !scenario.complete ? 'Sous-total connu' : 'Total estimé'}{scenario ? ` · ${nomScenario}` : ''}
             </Text>
             <Text style={styles.montantTotal} numberOfLines={1} adjustsFontSizeToFit>
-              {scenario
+              {scenario && hasKnownPrice
                 ? `${scenario.complete ? '≈ ' : ''}${enDollars(Number(scenario.known_amount))}`
-                : prixIndisponibles ? 'Prix indisponibles' : '—'}
+                : prixIndisponibles ? 'Prix indisponibles' : '- $'}
             </Text>
-            <Text style={styles.texteTotal}>{detailTotal}</Text>
+            <View style={styles.compteurs}>
+              <Compteur icon="basket-outline" value={articles.length} label="Articles" />
+              <Compteur icon="store-outline" value={scenario?.store_count ?? 0} label="Magasins" />
+              <Compteur icon="help-circle-outline" value={unknownCount} label="Sans prix" />
+            </View>
           </View>
 
           {/* Choix du magasin */}
@@ -217,20 +209,16 @@ export default function EpicerieSemaine({ period, onOpen }: {
           )}
 
           {!command.pending && (confirmation ? <View style={styles.carte}>
-            <Text accessibilityRole="header" style={styles.titreVide}>Créer avec les produits disponibles ?</Text>
-            {!!selection?.excluded.length && <>
-              <Text style={styles.texte}>Ces ingrédients ne peuvent pas être chiffrés dans {nomScenario} et ne seront pas ajoutés :</Text>
-              {selection.excluded.map(item => <Text key={item.id} style={styles.texte}>• {item.name}</Text>)}
-            </>}
+            <Text accessibilityRole="header" style={styles.titreVide}>Créer la liste ?</Text>
             {!!nbExclus && <Text style={styles.texte}>{nbExclus} repas sans recette accessible ne seront pas inclus.</Text>}
-            <RecipeButton title="Créer avec les produits disponibles" disabled={locked} onPress={() => void createProducts()} />
+            <RecipeButton title="Créer la liste" disabled={locked} onPress={() => void createProducts()} />
             <RecipeButton title="Annuler" variant="neutral" disabled={working} onPress={() => setConfirmation(false)} />
           </View> : <>
             <RecipeButton title="Créer une liste de produits" disabled={locked || !selection?.included.length} onPress={() => {
-              if (selection?.excluded.length || nbExclus) setConfirmation(true); else void createProducts();
+              if (nbExclus) setConfirmation(true); else void createProducts();
             }} />
             {!selection?.included.length && <>
-              <Text style={styles.note}>Aucun produit chiffré disponible pour ce scénario. Essaie un autre magasin ou actualise l’aperçu.</Text>
+              <Text style={styles.note}>Les prix ne sont pas disponibles. Actualise l’aperçu pour préparer la liste.</Text>
               {!prixIndisponibles && <RecipeButton title="Actualiser l’aperçu" variant="neutral" disabled={locked} onPress={() => setEssai(n => n + 1)} />}
             </>}
             {prixIndisponibles && <RecipeButton title="Réessayer les prix" variant="neutral" disabled={locked} onPress={() => setEssai(n => n + 1)} />}
@@ -239,6 +227,16 @@ export default function EpicerieSemaine({ period, onOpen }: {
       )}
     </View>
   );
+}
+
+function Compteur({ icon, value, label }: {
+  icon: 'basket-outline' | 'store-outline' | 'help-circle-outline'; value: number; label: string;
+}) {
+  return <View accessible accessibilityLabel={`${value} ${label.toLocaleLowerCase('fr')}`} style={styles.compteur}>
+    <MaterialCommunityIcons name={icon} size={22} color={VERT_PALE} accessible={false} />
+    <Text style={styles.nombreTotal}>{value}</Text>
+    <Text style={styles.texteTotal}>{label}</Text>
+  </View>;
 }
 
 // Une ligne : nom · quantité, recettes d'origine, prix et magasin
@@ -262,7 +260,7 @@ function LigneArticle({ article, besoin, avecPrix, derniere }: {
         <View style={{ alignItems: 'flex-end' }}>
           {montant !== null && Number.isFinite(montant)
             ? <Text style={styles.prix}>{enDollars(montant)}</Text>
-            : <Text style={styles.prixInconnu}>prix inconnu</Text>}
+            : <Text accessibilityLabel="Prix inconnu" style={styles.prixInconnu}>- $</Text>}
           {magasin && <Text style={styles.magasin}>{storeName(magasin)}</Text>}
         </View>
       )}
@@ -289,10 +287,13 @@ const styles = StyleSheet.create({
   titreBandeau: { fontFamily: 'DMSans_700Bold', fontSize: 14, lineHeight: 19, color: c.green },
   texteBandeau: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: c.green },
 
-  total: { backgroundColor: c.green, borderRadius: 20, paddingHorizontal: 18, paddingVertical: 16, gap: 2 },
-  surtitreTotal: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: VERT_PALE },
+  total: { alignSelf: 'stretch', alignItems: 'center', backgroundColor: c.green, borderRadius: 20, paddingHorizontal: 18, paddingVertical: 16, gap: 8 },
+  surtitreTotal: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: VERT_PALE, textAlign: 'center' },
   montantTotal: { fontFamily: 'DMSans_700Bold', fontSize: 30, lineHeight: 38, color: 'white' },
-  texteTotal: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: VERT_PALE },
+  texteTotal: { fontFamily: 'DMSans_500Medium', fontSize: 13, lineHeight: 18, color: VERT_PALE, textAlign: 'center' },
+  compteurs: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 20 },
+  compteur: { alignItems: 'center', minWidth: 64, gap: 3 },
+  nombreTotal: { fontFamily: 'DMSans_700Bold', fontSize: 18, lineHeight: 24, color: 'white', textAlign: 'center' },
 
   puces: { gap: 8, paddingVertical: 2 },
   puce: { paddingHorizontal: 16, minHeight: 40, justifyContent: 'center', borderRadius: 20, backgroundColor: c.light },

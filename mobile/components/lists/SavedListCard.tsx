@@ -14,16 +14,18 @@ export function SavedListTotals({ list }: { list: ShoppingListRead }) {
     { icon: 'cart-arrow-down', value: list.totals.remaining_item_count, label: 'À acheter' },
     { icon: 'check-circle-outline', value: list.totals.purchased_item_count, label: 'Achetés' },
   ];
-  if (products) counters.push({ icon: 'store-outline', value: shoppingStoreCount(list), label: 'Magasins' });
+  if (products) counters.push(
+    { icon: 'store-outline', value: shoppingStoreCount(list), label: 'Magasins' },
+    { icon: 'help-circle-outline', value: list.totals.unpriced_item_count, label: 'Sans prix' });
   if (list.totals.owned_item_count) counters.push({ icon: 'home-outline', value: list.totals.owned_item_count, label: 'Disponibles' });
   const status = list.status === 'draft' ? 'Brouillon enregistré' : list.status === 'active' ? 'Liste en cours' : list.status === 'completed' ? 'Liste terminée' : 'Liste archivée';
-  return <View style={{ gap: 16 }}>
-    <View style={s.row}><MaterialCommunityIcons name="clipboard-list-outline" size={20} color={recipeColors.green} accessible={false} />
-      <Text style={s.sectionTitle}>{status}</Text></View>
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: products ? 'flex-start' : 'center', gap: 16 }}>
+  return <View style={{ gap: 16, alignItems: 'center', alignSelf: 'stretch' }}>
+    <View style={[s.row, { justifyContent: 'center', flexWrap: 'wrap' }]}><MaterialCommunityIcons name="clipboard-list-outline" size={20} color={recipeColors.green} accessible={false} />
+      <Text style={[s.sectionTitle, { textAlign: 'center' }]}>{status}</Text></View>
+    <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 16 }}>
       {counters.map(counter => <View key={counter.label} accessible accessibilityLabel={`${counter.value} ${counter.label.toLocaleLowerCase('fr')}`} style={{ alignItems: 'center', minWidth: 60, gap: 3 }}>
         <MaterialCommunityIcons name={counter.icon} size={24} color={recipeColors.green} accessible={false} />
-        <Text style={s.sectionTitle}>{counter.value}</Text><Text style={s.note}>{counter.label}</Text>
+        <Text style={[s.sectionTitle, { textAlign: 'center' }]}>{counter.value}</Text><Text style={[s.note, { textAlign: 'center' }]}>{counter.label}</Text>
       </View>)}
     </View>
     {products && <ShoppingPriceSummary list={list} />}

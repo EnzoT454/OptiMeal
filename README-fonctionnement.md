@@ -843,14 +843,14 @@ La date des courses utilisée par cet aperçu est aujourd’hui si le jour appar
 
 **Créer une liste de produits** reprend le scénario sélectionné : Le moins cher, Maxi, Metro ou Super C. La copie active porte le nom de la semaine, par exemple **Épicerie 16-22 nov**, et s’ouvre directement dans Listes. Retour ramène aux récentes. Les produits, prix, magasins et provenances calendrier sont enregistrés ensemble ; les autres listes restent indépendantes.
 
-Les besoins sans produit chiffrable et les repas inaccessibles sont signalés avant confirmation des seuls produits disponibles. Sans produit disponible, la création est désactivée. Un besoin exclu ne devient pas un article libre dans cette liste de produits.
+Tous les besoins du calendrier sont conservés, même sans produit chiffrable dans le scénario choisi. Leur prix est affiché « - $ » et ils restent cochables sans montant connu. La création reste possible si tous les prix sont inconnus, dès lors que le devis a été chargé. Seuls les repas sans recette accessible demandent une confirmation d’exclusion. Le résumé centré présente les nombres d’articles, de magasins et d’articles sans prix avec leurs icônes ; un chiffrage incomplet est intitulé Sous-total connu.
 
 ```mermaid
 flowchart TD
     A[Aperçu des besoins de la semaine] --> P[Comparer les quatre scénarios sans enregistrer de liste]
     P --> S[Choisir un scénario]
-    S --> E{Des éléments sont indisponibles ?}
-    E -->|Oui| C[Confirmer leur exclusion et vérifier le devis retenu]
+    S --> E{Des repas sont inaccessibles ?}
+    E -->|Oui| C[Confirmer les repas inaccessibles exclus]
     E -->|Non| V[Vérifier le calendrier et les prix côté serveur]
     C --> V
     V --> L[Créer la liste et son panier dans une transaction]
@@ -914,6 +914,8 @@ Les conversions certaines couvrent notamment kg → g, L → ml, tasse → 250 m
 Le scénario **Le moins cher** compare le coût des produits entiers nécessaires pour chaque ingrédient parmi les références disponibles. Il peut répartir les achats sur plusieurs magasins ; il ne calcule pas les frais ou le temps de déplacement. Les promotions sont évaluées à la date du calcul, avec leur limite de quantité et le prix après limite lorsqu’ils sont connus. Le calcul utilise la même source d’offres que Promos : JSON ou PostgreSQL selon `OFFERS_SOURCE`. Il ne déclenche aucune collecte.
 
 Les montants n’apparaissent que lorsqu’un produit chiffré est retenu ou acheté. **Total estimé** signifie que les besoins sont chiffrés ; **Sous-total connu** signale un montant incomplet. Un achat déclaré sans prix peut couvrir un besoin sans créer un coût connu. Les prix restent des estimations issues du catalogue, pas une garantie du montant en caisse.
+
+Si un ingrédient a des quantités dans des unités incompatibles, comme 12 g d’ail et 2 unités, elles restent séparées et aucun montant n’est calculé pour ce besoin. La ligne garde « - $ ». L’avertissement technique sur les unités n’apparaît pas en rouge dans le détail. Un bloc ambré avec une icône « ! », placé entre le résumé et le bouton Actualiser les prix, explique que le sous-total comprend uniquement les montants connus et que les articles sans prix restent dans la liste. Les erreurs de sauvegarde et de réseau gardent leur affichage distinct.
 
 #### Acheter, modifier et actualiser
 
@@ -1304,6 +1306,8 @@ Cette configuration couvre les ports locaux correspondant à cette expression. U
 
 ### Validations connues
 
+**23 novembre 2026 — Besoins du calendrier sans prix.** La création conserve les besoins non chiffrables dans les quatre scénarios, même si tous les prix sont inconnus. Les tests vérifient leur persistance, les reprises sans doublon, le refus des devis périmés, les achats sans montant et leur conservation après recalcul. La suite complète donne **1 059 tests backend réussis et 14 tests OCR optionnels ignorés** sur PostgreSQL local jetable, ainsi que **317 tests mobiles réussis**. TypeScript et lint passent, avec 0 erreur et 109 avertissements lint. Les 47 exports de contrats restent cohérents. Aucune migration ni modification Supabase ; le rendu et les nouveaux parcours restent à vérifier sur appareils.
+
 **23 novembre 2026 — Vérification du dépôt courant.** Les contrôles locaux donnent **315 tests mobiles réussis**, avec lint et TypeScript réussis ; des avertissements lint subsistent. La suite backend donne **681 tests réussis et 388 ignorés**, notamment les tests nécessitant un PostgreSQL local jetable non configuré et les essais OCR optionnels. Les **47 exports de contrats** sont cohérents et le site Zensical se construit sans erreur. Cette exécution partielle ne remplace pas la suite avec PostgreSQL du 20 novembre. Aucun nouvel essai natif, export Expo ou contrôle de la base Supabase n’a été réalisé. Les ajustements d’Accueil et des exclusions intégrés le 22 novembre restent à vérifier sur appareils.
 
 **20 novembre 2026 — Petit budget.** Le classement par coût interne est intégré
@@ -1339,7 +1343,7 @@ La priorité reste une version stable et les tests utilisateurs. Les préférenc
 flowchart TD
     R[Choisir recettes et portions] --> P[Enregistrer les repas dans Calendrier]
     P --> E[Vue Épicerie : besoins et quatre scénarios de prix]
-    E --> S[Choisir un scénario et confirmer les éléments indisponibles]
+    E --> S[Choisir un scénario avec tous les besoins, même sans prix]
     S --> LP[Créer une liste de produits avec son panier déjà chiffré]
     P --> A[Depuis Accueil : confirmer les besoins de la semaine]
     A --> LA[Créer une liste d’articles sans prix]
@@ -1355,7 +1359,7 @@ flowchart TD
     PA --> FIN
 ```
 
-Une liste de produits créée depuis Calendrier est déjà chiffrée et ses achats sont immédiatement cochables. Une actualisation ultérieure conserve les achats et leurs prix sauvegardés. Les besoins sans produit chiffrable sont signalés avant la création, sans être transformés en articles libres dans cette liste de produits.
+Une liste de produits créée depuis Calendrier conserve tous les besoins et les produits chiffrables du scénario. Ses lignes sans prix restent des besoins d’ingrédients identifiés, avec leur provenance calendrier, leur quantité et « - $ » ; elles peuvent être cochées sans montant. Leur quantité se modifie avec son unité tant qu’aucun produit n’est associé. Une actualisation ultérieure conserve les achats et leurs prix sauvegardés. Le résumé centré affiche aussi le nombre de lignes sans prix.
 
 Les listes sauvegardées de **Mes listes** restent réutilisables indépendamment de la fin d’une copie de courses. L’API conserve les listes terminées ; **Toutes les listes** est la pagination des listes en cours. Ce parcours n’intègre pas de contribution par reçu ni d’historique des versions d’une liste.
 
