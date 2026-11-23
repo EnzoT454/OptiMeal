@@ -42,9 +42,9 @@ Les principaux objectifs sont les suivants :
 - **Préparer les achats** : regrouper les ingrédients nécessaires, comparer les prix par magasin et suivre les achats dans une liste modifiable.
 - **Aider aux choix économiques** : consulter les promotions et les circulaires, retrouver les recettes associées aux promotions et signaler les besoins sans prix connu.
 
-Le 17 novembre 2026, nous avons décidé de concentrer le projet sur la stabilisation du socle actuel et les tests utilisateurs. Les modes IA, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations et la contribution par reçu sont retirés du périmètre. L’historique des listes terminées et les outils de lecture locale des reçus restent disponibles.
+Le 17 novembre 2026, nous avons décidé de concentrer le projet sur la stabilisation du socle actuel et les tests utilisateurs. Les modes IA, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations et la contribution par reçu sont retirés du périmètre. Les listes terminées restent conservées en base, sans accès à un historique depuis l’index actuel. Les outils de lecture locale des reçus sont conservés.
 
-Les recettes, le calendrier, les promotions, les circulaires et les listes d’épicerie sont intégrés. La priorité est de vérifier les parcours complets sur iOS et Android, de corriger les problèmes rencontrés et de préparer une version stable pour les tests utilisateurs.
+Les recettes, le calendrier, les promotions, les circulaires et les listes d’épicerie sont intégrés. Les vérifications des listes, de l’Accueil, du parcours Recettes et des exclusions sont terminées. Nous poursuivons la stabilisation de l’application et la préparation des tests utilisateurs.
 
 
 ## Méthodologie
@@ -77,12 +77,12 @@ L’évaluation reposera sur des scénarios reproductibles et des données dont 
 | Protection et conservation des données | Vérifier avec deux comptes que les données privées restent séparées, qu’une liste créée reste indépendante des changements du calendrier et qu’un recalcul conserve les achats enregistrés. |
 | Utilisabilité et gestion des erreurs | Faire essayer les parcours de recettes, de planification et d’achat à des utilisateurs ; recueillir leurs retours et relever les blocages. Vérifier les états de chargement, de contenu vide et d’erreur réseau, ainsi que la clarté des avertissements. |
 
-Les résultats, les limites observées et les fonctionnalités effectivement réalisées seront présentés dans la [synthèse](synthese.md). Des tests du backend et du mobile, des vérifications sur les données et les reçus ainsi que des essais sur téléphone ont été réalisés. L’évaluation complète sur iOS et Android et les tests utilisateurs restent à mener.
+Les résultats, les limites observées et les fonctionnalités effectivement réalisées seront présentés dans la [synthèse](synthese.md). Des tests du backend et du mobile, des vérifications sur les données et les reçus ainsi que des essais sur téléphone ont été réalisés. Les vérifications des parcours récents sont terminées ; les tests utilisateurs restent à mener.
 
 
 ## Échéancier
 
-Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md). Les statuts correspondent à l’état au 17 novembre 2026. La priorité est de stabiliser l’application et de valider les parcours sur appareils avant de commencer les tests utilisateurs. 
+Les périodes ci-dessous reprennent le travail présenté dans le [suivi de projet](suivi.md). Les statuts correspondent à l’état au 23 novembre 2026. La priorité est de poursuivre la stabilisation de l’application et de préparer les tests utilisateurs.
 
 | Activités | Début | Fin | Livrable | Statut |
 | --- | --- | --- | --- | --- |
@@ -100,9 +100,11 @@ Les périodes ci-dessous reprennent le travail présenté dans le [suivi de proj
 | Essais sur iOS et scénarios de partage | 26 oct. | 1 nov. | Essais réalisés sur les nouveaux parcours ; validation complète sur iOS et Android à poursuivre | ✅ Terminé |
 | Notation des recettes | 2 nov. | 8 nov. | Trois critères, classement ajusté, réévaluation après changement de contenu et validation sur téléphone | ✅ Terminé |
 | Durées des recettes | 9 nov. | 15 nov. | Durées par étape| ✅ Terminé |
-| Listes d’épicerie | 9 nov. | En cours | Création manuelle ou depuis le calendrier, prix par magasin, suivi des achats, modèles et historique des listes terminées | Intégré ; validation finale en cours |
-| Onglet Accueil | 16 nov. | En cours | Repas du jour et accès à la liste épinglée | Intégré ; validation finale en cours |
+| Listes d’épicerie | 9 nov. | 23 nov. | Listes d’articles ou de produits, création depuis le calendrier, comparaison des prix, achats et sauvegardes réutilisables ; listes terminées conservées en base | ✅ Terminé |
+| Onglet Accueil | 16 nov. | 23 nov. | Repas à venir du jour ou du lendemain, listes récentes en cours et promotions suivies | ✅ Terminé |
+| Parcours Recettes | 20 nov. | 20 nov. | Création guidée en cinq étapes, photos sur navigateur et classement Petit budget | ✅ Terminé |
+| Ajustements Accueil et exclusions | 22 nov. | 22 nov. | Accueil compact limité à deux repas à venir et gestion simplifiée des ingrédients non suggérés | ✅ Terminé |
 | Version stable et tests utilisateurs | À planifier | À planifier | Validation sur iOS et Android, stabilisation et essais avec des utilisateurs | ⏳ À préparer |
 | Collecte Metro et Super C, préférences et recommandations | À planifier | À planifier | Collecte automatisée des prix, préférences détaillées et recommandations économiques | En attente ; priorité à la stabilisation |
 
-*Dernière mise à jour : 17 novembre 2026*
+*Dernière mise à jour : 23 novembre 2026*

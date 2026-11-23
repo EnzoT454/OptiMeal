@@ -1,6 +1,6 @@
 # Comprendre le fonctionnement d’OptiMeal
 
-Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il décrit le code relu au **20 novembre 2026**, notamment les parcours d’Accueil, de Promos, du Calendrier, des Listes et des produits suivis. Les confirmations fonctionnelles restent datées séparément.
+Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il décrit le code relu au **23 novembre 2026**, notamment les parcours d’Accueil, de Promos, du Calendrier, des Listes et des produits suivis. Les confirmations fonctionnelles restent datées séparément.
 
 Le parcours principal relie les recettes, les repas planifiés et les achats : choisir ses portions, regrouper les ingrédients, comparer les produits des magasins et suivre ses courses. Le [guide détaillé de Liste](backend/docs/SHOPPING_GUIDE.md) complète ce document avec les boutons, les parcours et les règles de calcul de cet onglet.
 
@@ -121,9 +121,11 @@ Sans compte, l’accueil présente une invitation à découvrir les recettes, pr
 
 | Zone | Comportement actuel |
 | --- | --- |
-| Aujourd’hui / Demain | Repas du jour ; à partir de 21 h, présentation de ceux du lendemain. Les horaires sont ceux de l’appareil. Une recette accessible ouvre sa fiche dans la pile Accueil. |
+| Aujourd’hui / Demain | Jusqu’à deux repas à venir du jour ; à partir de 21 h, présentation de ceux du lendemain. Les repas passés sont masqués. Un lien vers le Calendrier donne accès aux autres repas. Une recette accessible ouvre sa fiche dans la pile Accueil. |
 | Mes listes en cours | Jusqu’à trois listes actives ou brouillons, par modification récente, sans masquage lié à la date technique des prix. Voir toutes ouvre Liste ; toucher une ligne ouvre son détail. |
 | Promos suivies | Jusqu’à huit offres actives correspondant aux produits suivis ; accès au détail, aux suivis et aux promotions. |
+
+Les horaires sont ceux de l’appareil. Le déjeuner est considéré comme passé à 11 h, le dîner à 15 h et le souper à 21 h ; la collation reste affichable jusqu’à la fin du jour. Si tous les repas prévus pour le jour affiché sont passés, une carte « Plus rien de prévu aujourd’hui » ouvre le Calendrier. Ces choix sont évalués lors du rendu de l’écran, sans minuteur dédié au changement d’heure. Les données sont rechargées au retour sur l’Accueil.
 
 Les lignes de listes d’Accueil et de Liste partagent le même résumé : reste à acheter et magasins illustrés par des icônes puis **Total estimé** ou **Sous-total connu** uniquement lorsqu’un produit chiffré a été retenu ou acheté. Une liste d’articles n’affiche pas de montant ; les produits présentent leur montant à droite sous Total estimé ou Sous-total connu, avec le symbole $ après le montant, sans icône monétaire supplémentaire. Le budget connu inclut les achats enregistrés. L’accueil filtre encore la première page reçue ; une liste masquée reste accessible dans Liste.
 
@@ -923,6 +925,8 @@ Toucher une ligne ouvre sa fiche. Pour les articles, elle permet de changer le n
 
 **Actualiser les prix** recalcule les produits au jour courant en gardant les références explicites. Modifier la quantité ou retirer un produit recalcule le panier dans la même transaction. Une erreur annule l’ensemble de cette modification.
 
+La confirmation **Ne plus suggérer** masque les autres actions de la fiche et présente **Annuler** et **Confirmer** côte à côte. Depuis **Mon compte → Ingrédients non suggérés**, le bouton **Rétablir** autorise à nouveau l’ingrédient pour les prochaines générations. Cet écran se recharge à chaque ouverture ; **Réessayer** apparaît en cas d’erreur et une commande incertaine reste reprenable. Rétablir un ingrédient ne modifie pas les listes déjà créées.
+
 ```mermaid
 flowchart LR
     A[Achats déjà enregistrés] --> I[Conserver quantités et prix sauvegardés]
@@ -1282,7 +1286,7 @@ Cette configuration couvre les ports locaux correspondant à cette expression. U
 | Domaine | Fonctionnement courant | Limite à garder visible |
 | --- | --- | --- |
 | Comptes | Visiteur, inscription, connexion, profil et suppression | Tester les erreurs et changements de compte sur appareils |
-| Accueil | Repas du jour ou lendemain, listes en cours et promos suivies | Première page de listes filtrée localement ; épinglage non utilisé dans ce nouvel écran |
+| Accueil | Deux repas à venir au maximum du jour ou lendemain, listes en cours et promos suivies | Horaires évalués au rendu ; première page de listes filtrée localement ; épinglage non utilisé |
 | Recettes | Création manuelle en cinq étapes, photos natives/Web, visibilité, favoris, filtres, Petit budget et notation | Publication définitive ; photos publiques dans le prototype |
 | Promos | Recherche avec suggestions, catégories, magasins, grille/liste et circulaires | Fraîcheur dépendante des collectes et imports |
 | Idées repas | Rapprochement recettes/promos et deux tris | Cent promotions chargées ; économies non ajustées aux quantités des recettes |
@@ -1293,6 +1297,8 @@ Cette configuration couvre les ports locaux correspondant à cette expression. U
 | Outils de données | Apify Maxi, imports, OCR local et pilote PC Express | Collecte Metro/Super C à compléter ; Windows OCR à vérifier |
 
 ### Validations connues
+
+**23 novembre 2026 — Vérification du dépôt courant.** Les contrôles locaux donnent **315 tests mobiles réussis**, avec lint et TypeScript réussis ; des avertissements lint subsistent. La suite backend donne **681 tests réussis et 388 ignorés**, notamment les tests nécessitant un PostgreSQL local jetable non configuré et les essais OCR optionnels. Les **47 exports de contrats** sont cohérents et le site Zensical se construit sans erreur. Cette exécution partielle ne remplace pas la suite avec PostgreSQL du 20 novembre. Aucun nouvel essai natif, export Expo ou contrôle de la base Supabase n’a été réalisé. Les ajustements d’Accueil et des exclusions intégrés le 22 novembre restent à vérifier sur appareils.
 
 **20 novembre 2026 — Petit budget.** Le classement par coût interne est intégré
 aux trois sections de Recettes, avec recherche, droits et pagination. Les tests
@@ -1440,4 +1446,4 @@ Le [guide détaillé de Liste](backend/docs/SHOPPING_GUIDE.md) complète cet ord
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 20 novembre 2026*
+*Dernière mise à jour : 23 novembre 2026*

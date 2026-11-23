@@ -291,7 +291,7 @@ SKU identique n’est supposé. Les prix indisponibles ne sont pas inventés. Un
 échec de changement de magasin garde la sélection ouverte. J’en ai déjà n’efface
 ni les achats conservés ni les autres listes. Ne plus suggérer utilise la
 préférence d’ingrédient existante, commune aux magasins, et reste annulable dans
-les paramètres du compte. La préférence est enregistrée avant le retrait ; si
+le menu du compte, dans Ingrédients non suggérés. La préférence est enregistrée avant le retrait ; si
 ce second enregistrement échoue, il peut être repris. Les achats historiques
 et les sauvegardes restent conservés.
 
@@ -421,15 +421,19 @@ Les termes internes `ShoppingTemplate`, les routes `/api/v1/shopping-list-templa
 
 Depuis la fiche d’un article identifié, **Ne plus suggérer** demande confirmation. La préférence exclut cet ingrédient des prochaines générations depuis le calendrier.
 
-Elle ne retire pas l’article de la liste courante et ne modifie pas les modèles ni les listes existantes. L’ingrédient reste ajoutable manuellement.
+Depuis la fiche courante, la confirmation enregistre la préférence puis retire l’article ou le produit de cette liste. Les autres listes et les sauvegardes restent inchangées ; l’ingrédient reste ajoutable manuellement. La préférence et le retrait sont deux écritures distinctes : si le retrait échoue, il reste reprenable après l’enregistrement de la préférence. Les anciens parcours sans action de retrait conservent leur article.
 
-L’écran **Ingrédients non suggérés** est accessible depuis le menu du compte sur Accueil. **Suggérer à nouveau …** annule une exclusion. Il comporte Actualiser, pagination, erreurs et reprise d’une préférence incertaine.
+Dans la fiche, la confirmation masque les autres actions et présente **Annuler** et **Confirmer** côte à côte. Elle explique le retrait courant et l’exclusion des prochaines générations.
+
+L’écran **Ingrédients non suggérés** est accessible depuis le menu du compte sur Accueil. **Rétablir** annule une exclusion pour les prochaines générations, sans modifier les listes existantes. L’écran se recharge à chaque ouverture, sans bouton Actualiser permanent ; il propose Réessayer en cas d’erreur, la pagination et la reprise d’une préférence incertaine.
 
 Un message du formulaire de calendrier renvoie encore à Paramètres pour rétablir ces ingrédients ; le menu du compte sur Accueil fournit également cet accès dans le code intégré.
 
 ## 17. Accès depuis Accueil et Calendrier
 
 ### Accueil actuel
+
+L’Accueil affiche au maximum deux repas à venir du jour et masque les repas passés. À partir de 21 h, il présente ceux du lendemain. Un lien donne accès aux autres repas dans le Calendrier. Ces horaires utilisent l’heure de l’appareil au rendu de l’écran ; aucun minuteur dédié ne déclenche le changement. Les données sont rechargées au retour sur l’Accueil.
 
 Mes listes en cours conserve sa sélection de trois copies actives récemment modifiées et ses accès Voir toutes et détail. Elle réutilise désormais le même résumé que Liste : éléments restants, magasins et budget total légendé à droite avec $ lorsqu’un chiffrage réel existe. Il n’y a plus de montant arrondi de reste présenté à la place du budget total.
 
@@ -611,4 +615,4 @@ Pour les prochaines vérifications de régression : créer séparément une list
 
 La validation globale ci-dessus ne précise pas les essais iOS/Android avec clavier, texte agrandi et lecteur d’écran. Les objectifs de création/ajout en moins d’une minute sont des mesures à réaliser avec des utilisateurs, pas des résultats acquis.
 
-*Dernière mise à jour documentaire : 20 novembre 2026 ; parcours et validation fonctionnelle du 19 novembre.*
+*Dernière mise à jour documentaire : 23 novembre 2026 ; validation fonctionnelle globale des listes du 19 novembre, ajustements récents à vérifier sur appareils.*

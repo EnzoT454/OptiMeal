@@ -416,7 +416,7 @@ Chaque semaine décrit l’état du projet à cette période. Les décisions peu
 
 ---
 
-## Semaine 12 (16 – 22 novembre, en cours)
+## Semaine 12 (16 – 22 novembre)
 
 ### Objectifs de la période
 
@@ -426,18 +426,20 @@ Chaque semaine décrit l’état du projet à cette période. Les décisions peu
 
 ### Travail réalisé
 
-- **Listes d’épicerie** : création en deux étapes, ingrédients puis prix par magasin, avec un panier Moins cher personnalisable.
+- **Listes d’épicerie** : création de listes d’articles sans prix ou de produits précis, et génération depuis le calendrier avec comparaison des prix par magasin ou panier Le moins cher.
 - **Courses** : suivi des achats partiels et recalcul des prix du reste à acheter, en conservant les achats déjà effectués.
-- **Organisation** : modèles pour les occasions, historique des listes terminées, liste épinglée sur l’Accueil et accès aux listes depuis le Calendrier.
+- **Organisation** : sauvegardes réutilisables, conservation des listes terminées en base, listes récentes en cours sur l’Accueil et accès depuis le Calendrier.
 - **Vérifications** : tests du backend et du mobile, vérification TypeScript et génération des versions iOS et Android ; les essais complets sur appareils restent à consigner.
-- **Accueil** : Ajout aperçu de la semaine, produits suivis en promos et aperçu des listes d'épicerie.
+- **Accueil** : aperçu compact des deux prochains repas du jour ou du lendemain, listes en cours et promotions suivies ; les repas passés sont masqués.
+- **Recettes** : création manuelle guidée en cinq étapes, lecture des photos adaptée au navigateur et classement Petit budget selon le coût connu des ingrédients utilisés.
+- **Préférences** : confirmation simplifiée de Ne plus suggérer et accès à Rétablir depuis le menu du compte.
 
 ### Décisions et ajustements
 
 - Calculer les quantités et les prix sur le serveur, en arrondissant au nombre de produits à acheter.
 - Demander un compte et une connexion au serveur pour utiliser les listes ; retirer la synchronisation hors connexion.
 - Recalculer les prix uniquement sur demande, en conservant les achats enregistrés.
-- Conserver l’historique des listes terminées, sans consultation des anciennes versions d’une même liste.
+- Conserver les listes terminées en base, sans accès à l’historique depuis l’index actuel ni consultation des anciennes versions d’une même liste.
 - Le 17 novembre, réduire le périmètre pour nous concentrer sur la stabilisation du socle actuel et les tests utilisateurs. Abandonner les modes IA, la gestion avancée du budget, l’historique stable des plans et des prix, les estimations et la contribution par reçu. L’historique des listes terminées et les outils de lecture locale des reçus sont conservés.
 
 ### Prochaines étapes
@@ -445,4 +447,4 @@ Chaque semaine décrit l’état du projet à cette période. Les décisions peu
 - Stabiliser l’application et valider les parcours complets sur iOS et Android pour commencer les tests utilisateurs.
 - Préparer les scénarios de tests utilisateurs, recueillir les retours et corriger les problèmes prioritaires.
 
-*Dernière mise à jour : 17 novembre 2026*
+*Dernière mise à jour : 23 novembre 2026*

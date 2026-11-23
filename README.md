@@ -25,6 +25,7 @@ Nous concentrons maintenant le travail sur la stabilisation de l’application e
 - Recettes personnelles avec création guidée en cinq étapes, recherche, filtres, publication et favoris.
 - Évaluations des recettes et classement par notes ou par coût estimé avec Petit budget.
 - Calendrier hebdomadaire des repas.
+- Accueil avec les repas à venir, les listes en cours et les promotions suivies.
 - Listes d’épicerie d’articles ou de produits, ajout par recherche et suivi des achats.
 - Création depuis le calendrier, comparaison des prix par magasin et listes sauvegardées réutilisables.
 - Promotions et consultation des circulaires.
@@ -247,7 +248,7 @@ Le [guide mobile](mobile/README.md) décrit les essais sur téléphone.
 
 ## Structure du projet
 
-Voici les principaux fichiers et dossiers actuels. Les composantes marquées « à développer » sont des squelettes conservés pour commencer la programmation.
+Voici les principaux fichiers et dossiers actuels. Certains fichiers réservés à de futurs traitements sont encore des squelettes ; leur présence ne signifie pas que ces traitements sont disponibles.
 
 ```text
 OptiMeal/
@@ -540,4 +541,4 @@ La publication sur GitHub Pages se fait automatiquement lors des mises à jour d
 **Session :** Automne 2026<br>
 **Cours :** IFT3150 — Projet informatique, Université de Montréal
 
-*Dernière mise à jour : 20 novembre 2026*
+*Dernière mise à jour : 23 novembre 2026*
