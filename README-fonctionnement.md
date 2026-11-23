@@ -1,6 +1,6 @@
 # Comprendre le fonctionnement d’OptiMeal
 
-Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il décrit le code relu au **20 novembre 2026**, notamment les parcours d’Accueil, de Promos, du Calendrier, des Listes et des produits suivis. Les confirmations fonctionnelles restent datées séparément.
+Ce guide explique comment les écrans, le serveur, Supabase et les fichiers du dépôt travaillent ensemble. Il décrit le code relu au **23 novembre 2026**, notamment les parcours d’Accueil, de Promos, du Calendrier, des Listes et des produits suivis. Les confirmations fonctionnelles restent datées séparément.
 
 Le parcours principal relie les recettes, les repas planifiés et les achats : choisir ses portions, regrouper les ingrédients, comparer les produits des magasins et suivre ses courses. Le [guide détaillé de Liste](backend/docs/SHOPPING_GUIDE.md) complète ce document avec les boutons, les parcours et les règles de calcul de cet onglet.
 
@@ -121,9 +121,11 @@ Sans compte, l’accueil présente une invitation à découvrir les recettes, pr
 
 | Zone | Comportement actuel |
 | --- | --- |
-| Aujourd’hui / Demain | Repas du jour ; à partir de 21 h, présentation de ceux du lendemain. Les horaires sont ceux de l’appareil. Une recette accessible ouvre sa fiche dans la pile Accueil. |
+| Aujourd’hui / Demain | Jusqu’à deux repas à venir du jour ; à partir de 21 h, présentation de ceux du lendemain. Les repas passés sont masqués. Un lien vers le Calendrier donne accès aux autres repas. Une recette accessible ouvre sa fiche dans la pile Accueil. |
 | Mes listes en cours | Jusqu’à trois listes actives ou brouillons, par modification récente, sans masquage lié à la date technique des prix. Voir toutes ouvre Liste ; toucher une ligne ouvre son détail. |
 | Promos suivies | Jusqu’à huit offres actives correspondant aux produits suivis ; accès au détail, aux suivis et aux promotions. |
+
+Les horaires sont ceux de l’appareil. Le déjeuner est considéré comme passé à 11 h, le dîner à 15 h et le souper à 21 h ; la collation reste affichable jusqu’à la fin du jour. Si tous les repas prévus pour le jour affiché sont passés, une carte « Plus rien de prévu aujourd’hui » ouvre le Calendrier. Ces choix sont évalués lors du rendu de l’écran, sans minuteur dédié au changement d’heure. Les données sont rechargées au retour sur l’Accueil.
 
 Les lignes de listes d’Accueil et de Liste partagent le même résumé : reste à acheter et magasins illustrés par des icônes puis **Total estimé** ou **Sous-total connu** uniquement lorsqu’un produit chiffré a été retenu ou acheté. Une liste d’articles n’affiche pas de montant ; les produits présentent leur montant à droite sous Total estimé ou Sous-total connu, avec le symbole $ après le montant, sans icône monétaire supplémentaire. Le budget connu inclut les achats enregistrés. L’accueil filtre encore la première page reçue ; une liste masquée reste accessible dans Liste.
 
@@ -841,14 +843,14 @@ La date des courses utilisée par cet aperçu est aujourd’hui si le jour appar
 
 **Créer une liste de produits** reprend le scénario sélectionné : Le moins cher, Maxi, Metro ou Super C. La copie active porte le nom de la semaine, par exemple **Épicerie 16-22 nov**, et s’ouvre directement dans Listes. Retour ramène aux récentes. Les produits, prix, magasins et provenances calendrier sont enregistrés ensemble ; les autres listes restent indépendantes.
 
-Les besoins sans produit chiffrable et les repas inaccessibles sont signalés avant confirmation des seuls produits disponibles. Sans produit disponible, la création est désactivée. Un besoin exclu ne devient pas un article libre dans cette liste de produits.
+Tous les besoins du calendrier sont conservés, même sans produit chiffrable dans le scénario choisi. Leur prix est affiché « - $ » et ils restent cochables sans montant connu. La création reste possible si tous les prix sont inconnus, dès lors que le devis a été chargé. Seuls les repas sans recette accessible demandent une confirmation d’exclusion. Le résumé centré présente les nombres d’articles, de magasins et d’articles sans prix avec leurs icônes ; un chiffrage incomplet est intitulé Sous-total connu.
 
 ```mermaid
 flowchart TD
     A[Aperçu des besoins de la semaine] --> P[Comparer les quatre scénarios sans enregistrer de liste]
     P --> S[Choisir un scénario]
-    S --> E{Des éléments sont indisponibles ?}
-    E -->|Oui| C[Confirmer leur exclusion et vérifier le devis retenu]
+    S --> E{Des repas sont inaccessibles ?}
+    E -->|Oui| C[Confirmer les repas inaccessibles exclus]
     E -->|Non| V[Vérifier le calendrier et les prix côté serveur]
     C --> V
     V --> L[Créer la liste et son panier dans une transaction]
@@ -913,6 +915,8 @@ Le scénario **Le moins cher** compare le coût des produits entiers nécessaire
 
 Les montants n’apparaissent que lorsqu’un produit chiffré est retenu ou acheté. **Total estimé** signifie que les besoins sont chiffrés ; **Sous-total connu** signale un montant incomplet. Un achat déclaré sans prix peut couvrir un besoin sans créer un coût connu. Les prix restent des estimations issues du catalogue, pas une garantie du montant en caisse.
 
+Si un ingrédient a des quantités dans des unités incompatibles, comme 12 g d’ail et 2 unités, elles restent séparées et aucun montant n’est calculé pour ce besoin. La ligne garde « - $ ». L’avertissement technique sur les unités n’apparaît pas en rouge dans le détail. Un bloc ambré avec une icône « ! », placé entre le résumé et le bouton Actualiser les prix, explique que le sous-total comprend uniquement les montants connus et que les articles sans prix restent dans la liste. Les erreurs de sauvegarde et de réseau gardent leur affichage distinct.
+
 #### Acheter, modifier et actualiser
 
 Le détail affiche les besoins ou produits à acheter et une section **Achetés**, repliée au départ. Une coche attend la confirmation du serveur ; une erreur restaure l’état précédent. Les produits conservent leur référence et le prix sauvegardé de l’achat.
@@ -922,6 +926,8 @@ Toucher une ligne ouvre sa fiche. Pour les articles, elle permet de changer le n
 **J’en ai déjà** retire la ligne après confirmation. **Ne plus suggérer** enregistre d’abord une exclusion d’ingrédient pour les futures générations calendrier, puis retire la ligne ; ces deux écritures restent reprenables séparément. L’exclusion est annulable depuis le menu du compte. **Retirer de la liste** est restaurable. Les anciennes listes mixtes et les routes historiques conservent les déclarations de possession et d’achats partiels.
 
 **Actualiser les prix** recalcule les produits au jour courant en gardant les références explicites. Modifier la quantité ou retirer un produit recalcule le panier dans la même transaction. Une erreur annule l’ensemble de cette modification.
+
+La confirmation **Ne plus suggérer** masque les autres actions de la fiche et présente **Annuler** et **Confirmer** côte à côte. Depuis **Mon compte → Ingrédients non suggérés**, le bouton **Rétablir** autorise à nouveau l’ingrédient pour les prochaines générations. Cet écran se recharge à chaque ouverture ; **Réessayer** apparaît en cas d’erreur et une commande incertaine reste reprenable. Rétablir un ingrédient ne modifie pas les listes déjà créées.
 
 ```mermaid
 flowchart LR
@@ -1189,6 +1195,12 @@ Les commandes, résultats et limites sont expliqués dans [RECEIPTS.md](backend/
 
 Les types TypeScript aident le développeur à utiliser les données correctement. Le backend doit aussi valider les entrées reçues, indépendamment des vérifications du formulaire.
 
+### Adapter l’affichage aux appareils
+
+La barre des cinq onglets réserve une hauteur pour les icônes et les libellés, puis ajoute la marge de sécurité du bas fournie par l’appareil. Les libellés restent sous les icônes, y compris en paysage. Leur taille peut augmenter jusqu’à 1,4 fois la taille de référence, avec ajustement à la largeur disponible. Les boutons partagés utilisent une hauteur minimale, un texte centré pouvant revenir à la ligne et une largeur limitée par leur conteneur. Les boutons de recette utilisent directement la variante grasse de DM Sans.
+
+Les panneaux d’ajout et d’action sur les repas respectent les marges de sécurité du bas et des côtés. Leur hauteur est limitée et leur contenu défile pour garder les actions accessibles sur un petit écran. Ces règles réduisent les différences dues aux polices et aux barres système ; elles doivent être vérifiées sur iOS et Android, en portrait et paysage, avec le texte agrandi. Les ajustements du 23 novembre n’ont pas encore fait l’objet d’un nouvel essai natif consigné.
+
 ### Guides, configuration et vérifications
 
 Le [guide de Liste](backend/docs/SHOPPING_GUIDE.md) et la [note de refonte](backend/docs/SHOPPING_REFACTOR.md) présentent le fonctionnement courant, les contrats et les validations. Les guides de `backend/docs/` détaillent les contrats et les étapes de réalisation ; certaines de leurs sections datées conservent des descriptions historiques. Le code des routes et des écrans permet de vérifier les parcours effectivement accessibles.
@@ -1282,7 +1294,7 @@ Cette configuration couvre les ports locaux correspondant à cette expression. U
 | Domaine | Fonctionnement courant | Limite à garder visible |
 | --- | --- | --- |
 | Comptes | Visiteur, inscription, connexion, profil et suppression | Tester les erreurs et changements de compte sur appareils |
-| Accueil | Repas du jour ou lendemain, listes en cours et promos suivies | Première page de listes filtrée localement ; épinglage non utilisé dans ce nouvel écran |
+| Accueil | Deux repas à venir au maximum du jour ou lendemain, listes en cours et promos suivies | Horaires évalués au rendu ; première page de listes filtrée localement ; épinglage non utilisé |
 | Recettes | Création manuelle en cinq étapes, photos natives/Web, visibilité, favoris, filtres, Petit budget et notation | Publication définitive ; photos publiques dans le prototype |
 | Promos | Recherche avec suggestions, catégories, magasins, grille/liste et circulaires | Fraîcheur dépendante des collectes et imports |
 | Idées repas | Rapprochement recettes/promos et deux tris | Cent promotions chargées ; économies non ajustées aux quantités des recettes |
@@ -1293,6 +1305,10 @@ Cette configuration couvre les ports locaux correspondant à cette expression. U
 | Outils de données | Apify Maxi, imports, OCR local et pilote PC Express | Collecte Metro/Super C à compléter ; Windows OCR à vérifier |
 
 ### Validations connues
+
+**23 novembre 2026 — Besoins du calendrier sans prix.** La création conserve les besoins non chiffrables dans les quatre scénarios, même si tous les prix sont inconnus. Les tests vérifient leur persistance, les reprises sans doublon, le refus des devis périmés, les achats sans montant et leur conservation après recalcul. La suite complète donne **1 059 tests backend réussis et 14 tests OCR optionnels ignorés** sur PostgreSQL local jetable, ainsi que **317 tests mobiles réussis**. TypeScript et lint passent, avec 0 erreur et 109 avertissements lint. Les 47 exports de contrats restent cohérents. Aucune migration ni modification Supabase ; le rendu et les nouveaux parcours restent à vérifier sur appareils.
+
+**23 novembre 2026 — Vérification du dépôt courant.** Les contrôles locaux donnent **315 tests mobiles réussis**, avec lint et TypeScript réussis ; des avertissements lint subsistent. La suite backend donne **681 tests réussis et 388 ignorés**, notamment les tests nécessitant un PostgreSQL local jetable non configuré et les essais OCR optionnels. Les **47 exports de contrats** sont cohérents et le site Zensical se construit sans erreur. Cette exécution partielle ne remplace pas la suite avec PostgreSQL du 20 novembre. Aucun nouvel essai natif, export Expo ou contrôle de la base Supabase n’a été réalisé. Les ajustements d’Accueil et des exclusions intégrés le 22 novembre restent à vérifier sur appareils.
 
 **20 novembre 2026 — Petit budget.** Le classement par coût interne est intégré
 aux trois sections de Recettes, avec recherche, droits et pagination. Les tests
@@ -1327,7 +1343,7 @@ La priorité reste une version stable et les tests utilisateurs. Les préférenc
 flowchart TD
     R[Choisir recettes et portions] --> P[Enregistrer les repas dans Calendrier]
     P --> E[Vue Épicerie : besoins et quatre scénarios de prix]
-    E --> S[Choisir un scénario et confirmer les éléments indisponibles]
+    E --> S[Choisir un scénario avec tous les besoins, même sans prix]
     S --> LP[Créer une liste de produits avec son panier déjà chiffré]
     P --> A[Depuis Accueil : confirmer les besoins de la semaine]
     A --> LA[Créer une liste d’articles sans prix]
@@ -1343,7 +1359,7 @@ flowchart TD
     PA --> FIN
 ```
 
-Une liste de produits créée depuis Calendrier est déjà chiffrée et ses achats sont immédiatement cochables. Une actualisation ultérieure conserve les achats et leurs prix sauvegardés. Les besoins sans produit chiffrable sont signalés avant la création, sans être transformés en articles libres dans cette liste de produits.
+Une liste de produits créée depuis Calendrier conserve tous les besoins et les produits chiffrables du scénario. Ses lignes sans prix restent des besoins d’ingrédients identifiés, avec leur provenance calendrier, leur quantité et « - $ » ; elles peuvent être cochées sans montant. Leur quantité se modifie avec son unité tant qu’aucun produit n’est associé. Une actualisation ultérieure conserve les achats et leurs prix sauvegardés. Le résumé centré affiche aussi le nombre de lignes sans prix.
 
 Les listes sauvegardées de **Mes listes** restent réutilisables indépendamment de la fin d’une copie de courses. L’API conserve les listes terminées ; **Toutes les listes** est la pagination des listes en cours. Ce parcours n’intègre pas de contribution par reçu ni d’historique des versions d’une liste.
 
@@ -1440,4 +1456,4 @@ Le [guide détaillé de Liste](backend/docs/SHOPPING_GUIDE.md) complète cet ord
 
 Pour une lecture de recette, le trajet à retrouver dans le code est : **écran → client HTTP → route FastAPI → service → PostgreSQL → réponse JSON → écran**. Pour la connexion et les fichiers images, les branches directes vers Auth et Storage complètent ce trajet.
 
-*Dernière mise à jour : 20 novembre 2026*
+*Dernière mise à jour : 23 novembre 2026*

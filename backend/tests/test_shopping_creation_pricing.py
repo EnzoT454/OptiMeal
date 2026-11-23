@@ -253,19 +253,70 @@ def test_calendar_product_list_persists_exact_scenario_choices_and_is_ready_to_s
     assert calendar_preview(database).preview_fingerprint == original.preview_fingerprint
 
 
-def test_calendar_products_refuses_missing_product_even_if_partial_prices_are_accepted(database):
+@pytest.mark.parametrize('scenario', ['cheapest', 'maxi', 'metro', 'superc'])
+def test_calendar_products_keeps_all_unpriced_needs_and_manual_purchases(database, scenario):
     from sqlalchemy.orm import Session
+    from backend.app.shopping_lists.schemas import ShoppingManualPurchaseWrite, ShoppingRecalculatePricesWrite
+    from backend.app.shopping_lists.recalculation import recalculate
     add_meal(database)
     original = calendar_preview(database)
     request = ShoppingDraftPricingWrite(purchase_date=original.purchase_date,
         items=[dict(name=i.name, ingredient_id=i.ingredient_id, required=[q.model_dump() for q in i.required]) for i in original.items])
     quote = pricing.build(request, [])
     with Session(database) as db:
+        key = uuid4()
+        body = creation_request(original, kind='products', activate=True,
+            pricing=dict(fingerprint=quote.fingerprint, scenario=scenario, accept_partial=True))
+        saved = service.create_from_calendar(db, ALICE, body, key, lambda *_: [])
+        assert len(saved.items) == len(original.items) == 1
+        assert saved.items[0].required == original.items[0].required
+        assert saved.items[0].contributions and saved.items[0].pricing_status == 'unpriced'
+        assert saved.choices == [] and saved.assignment.scenario.known_amount == '0.00'
+        assert not saved.totals.estimate_complete and saved.totals.unpriced_item_count == 1
+        assert not saved.assignment.stale
+        assert service.create_from_calendar(db, ALICE, body, key,
+            lambda *_: pytest.fail('Le rejeu ne recalcule pas')) == saved
+        bought = service.set_manual_purchase(db, saved.id, saved.items[0].id, ALICE,
+            ShoppingManualPurchaseWrite(expected_revision=saved.revision, purchased=True,
+                coverage={'quantities': [q.model_dump() for q in saved.items[0].required]}), uuid4())
+        assert bought.totals.remaining_item_count == 0
+        refreshed = recalculate(db, saved.id, ALICE,
+            ShoppingRecalculatePricesWrite(expected_revision=bought.revision), uuid4(), lambda *_: [])
+        assert refreshed.purchases == bought.purchases and len(refreshed.items) == 1
+        assert refreshed.totals.budget_known_amount == '0.00'
+    assert calendar_preview(database).preview_fingerprint == original.preview_fingerprint
+
+
+def test_calendar_partial_products_keeps_unpriced_needs_and_rejects_stale_quote(database):
+    from sqlalchemy.orm import Session
+    from sqlalchemy import insert
+    from decimal import Decimal
+    from backend.app.recipes.models import RecipeIngredient
+    from backend.tests.test_shopping_list_calendar import RECIPE, MILK
+    with database.begin() as connection:
+        connection.execute(insert(RecipeIngredient).values(recipe_id=RECIPE, ingredient_id=MILK,
+            position=2, quantity=Decimal('100'), unit='ml'))
+    add_meal(database)
+    original = calendar_preview(database)
+    request = ShoppingDraftPricingWrite(purchase_date=original.purchase_date,
+        items=[dict(name=i.name, ingredient_id=i.ingredient_id, required=[q.model_dump() for q in i.required]) for i in original.items])
+    sales = [normalize_sale(RICE, product(), original.purchase_date)]
+    quote = pricing.build(request, sales)
+    with Session(database) as db:
+        body = creation_request(original, kind='products', activate=True,
+            pricing=dict(fingerprint=quote.fingerprint, scenario='cheapest', accept_partial=True))
         with pytest.raises(ShoppingListError) as failure:
-            service.create_from_calendar(db, ALICE, creation_request(original, kind='products', activate=True,
-                pricing=dict(fingerprint=quote.fingerprint, scenario='maxi', accept_partial=True)), uuid4(), lambda *_: [])
-        assert failure.value.code == 'LIST_KIND_CONFLICT'
+            service.create_from_calendar(db, ALICE, body, uuid4(), lambda *_: [])
+        assert failure.value.code == 'COMPARISON_STALE'
         assert db.scalar(select(func.count()).select_from(ShoppingList)) == 0
+        db.rollback()
+        saved = service.create_from_calendar(db, ALICE, body, uuid4(), lambda *_: sales)
+        assert len(saved.items) == 2 and len(saved.choices) == 1
+        missing = next(i for i in saved.items if i.ingredient_id == MILK)
+        assert missing.pricing_status == 'unpriced' and missing.contributions
+        assert saved.totals.unpriced_item_count == 1 and not saved.totals.estimate_complete
+        assert saved.totals.budget_known_amount == selected(quote).known_amount
+        assert not saved.assignment.stale
 
 
 def test_calendar_products_can_confirm_excluded_unpriced_ingredients(database):

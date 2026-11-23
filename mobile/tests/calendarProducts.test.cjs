@@ -85,23 +85,23 @@ for (const [label, scenario] of [['Le moins cher', 'cheapest'], ['Maxi', 'maxi']
     assert.deepEqual(h.opened, ['created-list']);
   });
 }
-test('besoins sans produit : confirmation annulable puis devis du sous-ensemble sans omission silencieuse', async () => {
+test('besoins sans prix : tous conservés dans le devis et la création sans exclusion', async () => {
   const h = harness({ partial: true }); await h.ready();
-  button(h, 'Créer une liste de produits').props.onPress(); assert.equal(h.commands.length, 0);
-  assert.match(JSON.stringify(h.render()), /milk/); button(h, 'Annuler').props.onPress();
-  assert.equal(button(h, 'Créer avec les produits disponibles'), undefined);
-  button(h, 'Créer une liste de produits').props.onPress(); button(h, 'Créer avec les produits disponibles').props.onPress(); await flush();
-  assert.equal(h.commands.length, 1); assert.deepEqual(Array.from(h.commands[0].body.excluded_item_ids), ['calendar-milk']);
-  assert.equal(h.commands[0].body.pricing.fingerprint, 'full-fingerprint');
-  assert.equal(h.reads.filter(r => r[0] === 'prices')[1][1].items.length, 1);
+  button(h, 'Créer une liste de produits').props.onPress(); await flush();
+  assert.equal(h.commands.length, 1);
+  assert.deepEqual(Array.from(h.commands[0].body.excluded_item_ids), []);
+  assert.equal(h.commands[0].body.pricing.fingerprint, 'partial-fingerprint');
+  assert.equal(h.commands[0].body.pricing.accept_partial, true);
+  assert.equal(h.reads.filter(r => r[0] === 'prices').length, 1);
+  const row = nodes(h.render()).find(n => typeof n.type === 'function' && n.props.article?.ingredient_id === 'milk');
+  assert.match(JSON.stringify(row.type(row.props)), /- \$/);
+  const counter = nodes(h.render()).find(n => typeof n.type === 'function' && n.props.label === 'Sans prix');
+  assert.equal(counter.props.value, 1);
 });
-test('si le nouveau devis change de produit, aucune création et une actualisation explicite', async () => {
-  const h = harness({ partial: true, prices: async body => {
-    const result = quote(body.items.length > 1);
-    if (body.items.length === 1) result.scenarios.forEach(s => { s.needs[0].lines[0].sale.product_id = 'changed'; });
-    return result;
-  } }); await h.ready(); button(h, 'Créer une liste de produits').props.onPress(); button(h, 'Créer avec les produits disponibles').props.onPress(); await flush();
-  assert.equal(h.commands.length, 0); assert.match(JSON.stringify(h.render()), /ont changé/);
+test('devis périmé refusé par le serveur : pas de navigation et actualisation proposée', async () => {
+  const h = harness({ partial: true, send: async () => { throw new Error('Les prix ont changé. Actualise l’aperçu.'); } });
+  await h.ready(); button(h, 'Créer une liste de produits').props.onPress(); await flush();
+  assert.equal(h.opened.length, 0); assert.match(JSON.stringify(h.render()), /ont changé/);
 });
 test('double appui et réponse serveur refusée : pas de doublon ni navigation', async () => {
   let finish; const h = harness({ send: () => new Promise(resolve => { finish = resolve; }) }); await h.ready();
@@ -113,26 +113,27 @@ test('reprise incertaine : renvoie exactement la commande persistée même aprè
   const h = harness({ pending }); await h.ready(); button(h, 'Reprendre la création').props.onPress(); await flush();
   assert.equal(h.commands[0], pending); assert.deepEqual(h.opened, ['created-list']);
 });
-test('changement de compte pendant le devis partiel : aucune écriture tardive', async () => {
+test('changement de compte pendant la création : aucune navigation tardive', async () => {
   let finish;
-  const h = harness({ partial: true, prices: async body => body.items.length > 1 ? quote(true) : new Promise(resolve => { finish = resolve; }) });
-  await h.ready(); button(h, 'Créer une liste de produits').props.onPress(); button(h, 'Créer avec les produits disponibles').props.onPress();
-  h.auth.session = { user: { id: 'bob' } }; h.render(); finish(quote()); await flush();
-  assert.equal(h.commands.length, 0); assert.equal(h.opened.length, 0);
+  const h = harness({ partial: true, send: () => new Promise(resolve => { finish = resolve; }) });
+  await h.ready(); button(h, 'Créer une liste de produits').props.onPress();
+  h.auth.session = { user: { id: 'bob' } }; h.render(); finish({ id: 'alice-list' }); await flush();
+  assert.equal(h.commands.length, 1); assert.equal(h.opened.length, 0);
 });
 
-
-test('scénario sans aucun produit chiffrable : création désactivée et actualisation proposée', async () => {
+test('scénario sans aucun produit chiffrable : création autorisée avec tous les besoins sans prix', async () => {
   const h = harness({ prices: async () => {
     const result = quote(); result.scenarios.forEach(s => { s.complete = false; s.needs[0].amount = null; s.needs[0].lines = []; }); return result;
   } }); await h.ready();
-  assert.equal(button(h, 'Créer une liste de produits').props.disabled, true);
-  assert.ok(button(h, 'Actualiser l’aperçu')); assert.equal(h.commands.length, 0);
+  assert.equal(button(h, 'Créer une liste de produits').props.disabled, false);
+  button(h, 'Créer une liste de produits').props.onPress(); await flush();
+  assert.equal(h.commands.length, 1); assert.equal(h.commands[0].body.pricing.accept_partial, true);
+  assert.deepEqual(Array.from(h.commands[0].body.excluded_item_ids), []);
 });
 
 test('repas inaccessibles : aucune création sans confirmation et acceptation explicite envoyée', async () => {
   const h = harness({ excludedMeals: [{ meal_id: 'unavailable' }] }); await h.ready();
   button(h, 'Créer une liste de produits').props.onPress(); assert.equal(h.commands.length, 0);
-  button(h, 'Créer avec les produits disponibles').props.onPress(); await flush();
+  button(h, 'Créer la liste').props.onPress(); await flush();
   assert.equal(h.commands[0].body.accept_partial, true);
 });

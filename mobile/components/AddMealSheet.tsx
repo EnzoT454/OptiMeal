@@ -4,6 +4,7 @@ import {
   StyleSheet, Text, View,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { api } from "../services/api";
 import type { MealType, Page, RecipeSummary } from "../types/api";
 import { MEALS, MEAL_LABELS, dayFullName } from "./planning";
@@ -84,7 +85,7 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
       <KeyboardAvoidingView style={styles.fond} behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityLabel="Fermer" />
 
-        <View style={styles.panneau}>
+        <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.panneau}>
           <View style={styles.poignee} />
           <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: 18 }}>
             <View style={{ gap: 2 }}>
@@ -185,7 +186,7 @@ export default function AddMealSheet({ jour, onClose, onAdd }: Props) {
               <RecipeButton title="Annuler" variant="neutral" onPress={onClose} />
             </View>
           </ScrollView>
-        </View>
+        </SafeAreaView>
       </KeyboardAvoidingView>
     </Modal>
   );

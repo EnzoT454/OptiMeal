@@ -67,7 +67,10 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
   }
   const kind = list ? shoppingListKind(list) : 'articles';
   const refreshNeeded = kind === 'products' && !!list?.items.some(item => !item.removed) && (!list.assignment || list.assignment.stale);
-  const visibleWarnings = list?.warnings.filter(w => w.code !== 'ESTIMATE_UNAVAILABLE' && !(kind === 'products' && ['COPY_PRODUCT_CHOICES', 'COMPARISON_STALE'].includes(w.code))) ?? [];
+  const visibleWarnings = list?.warnings.filter(w => !['ESTIMATE_UNAVAILABLE', 'INCOMPATIBLE_UNITS', 'ESTIMATE_PARTIAL'].includes(w.code)
+    && !(kind === 'products' && ['COPY_PRODUCT_CHOICES', 'COMPARISON_STALE'].includes(w.code))) ?? [];
+  const incompletePrices = kind !== 'articles' && list && !list.totals.estimate_complete
+    && (list.totals.unpriced_item_count > 0 || list.warnings.some(w => w.code === 'ESTIMATE_PARTIAL'));
   const editable = list?.status === 'draft' || list?.status === 'active';
   const locked = command.locked || loading || !editable;
   const menuLocked = command.locked || loading || !list || panel !== null;
@@ -105,6 +108,15 @@ export default function ShoppingListDetailScreen({ route, navigation }: NativeSt
       <View style={s.notice}>
         <SavedListTotals list={list} />
       </View>
+      {incompletePrices && <View accessible accessibilityLiveRegion="polite"
+        style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12, padding: 16, borderRadius: 14,
+          backgroundColor: '#fff8e6', borderWidth: 1, borderColor: '#ead8aa' }}>
+        <MaterialCommunityIcons name="alert-circle-outline" size={24} color="#8a6416" accessible={false} />
+        <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
+          <Text style={[s.label, { marginBottom: 0, color: '#655020' }]}>Certains prix sont inconnus</Text>
+          <Text style={[s.body, { color: '#655020' }]}>Ce sous-total comprend uniquement les montants connus. Les articles sans prix restent dans la liste.</Text>
+        </View>
+      </View>}
       {refreshNeeded && <Text accessibilityLiveRegion="polite" style={s.note}>Veuillez actualiser les prix.</Text>}
       {list.status === 'active' && panel === null && list.totals.item_count > 0 && list.totals.remaining_item_count === 0 &&
         <RecipeButton title="Terminer la liste" disabled={locked || addingProducts} onPress={finish} />}

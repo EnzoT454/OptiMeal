@@ -1,4 +1,4 @@
-import { Modal, Text } from 'react-native';
+import { Modal, Text, useWindowDimensions } from 'react-native';
 import type { ComponentProps } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFonts } from 'expo-font';
@@ -8,7 +8,7 @@ import { DMSans_700Bold } from '@expo-google-fonts/dm-sans/700Bold';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Heading, Screen } from './components/ui';
@@ -114,14 +114,25 @@ function Calendar({ route }: { route?: { params?: { vue?: 'repas' | 'epicerie' }
 }
 function Content() {
   const { session, loading, signInReason, dismissSignIn } = useAuth();
+  const insets = useSafeAreaInsets();
+  const { fontScale } = useWindowDimensions();
+  const bottomPadding = Math.max(insets.bottom, 8);
+  // Réserver la place des icônes, du texte agrandi et de la navigation système.
+  const labelScale = Math.min(Math.max(fontScale, 1), 1.4);
   if (loading) return <Screen><Heading>OptiMeal</Heading><Text>Ouverture de ta session…</Text></Screen>;
   return <><NavigationContainer key={session?.user.id ?? 'visitor'}><Tabs.Navigator screenOptions={({ route }) => ({
     tabBarActiveTintColor: VERT,
     tabBarInactiveTintColor: '#65746a',
-    // Noms des onglets : la police de l'app, pas celle du téléphone
-    tabBarLabelStyle: { fontFamily: 'DMSans_500Medium', fontSize: 12 },
+    tabBarLabelPosition: 'below-icon',
+    tabBarStyle: { height: 72 + Math.ceil(18 * (labelScale - 1)) + bottomPadding,
+      paddingTop: 8, paddingBottom: bottomPadding },
+    tabBarIconStyle: { width: 28, height: 28, marginBottom: 2 },
+    tabBarLabel: ({ color, children }) => <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}
+      maxFontSizeMultiplier={1.4} style={{ fontFamily: 'DMSans_500Medium', fontSize: 12, lineHeight: 18,
+        color, textAlign: 'center', alignSelf: 'stretch', includeFontPadding: false }}>{children}</Text>,
     tabBarIcon: ({ focused, color, size }) => <Ionicons
-      name={tabIcons[route.name][focused ? 'active' : 'inactive']} size={size} color={color} />,
+      name={tabIcons[route.name][focused ? 'active' : 'inactive']} size={Math.min(size, 26)} color={color}
+      style={{ width: 28, height: 28, lineHeight: 28, textAlign: 'center', includeFontPadding: false }} />,
   })}>
     <Tabs.Screen name="Accueil" component={HomeNavigator} options={{ headerShown: false, popToTopOnBlur: true }} />
     <Tabs.Screen name="Promos" component={PromoNavigator} options={{ headerShown: false, popToTopOnBlur: true }} />

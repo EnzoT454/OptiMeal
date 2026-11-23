@@ -33,8 +33,10 @@ function screen(file, { session = null, states = {}, apiFailure = false } = {}) 
     if (name === '@react-navigation/bottom-tabs') return { createBottomTabNavigator: () => navigator };
     if (name === 'expo-font') return { useFonts: () => [true, null] };
     if (name === 'react-native') return { Text: 'Text', View: 'View', Pressable: 'Pressable', Modal: 'Modal', TextInput: 'TextInput',
+      useWindowDimensions: () => ({ width: 360, height: 800, fontScale: 1 }),
       StyleSheet: { create: value => value }, Alert: { alert() {} } };
-    if (name === 'react-native-safe-area-context') return { SafeAreaProvider: 'SafeAreaProvider', SafeAreaView: 'SafeAreaView' };
+    if (name === 'react-native-safe-area-context') return { SafeAreaProvider: 'SafeAreaProvider', SafeAreaView: 'SafeAreaView',
+      useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }) };
     if (name === 'expo-status-bar') return { StatusBar: 'StatusBar' };
     if (name.includes('components/ui') || name.includes('components/recipes')) return ui;
     if (name.includes('/app/') || name.startsWith('./app/')) return { __esModule: true, default: name };

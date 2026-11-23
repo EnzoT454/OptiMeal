@@ -18,8 +18,10 @@ export const styles = StyleSheet.create({
   heading: { fontSize: 27, fontWeight: '700', color: '#173d29', marginVertical: 8 },
   label: { fontSize: 15, marginBottom: 6, color: '#263a2d' },
   input: { padding: 13, borderWidth: 1, borderColor: '#b7c9bb', borderRadius: 10, backgroundColor: 'white', fontSize: 16 },
-  button: { padding: 14, borderRadius: 10, backgroundColor: '#25603c', alignItems: 'center' },
-  buttonText: { color: 'white', fontWeight: '600', fontSize: 16 },
+  button: { minHeight: 48, minWidth: 0, flexShrink: 1, padding: 14, borderRadius: 10,
+    backgroundColor: '#25603c', alignItems: 'center', justifyContent: 'center' },
+  buttonText: { color: 'white', fontWeight: '600', fontSize: 16, textAlign: 'center',
+    alignSelf: 'stretch', flexShrink: 1 },
   message: { color: '#7c3021', fontSize: 15, lineHeight: 22 },
   card: { padding: 18, borderRadius: 12, backgroundColor: 'white', gap: 8, borderWidth: 1, borderColor: '#dce5db' },
 });

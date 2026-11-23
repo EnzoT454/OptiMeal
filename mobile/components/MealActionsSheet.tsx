@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { SafeAreaView } from "react-native-safe-area-context";
 import type { MealPlanEntry, MealType } from "../types/api";
 import {
   MEALS, MEAL_LABELS, addDays, dayFullName, dayName, fromISODate, mealName, recipeUnavailable, toISODate,
@@ -71,8 +72,9 @@ export default function MealActionsSheet({ repas, onClose, onVoirRecette, onPort
       <View style={styles.fond}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityLabel="Fermer" />
 
-        <View style={styles.panneau}>
+        <SafeAreaView edges={['bottom', 'left', 'right']} style={styles.panneau}>
           <View style={styles.poignee} />
+          <ScrollView keyboardShouldPersistTaps="handled">
           <Text style={styles.titre} numberOfLines={2}>
             {repas.is_leftover ? "♻ Restes · " : ""}{nom}
           </Text>
@@ -144,7 +146,8 @@ export default function MealActionsSheet({ repas, onClose, onVoirRecette, onPort
           {ecran === "menu" && (
             <RecipeButton title="Fermer" variant="neutral" onPress={onClose} style={{ marginTop: 8 }} />
           )}
-        </View>
+          </ScrollView>
+        </SafeAreaView>
       </View>
     </Modal>
   );
@@ -164,7 +167,7 @@ function Ligne({ icone, texte, onPress, couleur }: {
 
 const styles = StyleSheet.create({
   fond: { flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.4)" },
-  panneau: { backgroundColor: recipeColors.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, paddingBottom: 32 },
+  panneau: { maxHeight: '90%', backgroundColor: recipeColors.background, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, paddingBottom: 32 },
   poignee: { alignSelf: "center", width: 40, height: 4, borderRadius: 2, backgroundColor: recipeColors.border, marginBottom: 14 },
   titre: { fontFamily: "DMSans_700Bold", fontSize: 22, lineHeight: 29, color: recipeColors.ink },
   sousTitre: { fontFamily: "DMSans_400Regular", fontSize: 14, lineHeight: 19, color: recipeColors.muted, marginTop: 2 },

@@ -98,12 +98,12 @@ test('résumé commun : compteurs accessibles avec icônes et statut dans le blo
     return { dateLabel: x => x };
   } });
   const h = screen('components/lists/CalendarLists.tsx', { props: { period: { start_date: '', end_date: '' } } });
-  const list = { ...h.list, kind: 'products' };
+  const list = { ...h.list, kind: 'products', totals: { ...h.list.totals, unpriced_item_count: 2 } };
   const tree = exports.SavedListTotals({ list });
   assert.equal(nodes(tree).find(n => n.type === 'PriceSummary').props.list, list);
   assert.match(text(tree), /Liste en cours/);
-  for (const label of ['4 produits', '2 à acheter', '1 achetés', '1 disponibles', '0 magasins']) assert.ok(nodes(tree).some(n => n.props.accessibilityLabel === label));
-  assert.equal(nodes(tree).filter(n => n.type === 'Icon').length, 6);
+  for (const label of ['4 produits', '2 à acheter', '1 achetés', '1 disponibles', '0 magasins', '2 sans prix']) assert.ok(nodes(tree).some(n => n.props.accessibilityLabel === label));
+  assert.equal(nodes(tree).filter(n => n.type === 'Icon').length, 7);
   const articles = exports.SavedListTotals({ list: { ...list, kind: 'articles' } });
   assert.equal(nodes(articles).some(n => n.type === 'PriceSummary'), false);
 });

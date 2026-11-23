@@ -268,8 +268,12 @@ def _validate_kind(resource):
                              if need.lines for item_id in need.item_ids)
     product_items.update(item_id for purchase in resource.product_purchases
                          if purchase.purchased_units for item_id in purchase.item_ids)
+    # Conserver les besoins du calendrier même sans référence chiffrable.
+    # La provenance est créée par le serveur, jamais par un ajout manuel client.
+    calendar_needs = {item.id for item in resource.items if resource.source == 'calendar'
+                      and item.ingredient_id and any(c.source == 'calendar' for c in item.contributions)}
     invalid = (resource.kind == 'articles' and bool(active & product_items) or
-               resource.kind == 'products' and bool(active - choices))
+               resource.kind == 'products' and bool(active - choices - calendar_needs))
     if invalid:
         raise ShoppingListError(422, 'LIST_KIND_CONFLICT',
             'Une liste d’articles et une liste de produits ne peuvent pas être mélangées.')

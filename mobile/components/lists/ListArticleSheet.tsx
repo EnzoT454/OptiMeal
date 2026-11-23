@@ -58,10 +58,11 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
     return saved;
   }
   const selectedProductId = list.choices.find(choice => choice.item_id === item.id)?.product_id;
+  const hasProductQuantity = kind === 'products' && (!!selectedProductId || rows.some(row => row.comparisonId === list.assignment?.comparison_id));
   const productName = (selectedProductId ? list.assignment?.selected_products?.[selectedProductId]?.name : undefined) ?? rows.find(row => row.comparisonId === list.assignment?.comparison_id)?.line.sale.raw_source.name ?? item.name;
   function defineQuantity() {
     setError(''); setMode('quantity');
-    if (kind === 'products') {
+    if (hasProductQuantity) {
       const line = rows.find(row => row.comparisonId === list.assignment?.comparison_id)?.line;
       const increment = line?.direct_increment;
       const quantity = increment && item.required.find(q => q.unit === increment.unit);
@@ -74,11 +75,11 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
   async function saveQuantity() {
     if (locked) return;
     const amount = positiveAmount(newAmount);
-    if (!amount || (kind === 'products' ? !/^[1-9][0-9]*$/.test(amount) || Number(amount) > 1_000_000 : !newUnit)) {
-      setError(kind === 'products' ? 'Indique un nombre entier de produits entre 1 et 1 000 000.' : 'Indique une quantité positive et son unité.'); return;
+    if (!amount || (hasProductQuantity ? !/^[1-9][0-9]*$/.test(amount) || Number(amount) > 1_000_000 : !newUnit)) {
+      setError(hasProductQuantity ? 'Indique un nombre entier de produits entre 1 et 1 000 000.' : 'Indique une quantité positive et son unité.'); return;
     }
-    const changes = kind === 'products' ? { product_units: Number(amount), refresh_prices: true }
-      : { quantity: { amount, unit: newUnit } };
+    const changes = hasProductQuantity ? { product_units: Number(amount), refresh_prices: true }
+      : { quantity: { amount, unit: newUnit }, ...(kind === 'products' ? { refresh_prices: true } : {}) };
     if (await onCommand(listCommand(path, { expected_revision: list.revision, ...changes }, 'PATCH'))) { setMode(null); setError(''); }
   }
   if (kind !== 'mixed') return <Modal visible transparent animationType="slide" onRequestClose={onClose}>
@@ -101,8 +102,8 @@ export default function ListArticleSheet({ list, item, disabled, onClose, onComm
             }} />
             <RecipeButton title="Annuler" variant="neutral" disabled={locked} onPress={() => setMode(null)} />
           </View> : mode === 'quantity' ? <View style={s.notice}>
-            <RecipeField label={kind === 'products' ? 'Nombre de produits' : 'Quantité'} value={newAmount} onChangeText={setNewAmount} keyboardType={kind === 'products' ? 'number-pad' : 'decimal-pad'} editable={!locked} />
-            {kind === 'products' ? <Text style={s.note}>Nombre total souhaité, en unités de vente (sacs, paquets, bouteilles…). Les achats déjà enregistrés sont conservés et déduits.</Text>
+            <RecipeField label={hasProductQuantity ? 'Nombre de produits' : 'Quantité'} value={newAmount} onChangeText={setNewAmount} keyboardType={hasProductQuantity ? 'number-pad' : 'decimal-pad'} editable={!locked} />
+            {hasProductQuantity ? <Text style={s.note}>Nombre total souhaité, en unités de vente (sacs, paquets, bouteilles…). Les achats déjà enregistrés sont conservés et déduits.</Text>
               : <RecipeUnitPicker value={newUnit} onChange={setNewUnit} ingredientLabel={item.name} disabled={locked} />}
             <RecipeButton title="Enregistrer la quantité" disabled={locked} onPress={() => void saveQuantity()} />
             <RecipeButton title="Annuler" variant="neutral" disabled={locked} onPress={() => { setMode(null); setError(''); }} />
